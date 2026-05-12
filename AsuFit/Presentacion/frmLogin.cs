@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using AsuFit.Negocio;   // Para conectar con el puente
 using AsuFit.Entidades; // Para reconocer al objeto Usuario
+using AsuFit.Datos;
 
 namespace AsuFit.Presentacion
 {
@@ -30,6 +31,9 @@ namespace AsuFit.Presentacion
             // 3. Verificamos si los datos son correctos
             if (user != null)
             {
+                // --- LÍNEA DE AUDITORÍA: REGISTRO DE LOGIN ---
+                GestorAuditoria.Registrar(user.NombreCompleto, "Seguridad", "Inicio de Sesión", "El usuario ingresó al sistema.");
+
                 MessageBox.Show($"¡Bienvenido a AsuFit, {user.NombreCompleto}!", "Acceso Concedido",
                                 MessageBoxButtons.OK, MessageBoxIcon.Information);
 

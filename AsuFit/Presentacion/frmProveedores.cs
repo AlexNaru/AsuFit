@@ -1,8 +1,10 @@
-﻿using AsuFit.Negocio;
+﻿using AsuFit.Datos;
+using AsuFit.Entidades;
+using AsuFit.Negocio;
 using System;
 using System.Data;
-using System.Windows.Forms;
 using System.Runtime.InteropServices;
+using System.Windows.Forms;
 
 namespace AsuFit.Presentacion
 {
@@ -14,10 +16,12 @@ namespace AsuFit.Presentacion
 
         private DataTable dtProveedores;
         private ProveedorNegocio negocio = new ProveedorNegocio();
+        private Usuario usuarioActual;
 
-        public frmProveedores()
+        public frmProveedores(Usuario userLogueado)
         {
             InitializeComponent();
+            usuarioActual = userLogueado;
         }
 
         private void frmProveedores_Load(object sender, EventArgs e)
@@ -171,14 +175,26 @@ namespace AsuFit.Presentacion
                 {
                     // NUEVO PROVEEDOR
                     bool exito = negocio.InsertarProveedor(txtNombre.Text, txtRuc.Text, cmbCategoria.Text, txtContacto.Text, txtTelefono.Text, txtCorreo.Text, txtDireccion.Text, txtCiudad.Text, estadoTexto);
-                    if (exito) MessageBox.Show("Proveedor registrado con éxito.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    if (exito)
+                    {
+                        // --- AUDITORÍA: NUEVO ---
+                        GestorAuditoria.Registrar(usuarioActual.NombreCompleto, "Proveedores", "Alta", $"Se registró al proveedor '{txtNombre.Text}'.");
+
+                        MessageBox.Show("Proveedor registrado con éxito.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    } // <-- Aquí estaba el corchete "]" por error. Ya está corregido con "}"
                 }
                 else
                 {
                     // EDITAR EXISTENTE
                     int idProveedor = Convert.ToInt32(txtId.Text);
                     bool exito = negocio.EditarProveedor(idProveedor, txtNombre.Text, txtRuc.Text, cmbCategoria.Text, txtContacto.Text, txtTelefono.Text, txtCorreo.Text, txtDireccion.Text, txtCiudad.Text, estadoTexto);
-                    if (exito) MessageBox.Show("Proveedor actualizado correctamente.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    if (exito)
+                    {
+                        // --- AUDITORÍA: EDICIÓN ---
+                        GestorAuditoria.Registrar(usuarioActual.NombreCompleto, "Proveedores", "Edición", $"Se modificaron los datos del proveedor '{txtNombre.Text}'.");
+
+                        MessageBox.Show("Proveedor actualizado correctamente.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
                 }
 
                 LimpiarFormulario();
@@ -208,6 +224,7 @@ namespace AsuFit.Presentacion
                 bool exito = negocio.CambiarEstado(idProveedor, nuevoEstadoTexto);
                 if (exito)
                 {
+                    GestorAuditoria.Registrar(usuarioActual.NombreCompleto, "Proveedores", "Cambio de Estado", $"El estado del proveedor ID {idProveedor} cambió a {nuevoEstadoTexto}.");
                     MessageBox.Show($"El estado del proveedor ha sido cambiado a: {nuevoEstadoTexto}.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     LimpiarFormulario();
                     CargarGrilla();

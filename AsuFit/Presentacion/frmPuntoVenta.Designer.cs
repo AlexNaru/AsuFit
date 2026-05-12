@@ -41,12 +41,14 @@
             this.label4 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
             this.txtBuscarProducto = new System.Windows.Forms.TextBox();
+            this.button1 = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvCarrito)).BeginInit();
             this.SuspendLayout();
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.button1);
             this.panel1.Controls.Add(this.label1);
             this.panel1.Controls.Add(this.btnFinalizarVenta);
             this.panel1.Controls.Add(this.lblTotalPagar);
@@ -70,7 +72,7 @@
             this.btnFinalizarVenta.BackColor = System.Drawing.Color.SteelBlue;
             this.btnFinalizarVenta.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnFinalizarVenta.ForeColor = System.Drawing.Color.White;
-            this.btnFinalizarVenta.Location = new System.Drawing.Point(166, 640);
+            this.btnFinalizarVenta.Location = new System.Drawing.Point(153, 691);
             this.btnFinalizarVenta.Name = "btnFinalizarVenta";
             this.btnFinalizarVenta.Size = new System.Drawing.Size(176, 36);
             this.btnFinalizarVenta.TabIndex = 2;
@@ -173,6 +175,16 @@
             this.txtBuscarProducto.TabIndex = 12;
             this.txtBuscarProducto.TextChanged += new System.EventHandler(this.txtBuscarProducto_TextChanged);
             // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(153, 637);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(176, 36);
+            this.button1.TabIndex = 4;
+            this.button1.Text = "LIMPIAR CARRITO";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.btnLimpiarCarrito_Click);
+            // 
             // frmPuntoVenta
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
@@ -215,5 +227,6 @@
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.TextBox txtBuscarProducto;
+        private System.Windows.Forms.Button button1;
     }
 }

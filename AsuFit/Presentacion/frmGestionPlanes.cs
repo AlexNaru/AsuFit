@@ -1,4 +1,5 @@
-﻿using AsuFit.Entidades;
+﻿using AsuFit.Datos;
+using AsuFit.Entidades;
 using AsuFit.Negocio;
 using System;
 using System.Windows.Forms;
@@ -8,10 +9,12 @@ namespace AsuFit.Presentacion
     public partial class frmGestionPlanes : Form
     {
         private int idPlanSeleccionado = 0;
+        private Usuario usuarioActual;
 
-        public frmGestionPlanes()
+        public frmGestionPlanes(Usuario userLogueado)
         {
             InitializeComponent();
+            usuarioActual = userLogueado;
         }
 
         private void frmGestionPlanes_Load(object sender, EventArgs e)
@@ -73,6 +76,7 @@ namespace AsuFit.Presentacion
                 string mensaje;
                 if (negocio.RegistrarPlan(nuevoPlan, out mensaje))
                 {
+                    GestorAuditoria.Registrar(usuarioActual.NombreCompleto, "Planes", "Nuevo Plan", $"Creó el plan '{nuevoPlan.NombrePlan}' por Gs. {nuevoPlan.Precio:N0}.");
                     MessageBox.Show("¡Plan guardado con éxito!", "Excelente", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     LimpiarCampos();
                     CargarGrilla();
@@ -114,6 +118,7 @@ namespace AsuFit.Presentacion
 
                 if (negocio.EditarPlan(ventanaEdicion.PlanAEditar, out mensaje))
                 {
+                    GestorAuditoria.Registrar(usuarioActual.NombreCompleto, "Planes", "Edición", $"Modificó el plan '{ventanaEdicion.PlanAEditar.NombrePlan}'.");
                     MessageBox.Show("¡Plan editado con éxito!", "Excelente", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     LimpiarCampos();
                     CargarGrilla();
@@ -141,6 +146,7 @@ namespace AsuFit.Presentacion
 
                 if (negocio.EliminarPlan(idPlanSeleccionado, out mensaje))
                 {
+                    GestorAuditoria.Registrar(usuarioActual.NombreCompleto, "Planes", "Baja", $"Eliminó el plan ID {idPlanSeleccionado}.");
                     MessageBox.Show("El plan fue eliminado del sistema.", "Listo", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     LimpiarCampos();
                     CargarGrilla();

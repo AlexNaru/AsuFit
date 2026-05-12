@@ -48,8 +48,6 @@
             this.cmbPlanes = new System.Windows.Forms.ComboBox();
             this.label9 = new System.Windows.Forms.Label();
             this.btnCancelar = new System.Windows.Forms.Button();
-            this.label10 = new System.Windows.Forms.Label();
-            this.cmbMetodoPago = new System.Windows.Forms.ComboBox();
             this.label11 = new System.Windows.Forms.Label();
             this.txtRuc = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
@@ -274,37 +272,6 @@
             this.btnCancelar.Visible = false;
             this.btnCancelar.Click += new System.EventHandler(this.btnCancelar_Click);
             // 
-            // label10
-            // 
-            this.label10.AutoSize = true;
-            this.label10.ForeColor = System.Drawing.Color.White;
-            this.label10.Location = new System.Drawing.Point(12, 471);
-            this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(125, 20);
-            this.label10.TabIndex = 20;
-            this.label10.Text = "Metodo de pago";
-            // 
-            // cmbMetodoPago
-            // 
-            this.cmbMetodoPago.AutoCompleteCustomSource.AddRange(new string[] {
-            "Efectivo",
-            "Tarjeta de Débito",
-            "Tarjeta de Crédito",
-            "Transferencia / QR"});
-            this.cmbMetodoPago.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(48)))));
-            this.cmbMetodoPago.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbMetodoPago.ForeColor = System.Drawing.Color.White;
-            this.cmbMetodoPago.FormattingEnabled = true;
-            this.cmbMetodoPago.Items.AddRange(new object[] {
-            "Efectivo",
-            "Transferencia/QR",
-            "Tarjeta de crédito",
-            "Tarjeta de debito"});
-            this.cmbMetodoPago.Location = new System.Drawing.Point(143, 463);
-            this.cmbMetodoPago.Name = "cmbMetodoPago";
-            this.cmbMetodoPago.Size = new System.Drawing.Size(115, 28);
-            this.cmbMetodoPago.TabIndex = 21;
-            // 
             // label11
             // 
             this.label11.AutoSize = true;
@@ -332,8 +299,6 @@
             this.ClientSize = new System.Drawing.Size(800, 623);
             this.Controls.Add(this.txtRuc);
             this.Controls.Add(this.label11);
-            this.Controls.Add(this.cmbMetodoPago);
-            this.Controls.Add(this.label10);
             this.Controls.Add(this.btnCancelar);
             this.Controls.Add(this.label9);
             this.Controls.Add(this.cmbPlanes);
@@ -388,8 +353,6 @@
         private System.Windows.Forms.ComboBox cmbPlanes;
         private System.Windows.Forms.Label label9;
         public System.Windows.Forms.Button btnCancelar;
-        private System.Windows.Forms.Label label10;
-        private System.Windows.Forms.ComboBox cmbMetodoPago;
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.TextBox txtRuc;
     }

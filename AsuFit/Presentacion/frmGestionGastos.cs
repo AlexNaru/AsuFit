@@ -2,6 +2,7 @@
 using System.Windows.Forms;
 using AsuFit.Entidades;
 using AsuFit.Negocio;
+using AsuFit.Datos;
 
 namespace AsuFit.Presentacion
 {
@@ -60,6 +61,8 @@ namespace AsuFit.Presentacion
 
                 if (negocio.RegistrarGasto(nuevoGasto, out mensaje))
                 {
+                    GestorAuditoria.Registrar("Admin", "Gastos", "Registro", $"Gasto de Gs. {nuevoGasto.Monto:N0} en {nuevoGasto.Categoria}.");
+
                     MessageBox.Show("Gasto registrado correctamente en la caja.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                     // Limpiamos los campos para el siguiente gasto

@@ -61,11 +61,11 @@
     <Compile Include="Datos\GestorAuditoria.cs" />
     <Compile Include="Datos\IngresoMercaderiaDatos.cs" />
     <Compile Include="Datos\InventarioDatos.cs" />
-    <Compile Include="Datos\PagoDatos.cs" />
     <Compile Include="Datos\PlanDatos.cs" />
     <Compile Include="Datos\ProveedorDatos.cs" />
     <Compile Include="Datos\SocioDatos.cs" />
     <Compile Include="Datos\UsuarioDatos.cs" />
+    <Compile Include="Datos\VentaDatos.cs" />
     <Compile Include="Entidades\CarritoGlobal.cs" />
     <Compile Include="Entidades\Gasto.cs" />
     <Compile Include="Entidades\Pago.cs" />
@@ -78,9 +78,14 @@
     <Compile Include="Negocio\GastoNegocio.cs" />
     <Compile Include="Negocio\IngresoMercaderiaNegocio.cs" />
     <Compile Include="Negocio\InventarioNegocio.cs" />
-    <Compile Include="Negocio\PagoNegocio.cs" />
     <Compile Include="Negocio\PlanNegocio.cs" />
     <Compile Include="Negocio\ProveedorNegocio.cs" />
+    <Compile Include="Presentacion\frmAbrirCaja.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Presentacion\frmAbrirCaja.Designer.cs">
+      <DependentUpon>frmAbrirCaja.cs</DependentUpon>
+    </Compile>
     <Compile Include="Presentacion\frmAgregarProveedor.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -111,11 +116,23 @@
     <Compile Include="Presentacion\frmCajaCobro.Designer.cs">
       <DependentUpon>frmCajaCobro.cs</DependentUpon>
     </Compile>
+    <Compile Include="Presentacion\frmCerrarCaja.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Presentacion\frmCerrarCaja.Designer.cs">
+      <DependentUpon>frmCerrarCaja.cs</DependentUpon>
+    </Compile>
     <Compile Include="Presentacion\frmConfiguracion.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Presentacion\frmConfiguracion.Designer.cs">
       <DependentUpon>frmConfiguracion.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Presentacion\frmDetalleTransaccion.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Presentacion\frmDetalleTransaccion.Designer.cs">
+      <DependentUpon>frmDetalleTransaccion.cs</DependentUpon>
     </Compile>
     <Compile Include="Presentacion\frmEditarPlan.cs">
       <SubType>Form</SubType>
@@ -153,17 +170,11 @@
     <Compile Include="Presentacion\frmHistorialArqueos.Designer.cs">
       <DependentUpon>frmHistorialArqueos.cs</DependentUpon>
     </Compile>
-    <Compile Include="Presentacion\frmHistorialPagos.cs">
+    <Compile Include="Presentacion\frmHistorialTransacciones.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Presentacion\frmHistorialPagos.Designer.cs">
-      <DependentUpon>frmHistorialPagos.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Presentacion\frmHistorialVentas.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Presentacion\frmHistorialVentas.Designer.cs">
-      <DependentUpon>frmHistorialVentas.cs</DependentUpon>
+    <Compile Include="Presentacion\frmHistorialTransacciones.Designer.cs">
+      <DependentUpon>frmHistorialTransacciones.cs</DependentUpon>
     </Compile>
     <Compile Include="Presentacion\frmIngresoMercaderia.cs">
       <SubType>Form</SubType>
@@ -202,6 +213,12 @@
     </Compile>
     <Compile Include="Presentacion\frmGestionSocios.Designer.cs">
       <DependentUpon>frmGestionSocios.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Presentacion\frmNuevoProducto.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Presentacion\frmNuevoProducto.Designer.cs">
+      <DependentUpon>frmNuevoProducto.cs</DependentUpon>
     </Compile>
     <Compile Include="Presentacion\frmProveedores.cs">
       <SubType>Form</SubType>
@@ -245,9 +262,18 @@
     <Compile Include="Presentacion\frmReportes.Designer.cs">
       <DependentUpon>frmReportes.cs</DependentUpon>
     </Compile>
+    <Compile Include="Presentacion\frmResumenArqueo.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Presentacion\frmResumenArqueo.Designer.cs">
+      <DependentUpon>frmResumenArqueo.cs</DependentUpon>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Reportes\GeneradorPDF.cs" />
+    <EmbeddedResource Include="Presentacion\frmAbrirCaja.resx">
+      <DependentUpon>frmAbrirCaja.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Presentacion\frmAgregarProveedor.resx">
       <DependentUpon>frmAgregarProveedor.cs</DependentUpon>
     </EmbeddedResource>
@@ -263,8 +289,14 @@
     <EmbeddedResource Include="Presentacion\frmCajaCobro.resx">
       <DependentUpon>frmCajaCobro.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Presentacion\frmCerrarCaja.resx">
+      <DependentUpon>frmCerrarCaja.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Presentacion\frmConfiguracion.resx">
       <DependentUpon>frmConfiguracion.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Presentacion\frmDetalleTransaccion.resx">
+      <DependentUpon>frmDetalleTransaccion.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Presentacion\frmEditarPlan.resx">
       <DependentUpon>frmEditarPlan.cs</DependentUpon>
@@ -284,11 +316,8 @@
     <EmbeddedResource Include="Presentacion\frmHistorialArqueos.resx">
       <DependentUpon>frmHistorialArqueos.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Presentacion\frmHistorialPagos.resx">
-      <DependentUpon>frmHistorialPagos.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Presentacion\frmHistorialVentas.resx">
-      <DependentUpon>frmHistorialVentas.cs</DependentUpon>
+    <EmbeddedResource Include="Presentacion\frmHistorialTransacciones.resx">
+      <DependentUpon>frmHistorialTransacciones.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Presentacion\frmIngresoMercaderia.resx">
       <DependentUpon>frmIngresoMercaderia.cs</DependentUpon>
@@ -304,6 +333,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Presentacion\frmGestionSocios.resx">
       <DependentUpon>frmGestionSocios.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Presentacion\frmNuevoProducto.resx">
+      <DependentUpon>frmNuevoProducto.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Presentacion\frmProveedores.resx">
       <DependentUpon>frmProveedores.cs</DependentUpon>
@@ -325,6 +357,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Presentacion\frmReportes.resx">
       <DependentUpon>frmReportes.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Presentacion\frmResumenArqueo.resx">
+      <DependentUpon>frmResumenArqueo.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

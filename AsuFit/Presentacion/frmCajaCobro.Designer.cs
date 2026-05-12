@@ -177,7 +177,7 @@
             "Transferencia"});
             this.cmbMetodoPago.Location = new System.Drawing.Point(170, 415);
             this.cmbMetodoPago.Name = "cmbMetodoPago";
-            this.cmbMetodoPago.Size = new System.Drawing.Size(121, 28);
+            this.cmbMetodoPago.Size = new System.Drawing.Size(170, 28);
             this.cmbMetodoPago.TabIndex = 13;
             this.cmbMetodoPago.SelectedIndexChanged += new System.EventHandler(this.cmbMetodoPago_SelectedIndexChanged);
             // 
@@ -190,7 +190,7 @@
             "Factura"});
             this.cmbTipoComprobante.Location = new System.Drawing.Point(170, 457);
             this.cmbTipoComprobante.Name = "cmbTipoComprobante";
-            this.cmbTipoComprobante.Size = new System.Drawing.Size(121, 28);
+            this.cmbTipoComprobante.Size = new System.Drawing.Size(170, 28);
             this.cmbTipoComprobante.TabIndex = 14;
             // 
             // label11
@@ -275,7 +275,7 @@
             this.btnConfirmar.Name = "btnConfirmar";
             this.btnConfirmar.Size = new System.Drawing.Size(269, 36);
             this.btnConfirmar.TabIndex = 23;
-            this.btnConfirmar.Text = "$$$ CONFIRMAR E IMPRIMIR";
+            this.btnConfirmar.Text = "CONFIRMAR E IMPRIMIR";
             this.btnConfirmar.UseVisualStyleBackColor = true;
             this.btnConfirmar.Click += new System.EventHandler(this.btnConfirmar_Click);
             // 

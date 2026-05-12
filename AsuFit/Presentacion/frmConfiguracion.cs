@@ -1,20 +1,24 @@
 ﻿using AsuFit.Datos;
+using AsuFit.Entidades;
 using System;
 using System.Data;
 using System.Data.SqlClient;
 using System.Drawing;
 using System.IO;
-using System.Windows.Forms;
 using System.Net;
 using System.Net.Mail;
+using System.Windows.Forms;
 
 namespace AsuFit.Presentacion
 {
     public partial class frmConfiguracion : Form
     {
-        public frmConfiguracion()
+        private Usuario usuarioActual;
+
+        public frmConfiguracion(Usuario userLogueado)
         {
             InitializeComponent();
+            usuarioActual = userLogueado;
         }
 
         // 1. EVENTO LOAD: Se ejecuta al abrir la pantalla de configuración
@@ -134,6 +138,7 @@ namespace AsuFit.Presentacion
 
                     oConexion.Open();
                     cmd.ExecuteNonQuery();
+                    GestorAuditoria.Registrar(usuarioActual.NombreCompleto, "Configuración", "Actualización General", "Se modificaron los datos generales de la empresa o el logo.");
 
                     MessageBox.Show("¡Configuración guardada correctamente!", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
@@ -218,7 +223,8 @@ namespace AsuFit.Presentacion
 
                     MessageBox.Show("¡Configuración de correos y avisos guardada correctamente!", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-                    AsuFit.Datos.GestorAuditoria.Registrar("Administrador", "Configuración", "Actualización", "Se cambiaron los parámetros de envío de correos.");
+                    // --- AUDITORÍA ACTUALIZADA: Usa el nombre del usuario real ---
+                    GestorAuditoria.Registrar(usuarioActual.NombreCompleto, "Configuración", "Actualización", "Se cambiaron los parámetros de envío de correos.");
                 }
                 catch (Exception ex)
                 {
@@ -264,6 +270,9 @@ namespace AsuFit.Presentacion
                     oConexion.Open();
                     cmd.ExecuteNonQuery();
                 }
+
+                // --- AUDITORÍA: CREACIÓN DE BACKUP ---
+                GestorAuditoria.Registrar(usuarioActual.NombreCompleto, "Sistema", "Backup de Base de Datos", $"Se generó una copia de seguridad en: {rutaCompleta}");
 
                 lblUltimoRespaldo.Text = "Último respaldo realizado: " + DateTime.Now.ToString("dd/MM/yyyy HH:mm") + " hs";
                 MessageBox.Show($"¡Copia de seguridad generada con éxito!\n\nSe guardó en:\n{rutaCompleta}", "Respaldo Exitoso", MessageBoxButtons.OK, MessageBoxIcon.Information);

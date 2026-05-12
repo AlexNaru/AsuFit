@@ -92,5 +92,38 @@ namespace AsuFit.Presentacion
                 }
             }
         }
+
+        private void btnVerPDF_Click(object sender, EventArgs e)
+        {
+            if (dgvArqueos.CurrentRow == null)
+            {
+                MessageBox.Show("Por favor, selecciona un arqueo de la lista.", "Atención", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            string estado = dgvArqueos.CurrentRow.Cells["Estado"].Value.ToString();
+            string idTurno = dgvArqueos.CurrentRow.Cells["IdArqueo"].Value.ToString();
+
+            if (estado == "Cerrada")
+            {
+                // Sincronizamos la ruta exacta hacia la carpeta de Descargas (Downloads)
+                string rutaDescargas = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads");
+                string nombreArchivo = $"Ticket_Arqueo_Turno_{idTurno}.pdf";
+                string rutaCompleta = System.IO.Path.Combine(rutaDescargas, nombreArchivo);
+
+                if (System.IO.File.Exists(rutaCompleta))
+                {
+                    System.Diagnostics.Process.Start(rutaCompleta);
+                }
+                else
+                {
+                    MessageBox.Show($"No se encontró el archivo PDF para este arqueo en la ruta:\n{rutaCompleta}", "Archivo no encontrado", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+            else
+            {
+                MessageBox.Show("Este turno aún se encuentra ABIERTO.", "Turno en curso", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+        }
     }
 }

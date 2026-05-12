@@ -1,12 +1,14 @@
-﻿using System;
+﻿using AsuFit.Datos;
+using AsuFit.Entidades;
+using AsuFit.Negocio;
+using System;
 using System.Data;
 using System.Drawing;
-using System.Windows.Forms;
-using AsuFit.Negocio;
+using System.Globalization;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
-using System.Globalization;
+using System.Windows.Forms;
 
 namespace AsuFit.Presentacion
 {
@@ -15,10 +17,12 @@ namespace AsuFit.Presentacion
         [DllImport("user32.dll", CharSet = CharSet.Auto)]
         private static extern Int32 SendMessage(IntPtr hWnd, int msg, int wParam, [MarshalAs(UnmanagedType.LPWStr)] string lParam);
         private const int EM_SETCUEBANNER = 0x1501;
+        private Usuario usuarioActual;
 
-        public frmGestionProductos()
+        public frmGestionProductos(Usuario userLogueado)
         {
             InitializeComponent();
+            usuarioActual = userLogueado;
         }
 
         // Capas de negocio conectadas
@@ -164,7 +168,7 @@ namespace AsuFit.Presentacion
                 txtPrecio.Text = Convert.ToDecimal(fila.Cells["PrecioVenta"].Value).ToString("N0");
                 txtStock.Text = fila.Cells["StockActual"].Value.ToString();
 
-                // Auto-seleccionar el proveedor en el ComboBox
+                // Auto-seleccionar el proveedor
                 if (fila.Cells["Proveedor"].Value != DBNull.Value && fila.Cells["Proveedor"].Value != null)
                 {
                     cmbProveedor.Text = fila.Cells["Proveedor"].Value.ToString();
@@ -172,6 +176,16 @@ namespace AsuFit.Presentacion
                 else
                 {
                     cmbProveedor.SelectedIndex = -1;
+                }
+
+                // --- NUEVO: LEER EL IVA DESDE LA GRILLA AL COMBOBOX VISUAL ---
+                if (dgvProductos.Columns.Contains("PorcentajeIva") && fila.Cells["PorcentajeIva"].Value != DBNull.Value)
+                {
+                    cmbIva.Text = fila.Cells["PorcentajeIva"].Value.ToString();
+                }
+                else
+                {
+                    cmbIva.SelectedIndex = -1;
                 }
 
                 string codigo = fila.Cells["CodigoBarras"].Value.ToString();
@@ -233,14 +247,24 @@ namespace AsuFit.Presentacion
                 string codigo = txtCodigo.Text;
                 decimal precio = Convert.ToDecimal(txtPrecio.Text);
                 int stock = Convert.ToInt32(txtStock.Text);
-
-                // Capturamos el Id del proveedor seleccionado
                 int idProveedor = Convert.ToInt32(cmbProveedor.SelectedValue);
 
-                bool exito = negocio.GuardarProducto(id, codigo, txtNombre.Text, cmbCategoria.Text, precio, stock, idProveedor);
+                // --- SOLUCIÓN AL ERROR CS7036 ---
+                // Leemos el IVA de la grilla (si existe), si no, asumimos 10% por defecto.
+                int ivaAsignado = 10;
+                if (id > 0 && dgvProductos.CurrentRow != null && dgvProductos.Columns.Contains("PorcentajeIva") && dgvProductos.CurrentRow.Cells["PorcentajeIva"].Value != DBNull.Value)
+                {
+                    ivaAsignado = Convert.ToInt32(dgvProductos.CurrentRow.Cells["PorcentajeIva"].Value);
+                }
+
+                // Ahora enviamos los 8 parámetros sin problema
+                bool exito = negocio.GuardarProducto(id, codigo, txtNombre.Text, cmbCategoria.Text, precio, stock, idProveedor, ivaAsignado);
 
                 if (exito)
                 {
+                    string accion = (id == 0) ? "Nuevo Producto" : "Edición";
+                    GestorAuditoria.Registrar(usuarioActual.NombreCompleto, "Inventario", accion, $"Guardó el producto '{txtNombre.Text}' (Cod: {codigo}).");
+
                     if (rutaFotoOrigen != "")
                     {
                         string rutaFinal = carpetaFotos + codigo + ".jpg";
@@ -292,6 +316,7 @@ namespace AsuFit.Presentacion
 
                     if (exito)
                     {
+                        GestorAuditoria.Registrar(usuarioActual.NombreCompleto, "Inventario", "Cambio de Estado", $"Cambió el estado del producto ID {id} a {nuevoEstado}.");
                         MessageBox.Show($"El estado del producto se cambió a: {nuevoEstado}", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         LimpiarFormulario();
                         CargarGrilla();
@@ -316,6 +341,10 @@ namespace AsuFit.Presentacion
             txtNombre.Clear();
             cmbCategoria.SelectedIndex = -1;
             cmbProveedor.SelectedIndex = -1;
+
+            // --- LÍNEA NUEVA PARA LIMPIAR EL IVA ---
+            if (cmbIva != null) cmbIva.SelectedIndex = -1;
+
             txtPrecio.Clear();
             txtStock.Clear();
             picFoto.Image = null;
@@ -323,7 +352,6 @@ namespace AsuFit.Presentacion
 
             // Limpieza normal como en el otro formulario
             txtBuscarProducto.Clear();
-
             dgvProductos.ClearSelection();
         }
 

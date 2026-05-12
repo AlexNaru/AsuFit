@@ -1,4 +1,5 @@
-﻿using AsuFit.Entidades;
+﻿using AsuFit.Datos;
+using AsuFit.Entidades;
 using AsuFit.Negocio;
 using System;
 using System.Collections.Generic;
@@ -17,15 +18,17 @@ namespace AsuFit.Presentacion
     public partial class frmGestionSocios : Form
     {
         private int idSocioSeleccionado = 0;
+        private Usuario usuarioActual;
 
         // 1. Traemos la función nativa de Windows
         [DllImport("user32.dll", CharSet = CharSet.Auto)]
         private static extern Int32 SendMessage(IntPtr hWnd, int msg, int wParam, [MarshalAs(UnmanagedType.LPWStr)] string lParam);
         private const int EM_SETCUEBANNER = 0x1501;
 
-        public frmGestionSocios()
+        public frmGestionSocios(Usuario userLogueado)
         {
             InitializeComponent();
+            usuarioActual = userLogueado;
 
             // Le decimos que cargue los datos apenas nace el formulario
             CargarGrilla();
@@ -188,6 +191,7 @@ namespace AsuFit.Presentacion
                 SocioNegocio negocio = new SocioNegocio();
                 if (negocio.CambiarEstadoSocio(idSocioSeleccionado, nuevoEstado))
                 {
+                    GestorAuditoria.Registrar(usuarioActual.NombreCompleto, "Socios", "Cambio de Estado", $"Se cambió el estado del socio '{nombre}' a {nuevoEstado}.");
                     MessageBox.Show("Estado actualizado con éxito.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     CargarGrilla(); // Refresca según el filtro del CheckBox 
                 }

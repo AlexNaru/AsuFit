@@ -1,12 +1,6 @@
 ﻿using AsuFit.Entidades;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace AsuFit.Presentacion
@@ -18,7 +12,7 @@ namespace AsuFit.Presentacion
 
         // Variable para guardar los datos del usuario logueado
         private Usuario usuarioActual;
-        
+
         // Nos dice si cerramos para salir (True) o para loguear de nuevo (False)
         private bool _cerrandoParaLogOut = false;
 
@@ -72,18 +66,14 @@ namespace AsuFit.Presentacion
             // 2. Quitamos bordes y comportamiento de ventana independiente
             formularioHijo.TopLevel = false;
             formularioHijo.FormBorderStyle = FormBorderStyle.None;
-            
-            // 3. LA CLAVE: No usamos DockStyle.Fill para que el formulario mantenga
-            // exactamente el tamaño que le diste en el modo diseño.
-            //formularioHijo.Dock = DockStyle.Fill; 
 
-            // 4. Lo agregamos al panel gris y lo mostramos
+            // 3. Lo agregamos al panel gris y lo mostramos
             pnlContenedor.Controls.Add(formularioHijo);
             formularioHijo.Show();
         }
 
 
-        // --- EVENTOS DE LOS BOTONES (Ahora mucho más limpios) ---
+        // --- EVENTOS DE LOS BOTONES ---
 
         private void btnInicio_Click(object sender, EventArgs e)
         {
@@ -100,7 +90,7 @@ namespace AsuFit.Presentacion
         private void btnGestionSocios_Click(object sender, EventArgs e)
         {
             ResaltarBoton(sender);
-            AbrirFormularioHijo(new frmGestionSocios());
+            AbrirFormularioHijo(new frmGestionSocios(usuarioActual));
         }
 
         private void btnRegistrarUsuario_Click(object sender, EventArgs e)
@@ -112,25 +102,23 @@ namespace AsuFit.Presentacion
         private void btnGestionUsuarios_Click(object sender, EventArgs e)
         {
             ResaltarBoton(sender);
-            AbrirFormularioHijo(new frmGestionUsuarios());
+            AbrirFormularioHijo(new frmGestionUsuarios(usuarioActual));
         }
 
         private void btnRegistroAsistencia_Click(object sender, EventArgs e)
         {
             ResaltarBoton(sender);
 
-            // 1. Verificamos si la ventana ya está abierta
             foreach (Form formulario in Application.OpenForms)
             {
                 if (formulario is frmAsistencia)
                 {
-                    formulario.BringToFront(); // La trae al frente
-                    formulario.Focus();        // Pone el cursor activo
-                    return;                    // CORTAMOS la función acá
+                    formulario.BringToFront();
+                    formulario.Focus();
+                    return;
                 }
             }
 
-            // 2. Si el código llega acá, es porque no estaba abierta. Creamos una nueva.
             frmAsistencia frm = new frmAsistencia();
             Screen[] pantallas = Screen.AllScreens;
 
@@ -160,19 +148,9 @@ namespace AsuFit.Presentacion
             ResaltarBoton(sender);
         }
 
-        private void btnHistorialPagos_Click(object sender, EventArgs e)
-        {
-            AbrirFormularioHijo(new frmHistorialPagos());
-            ResaltarBoton(sender);
-        }
-
         private void btnGestionGastos_Click(object sender, EventArgs e)
         {
-            // 1. Creamos la "instancia" de tu nuevo formulario de gastos
             frmGestionGastos ventanaGastos = new frmGestionGastos();
-
-            // 2. Llamamos al método que tenés en tu Menú para incrustar el formulario en el panel central
-            // NOTA: Cambiá 'AbrirFormularioHijo' por el nombre real del método que usás en tu sistema
             AbrirFormularioHijo(ventanaGastos);
             ResaltarBoton(sender);
         }
@@ -185,13 +163,13 @@ namespace AsuFit.Presentacion
 
         private void btnGestionPlanes_Click(object sender, EventArgs e)
         {
-            AbrirFormularioHijo(new frmGestionPlanes());
+            AbrirFormularioHijo(new frmGestionPlanes(usuarioActual));
             ResaltarBoton(sender);
         }
 
         private void btnProveedores_Click(object sender, EventArgs e)
         {
-            AbrirFormularioHijo(new frmProveedores());
+            AbrirFormularioHijo(new frmProveedores(usuarioActual));
             ResaltarBoton(sender);
         }
 
@@ -209,7 +187,7 @@ namespace AsuFit.Presentacion
 
         private void btnConfiguración_Click(object sender, EventArgs e)
         {
-            AbrirFormularioHijo(new frmConfiguracion());
+            AbrirFormularioHijo(new frmConfiguracion(usuarioActual));
             ResaltarBoton(sender);
         }
 
@@ -222,7 +200,8 @@ namespace AsuFit.Presentacion
 
             if (resultado == DialogResult.Yes)
             {
-                // --- NUEVO: Buscar y cerrar frmAsistencia si quedó abierta ---
+                AsuFit.Datos.GestorAuditoria.Registrar(usuarioActual.NombreCompleto, "Seguridad", "Cierre de Sesión", "El usuario cerró sesión normalmente.");
+
                 Form ventanaAsistencia = null;
                 foreach (Form formulario in Application.OpenForms)
                 {
@@ -236,7 +215,6 @@ namespace AsuFit.Presentacion
                 {
                     ventanaAsistencia.Close();
                 }
-                // --------------------------------------------------------------
 
                 _cerrandoParaLogOut = true;
                 this.Close();
@@ -249,31 +227,37 @@ namespace AsuFit.Presentacion
         {
             if (!_cerrandoParaLogOut)
             {
-                Application.ExitThread();
+                DialogResult resultado = MessageBox.Show("¿Está seguro de que desea salir del sistema AsuFit? Se perderán los cambios no guardados.",
+                    "Confirmar Salida", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+
+                if (resultado == DialogResult.Yes)
+                {
+                    AsuFit.Datos.GestorAuditoria.Registrar(usuarioActual.NombreCompleto, "Seguridad", "Cierre de Sistema", "El usuario cerró la aplicación usando la 'X' o Alt+F4.");
+                    Application.ExitThread();
+                }
+                else
+                {
+                    e.Cancel = true;
+                }
             }
         }
 
         private void btnGestionProductos_Click(object sender, EventArgs e)
         {
-            // Abrimos la pantalla de gestión adentro del panel central
-            AbrirFormularioHijo(new frmGestionProductos());
-
-            // Iluminamos el botón en el menú (si tenés esta función)
+            AbrirFormularioHijo(new frmGestionProductos(usuarioActual));
             ResaltarBoton(sender);
         }
 
         private void btnIngresoMercaderia_Click(object sender, EventArgs e)
         {
-            // Abre la nueva pantalla de re-stock
-            AbrirFormularioHijo(new frmIngresoMercaderia());
-
-            // Ilumina el botón en el menú
+            AbrirFormularioHijo(new frmIngresoMercaderia(usuarioActual));
             ResaltarBoton(sender);
         }
 
+        // Este es tu botón unificado de Historial (antes llamado btnHistorialVentas)
         private void btnHistorialVentas_Click(object sender, EventArgs e)
         {
-            AbrirFormularioHijo(new frmHistorialVentas());
+            AbrirFormularioHijo(new frmHistorialTransacciones());
             ResaltarBoton(sender);
         }
     }

@@ -1,5 +1,5 @@
-﻿using AsuFit.Datos;     // Necesitamos hablar con la capa de Datos
-using AsuFit.Entidades; // Necesitamos el objeto Socio
+﻿using AsuFit.Datos;
+using AsuFit.Entidades;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -8,16 +8,11 @@ namespace AsuFit.Negocio
 {
     public class SocioNegocio
     {
-        // Instanciamos la clase de Datos para poder enviarle la información
         private SocioDatos objSocioDatos = new SocioDatos();
 
-        // Método que valida las reglas antes de guardar. 
-        // Usamos 'out string mensaje' para devolverle un texto de error al formulario si algo falla.
         public bool RegistrarSocio(Socio objSocio, out string mensaje)
         {
             mensaje = string.Empty;
-
-            // --- 1. REGLAS DE NEGOCIO Y VALIDACIONES ---
 
             if (string.IsNullOrWhiteSpace(objSocio.Cedula))
             {
@@ -37,10 +32,6 @@ namespace AsuFit.Negocio
                 return false;
             }
 
-            // Aquí a futuro podemos agregar la validación de edad usando FechaNacimiento
-            // Ej: Si es menor de 15 años, pedir un campo de "Autorización de Tutor".
-
-            // --- 2. SI PASA LOS FILTROS, ENVIAMOS A LA BASE DE DATOS ---
             bool respuestaBD = objSocioDatos.RegistrarSocio(objSocio);
 
             if (respuestaBD == false)
@@ -51,47 +42,27 @@ namespace AsuFit.Negocio
             return respuestaBD;
         }
 
-        public bool RegistrarSocioYPrimerPago(Socio nuevoSocio, Pago pagoInicial, int diasPlan, out string mensaje)
+        // NUEVO MÉTODO: Solo guarda al socio y nos devuelve su ID para usarlo en la Caja
+        public int InsertarSocioYObtenerId(Socio nuevoSocio, out string mensaje)
         {
             mensaje = string.Empty;
 
-            // 1. Validamos las mismas reglas de siempre para el socio
             if (string.IsNullOrWhiteSpace(nuevoSocio.Cedula) || string.IsNullOrWhiteSpace(nuevoSocio.Nombre))
             {
                 mensaje = "La Cédula y el Nombre son obligatorios.";
-                return false;
+                return 0;
             }
 
-            // 2. Llamamos a Datos para insertar el socio y que nos devuelva el ID numérico
-            int nuevoIdSocio = objSocioDatos.InsertarSocioYObtenerId(nuevoSocio, out mensaje);
-
-            if (nuevoIdSocio > 0)
-            {
-                // 3. ¡Éxito! Le asignamos ese nuevo ID al recibo de pago
-                pagoInicial.IdSocio = nuevoIdSocio;
-
-                // 4. Instanciamos PagoDatos y registramos el ingreso
-                PagoDatos objPagoDatos = new PagoDatos();
-
-                // ¡EL CAMBIO ESTÁ ACÁ! Pasamos un 0 en vez de diasPlan
-                return objPagoDatos.RegistrarCobro(pagoInicial, 0, out mensaje);
-            }
-            else
-            {
-                // Si el ID volvió como 0, significa que falló el registro del socio
-                return false;
-            }
+            return objSocioDatos.InsertarSocioYObtenerId(nuevoSocio, out mensaje);
         }
 
         public bool CambiarEstadoSocio(int idSocio, string nuevoEstado)
         {
-            // Solo le agregamos "Socio" en el medio para que use tu variable
             return objSocioDatos.CambiarEstadoSocio(idSocio, nuevoEstado);
         }
 
-        public DataTable ListarSocios(string estado) // ¡Acá está el secreto! Le decimos que reciba la variable
+        public DataTable ListarSocios(string estado)
         {
-            // Ahora sí conoce qué es "estado" y se lo pasa a la capa de datos
             return objSocioDatos.ListarSocios(estado);
         }
 
@@ -107,8 +78,6 @@ namespace AsuFit.Negocio
 
         public bool ExisteCedula(string cedula, int idSocioActual)
         {
-            // Negocio no hace la conexión a la base de datos, 
-            // solo le pasa la tarea a la capa de Datos.
             return objSocioDatos.ExisteCedula(cedula, idSocioActual);
         }
 

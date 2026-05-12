@@ -57,7 +57,6 @@ namespace AsuFit.Reportes
                 info.Add("------------------------------------------------------------\n");
                 doc.Add(info);
 
-                // --- TABLA DEL TICKET (4 Columnas) ---
                 PdfPTable tabla = new PdfPTable(4);
                 tabla.WidthPercentage = 100;
                 tabla.SetWidths(new float[] { 2.5f, 4.7f, 1.7f, 1.1f });
@@ -90,30 +89,37 @@ namespace AsuFit.Reportes
                 int totalItems = dtAgrupado.Rows.Count;
                 int totalArticulos = 0;
 
+                // --- VARIABLES PARA ACUMULAR EL IVA ---
+                decimal totalExentas = 0;
+                decimal totalGravado5 = 0;
+                decimal totalGravado10 = 0;
+
                 foreach (DataRow fila in dtAgrupado.Rows)
                 {
                     int cantidadItem = Convert.ToInt32(fila["Cantidad"]);
                     decimal precioUnit = Convert.ToDecimal(fila["PrecioUnitario"]);
-                    string subtotal = Convert.ToDecimal(fila["SubTotal"]).ToString("N0");
+                    decimal subtotalFila = Convert.ToDecimal(fila["SubTotal"]);
+                    string subtotalStr = subtotalFila.ToString("N0");
                     totalArticulos += cantidadItem;
 
-                    string ivaProducto = fila.Table.Columns.Contains("IVA") && fila["IVA"] != DBNull.Value ? fila["IVA"].ToString() : "10";
-                    if (!ivaProducto.EndsWith("%"))
-                    {
-                        ivaProducto += "%";
-                    }
+                    // Leemos el IVA real que viene desde la base de datos
+                    int ivaItem = fila.Table.Columns.Contains("PorcentajeIva") && fila["PorcentajeIva"] != DBNull.Value ? Convert.ToInt32(fila["PorcentajeIva"]) : 10;
+
+                    // Acumulamos en su respectiva bolsa
+                    if (ivaItem == 0) totalExentas += subtotalFila;
+                    else if (ivaItem == 5) totalGravado5 += subtotalFila;
+                    else if (ivaItem == 10) totalGravado10 += subtotalFila;
 
                     string codBarra = fila.Table.Columns.Contains("CodigoBarras") && fila["CodigoBarras"] != DBNull.Value ? fila["CodigoBarras"].ToString() : "0";
 
                     // FILA 1
                     tabla.AddCell(new PdfPCell(new Phrase(codBarra, fuenteNormal)) { Border = 0, PaddingTop = 4f });
                     tabla.AddCell(new PdfPCell(new Phrase(fila["Concepto"].ToString(), fuenteNormal)) { Border = 0, PaddingTop = 4f });
-                    tabla.AddCell(new PdfPCell(new Phrase(subtotal, fuenteNormal)) { Border = 0, HorizontalAlignment = Element.ALIGN_RIGHT, PaddingTop = 4f });
-                    tabla.AddCell(new PdfPCell(new Phrase(ivaProducto, fuenteNormal)) { Border = 0, HorizontalAlignment = Element.ALIGN_RIGHT, PaddingTop = 4f });
+                    tabla.AddCell(new PdfPCell(new Phrase(subtotalStr, fuenteNormal)) { Border = 0, HorizontalAlignment = Element.ALIGN_RIGHT, PaddingTop = 4f });
+                    tabla.AddCell(new PdfPCell(new Phrase(ivaItem.ToString() + "%", fuenteNormal)) { Border = 0, HorizontalAlignment = Element.ALIGN_RIGHT, PaddingTop = 4f });
 
                     // FILA 2
                     string textoUnidad = cantidadItem == 1 ? "1 unidad" : $"{cantidadItem} unidades";
-
                     tabla.AddCell(new PdfPCell(new Phrase(textoUnidad, fuenteNormal)) { Border = 0 });
                     tabla.AddCell(new PdfPCell(new Phrase($"x Gs. {precioUnit.ToString("N0")}", fuenteNormal)) { Border = 0 });
                     tabla.AddCell(new PdfPCell(new Phrase("", fuenteNormal)) { Border = 0 });
@@ -123,7 +129,6 @@ namespace AsuFit.Reportes
                 doc.Add(tabla);
                 doc.Add(new Paragraph("------------------------------------------------------------\n", fuenteNormal));
 
-                // --- SECCIÓN DE TOTALES ---
                 PdfPTable tablaTotales = new PdfPTable(2);
                 tablaTotales.WidthPercentage = 100;
                 tablaTotales.SetWidths(new float[] { 6f, 4f });
@@ -143,43 +148,39 @@ namespace AsuFit.Reportes
 
                 doc.Add(new Paragraph("------------------------------------------------------------\n", fuenteNormal));
 
-                // --- SECCIÓN DE LIQUIDACIÓN DE IVA ---
-                decimal iva10 = Math.Round(total / 11);
+                // --- CÁLCULO REAL DEL IVA ---
+                decimal liqIva5 = Math.Round(totalGravado5 / 21);
+                decimal liqIva10 = Math.Round(totalGravado10 / 11);
+                decimal totalIva = liqIva5 + liqIva10;
 
                 PdfPTable tablaIva = new PdfPTable(3);
                 tablaIva.WidthPercentage = 100;
                 tablaIva.SetWidths(new float[] { 4f, 3f, 3f });
 
-                // Encabezados en negrita
                 tablaIva.AddCell(new PdfPCell(new Phrase("SUB TOTALES", fuenteNegrita)) { Border = 0, PaddingBottom = 3f });
                 tablaIva.AddCell(new PdfPCell(new Phrase("LIQUIDACION", fuenteNegrita)) { Border = 0, HorizontalAlignment = Element.ALIGN_RIGHT, PaddingBottom = 3f });
                 tablaIva.AddCell(new PdfPCell(new Phrase("IVA", fuenteNegrita)) { Border = 0, HorizontalAlignment = Element.ALIGN_RIGHT, PaddingBottom = 3f });
 
-                // Exentas
                 tablaIva.AddCell(new PdfPCell(new Phrase("Exentas E   :", fuenteNormal)) { Border = 0 });
-                tablaIva.AddCell(new PdfPCell(new Phrase("0", fuenteNormal)) { Border = 0, HorizontalAlignment = Element.ALIGN_RIGHT });
+                tablaIva.AddCell(new PdfPCell(new Phrase(totalExentas.ToString("N0"), fuenteNormal)) { Border = 0, HorizontalAlignment = Element.ALIGN_RIGHT });
                 tablaIva.AddCell(new PdfPCell(new Phrase("0", fuenteNormal)) { Border = 0, HorizontalAlignment = Element.ALIGN_RIGHT });
 
-                // Gravado 5%
                 tablaIva.AddCell(new PdfPCell(new Phrase("Gravado 5%  :", fuenteNormal)) { Border = 0 });
-                tablaIva.AddCell(new PdfPCell(new Phrase("0", fuenteNormal)) { Border = 0, HorizontalAlignment = Element.ALIGN_RIGHT });
-                tablaIva.AddCell(new PdfPCell(new Phrase("0", fuenteNormal)) { Border = 0, HorizontalAlignment = Element.ALIGN_RIGHT });
+                tablaIva.AddCell(new PdfPCell(new Phrase(totalGravado5.ToString("N0"), fuenteNormal)) { Border = 0, HorizontalAlignment = Element.ALIGN_RIGHT });
+                tablaIva.AddCell(new PdfPCell(new Phrase(liqIva5.ToString("N0"), fuenteNormal)) { Border = 0, HorizontalAlignment = Element.ALIGN_RIGHT });
 
-                // Gravado 10%
                 tablaIva.AddCell(new PdfPCell(new Phrase("Gravado 10% :", fuenteNormal)) { Border = 0 });
-                tablaIva.AddCell(new PdfPCell(new Phrase(total.ToString("N0"), fuenteNormal)) { Border = 0, HorizontalAlignment = Element.ALIGN_RIGHT });
-                tablaIva.AddCell(new PdfPCell(new Phrase(iva10.ToString("N0"), fuenteNormal)) { Border = 0, HorizontalAlignment = Element.ALIGN_RIGHT });
+                tablaIva.AddCell(new PdfPCell(new Phrase(totalGravado10.ToString("N0"), fuenteNormal)) { Border = 0, HorizontalAlignment = Element.ALIGN_RIGHT });
+                tablaIva.AddCell(new PdfPCell(new Phrase(liqIva10.ToString("N0"), fuenteNormal)) { Border = 0, HorizontalAlignment = Element.ALIGN_RIGHT });
 
-                // Total Final IVA
                 tablaIva.AddCell(new PdfPCell(new Phrase(" ", fuenteNormal)) { Border = 0 });
-                tablaIva.AddCell(new PdfPCell(new Phrase("TOTAL:", fuenteNormal)) { Border = 0, HorizontalAlignment = Element.ALIGN_RIGHT });
-                tablaIva.AddCell(new PdfPCell(new Phrase(iva10.ToString("N0"), fuenteNormal)) { Border = 0, HorizontalAlignment = Element.ALIGN_RIGHT });
+                tablaIva.AddCell(new PdfPCell(new Phrase("TOTAL IVA:", fuenteNegrita)) { Border = 0, HorizontalAlignment = Element.ALIGN_RIGHT });
+                tablaIva.AddCell(new PdfPCell(new Phrase(totalIva.ToString("N0"), fuenteNegrita)) { Border = 0, HorizontalAlignment = Element.ALIGN_RIGHT });
 
                 doc.Add(tablaIva);
 
                 Paragraph pie = new Paragraph();
                 pie.Font = fuenteNormal;
-                // Quitado el \n inicial de la siguiente línea
                 pie.Add("------------------------------------------------------------\n");
                 pie.Add($"Total ítems: {totalItems}\n");
                 pie.Add($"Total artículos vendidos: {totalArticulos}\n");
@@ -221,7 +222,6 @@ namespace AsuFit.Reportes
                 Font fuenteTablaNegrita = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 7, BaseColor.BLACK);
                 BaseColor colorBorde = BaseColor.BLACK;
 
-                // --- CABECERA Y DATOS DEL CLIENTE ---
                 PdfPTable tablaCabecera = new PdfPTable(3);
                 tablaCabecera.WidthPercentage = 100;
                 tablaCabecera.SetWidths(new float[] { 65f, 5f, 30f });
@@ -282,7 +282,6 @@ namespace AsuFit.Reportes
                 doc.Add(tablaCliente);
                 doc.Add(new Paragraph("\n"));
 
-                // --- DETALLES DE PRODUCTOS ---
                 PdfPTable tablaDetalles = new PdfPTable(9);
                 tablaDetalles.WidthPercentage = 100;
                 tablaDetalles.SetWidths(new float[] { 7f, 6f, 25f, 11f, 11f, 13f, 10f, 8f, 9f });
@@ -297,12 +296,25 @@ namespace AsuFit.Reportes
                     tablaDetalles.AddCell(celda);
                 }
 
+                // --- VARIABLES DE ACUMULACIÓN ---
+                decimal totalExentas = 0;
+                decimal totalGravado5 = 0;
+                decimal totalGravado10 = 0;
+
                 foreach (DataRow fila in detalles.Rows)
                 {
                     int cantidad = Convert.ToInt32(fila["Cantidad"]);
                     string codigoStr = fila.Table.Columns.Contains("CodigoBarras") && fila["CodigoBarras"] != DBNull.Value ? fila["CodigoBarras"].ToString() : "0";
                     decimal precio = Convert.ToDecimal(fila["PrecioUnitario"]);
                     decimal subtotal = Convert.ToDecimal(fila["SubTotal"]);
+
+                    int ivaItem = fila.Table.Columns.Contains("PorcentajeIva") && fila["PorcentajeIva"] != DBNull.Value ? Convert.ToInt32(fila["PorcentajeIva"]) : 10;
+
+                    string colExenta = "0", colIva5 = "0", colIva10 = "0";
+
+                    if (ivaItem == 0) { colExenta = subtotal.ToString("N0"); totalExentas += subtotal; }
+                    else if (ivaItem == 5) { colIva5 = subtotal.ToString("N0"); totalGravado5 += subtotal; }
+                    else if (ivaItem == 10) { colIva10 = subtotal.ToString("N0"); totalGravado10 += subtotal; }
 
                     int bordesLaterales = Rectangle.LEFT_BORDER | Rectangle.RIGHT_BORDER;
 
@@ -312,23 +324,22 @@ namespace AsuFit.Reportes
                     tablaDetalles.AddCell(new PdfPCell(new Phrase(precio.ToString("N0"), fuenteTabla)) { Border = bordesLaterales, BorderColor = colorBorde, HorizontalAlignment = Element.ALIGN_RIGHT });
                     tablaDetalles.AddCell(new PdfPCell(new Phrase(subtotal.ToString("N0"), fuenteTabla)) { Border = bordesLaterales, BorderColor = colorBorde, HorizontalAlignment = Element.ALIGN_RIGHT });
                     tablaDetalles.AddCell(new PdfPCell(new Phrase("0", fuenteTabla)) { Border = bordesLaterales, BorderColor = colorBorde, HorizontalAlignment = Element.ALIGN_RIGHT });
-                    tablaDetalles.AddCell(new PdfPCell(new Phrase("0", fuenteTabla)) { Border = bordesLaterales, BorderColor = colorBorde, HorizontalAlignment = Element.ALIGN_RIGHT });
-                    tablaDetalles.AddCell(new PdfPCell(new Phrase("0", fuenteTabla)) { Border = bordesLaterales, BorderColor = colorBorde, HorizontalAlignment = Element.ALIGN_RIGHT });
-                    tablaDetalles.AddCell(new PdfPCell(new Phrase(subtotal.ToString("N0"), fuenteTabla)) { Border = bordesLaterales, BorderColor = colorBorde, HorizontalAlignment = Element.ALIGN_RIGHT });
+
+                    // Columnas de IVA separadas
+                    tablaDetalles.AddCell(new PdfPCell(new Phrase(colExenta, fuenteTabla)) { Border = bordesLaterales, BorderColor = colorBorde, HorizontalAlignment = Element.ALIGN_RIGHT });
+                    tablaDetalles.AddCell(new PdfPCell(new Phrase(colIva5, fuenteTabla)) { Border = bordesLaterales, BorderColor = colorBorde, HorizontalAlignment = Element.ALIGN_RIGHT });
+                    tablaDetalles.AddCell(new PdfPCell(new Phrase(colIva10, fuenteTabla)) { Border = bordesLaterales, BorderColor = colorBorde, HorizontalAlignment = Element.ALIGN_RIGHT });
                 }
 
-                // --- FILAS DE TOTALES ---
                 PdfPCell celdaSubTotalTitulo = new PdfPCell(new Phrase("SUBTOTAL", fuenteTablaNegrita));
-                celdaSubTotalTitulo.Colspan = 8;
+                celdaSubTotalTitulo.Colspan = 6;
                 celdaSubTotalTitulo.BorderColor = colorBorde;
                 celdaSubTotalTitulo.BorderWidthTop = 1f;
                 tablaDetalles.AddCell(celdaSubTotalTitulo);
 
-                PdfPCell celdaSubTotalMonto = new PdfPCell(new Phrase(total.ToString("N0"), fuenteTabla));
-                celdaSubTotalMonto.BorderColor = colorBorde;
-                celdaSubTotalMonto.BorderWidthTop = 1f;
-                celdaSubTotalMonto.HorizontalAlignment = Element.ALIGN_RIGHT;
-                tablaDetalles.AddCell(celdaSubTotalMonto);
+                tablaDetalles.AddCell(new PdfPCell(new Phrase(totalExentas.ToString("N0"), fuenteTabla)) { BorderColor = colorBorde, BorderWidthTop = 1f, HorizontalAlignment = Element.ALIGN_RIGHT });
+                tablaDetalles.AddCell(new PdfPCell(new Phrase(totalGravado5.ToString("N0"), fuenteTabla)) { BorderColor = colorBorde, BorderWidthTop = 1f, HorizontalAlignment = Element.ALIGN_RIGHT });
+                tablaDetalles.AddCell(new PdfPCell(new Phrase(totalGravado10.ToString("N0"), fuenteTabla)) { BorderColor = colorBorde, BorderWidthTop = 1f, HorizontalAlignment = Element.ALIGN_RIGHT });
 
                 string montoEnLetras = ConvertirMontoALetras(total);
                 PdfPCell celdaTotalLetras = new PdfPCell(new Phrase($"TOTAL A PAGAR ({montoEnLetras} GUARANÍES)", fuenteTablaNegrita));
@@ -336,7 +347,7 @@ namespace AsuFit.Reportes
                 celdaTotalLetras.BorderColor = colorBorde;
                 tablaDetalles.AddCell(celdaTotalLetras);
 
-                PdfPCell celdaTotalPagarMonto = new PdfPCell(new Phrase(total.ToString("N0"), fuenteTabla));
+                PdfPCell celdaTotalPagarMonto = new PdfPCell(new Phrase(total.ToString("N0"), fuenteTablaNegrita));
                 celdaTotalPagarMonto.BorderColor = colorBorde;
                 celdaTotalPagarMonto.HorizontalAlignment = Element.ALIGN_RIGHT;
                 tablaDetalles.AddCell(celdaTotalPagarMonto);
@@ -364,15 +375,17 @@ namespace AsuFit.Reportes
                     tablaDetalles.AddCell(celdaVueltoMon);
                 }
 
-                decimal iva10 = Math.Round(total / 11);
-                PdfPCell celdaIva = new PdfPCell(new Phrase($"LIQUIDACIÓN DEL IVA                (5%): 0                (10%): {iva10.ToString("N0")}                TOTAL IVA: {iva10.ToString("N0")}", fuenteTablaNegrita));
+                decimal liqIva5 = Math.Round(totalGravado5 / 21);
+                decimal liqIva10 = Math.Round(totalGravado10 / 11);
+                decimal totalIva = liqIva5 + liqIva10;
+
+                PdfPCell celdaIva = new PdfPCell(new Phrase($"LIQUIDACIÓN DEL IVA                (5%): {liqIva5.ToString("N0")}                (10%): {liqIva10.ToString("N0")}                TOTAL IVA: {totalIva.ToString("N0")}", fuenteTablaNegrita));
                 celdaIva.Colspan = 9;
                 celdaIva.BorderColor = colorBorde;
                 celdaIva.Padding = 5f;
                 tablaDetalles.AddCell(celdaIva);
 
                 doc.Add(tablaDetalles);
-
                 doc.Close();
                 Process.Start(rutaArchivo);
             }
@@ -446,6 +459,110 @@ namespace AsuFit.Reportes
             else num2Text = "NUMERO MUY GRANDE";
 
             return num2Text.Replace("  ", " ");
+        }
+
+        // ========================================================================
+        // 4. MÉTODO PARA EL TICKET DE CIERRE DE CAJA (ARQUEO)
+        // ========================================================================
+        public string GenerarTicketArqueo(int idTurno, string cajero, DateTime fechaApertura, decimal trans, decimal efvo, decimal fondo, decimal gastos, decimal esperado, decimal contado, decimal diferencia)
+        {
+            Rectangle tamañoPapel = new Rectangle(226f, 800f);
+            Document doc = new Document(tamañoPapel, 10f, 10f, 10f, 10f);
+
+            string rutaDescargas = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads");
+            string rutaArchivo = Path.Combine(rutaDescargas, $"Ticket_Arqueo_Turno_{idTurno}.pdf");
+
+            try
+            {
+                PdfWriter.GetInstance(doc, new FileStream(rutaArchivo, FileMode.Create));
+                doc.Open();
+
+                Font fuenteTitulo = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 10);
+                Font fuenteNormal = FontFactory.GetFont(FontFactory.HELVETICA, 8);
+                Font fuenteNegrita = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 8);
+
+                Paragraph cabeceraGym = new Paragraph("ASUFIT GYM\nREPORTE DE ARQUEO DE CAJA\n\n", fuenteTitulo);
+                cabeceraGym.Alignment = Element.ALIGN_CENTER;
+                doc.Add(cabeceraGym);
+
+                Paragraph info = new Paragraph();
+                info.Font = fuenteNormal;
+                info.Add($"Turno Nro.: {idTurno}\n");
+                // --- AQUÍ ESTÁ LA FECHA DE APERTURA ---
+                info.Add($"Apertura: {fechaApertura.ToString("dd'/'MM'/'yyyy HH:mm")}\n");
+                info.Add($"Cierre: {DateTime.Now.ToString("dd'/'MM'/'yyyy HH:mm")}\n");
+                info.Add($"Cajero: {cajero}\n");
+                info.Add("--------------------------------------------------\n");
+                doc.Add(info);
+
+                // --- INGRESOS ---
+                PdfPTable tIngresos = new PdfPTable(2);
+                tIngresos.WidthPercentage = 100;
+                tIngresos.SetWidths(new float[] { 6f, 4f });
+                tIngresos.AddCell(new PdfPCell(new Phrase("INGRESOS DEL TURNO", fuenteNegrita)) { Border = 0, Colspan = 2, PaddingBottom = 5f });
+
+                tIngresos.AddCell(new PdfPCell(new Phrase("Transferencias:", fuenteNormal)) { Border = 0 });
+                tIngresos.AddCell(new PdfPCell(new Phrase("Gs. " + trans.ToString("N0"), fuenteNormal)) { Border = 0, HorizontalAlignment = Element.ALIGN_RIGHT });
+
+                tIngresos.AddCell(new PdfPCell(new Phrase("Efectivo:", fuenteNormal)) { Border = 0 });
+                tIngresos.AddCell(new PdfPCell(new Phrase("Gs. " + efvo.ToString("N0"), fuenteNormal)) { Border = 0, HorizontalAlignment = Element.ALIGN_RIGHT });
+
+                tIngresos.AddCell(new PdfPCell(new Phrase("TOTAL INGRESOS:", fuenteNegrita)) { Border = Rectangle.TOP_BORDER, PaddingTop = 3f });
+                tIngresos.AddCell(new PdfPCell(new Phrase("Gs. " + (trans + efvo).ToString("N0"), fuenteNegrita)) { Border = Rectangle.TOP_BORDER, HorizontalAlignment = Element.ALIGN_RIGHT, PaddingTop = 3f });
+                doc.Add(tIngresos);
+
+                doc.Add(new Paragraph("--------------------------------------------------\n", fuenteNormal));
+
+                // --- FLUJO FÍSICO DE CAJA ---
+                PdfPTable tFlujo = new PdfPTable(2);
+                tFlujo.WidthPercentage = 100;
+                tFlujo.SetWidths(new float[] { 6.5f, 3.5f });
+                tFlujo.AddCell(new PdfPCell(new Phrase("FLUJO DE EFECTIVO (MESA)", fuenteNegrita)) { Border = 0, Colspan = 2, PaddingBottom = 5f });
+
+                tFlujo.AddCell(new PdfPCell(new Phrase("Fondo Inicial:", fuenteNormal)) { Border = 0 });
+                tFlujo.AddCell(new PdfPCell(new Phrase("Gs. " + fondo.ToString("N0"), fuenteNormal)) { Border = 0, HorizontalAlignment = Element.ALIGN_RIGHT });
+
+                tFlujo.AddCell(new PdfPCell(new Phrase("(+) Ventas en Efvo:", fuenteNormal)) { Border = 0 });
+                tFlujo.AddCell(new PdfPCell(new Phrase("Gs. " + efvo.ToString("N0"), fuenteNormal)) { Border = 0, HorizontalAlignment = Element.ALIGN_RIGHT });
+
+                tFlujo.AddCell(new PdfPCell(new Phrase("(-) Gastos en Efvo:", fuenteNormal)) { Border = 0 });
+                tFlujo.AddCell(new PdfPCell(new Phrase("Gs. " + gastos.ToString("N0"), fuenteNormal)) { Border = 0, HorizontalAlignment = Element.ALIGN_RIGHT });
+
+                tFlujo.AddCell(new PdfPCell(new Phrase("EFECTIVO ESPERADO:", fuenteNegrita)) { Border = Rectangle.TOP_BORDER, PaddingTop = 3f });
+                tFlujo.AddCell(new PdfPCell(new Phrase("Gs. " + esperado.ToString("N0"), fuenteNegrita)) { Border = Rectangle.TOP_BORDER, HorizontalAlignment = Element.ALIGN_RIGHT, PaddingTop = 3f });
+                doc.Add(tFlujo);
+
+                doc.Add(new Paragraph("--------------------------------------------------\n", fuenteNormal));
+
+                // --- DESCUADRE ---
+                PdfPTable tDescuadre = new PdfPTable(2);
+                tDescuadre.WidthPercentage = 100;
+                tDescuadre.SetWidths(new float[] { 6f, 4f });
+
+                tDescuadre.AddCell(new PdfPCell(new Phrase("EFECTIVO CONTADO:", fuenteNegrita)) { Border = 0 });
+                tDescuadre.AddCell(new PdfPCell(new Phrase("Gs. " + contado.ToString("N0"), fuenteNegrita)) { Border = 0, HorizontalAlignment = Element.ALIGN_RIGHT });
+
+                tDescuadre.AddCell(new PdfPCell(new Phrase("DIFERENCIA:", fuenteNegrita)) { Border = 0, PaddingTop = 5f });
+                tDescuadre.AddCell(new PdfPCell(new Phrase("Gs. " + diferencia.ToString("N0"), fuenteNegrita)) { Border = 0, HorizontalAlignment = Element.ALIGN_RIGHT, PaddingTop = 5f });
+                doc.Add(tDescuadre);
+
+                // --- FIRMAS ---
+                Paragraph firmas = new Paragraph("\n\n\n___________________________\nFirma del Cajero\n", fuenteNormal);
+                firmas.Alignment = Element.ALIGN_CENTER;
+                doc.Add(firmas);
+
+                doc.Close();
+
+                // Abrimos el PDF generado automáticamente
+                Process.Start(rutaArchivo);
+
+                // Retornamos la ruta para que el formulario se la pase al correo
+                return rutaArchivo;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error al generar el PDF de Arqueo: " + ex.Message);
+            }
         }
     }
 }

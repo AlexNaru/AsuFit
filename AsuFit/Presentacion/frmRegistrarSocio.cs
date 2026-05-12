@@ -22,7 +22,6 @@ namespace AsuFit.Presentacion
             this.socioEdicion = socioParaEditar;
 
             cmbPlanes.Enabled = false;
-            cmbMetodoPago.Enabled = false;
 
             btnGuardar.Text = "ACTUALIZAR DATOS";
             btnGuardar.Size = new System.Drawing.Size(130, 30);
@@ -161,10 +160,7 @@ namespace AsuFit.Presentacion
             nuevoSocio.Nombre = txtNombre.Text;
             nuevoSocio.Apellido = txtApellido.Text;
             nuevoSocio.Email = string.IsNullOrWhiteSpace(txtEmail.Text) ? "No especificado" : txtEmail.Text;
-
-            // --- AQUÍ GUARDAMOS EL RUC (SI ESTÁ VACÍO MANDA UN TEXTO VACÍO) ---
             nuevoSocio.Ruc = string.IsNullOrWhiteSpace(txtRuc.Text) ? "" : txtRuc.Text;
-
             nuevoSocio.Telefono = txtTelefono.Text;
             nuevoSocio.FechaNacimiento = dtpFechaNacimiento.Value;
             nuevoSocio.NombreContactoEmergencia = txtContactoEmergencia.Text;
@@ -178,8 +174,7 @@ namespace AsuFit.Presentacion
 
             if (planInfo == null)
             {
-                MessageBox.Show("No se pudo encontrar la información del plan en la base de datos.",
-                                "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("No se pudo encontrar la información del plan.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
@@ -191,42 +186,40 @@ namespace AsuFit.Presentacion
                 nuevoSocio.IdSocio = socioEdicion.IdSocio;
                 if (negocioSocio.EditarSocio(nuevoSocio))
                 {
-                    MessageBox.Show("Los datos del socio se actualizaron correctamente.",
-                                    "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MessageBox.Show("Los datos se actualizaron correctamente.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     this.Close();
                 }
             }
             else
             {
-                if (cmbMetodoPago.SelectedIndex == -1)
-                {
-                    MessageBox.Show("Para un socio nuevo, debes seleccionar el Método de Pago para asentar el ingreso.",
-                                    "Atención", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    cmbMetodoPago.Focus();
-                    return;
-                }
-
-                Pago objPago = new Pago()
-                {
-                    Monto = planInfo.Precio,
-                    MetodoPago = cmbMetodoPago.Text,
-                    Concepto = "Inscripción y " + planInfo.NombrePlan
-                };
-
                 string mensajeError = "";
-                bool exito = negocioSocio.RegistrarSocioYPrimerPago(nuevoSocio, objPago, planInfo.DuracionDias, out mensajeError);
+                int nuevoIdSocio = negocioSocio.InsertarSocioYObtenerId(nuevoSocio, out mensajeError);
 
-                if (exito)
+                if (nuevoIdSocio > 0)
                 {
-                    MessageBox.Show("¡Socio registrado y primer pago asentado correctamente!",
-                                    "Operación Exitosa", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    if (this.Modal) this.Close();
+                    // --- MAGIA: Escondemos los DÍAS y el ID DEL NUEVO SOCIO ---
+                    string codigoPlanArtificial = $"PLAN-{planInfo.DuracionDias}-{nuevoIdSocio}";
+                    CarritoGlobal.AgregarItem(0, codigoPlanArtificial, "Inscripción y " + planInfo.NombrePlan, 1, planInfo.Precio, 10);
+
+                    if (CarritoGlobal.IdSocioPagara == null) CarritoGlobal.IdSocioPagara = nuevoIdSocio;
+
+                    frmCajaCobro cajaAbierta = Application.OpenForms["frmCajaCobro"] as frmCajaCobro;
+                    if (cajaAbierta != null)
+                    {
+                        cajaAbierta.WindowState = FormWindowState.Normal;
+                        cajaAbierta.BringToFront();
+                        cajaAbierta.ActualizarPantallaDesdeCarrito();
+                    }
                     else
-                        LimpiarCampos();
+                    {
+                        frmCajaCobro nuevaCaja = new frmCajaCobro(null);
+                        nuevaCaja.Show();
+                    }
+                    LimpiarCampos();
                 }
                 else
                 {
-                    MessageBox.Show("Error al registrar: " + mensajeError, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("Error al registrar el socio: " + mensajeError, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
         }

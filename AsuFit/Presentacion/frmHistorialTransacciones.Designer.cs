@@ -1,6 +1,6 @@
 ﻿namespace AsuFit.Presentacion
 {
-    partial class frmHistorialVentas
+    partial class frmHistorialTransacciones
     {
         /// <summary>
         /// Required designer variable.
@@ -30,9 +30,7 @@
         {
             this.label1 = new System.Windows.Forms.Label();
             this.lblTotalRecaudado = new System.Windows.Forms.Label();
-            this.label5 = new System.Windows.Forms.Label();
             this.lblCantidadVentas = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.dgvVentas = new System.Windows.Forms.DataGridView();
@@ -40,58 +38,42 @@
             this.dtpHasta = new System.Windows.Forms.DateTimePicker();
             this.dtpDesde = new System.Windows.Forms.DateTimePicker();
             this.btnVerDetalle = new System.Windows.Forms.Button();
+            this.cmbFiltroTipo = new System.Windows.Forms.ComboBox();
+            this.label6 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dgvVentas)).BeginInit();
             this.SuspendLayout();
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(220, 31);
+            this.label1.Location = new System.Drawing.Point(12, 9);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(250, 20);
+            this.label1.Size = new System.Drawing.Size(323, 20);
             this.label1.TabIndex = 0;
-            this.label1.Text = "HISTORIAL DE VENTAS Y CAJA";
+            this.label1.Text = "HISTORIAL DE TRANSACCIONES Y CAJA";
             // 
             // lblTotalRecaudado
             // 
             this.lblTotalRecaudado.AutoSize = true;
-            this.lblTotalRecaudado.Location = new System.Drawing.Point(497, 509);
+            this.lblTotalRecaudado.Location = new System.Drawing.Point(312, 334);
             this.lblTotalRecaudado.Name = "lblTotalRecaudado";
-            this.lblTotalRecaudado.Size = new System.Drawing.Size(18, 20);
-            this.lblTotalRecaudado.TabIndex = 19;
-            this.lblTotalRecaudado.Text = "0";
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(320, 509);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(171, 20);
-            this.label5.TabIndex = 18;
-            this.label5.Text = "TOTAL RECAUDADO:";
+            this.lblTotalRecaudado.Size = new System.Drawing.Size(171, 20);
+            this.lblTotalRecaudado.TabIndex = 18;
+            this.lblTotalRecaudado.Text = "TOTAL RECAUDADO:";
             // 
             // lblCantidadVentas
             // 
             this.lblCantidadVentas.AutoSize = true;
-            this.lblCantidadVentas.Location = new System.Drawing.Point(207, 509);
+            this.lblCantidadVentas.Location = new System.Drawing.Point(12, 334);
             this.lblCantidadVentas.Name = "lblCantidadVentas";
-            this.lblCantidadVentas.Size = new System.Drawing.Size(18, 20);
-            this.lblCantidadVentas.TabIndex = 17;
-            this.lblCantidadVentas.Text = "0";
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(42, 509);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(159, 20);
-            this.label3.TabIndex = 16;
-            this.label3.Text = "Ventas Encontradas:";
+            this.lblCantidadVentas.Size = new System.Drawing.Size(211, 20);
+            this.lblCantidadVentas.TabIndex = 16;
+            this.lblCantidadVentas.Text = "Transacciones Encontradas:";
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(414, 92);
+            this.label2.Location = new System.Drawing.Point(381, 58);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(56, 20);
             this.label2.TabIndex = 15;
@@ -100,7 +82,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(45, 91);
+            this.label4.Location = new System.Drawing.Point(12, 57);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(60, 20);
             this.label4.TabIndex = 14;
@@ -112,7 +94,7 @@
             this.dgvVentas.AllowUserToDeleteRows = false;
             this.dgvVentas.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.dgvVentas.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvVentas.Location = new System.Drawing.Point(49, 321);
+            this.dgvVentas.Location = new System.Drawing.Point(16, 158);
             this.dgvVentas.Name = "dgvVentas";
             this.dgvVentas.ReadOnly = true;
             this.dgvVentas.RowHeadersVisible = false;
@@ -124,16 +106,16 @@
             // 
             // txtBuscar
             // 
-            this.txtBuscar.Location = new System.Drawing.Point(49, 207);
+            this.txtBuscar.Location = new System.Drawing.Point(16, 96);
             this.txtBuscar.Name = "txtBuscar";
-            this.txtBuscar.Size = new System.Drawing.Size(575, 26);
+            this.txtBuscar.Size = new System.Drawing.Size(308, 26);
             this.txtBuscar.TabIndex = 12;
             this.txtBuscar.TextChanged += new System.EventHandler(this.txtBuscar_TextChanged);
             // 
             // dtpHasta
             // 
             this.dtpHasta.Format = System.Windows.Forms.DateTimePickerFormat.Short;
-            this.dtpHasta.Location = new System.Drawing.Point(471, 86);
+            this.dtpHasta.Location = new System.Drawing.Point(438, 52);
             this.dtpHasta.Name = "dtpHasta";
             this.dtpHasta.Size = new System.Drawing.Size(153, 26);
             this.dtpHasta.TabIndex = 11;
@@ -142,7 +124,7 @@
             // dtpDesde
             // 
             this.dtpDesde.Format = System.Windows.Forms.DateTimePickerFormat.Short;
-            this.dtpDesde.Location = new System.Drawing.Point(102, 86);
+            this.dtpDesde.Location = new System.Drawing.Point(69, 52);
             this.dtpDesde.Name = "dtpDesde";
             this.dtpDesde.Size = new System.Drawing.Size(155, 26);
             this.dtpDesde.TabIndex = 10;
@@ -150,7 +132,7 @@
             // 
             // btnVerDetalle
             // 
-            this.btnVerDetalle.Location = new System.Drawing.Point(211, 567);
+            this.btnVerDetalle.Location = new System.Drawing.Point(184, 407);
             this.btnVerDetalle.Name = "btnVerDetalle";
             this.btnVerDetalle.Size = new System.Drawing.Size(240, 38);
             this.btnVerDetalle.TabIndex = 20;
@@ -158,16 +140,40 @@
             this.btnVerDetalle.UseVisualStyleBackColor = true;
             this.btnVerDetalle.Click += new System.EventHandler(this.btnVerDetalle_Click);
             // 
-            // frmHistorialVentas
+            // cmbFiltroTipo
+            // 
+            this.cmbFiltroTipo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbFiltroTipo.FormattingEnabled = true;
+            this.cmbFiltroTipo.Items.AddRange(new object[] {
+            "Todos",
+            "Solo Productos",
+            "Solo Mensualidades",
+            "Mixtos"});
+            this.cmbFiltroTipo.Location = new System.Drawing.Point(438, 96);
+            this.cmbFiltroTipo.Name = "cmbFiltroTipo";
+            this.cmbFiltroTipo.Size = new System.Drawing.Size(153, 28);
+            this.cmbFiltroTipo.TabIndex = 21;
+            this.cmbFiltroTipo.SelectedIndexChanged += new System.EventHandler(this.cmbFiltroTipo_SelectedIndexChanged);
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(381, 99);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(43, 20);
+            this.label6.TabIndex = 22;
+            this.label6.Text = "Tipo:";
+            // 
+            // frmHistorialTransacciones
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(692, 617);
+            this.ClientSize = new System.Drawing.Size(613, 469);
+            this.Controls.Add(this.label6);
+            this.Controls.Add(this.cmbFiltroTipo);
             this.Controls.Add(this.btnVerDetalle);
             this.Controls.Add(this.lblTotalRecaudado);
-            this.Controls.Add(this.label5);
             this.Controls.Add(this.lblCantidadVentas);
-            this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.dgvVentas);
@@ -175,9 +181,9 @@
             this.Controls.Add(this.dtpHasta);
             this.Controls.Add(this.dtpDesde);
             this.Controls.Add(this.label1);
-            this.Name = "frmHistorialVentas";
+            this.Name = "frmHistorialTransacciones";
             this.Text = "frmHistorialVentas";
-            this.Load += new System.EventHandler(this.frmHistorialVentas_Load);
+            this.Load += new System.EventHandler(this.frmHistorialTransacciones_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dgvVentas)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -188,9 +194,7 @@
 
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label lblTotalRecaudado;
-        private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label lblCantidadVentas;
-        private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.DataGridView dgvVentas;
@@ -198,5 +202,7 @@
         private System.Windows.Forms.DateTimePicker dtpHasta;
         private System.Windows.Forms.DateTimePicker dtpDesde;
         private System.Windows.Forms.Button btnVerDetalle;
+        private System.Windows.Forms.ComboBox cmbFiltroTipo;
+        private System.Windows.Forms.Label label6;
     }
 }

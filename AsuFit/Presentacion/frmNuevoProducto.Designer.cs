@@ -1,6 +1,6 @@
 ﻿namespace AsuFit.Presentacion
 {
-    partial class frmGestionProductos
+    partial class frmNuevoProducto
     {
         /// <summary>
         /// Required designer variable.
@@ -41,23 +41,16 @@
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.btnGuardar = new System.Windows.Forms.Button();
-            this.btnLimpiar = new System.Windows.Forms.Button();
+            this.btnCancelar = new System.Windows.Forms.Button();
             this.txtStock = new System.Windows.Forms.TextBox();
             this.txtPrecio = new System.Windows.Forms.TextBox();
             this.txtNombre = new System.Windows.Forms.TextBox();
             this.cmbCategoria = new System.Windows.Forms.ComboBox();
-            this.txtCodigo = new System.Windows.Forms.TextBox();
+            this.txtCodigoBarras = new System.Windows.Forms.TextBox();
             this.btnSubirFoto = new System.Windows.Forms.Button();
-            this.picFoto = new System.Windows.Forms.PictureBox();
-            this.panel2 = new System.Windows.Forms.Panel();
-            this.chkMostrarInactivos = new System.Windows.Forms.CheckBox();
-            this.btnCambiarEstado = new System.Windows.Forms.Button();
-            this.txtBuscarProducto = new System.Windows.Forms.TextBox();
-            this.dgvProductos = new System.Windows.Forms.DataGridView();
+            this.picProducto = new System.Windows.Forms.PictureBox();
             this.panel1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.picFoto)).BeginInit();
-            this.panel2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dgvProductos)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.picProducto)).BeginInit();
             this.SuspendLayout();
             // 
             // panel1
@@ -75,19 +68,18 @@
             this.panel1.Controls.Add(this.label2);
             this.panel1.Controls.Add(this.label1);
             this.panel1.Controls.Add(this.btnGuardar);
-            this.panel1.Controls.Add(this.btnLimpiar);
+            this.panel1.Controls.Add(this.btnCancelar);
             this.panel1.Controls.Add(this.txtStock);
             this.panel1.Controls.Add(this.txtPrecio);
             this.panel1.Controls.Add(this.txtNombre);
             this.panel1.Controls.Add(this.cmbCategoria);
-            this.panel1.Controls.Add(this.txtCodigo);
+            this.panel1.Controls.Add(this.txtCodigoBarras);
             this.panel1.Controls.Add(this.btnSubirFoto);
-            this.panel1.Controls.Add(this.picFoto);
-            this.panel1.Location = new System.Drawing.Point(23, 12);
+            this.panel1.Controls.Add(this.picProducto);
+            this.panel1.Location = new System.Drawing.Point(24, 23);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(347, 699);
-            this.panel1.TabIndex = 22;
-            this.panel1.Click += new System.EventHandler(this.frmGestionProductos_Click);
+            this.panel1.TabIndex = 23;
             // 
             // label8
             // 
@@ -95,7 +87,7 @@
             this.label8.Location = new System.Drawing.Point(206, 377);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(52, 20);
-            this.label8.TabIndex = 43;
+            this.label8.TabIndex = 41;
             this.label8.Text = "Iva %:";
             // 
             // cmbIva
@@ -109,7 +101,7 @@
             this.cmbIva.Location = new System.Drawing.Point(210, 400);
             this.cmbIva.Name = "cmbIva";
             this.cmbIva.Size = new System.Drawing.Size(121, 28);
-            this.cmbIva.TabIndex = 42;
+            this.cmbIva.TabIndex = 40;
             // 
             // label7
             // 
@@ -141,8 +133,10 @@
             // 
             // txtId
             // 
+            this.txtId.Enabled = false;
             this.txtId.Location = new System.Drawing.Point(210, 247);
             this.txtId.Name = "txtId";
+            this.txtId.ReadOnly = true;
             this.txtId.Size = new System.Drawing.Size(100, 26);
             this.txtId.TabIndex = 36;
             this.txtId.Visible = false;
@@ -152,9 +146,9 @@
             this.label5.AutoSize = true;
             this.label5.Location = new System.Drawing.Point(12, 524);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(103, 20);
+            this.label5.Size = new System.Drawing.Size(98, 20);
             this.label5.TabIndex = 35;
-            this.label5.Text = "Stock Actual:";
+            this.label5.Text = "Stock Inicial:";
             // 
             // label4
             // 
@@ -194,7 +188,7 @@
             // 
             // btnGuardar
             // 
-            this.btnGuardar.Location = new System.Drawing.Point(191, 605);
+            this.btnGuardar.Location = new System.Drawing.Point(191, 604);
             this.btnGuardar.Name = "btnGuardar";
             this.btnGuardar.Size = new System.Drawing.Size(140, 39);
             this.btnGuardar.TabIndex = 30;
@@ -202,24 +196,23 @@
             this.btnGuardar.UseVisualStyleBackColor = true;
             this.btnGuardar.Click += new System.EventHandler(this.btnGuardar_Click);
             // 
-            // btnLimpiar
+            // btnCancelar
             // 
-            this.btnLimpiar.Location = new System.Drawing.Point(16, 605);
-            this.btnLimpiar.Name = "btnLimpiar";
-            this.btnLimpiar.Size = new System.Drawing.Size(140, 39);
-            this.btnLimpiar.TabIndex = 29;
-            this.btnLimpiar.Text = "LIMPIAR";
-            this.btnLimpiar.UseVisualStyleBackColor = true;
-            this.btnLimpiar.Click += new System.EventHandler(this.btnLimpiar_Click);
+            this.btnCancelar.Location = new System.Drawing.Point(16, 604);
+            this.btnCancelar.Name = "btnCancelar";
+            this.btnCancelar.Size = new System.Drawing.Size(140, 39);
+            this.btnCancelar.TabIndex = 29;
+            this.btnCancelar.Text = "CANCELAR";
+            this.btnCancelar.UseVisualStyleBackColor = true;
+            this.btnCancelar.Click += new System.EventHandler(this.btnCancelar_Click);
             // 
             // txtStock
             // 
-            this.txtStock.Enabled = false;
             this.txtStock.Location = new System.Drawing.Point(16, 547);
             this.txtStock.Name = "txtStock";
-            this.txtStock.ReadOnly = true;
             this.txtStock.Size = new System.Drawing.Size(100, 26);
             this.txtStock.TabIndex = 28;
+            this.txtStock.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtStock_KeyPress);
             // 
             // txtPrecio
             // 
@@ -227,6 +220,7 @@
             this.txtPrecio.Name = "txtPrecio";
             this.txtPrecio.Size = new System.Drawing.Size(100, 26);
             this.txtPrecio.TabIndex = 27;
+            this.txtPrecio.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtPrecio_KeyPress);
             // 
             // txtNombre
             // 
@@ -237,6 +231,10 @@
             // 
             // cmbCategoria
             // 
+            this.cmbCategoria.AutoCompleteCustomSource.AddRange(new string[] {
+            "Suplementos",
+            "Bebidas",
+            "Snacks"});
             this.cmbCategoria.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbCategoria.FormattingEnabled = true;
             this.cmbCategoria.Items.AddRange(new object[] {
@@ -248,12 +246,12 @@
             this.cmbCategoria.Size = new System.Drawing.Size(121, 28);
             this.cmbCategoria.TabIndex = 25;
             // 
-            // txtCodigo
+            // txtCodigoBarras
             // 
-            this.txtCodigo.Location = new System.Drawing.Point(16, 247);
-            this.txtCodigo.Name = "txtCodigo";
-            this.txtCodigo.Size = new System.Drawing.Size(100, 26);
-            this.txtCodigo.TabIndex = 24;
+            this.txtCodigoBarras.Location = new System.Drawing.Point(16, 247);
+            this.txtCodigoBarras.Name = "txtCodigoBarras";
+            this.txtCodigoBarras.Size = new System.Drawing.Size(100, 26);
+            this.txtCodigoBarras.TabIndex = 24;
             // 
             // btnSubirFoto
             // 
@@ -265,95 +263,35 @@
             this.btnSubirFoto.UseVisualStyleBackColor = true;
             this.btnSubirFoto.Click += new System.EventHandler(this.btnSubirFoto_Click);
             // 
-            // picFoto
+            // picProducto
             // 
-            this.picFoto.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.picFoto.Location = new System.Drawing.Point(16, 26);
-            this.picFoto.Name = "picFoto";
-            this.picFoto.Size = new System.Drawing.Size(140, 110);
-            this.picFoto.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.picFoto.TabIndex = 22;
-            this.picFoto.TabStop = false;
+            this.picProducto.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.picProducto.Location = new System.Drawing.Point(16, 26);
+            this.picProducto.Name = "picProducto";
+            this.picProducto.Size = new System.Drawing.Size(140, 110);
+            this.picProducto.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.picProducto.TabIndex = 22;
+            this.picProducto.TabStop = false;
             // 
-            // panel2
-            // 
-            this.panel2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel2.Controls.Add(this.chkMostrarInactivos);
-            this.panel2.Controls.Add(this.btnCambiarEstado);
-            this.panel2.Controls.Add(this.txtBuscarProducto);
-            this.panel2.Controls.Add(this.dgvProductos);
-            this.panel2.Location = new System.Drawing.Point(385, 12);
-            this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(827, 699);
-            this.panel2.TabIndex = 23;
-            this.panel2.Click += new System.EventHandler(this.frmGestionProductos_Click);
-            // 
-            // chkMostrarInactivos
-            // 
-            this.chkMostrarInactivos.AutoSize = true;
-            this.chkMostrarInactivos.Location = new System.Drawing.Point(556, 28);
-            this.chkMostrarInactivos.Name = "chkMostrarInactivos";
-            this.chkMostrarInactivos.Size = new System.Drawing.Size(232, 24);
-            this.chkMostrarInactivos.TabIndex = 23;
-            this.chkMostrarInactivos.Text = "Mostrar Productos Inactivos";
-            this.chkMostrarInactivos.UseVisualStyleBackColor = true;
-            this.chkMostrarInactivos.CheckedChanged += new System.EventHandler(this.chkMostrarInactivos_CheckedChanged);
-            // 
-            // btnCambiarEstado
-            // 
-            this.btnCambiarEstado.Location = new System.Drawing.Point(347, 605);
-            this.btnCambiarEstado.Name = "btnCambiarEstado";
-            this.btnCambiarEstado.Size = new System.Drawing.Size(180, 39);
-            this.btnCambiarEstado.TabIndex = 22;
-            this.btnCambiarEstado.Text = "CAMBIAR ESTADO";
-            this.btnCambiarEstado.UseVisualStyleBackColor = true;
-            this.btnCambiarEstado.Click += new System.EventHandler(this.btnCambiarEstado_Click);
-            // 
-            // txtBuscarProducto
-            // 
-            this.txtBuscarProducto.Location = new System.Drawing.Point(37, 26);
-            this.txtBuscarProducto.Name = "txtBuscarProducto";
-            this.txtBuscarProducto.Size = new System.Drawing.Size(490, 26);
-            this.txtBuscarProducto.TabIndex = 21;
-            this.txtBuscarProducto.Click += new System.EventHandler(this.txtBuscarProducto_TextChanged);
-            this.txtBuscarProducto.TextChanged += new System.EventHandler(this.txtBuscarProducto_TextChanged);
-            // 
-            // dgvProductos
-            // 
-            this.dgvProductos.AllowUserToResizeColumns = false;
-            this.dgvProductos.AllowUserToResizeRows = false;
-            this.dgvProductos.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvProductos.Location = new System.Drawing.Point(37, 69);
-            this.dgvProductos.Name = "dgvProductos";
-            this.dgvProductos.RowHeadersWidth = 62;
-            this.dgvProductos.RowTemplate.Height = 28;
-            this.dgvProductos.Size = new System.Drawing.Size(751, 404);
-            this.dgvProductos.TabIndex = 20;
-            this.dgvProductos.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvProductos_CellClick);
-            this.dgvProductos.DataBindingComplete += new System.Windows.Forms.DataGridViewBindingCompleteEventHandler(this.dgvProductos_DataBindingComplete);
-            // 
-            // frmGestionProductos
+            // frmNuevoProducto
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1224, 734);
-            this.Controls.Add(this.panel2);
+            this.ClientSize = new System.Drawing.Size(395, 733);
             this.Controls.Add(this.panel1);
-            this.Name = "frmGestionProductos";
-            this.Text = "frmGestionProductos";
-            this.Load += new System.EventHandler(this.frmGestionProductos_Load);
-            this.Click += new System.EventHandler(this.frmGestionProductos_Click);
+            this.Name = "frmNuevoProducto";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+            this.Text = "frmNuevoProducto";
+            this.Load += new System.EventHandler(this.frmNuevoProducto_Load);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.picFoto)).EndInit();
-            this.panel2.ResumeLayout(false);
-            this.panel2.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dgvProductos)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.picProducto)).EndInit();
             this.ResumeLayout(false);
 
         }
 
         #endregion
+
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.ComboBox cmbProveedor;
@@ -365,19 +303,14 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button btnGuardar;
-        private System.Windows.Forms.Button btnLimpiar;
+        private System.Windows.Forms.Button btnCancelar;
         private System.Windows.Forms.TextBox txtStock;
         private System.Windows.Forms.TextBox txtPrecio;
         private System.Windows.Forms.TextBox txtNombre;
         private System.Windows.Forms.ComboBox cmbCategoria;
-        private System.Windows.Forms.TextBox txtCodigo;
+        private System.Windows.Forms.TextBox txtCodigoBarras;
         private System.Windows.Forms.Button btnSubirFoto;
-        private System.Windows.Forms.PictureBox picFoto;
-        private System.Windows.Forms.Panel panel2;
-        private System.Windows.Forms.CheckBox chkMostrarInactivos;
-        private System.Windows.Forms.Button btnCambiarEstado;
-        private System.Windows.Forms.TextBox txtBuscarProducto;
-        private System.Windows.Forms.DataGridView dgvProductos;
+        private System.Windows.Forms.PictureBox picProducto;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.ComboBox cmbIva;
     }

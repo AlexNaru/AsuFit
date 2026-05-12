@@ -8,20 +8,30 @@ namespace AsuFit.Negocio
     {
         private ArqueoDatos datos = new ArqueoDatos();
 
-        public decimal ObtenerTotalDelDia(DateTime fecha)
+        public bool AbrirCaja(int idUsuario, string cajeroNombre, decimal fondoInicial)
         {
-            return datos.ObtenerTotalDelDia(fecha);
+            return datos.AbrirCaja(idUsuario, cajeroNombre, fondoInicial);
         }
 
-        public bool RegistrarCierre(decimal totalSistema, decimal efectivoCaja, decimal diferencia, string usuario)
+        public DataTable ObtenerTurnoAbierto(int idUsuario)
         {
-            // Usamos 'datos' en lugar de 'objArqueoDatos'
-            return datos.RegistrarCierre(totalSistema, efectivoCaja, diferencia, usuario);
+            return datos.ObtenerTurnoAbierto(idUsuario);
         }
 
+        public DataTable ObtenerTotalesEnVivo(int idUsuario, DateTime fechaApertura)
+        {
+            return datos.ObtenerTotalesEnVivo(idUsuario, fechaApertura);
+        }
+
+        // El puente que le faltaba a tu formulario
         public DataTable ListarHistorialArqueos(DateTime desde, DateTime hasta)
         {
             return datos.ListarHistorialArqueos(desde, hasta);
+        }
+
+        public bool CerrarCaja(int idTurno, decimal ingresosEfectivo, decimal ingresosTransferencia, decimal gastosEfectivo, decimal montoEsperado, decimal montoContado, decimal diferencia)
+        {
+            return datos.CerrarCaja(idTurno, ingresosEfectivo, ingresosTransferencia, gastosEfectivo, montoEsperado, montoContado, diferencia);
         }
     }
 }

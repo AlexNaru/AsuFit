@@ -1,5 +1,6 @@
 ﻿using AsuFit.Entidades;
 using AsuFit.Negocio;
+using AsuFit.Datos;
 using System;
 using System.Data;
 using System.Runtime.InteropServices; // <-- Fundamental para el Cue Banner
@@ -21,6 +22,9 @@ namespace AsuFit.Presentacion
         public frmRegistrarCobro(Usuario userLogueado)
         {
             InitializeComponent();
+
+            // --- AQUÍ ESTÁ LA SOLUCIÓN AL ERROR DE REFERENCIA NULA ---
+            usuarioActual = userLogueado;
 
             // 1. Aplicamos el placeholder nativo a tu barra de búsqueda
             SendMessage(txtBuscar.Handle, EM_SETCUEBANNER, 1, "Buscar por Cédula, Nombre o Apellido...");
@@ -91,62 +95,54 @@ namespace AsuFit.Presentacion
         // --- 3. PROCESAR EL COBRO ---
         private void btnCobrar_Click(object sender, EventArgs e)
         {
-            if (idSocioSeleccionado == 0)
+            if (idSocioSeleccionado == 0) return;
+            if (cmbPlanes.SelectedIndex == -1 || string.IsNullOrWhiteSpace(txtMonto.Text)) return;
+
+            // --- ADVERTENCIA DE COBRO MÚLTIPLE ---
+            if (CarritoGlobal.Detalles.Rows.Count > 0 && CarritoGlobal.IdSocioPagara != null && CarritoGlobal.IdSocioPagara != idSocioSeleccionado)
             {
-                MessageBox.Show("Por favor, selecciona un socio de la tabla.", "Atención", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
+                DialogResult respuesta = MessageBox.Show(
+                    "Ya hay conceptos en la caja a nombre de otro socio.\n\n¿Deseas agregar esta mensualidad para cobrar ambos planes juntos en el mismo ticket?\n(La factura saldrá a nombre del primer socio, pero ambos serán renovados en el sistema).",
+                    "Cobro Múltiple Detectado", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+                if (respuesta == DialogResult.No) return;
+            }
+            else
+            {
+                CarritoGlobal.IdSocioPagara = idSocioSeleccionado;
             }
 
-            if (cmbPlanes.SelectedIndex == -1 || string.IsNullOrWhiteSpace(txtMonto.Text))
-            {
-                MessageBox.Show("Debes seleccionar un plan para realizar el cobro.", "Atención", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
+            PlanNegocio negocioPlan = new PlanNegocio();
+            Plan planInfo = negocioPlan.ObtenerPlanPorNombre(cmbPlanes.Text);
+            if (planInfo == null) return;
 
-            // 1. Cargamos los datos en el Carrito Global (La Nube)
             decimal monto = Convert.ToDecimal(txtMonto.Text.Replace(".", ""));
             string conceptoPlan = "Renovación: " + cmbPlanes.Text;
 
-            // Extraemos el ID del Plan para crear su código artificial
-            int idDelPlan = Convert.ToInt32(cmbPlanes.SelectedValue);
-            string codigoPlanArtificial = "PLAN-" + idDelPlan;
+            // --- MAGIA: Escondemos los DÍAS y el ID DEL SOCIO en el código de barras artificial ---
+            string codigoPlanArtificial = $"PLAN-{planInfo.DuracionDias}-{idSocioSeleccionado}-{planInfo.IdPlan}";
+            CarritoGlobal.AgregarItem(0, codigoPlanArtificial, conceptoPlan, 1, monto, 10);
 
-            // ¡Usamos el nuevo parámetro!
-            CarritoGlobal.AgregarItem(0, codigoPlanArtificial, conceptoPlan, 1, monto);
-            CarritoGlobal.IdSocioPagara = idSocioSeleccionado;
-
-            // 2. Cerramos cualquier caja que haya quedado abierta para refrescarla
-            Form cajaAbierta = Application.OpenForms["frmCajaCobro"];
-            if (cajaAbierta != null) cajaAbierta.Close();
-
-            // 3. Abrimos la nueva Caja de forma independiente
-            frmCajaCobro nuevaCaja = new frmCajaCobro(usuarioActual);
-
-            // 4. SENSOR: Solo si la venta se confirma, actualizamos los días en SQL
-            nuevaCaja.FormClosed += (s, args) =>
+            // En lugar de cerrar la caja, la RESTAURAMOS si estaba minimizada
+            frmCajaCobro cajaAbierta = Application.OpenForms["frmCajaCobro"] as frmCajaCobro;
+            if (cajaAbierta != null)
             {
-                if (nuevaCaja.DialogResult == DialogResult.OK)
-                {
-                    PlanNegocio negocioPlan = new PlanNegocio();
-                    Plan planInfo = negocioPlan.ObtenerPlanPorNombre(cmbPlanes.Text);
+                cajaAbierta.WindowState = FormWindowState.Normal;
+                cajaAbierta.BringToFront();
+                cajaAbierta.ActualizarPantallaDesdeCarrito();
+            }
+            else
+            {
+                frmCajaCobro nuevaCaja = new frmCajaCobro(usuarioActual);
+                nuevaCaja.Show();
+            }
 
-                    if (planInfo != null)
-                    {
-                        SocioNegocio negocioSocio = new SocioNegocio();
-                        negocioSocio.RenovarMembresiaSocio(idSocioSeleccionado, planInfo.DuracionDias);
-                    }
-
-                    // Limpieza visual de la pantalla de socios
-                    idSocioSeleccionado = 0;
-                    txtMonto.Clear();
-                    cmbPlanes.SelectedIndex = -1;
-                    txtBuscar.Clear();
-                    dgvSocios.ClearSelection();
-                    // Si tienes un método para refrescar la tabla de socios, llámalo aquí
-                }
-            };
-
-            nuevaCaja.Show();
+            // Limpieza visual
+            idSocioSeleccionado = 0;
+            txtMonto.Clear();
+            cmbPlanes.SelectedIndex = -1;
+            txtBuscar.Clear();
+            dgvSocios.ClearSelection();
         }
 
         private void dgvSocios_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)

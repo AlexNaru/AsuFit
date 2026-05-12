@@ -6,63 +6,23 @@ namespace AsuFit.Datos
 {
     public class ArqueoDatos
     {
-        // Trae la suma neta de la caja: Ingresos (Cuotas + Productos) menos Egresos (Gastos + Compras)
-        public decimal ObtenerTotalDelDia(DateTime fecha)
-        {
-            decimal totalNeto = 0;
-            using (System.Data.SqlClient.SqlConnection oConexion = Conexion.ObtenerConexion())
-            {
-                try
-                {
-                    // Consulta ajustada EXACTAMENTE a tu base de datos actual
-                    string query = @"
-                        DECLARE @Ingresos DECIMAL(18,2) = 0;
-                        DECLARE @Egresos DECIMAL(18,2) = 0;
-
-                        -- 1. SUMAR INGRESOS (Mensualidades en 'Pagos' + Productos en 'Ventas')
-                        SET @Ingresos = 
-                            ISNULL((SELECT SUM(Monto) FROM Pagos WHERE CAST(FechaPago AS DATE) = CAST(@Fecha AS DATE)), 0) + 
-                            ISNULL((SELECT SUM(Total) FROM Ventas WHERE CAST(Fecha AS DATE) = CAST(@Fecha AS DATE)), 0);
-
-                        -- 2. SUMAR EGRESOS (Gastos + Compras de Mercadería)
-                        SET @Egresos = 
-                            ISNULL((SELECT SUM(Monto) FROM Gastos WHERE CAST(FechaGasto AS DATE) = CAST(@Fecha AS DATE)), 0) + 
-                            ISNULL((SELECT SUM(CostoTotal) FROM IngresosMercaderia WHERE CAST(FechaIngreso AS DATE) = CAST(@Fecha AS DATE)), 0);
-
-                        -- 3. RETORNAR EL NETO ESPERADO EN LA CAJA
-                        SELECT (@Ingresos - @Egresos) AS TotalCaja;";
-
-                    System.Data.SqlClient.SqlCommand cmd = new System.Data.SqlClient.SqlCommand(query, oConexion);
-                    cmd.Parameters.AddWithValue("@Fecha", fecha);
-
-                    oConexion.Open();
-                    totalNeto = Convert.ToDecimal(cmd.ExecuteScalar());
-                }
-                catch (Exception)
-                {
-                    throw;
-                }
-            }
-            return totalNeto;
-        }
-
-        // Guarda el cierre de caja en la tabla nueva
-        public bool RegistrarCierre(decimal totalSistema, decimal efectivoCaja, decimal diferencia, string usuario)
+        // =======================================================
+        // 1. ABRIR CAJA 
+        // =======================================================
+        public bool AbrirCaja(int idUsuario, string cajeroNombre, decimal fondoInicial)
         {
             bool respuesta = false;
-            using (System.Data.SqlClient.SqlConnection oConexion = Conexion.ObtenerConexion())
+            using (SqlConnection oConexion = Conexion.ObtenerConexion())
             {
                 try
                 {
-                    // Agregamos UsuarioRegistra al INSERT
-                    string query = @"INSERT INTO ArqueosCaja (FechaHora, TotalIngresosSistema, EfectivoDeclarado, Diferencia, Estado, UsuarioRegistra) 
-                                     VALUES (GETDATE(), @TotalSist, @Efectivo, @Dif, 'CERRADO', @Usuario)";
+                    string query = @"INSERT INTO TurnosCaja (IdUsuario, CajeroNombre, FondoInicial, Estado) 
+                                     VALUES (@idUser, @nombre, @fondo, 'Abierta')";
 
-                    System.Data.SqlClient.SqlCommand cmd = new System.Data.SqlClient.SqlCommand(query, oConexion);
-                    cmd.Parameters.AddWithValue("@TotalSist", totalSistema);
-                    cmd.Parameters.AddWithValue("@Efectivo", efectivoCaja);
-                    cmd.Parameters.AddWithValue("@Dif", diferencia);
-                    cmd.Parameters.AddWithValue("@Usuario", usuario); // Mandamos el nombre a SQL
+                    SqlCommand cmd = new SqlCommand(query, oConexion);
+                    cmd.Parameters.AddWithValue("@idUser", idUsuario);
+                    cmd.Parameters.AddWithValue("@nombre", cajeroNombre);
+                    cmd.Parameters.AddWithValue("@fondo", fondoInicial);
 
                     oConexion.Open();
                     respuesta = cmd.ExecuteNonQuery() > 0;
@@ -75,6 +35,60 @@ namespace AsuFit.Datos
             return respuesta;
         }
 
+        // =======================================================
+        // 2. VERIFICAR TURNO ABIERTO 
+        // =======================================================
+        public DataTable ObtenerTurnoAbierto(int idUsuario)
+        {
+            DataTable dt = new DataTable();
+            using (SqlConnection oConexion = Conexion.ObtenerConexion())
+            {
+                string query = "SELECT TOP 1 * FROM TurnosCaja WHERE IdUsuario = @idUser AND Estado = 'Abierta' ORDER BY IdTurno DESC";
+                SqlCommand cmd = new SqlCommand(query, oConexion);
+                cmd.Parameters.AddWithValue("@idUser", idUsuario);
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
+                da.Fill(dt);
+            }
+            return dt;
+        }
+
+        // =======================================================
+        // 3. CALCULAR TOTALES EN VIVO (MIGRADO A TABLA VENTAS)
+        // =======================================================
+        public DataTable ObtenerTotalesEnVivo(int idUsuario, DateTime fechaApertura)
+        {
+            DataTable dt = new DataTable();
+            using (SqlConnection oConexion = Conexion.ObtenerConexion())
+            {
+                // Como eliminamos 'Pagos' y 'Gastos', la consulta es directa.
+                // Todo el ingreso sale de 'Ventas' y el egreso de 'IngresosMercaderia'.
+                string query = @"
+                    DECLARE @Efectivo DECIMAL(18,2) = 0;
+                    DECLARE @Transferencia DECIMAL(18,2) = 0;
+                    DECLARE @Gastos DECIMAL(18,2) = 0;
+
+                    -- 1. Ingresos en Efectivo (Cuotas y Productos unificados)
+                    SET @Efectivo = ISNULL((SELECT SUM(Total) FROM Ventas WHERE MetodoPago = 'Efectivo' AND Fecha >= @FechaApertura), 0);
+
+                    -- 2. Ingresos por Transferencia (Cuotas y Productos unificados)
+                    SET @Transferencia = ISNULL((SELECT SUM(Total) FROM Ventas WHERE MetodoPago = 'Transferencia' AND Fecha >= @FechaApertura), 0);
+
+                    -- 3. Egresos (Pago a proveedores de mercadería)
+                    SET @Gastos = ISNULL((SELECT SUM(CostoTotal) FROM IngresosMercaderia WHERE FechaIngreso >= @FechaApertura), 0);
+
+                    SELECT @Efectivo AS TotalEfectivo, @Transferencia AS TotalTransferencia, @Gastos AS TotalGastos;";
+
+                SqlCommand cmd = new SqlCommand(query, oConexion);
+                cmd.Parameters.AddWithValue("@FechaApertura", fechaApertura);
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
+                da.Fill(dt);
+            }
+            return dt;
+        }
+
+        // =======================================================
+        // 4. HISTORIAL DE ARQUEOS 
+        // =======================================================
         public DataTable ListarHistorialArqueos(DateTime desde, DateTime hasta)
         {
             DataTable dt = new DataTable();
@@ -82,17 +96,18 @@ namespace AsuFit.Datos
             {
                 try
                 {
-                    string query = @"SELECT IdArqueo, 
-                                            FechaHora, 
-                                            TotalIngresosSistema, 
-                                            EfectivoDeclarado, 
-                                            Diferencia, 
-                                            UsuarioRegistra, 
-                                            Estado 
-                                     FROM ArqueosCaja 
-                                     WHERE CAST(FechaHora AS DATE) >= @Desde 
-                                     AND CAST(FechaHora AS DATE) <= @Hasta
-                                     ORDER BY FechaHora DESC";
+                    string query = @"SELECT 
+                                        IdTurno AS IdArqueo, 
+                                        FechaApertura AS FechaHora, 
+                                        MontoEsperado AS TotalIngresosSistema, 
+                                        MontoContado AS EfectivoDeclarado, 
+                                        Diferencia, 
+                                        CajeroNombre AS UsuarioRegistra, 
+                                        Estado 
+                                     FROM TurnosCaja 
+                                     WHERE CAST(FechaApertura AS DATE) >= @Desde 
+                                     AND CAST(FechaApertura AS DATE) <= @Hasta
+                                     ORDER BY FechaApertura DESC";
 
                     SqlCommand cmd = new SqlCommand(query, oConexion);
                     cmd.Parameters.AddWithValue("@Desde", desde.Date);
@@ -107,6 +122,47 @@ namespace AsuFit.Datos
                 }
             }
             return dt;
+        }
+
+        // =======================================================
+        // 5. CERRAR TURNO 
+        // =======================================================
+        public bool CerrarCaja(int idTurno, decimal ingresosEfectivo, decimal ingresosTransferencia, decimal gastosEfectivo, decimal montoEsperado, decimal montoContado, decimal diferencia)
+        {
+            bool respuesta = false;
+            using (SqlConnection oConexion = Conexion.ObtenerConexion())
+            {
+                try
+                {
+                    string query = @"UPDATE TurnosCaja SET 
+                                     FechaCierre = GETDATE(),
+                                     IngresosEfectivo = @ingEfvo,
+                                     IngresosTransferencia = @ingTrans,
+                                     GastosEfectivo = @gastos,
+                                     MontoEsperado = @esperado,
+                                     MontoContado = @contado,
+                                     Diferencia = @diferencia,
+                                     Estado = 'Cerrada'
+                                     WHERE IdTurno = @idTurno";
+
+                    SqlCommand cmd = new SqlCommand(query, oConexion);
+                    cmd.Parameters.AddWithValue("@ingEfvo", ingresosEfectivo);
+                    cmd.Parameters.AddWithValue("@ingTrans", ingresosTransferencia);
+                    cmd.Parameters.AddWithValue("@gastos", gastosEfectivo);
+                    cmd.Parameters.AddWithValue("@esperado", montoEsperado);
+                    cmd.Parameters.AddWithValue("@contado", montoContado);
+                    cmd.Parameters.AddWithValue("@diferencia", diferencia);
+                    cmd.Parameters.AddWithValue("@idTurno", idTurno);
+
+                    oConexion.Open();
+                    respuesta = cmd.ExecuteNonQuery() > 0;
+                }
+                catch (Exception)
+                {
+                    throw;
+                }
+            }
+            return respuesta;
         }
     }
 }

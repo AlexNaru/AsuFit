@@ -23,11 +23,12 @@ namespace AsuFit.Datos
                     SqlCommand cmd1 = new SqlCommand("SELECT COUNT(*) FROM Asistencias WHERE CAST(FechaHora AS DATE) = CAST(GETDATE() AS DATE)", oConexion);
                     activos = Convert.ToInt32(cmd1.ExecuteScalar());
 
-                    // 2. INGRESOS DEL MES (Cuotas en 'Pagos' + Productos en 'Ventas')
+                    // 2. INGRESOS DEL MES (Todo está unificado ahora en la tabla 'Ventas')
                     string queryIngresos = @"
-                        SELECT 
-                            ISNULL((SELECT SUM(Monto) FROM Pagos WHERE MONTH(FechaPago) = MONTH(GETDATE()) AND YEAR(FechaPago) = YEAR(GETDATE())), 0) + 
-                            ISNULL((SELECT SUM(Total) FROM Ventas WHERE MONTH(Fecha) = MONTH(GETDATE()) AND YEAR(Fecha) = YEAR(GETDATE())), 0)";
+                        SELECT ISNULL(SUM(Total), 0) 
+                        FROM Ventas 
+                        WHERE MONTH(Fecha) = MONTH(GETDATE()) 
+                        AND YEAR(Fecha) = YEAR(GETDATE())";
                     SqlCommand cmd2 = new SqlCommand(queryIngresos, oConexion);
                     ingresos = Convert.ToDecimal(cmd2.ExecuteScalar());
 

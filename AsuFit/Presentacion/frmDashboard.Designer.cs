@@ -43,7 +43,6 @@
             this.btnArqueoCaja = new System.Windows.Forms.Button();
             this.btnGestionGastos = new System.Windows.Forms.Button();
             this.btnHistorialVentas = new System.Windows.Forms.Button();
-            this.btnHistorialPagos = new System.Windows.Forms.Button();
             this.btnGestionProductos = new System.Windows.Forms.Button();
             this.btnInventarioVentas = new System.Windows.Forms.Button();
             this.btnRegistrarCobro = new System.Windows.Forms.Button();
@@ -77,7 +76,6 @@
             this.pnlSidebar.Controls.Add(this.btnArqueoCaja);
             this.pnlSidebar.Controls.Add(this.btnGestionGastos);
             this.pnlSidebar.Controls.Add(this.btnHistorialVentas);
-            this.pnlSidebar.Controls.Add(this.btnHistorialPagos);
             this.pnlSidebar.Controls.Add(this.btnGestionProductos);
             this.pnlSidebar.Controls.Add(this.btnInventarioVentas);
             this.pnlSidebar.Controls.Add(this.btnRegistrarCobro);
@@ -98,7 +96,7 @@
             this.btnCerrarSesion.FlatAppearance.BorderSize = 0;
             this.btnCerrarSesion.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnCerrarSesion.ForeColor = System.Drawing.Color.White;
-            this.btnCerrarSesion.Location = new System.Drawing.Point(0, 940);
+            this.btnCerrarSesion.Location = new System.Drawing.Point(0, 900);
             this.btnCerrarSesion.Name = "btnCerrarSesion";
             this.btnCerrarSesion.Size = new System.Drawing.Size(262, 40);
             this.btnCerrarSesion.TabIndex = 15;
@@ -113,7 +111,7 @@
             this.btnConfiguración.FlatAppearance.BorderSize = 0;
             this.btnConfiguración.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnConfiguración.ForeColor = System.Drawing.Color.White;
-            this.btnConfiguración.Location = new System.Drawing.Point(0, 900);
+            this.btnConfiguración.Location = new System.Drawing.Point(0, 860);
             this.btnConfiguración.Margin = new System.Windows.Forms.Padding(0);
             this.btnConfiguración.Name = "btnConfiguración";
             this.btnConfiguración.Size = new System.Drawing.Size(262, 40);
@@ -129,7 +127,7 @@
             this.btnRespaldosAuditoría.FlatAppearance.BorderSize = 0;
             this.btnRespaldosAuditoría.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnRespaldosAuditoría.ForeColor = System.Drawing.Color.White;
-            this.btnRespaldosAuditoría.Location = new System.Drawing.Point(0, 860);
+            this.btnRespaldosAuditoría.Location = new System.Drawing.Point(0, 820);
             this.btnRespaldosAuditoría.Margin = new System.Windows.Forms.Padding(0);
             this.btnRespaldosAuditoría.Name = "btnRespaldosAuditoría";
             this.btnRespaldosAuditoría.Size = new System.Drawing.Size(262, 40);
@@ -144,7 +142,7 @@
             this.btnGestionUsuarios.FlatAppearance.BorderSize = 0;
             this.btnGestionUsuarios.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnGestionUsuarios.ForeColor = System.Drawing.Color.White;
-            this.btnGestionUsuarios.Location = new System.Drawing.Point(0, 820);
+            this.btnGestionUsuarios.Location = new System.Drawing.Point(0, 780);
             this.btnGestionUsuarios.Name = "btnGestionUsuarios";
             this.btnGestionUsuarios.Size = new System.Drawing.Size(262, 40);
             this.btnGestionUsuarios.TabIndex = 12;
@@ -158,7 +156,7 @@
             this.btnRegistrarUsuario.FlatAppearance.BorderSize = 0;
             this.btnRegistrarUsuario.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnRegistrarUsuario.ForeColor = System.Drawing.Color.White;
-            this.btnRegistrarUsuario.Location = new System.Drawing.Point(0, 780);
+            this.btnRegistrarUsuario.Location = new System.Drawing.Point(0, 740);
             this.btnRegistrarUsuario.Name = "btnRegistrarUsuario";
             this.btnRegistrarUsuario.Size = new System.Drawing.Size(262, 40);
             this.btnRegistrarUsuario.TabIndex = 11;
@@ -169,7 +167,7 @@
             // lblSeparador3
             // 
             this.lblSeparador3.Dock = System.Windows.Forms.DockStyle.Top;
-            this.lblSeparador3.Location = new System.Drawing.Point(0, 720);
+            this.lblSeparador3.Location = new System.Drawing.Point(0, 680);
             this.lblSeparador3.Name = "lblSeparador3";
             this.lblSeparador3.Size = new System.Drawing.Size(262, 60);
             this.lblSeparador3.TabIndex = 18;
@@ -181,7 +179,7 @@
             this.btnReportesEstadísticas.FlatAppearance.BorderSize = 0;
             this.btnReportesEstadísticas.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnReportesEstadísticas.ForeColor = System.Drawing.Color.White;
-            this.btnReportesEstadísticas.Location = new System.Drawing.Point(0, 680);
+            this.btnReportesEstadísticas.Location = new System.Drawing.Point(0, 640);
             this.btnReportesEstadísticas.Name = "btnReportesEstadísticas";
             this.btnReportesEstadísticas.Size = new System.Drawing.Size(262, 40);
             this.btnReportesEstadísticas.TabIndex = 10;
@@ -196,7 +194,7 @@
             this.btnProveedores.FlatAppearance.BorderSize = 0;
             this.btnProveedores.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnProveedores.ForeColor = System.Drawing.Color.White;
-            this.btnProveedores.Location = new System.Drawing.Point(0, 640);
+            this.btnProveedores.Location = new System.Drawing.Point(0, 600);
             this.btnProveedores.Name = "btnProveedores";
             this.btnProveedores.Size = new System.Drawing.Size(262, 40);
             this.btnProveedores.TabIndex = 9;
@@ -211,7 +209,7 @@
             this.btnIngresoMercaderia.FlatAppearance.BorderSize = 0;
             this.btnIngresoMercaderia.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnIngresoMercaderia.ForeColor = System.Drawing.Color.White;
-            this.btnIngresoMercaderia.Location = new System.Drawing.Point(0, 600);
+            this.btnIngresoMercaderia.Location = new System.Drawing.Point(0, 560);
             this.btnIngresoMercaderia.Name = "btnIngresoMercaderia";
             this.btnIngresoMercaderia.Size = new System.Drawing.Size(262, 40);
             this.btnIngresoMercaderia.TabIndex = 22;
@@ -226,7 +224,7 @@
             this.btnGestionPlanes.FlatAppearance.BorderSize = 0;
             this.btnGestionPlanes.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnGestionPlanes.ForeColor = System.Drawing.Color.White;
-            this.btnGestionPlanes.Location = new System.Drawing.Point(0, 560);
+            this.btnGestionPlanes.Location = new System.Drawing.Point(0, 520);
             this.btnGestionPlanes.Name = "btnGestionPlanes";
             this.btnGestionPlanes.Size = new System.Drawing.Size(262, 40);
             this.btnGestionPlanes.TabIndex = 8;
@@ -237,7 +235,7 @@
             // lblSeparador2
             // 
             this.lblSeparador2.Dock = System.Windows.Forms.DockStyle.Top;
-            this.lblSeparador2.Location = new System.Drawing.Point(0, 500);
+            this.lblSeparador2.Location = new System.Drawing.Point(0, 460);
             this.lblSeparador2.Name = "lblSeparador2";
             this.lblSeparador2.Size = new System.Drawing.Size(262, 60);
             this.lblSeparador2.TabIndex = 17;
@@ -249,7 +247,7 @@
             this.btnArqueoCaja.FlatAppearance.BorderSize = 0;
             this.btnArqueoCaja.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnArqueoCaja.ForeColor = System.Drawing.Color.White;
-            this.btnArqueoCaja.Location = new System.Drawing.Point(0, 460);
+            this.btnArqueoCaja.Location = new System.Drawing.Point(0, 420);
             this.btnArqueoCaja.Name = "btnArqueoCaja";
             this.btnArqueoCaja.Size = new System.Drawing.Size(262, 40);
             this.btnArqueoCaja.TabIndex = 7;
@@ -264,7 +262,7 @@
             this.btnGestionGastos.FlatAppearance.BorderSize = 0;
             this.btnGestionGastos.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnGestionGastos.ForeColor = System.Drawing.Color.White;
-            this.btnGestionGastos.Location = new System.Drawing.Point(0, 420);
+            this.btnGestionGastos.Location = new System.Drawing.Point(0, 380);
             this.btnGestionGastos.Name = "btnGestionGastos";
             this.btnGestionGastos.Size = new System.Drawing.Size(262, 40);
             this.btnGestionGastos.TabIndex = 6;
@@ -279,28 +277,13 @@
             this.btnHistorialVentas.FlatAppearance.BorderSize = 0;
             this.btnHistorialVentas.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnHistorialVentas.ForeColor = System.Drawing.Color.White;
-            this.btnHistorialVentas.Location = new System.Drawing.Point(0, 380);
+            this.btnHistorialVentas.Location = new System.Drawing.Point(0, 340);
             this.btnHistorialVentas.Name = "btnHistorialVentas";
             this.btnHistorialVentas.Size = new System.Drawing.Size(262, 40);
             this.btnHistorialVentas.TabIndex = 23;
-            this.btnHistorialVentas.Text = "Historial de Ventas";
+            this.btnHistorialVentas.Text = "Historial de Transacciones";
             this.btnHistorialVentas.UseVisualStyleBackColor = false;
             this.btnHistorialVentas.Click += new System.EventHandler(this.btnHistorialVentas_Click);
-            // 
-            // btnHistorialPagos
-            // 
-            this.btnHistorialPagos.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(20)))), ((int)(((byte)(20)))));
-            this.btnHistorialPagos.Dock = System.Windows.Forms.DockStyle.Top;
-            this.btnHistorialPagos.FlatAppearance.BorderSize = 0;
-            this.btnHistorialPagos.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnHistorialPagos.ForeColor = System.Drawing.Color.White;
-            this.btnHistorialPagos.Location = new System.Drawing.Point(0, 340);
-            this.btnHistorialPagos.Name = "btnHistorialPagos";
-            this.btnHistorialPagos.Size = new System.Drawing.Size(262, 40);
-            this.btnHistorialPagos.TabIndex = 5;
-            this.btnHistorialPagos.Text = "🕒 Historial de Pagos";
-            this.btnHistorialPagos.UseVisualStyleBackColor = false;
-            this.btnHistorialPagos.Click += new System.EventHandler(this.btnHistorialPagos_Click);
             // 
             // btnGestionProductos
             // 
@@ -479,7 +462,6 @@
         private System.Windows.Forms.Button btnGestionUsuarios;
         private System.Windows.Forms.Button btnRegistrarUsuario;
         private System.Windows.Forms.Button btnRegistroAsistencia;
-        private System.Windows.Forms.Button btnHistorialPagos;
         private System.Windows.Forms.Button btnRegistrarCobro;
         private System.Windows.Forms.Button btnGestionPlanes;
         private System.Windows.Forms.Button btnArqueoCaja;

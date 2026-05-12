@@ -1,5 +1,6 @@
 ﻿using AsuFit.Entidades;
 using AsuFit.Negocio;
+using AsuFit.Datos;
 using System;
 using System.Data;
 using System.Drawing;
@@ -46,8 +47,7 @@ namespace AsuFit.Presentacion
             // LLAMAMOS A NUESTRA NUEVA FUNCIÓN AQUÍ
             ConfigurarAutocompletado();
 
-            // Generamos las tarjetas mostrando "Todas" las categorías y ordenadas de la A a la Z
-            GenerarTarjetas("", "Nombre ASC");
+            AplicarFiltros();
         }
 
         // --- 1. CONFIGURACIÓN DE TABLA Y FILTROS ---
@@ -58,9 +58,8 @@ namespace AsuFit.Presentacion
             dgvCarrito.Columns.Add("IdProducto", "ID");
             dgvCarrito.Columns.Add("Nombre", "Producto");
             dgvCarrito.Columns.Add("CodigoBarras", "Código");
-            dgvCarrito.Columns["CodigoBarras"].Visible = false; // Lo mantenemos oculto en la grilla para que no ensucie el diseño
+            dgvCarrito.Columns["CodigoBarras"].Visible = false;
 
-            // --- NUEVO: BOTÓN MENOS ---
             DataGridViewButtonColumn colMenos = new DataGridViewButtonColumn();
             colMenos.Name = "Restar";
             colMenos.HeaderText = "";
@@ -73,7 +72,6 @@ namespace AsuFit.Presentacion
 
             dgvCarrito.Columns.Add("Cantidad", "Cant.");
 
-            // --- NUEVO: BOTÓN MÁS ---
             DataGridViewButtonColumn colMas = new DataGridViewButtonColumn();
             colMas.Name = "Sumar";
             colMas.HeaderText = "";
@@ -97,6 +95,10 @@ namespace AsuFit.Presentacion
             colEliminar.DefaultCellStyle.ForeColor = Color.White;
             dgvCarrito.Columns.Add(colEliminar);
 
+            // --- NUEVO: COLUMNA OCULTA PARA EL IVA ---
+            dgvCarrito.Columns.Add("PorcentajeIva", "IVA");
+            dgvCarrito.Columns["PorcentajeIva"].Visible = false;
+
             dgvCarrito.Columns["IdProducto"].Visible = false;
             dgvCarrito.AllowUserToAddRows = false;
             dgvCarrito.RowHeadersVisible = false;
@@ -107,7 +109,6 @@ namespace AsuFit.Presentacion
             dgvCarrito.Columns["Precio"].DefaultCellStyle.Format = "N0";
             dgvCarrito.Columns["Subtotal"].DefaultCellStyle.Format = "N0";
 
-            // Ajustamos los anchos para que se vea estético
             dgvCarrito.Columns["Nombre"].FillWeight = 180;
             dgvCarrito.Columns["Restar"].FillWeight = 30;
             dgvCarrito.Columns["Cantidad"].FillWeight = 50;
@@ -116,14 +117,12 @@ namespace AsuFit.Presentacion
             dgvCarrito.Columns["Subtotal"].FillWeight = 90;
             dgvCarrito.Columns["Eliminar"].FillWeight = 40;
 
-            // Alineación profesional de los textos
             dgvCarrito.Columns["Cantidad"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
             dgvCarrito.Columns["Precio"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
             dgvCarrito.Columns["Subtotal"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
 
             dgvCarrito.CellContentClick += dgvCarrito_CellContentClick;
             dgvCarrito.CellContentDoubleClick += dgvCarrito_CellContentClick;
-
         }
 
         private void ConfigurarFiltros()
@@ -213,32 +212,28 @@ namespace AsuFit.Presentacion
         private void AplicarFiltros()
         {
             if (dtCatalogo == null) return;
-
             string filtro = "";
 
-            // 1. Filtramos por texto si escribieron algo
+            // 1. Filtramos por texto
             if (!string.IsNullOrWhiteSpace(txtBuscarProducto.Text))
             {
-                // Le quitamos los acentos a lo que el usuario escribió en el cuadro de búsqueda
                 string textoLimpio = QuitarAcentos(txtBuscarProducto.Text);
-
-                // Buscamos en nuestra columna invisible (que tampoco tiene acentos)
                 filtro = "NombreBusqueda LIKE '%" + textoLimpio + "%'";
             }
 
             // 2. Filtramos por categoría
             if (cmbFiltroCategoria.Text != "Todas")
             {
-                if (filtro.Length > 0)
-                {
-                    filtro += " AND ";
-                }
+                if (filtro.Length > 0) filtro += " AND ";
                 filtro += "Categoria = '" + cmbFiltroCategoria.Text + "'";
             }
 
-            // 3. Ordenamiento
-            string orden = "Nombre ASC";
+            // 3. LA REGLA DE ORO: Solo mostramos si hay stock y está activo
+            if (filtro.Length > 0) filtro += " AND ";
+            filtro += "StockActual > 0 AND Estado = 'Activo'";
 
+            // 4. Ordenamiento
+            string orden = "Nombre ASC";
             if (cmbOrdenar.Text == "Nombre (Z-A)") orden = "Nombre DESC";
             else if (cmbOrdenar.Text == "Precio (Menor a Mayor)") orden = "PrecioVenta ASC";
             else if (cmbOrdenar.Text == "Precio (Mayor a Menor)") orden = "PrecioVenta DESC";
@@ -250,8 +245,10 @@ namespace AsuFit.Presentacion
 
         private void GenerarTarjetas(string filtro, string orden)
         {
-            flpCatalogo.Controls.Clear();
+            // 1. MAGIA VISUAL: Pausamos el dibujo para evitar parpadeos
+            flpCatalogo.SuspendLayout();
 
+            flpCatalogo.Controls.Clear();
             DataView vistaFiltrada = dtCatalogo.DefaultView;
             vistaFiltrada.RowFilter = filtro;
             vistaFiltrada.Sort = orden;
@@ -285,7 +282,8 @@ namespace AsuFit.Presentacion
                 }
                 else
                 {
-                    pic.Image = null; // Queda el fondo gris/blanco si no hay foto asignada
+                    pic.Image = null;
+                    // Queda el fondo gris/blanco si no hay foto asignada
                 }
                 // ---------------------------------------------------
 
@@ -307,7 +305,6 @@ namespace AsuFit.Presentacion
                 lblPrecio.AutoSize = true;
 
                 Label lblStock = new Label();
-
                 lblStock.Text = "Stock: " + row["StockActual"].ToString();
                 lblStock.ForeColor = Color.LightGray;
                 lblStock.Font = new Font("Segoe UI", 9, FontStyle.Regular);
@@ -337,6 +334,9 @@ namespace AsuFit.Presentacion
 
                 flpCatalogo.Controls.Add(pnlCard);
             }
+
+            // 2. MAGIA VISUAL: Reanudamos el dibujo para que muestre todo de golpe
+            flpCatalogo.ResumeLayout();
         }
 
         // --- 4. LÓGICA DEL CARRITO ---
@@ -353,6 +353,10 @@ namespace AsuFit.Presentacion
                 string nombre = filaProducto[0]["Nombre"].ToString();
                 decimal precio = Convert.ToDecimal(filaProducto[0]["PrecioVenta"]);
                 string codigoBarras = filaProducto[0]["CodigoBarras"].ToString();
+
+                // --- NUEVO: CAPTURAMOS EL IVA DESDE LA BASE DE DATOS ---
+                int iva = filaProducto[0]["PorcentajeIva"] != DBNull.Value ? Convert.ToInt32(filaProducto[0]["PorcentajeIva"]) : 10;
+
                 bool existeEnCarrito = false;
 
                 foreach (DataGridViewRow row in dgvCarrito.Rows)
@@ -369,16 +373,18 @@ namespace AsuFit.Presentacion
 
                 if (!existeEnCarrito)
                 {
-                    // LA SOLUCIÓN: Creamos una fila vacía y le asignamos los valores por su NOMBRE exacto
                     int rowIndex = dgvCarrito.Rows.Add();
                     DataGridViewRow nuevaFila = dgvCarrito.Rows[rowIndex];
 
                     nuevaFila.Cells["IdProducto"].Value = idProducto;
-                    nuevaFila.Cells["CodigoBarras"].Value = codigoBarras; // <-- LÍNEA NUEVA
+                    nuevaFila.Cells["CodigoBarras"].Value = codigoBarras;
                     nuevaFila.Cells["Nombre"].Value = nombre;
                     nuevaFila.Cells["Cantidad"].Value = 1;
                     nuevaFila.Cells["Precio"].Value = precio;
                     nuevaFila.Cells["Subtotal"].Value = precio;
+
+                    // --- NUEVO: LO GUARDAMOS EN LA GRILLA VISUAL ---
+                    nuevaFila.Cells["PorcentajeIva"].Value = iva;
                 }
 
                 ActualizarTotal();
@@ -438,6 +444,32 @@ namespace AsuFit.Presentacion
             lblTotalPagar.Text = "Gs. " + totalPagar.ToString("N0");
         }
 
+        // NUEVO: Método público para que la Caja pueda limpiar esta pantalla al terminar
+        public void LimpiarGrillaVisual()
+        {
+            dgvCarrito.Rows.Clear();
+            ActualizarTotal();
+        }
+
+        // NUEVO: Crea un botón en tu diseño llamado "btnLimpiarCarrito" (Color Rojo) y ponle este evento:
+        private void btnLimpiarCarrito_Click(object sender, EventArgs e)
+        {
+            LimpiarGrillaVisual();
+
+            // Borramos solo los productos de la nube (respetando si hay mensualidades de socios)
+            for (int i = CarritoGlobal.Detalles.Rows.Count - 1; i >= 0; i--)
+            {
+                if (Convert.ToInt32(CarritoGlobal.Detalles.Rows[i]["IdProducto"]) > 0)
+                {
+                    CarritoGlobal.Detalles.Rows.RemoveAt(i);
+                }
+            }
+
+            frmCajaCobro cajaAbierta = Application.OpenForms["frmCajaCobro"] as frmCajaCobro;
+            if (cajaAbierta != null) cajaAbierta.ActualizarPantallaDesdeCarrito();
+        }
+
+        // REEMPLAZA TU EVENTO btnFinalizarVenta_Click POR ESTE:
         private void btnFinalizarVenta_Click(object sender, EventArgs e)
         {
             if (dgvCarrito.Rows.Count == 0 && CarritoGlobal.Detalles.Rows.Count == 0)
@@ -448,55 +480,51 @@ namespace AsuFit.Presentacion
 
             try
             {
-                // 1. Pasamos los productos de la grilla local a la Nube (CarritoGlobal)
+                // 1. Limpiamos los productos previos en la Nube para evitar duplicados si dan "Finalizar" varias veces
+                for (int i = CarritoGlobal.Detalles.Rows.Count - 1; i >= 0; i--)
+                {
+                    // Mantenemos los PLANES (IdProducto == 0), pero borramos los productos para refrescarlos
+                    if (Convert.ToInt32(CarritoGlobal.Detalles.Rows[i]["IdProducto"]) > 0)
+                    {
+                        CarritoGlobal.Detalles.Rows.RemoveAt(i);
+                    }
+                }
+
+                // 2. Pasamos los productos de la grilla visual a la Nube (CarritoGlobal)
                 foreach (DataGridViewRow row in dgvCarrito.Rows)
                 {
                     int idProd = Convert.ToInt32(row.Cells["IdProducto"].Value);
-                    string codigoDeBarras = row.Cells["CodigoBarras"].Value.ToString(); // Atrapamos el código
+                    string codigoDeBarras = row.Cells["CodigoBarras"].Value.ToString();
                     string concepto = row.Cells["Nombre"].Value.ToString();
                     int cant = Convert.ToInt32(row.Cells["Cantidad"].Value);
                     decimal precio = Convert.ToDecimal(row.Cells["Precio"].Value);
+                    int iva = Convert.ToInt32(row.Cells["PorcentajeIva"].Value);
 
-                    CarritoGlobal.AgregarItem(idProd, codigoDeBarras, concepto, cant, precio); // Lo mandamos al Carrito Global
+                    CarritoGlobal.AgregarItem(idProd, codigoDeBarras, concepto, cant, precio, iva);
                 }
 
-                // 2. Refrescamos la ventana de Caja
-                Form cajaAbierta = Application.OpenForms["frmCajaCobro"];
-                if (cajaAbierta != null) cajaAbierta.Close();
+                // ¡YA NO VACIAMOS LA GRILLA AQUÍ! Así el usuario sigue viendo sus productos
 
-                frmCajaCobro nuevaCaja = new frmCajaCobro(usuarioActual);
+                // 3. Restauramos la caja o la creamos si no existe
+                frmCajaCobro cajaAbierta = Application.OpenForms["frmCajaCobro"] as frmCajaCobro;
 
-                // 3. CAMBIO CLAVE: Abrimos con ShowDialog() para que espere la respuesta de la caja
-                if (nuevaCaja.ShowDialog() == DialogResult.OK)
+                if (cajaAbierta != null)
                 {
-                    // 1. Limpiamos la grilla del carrito local y el total a pagar
-                    dgvCarrito.Rows.Clear();
-                    ActualizarTotal(); // Esto dejará el texto visualmente en "Gs. 0"
-
-                    // --- LA MAGIA DEL AUTO-REFRESH ---
-
-                    // 2. Volvemos a traer TODOS los productos de la base de datos (con el stock ya descontado)
-                    dtCatalogo = negocio.ListarProductos();
-
-                    // 3. Recreamos nuestra columna invisible para que el buscador sin acentos siga funcionando
-                    dtCatalogo.Columns.Add("NombreBusqueda", typeof(string));
-                    foreach (DataRow fila in dtCatalogo.Rows)
-                    {
-                        string nombreOriginal = fila["Nombre"].ToString();
-                        fila["NombreBusqueda"] = QuitarAcentos(nombreOriginal);
-                    }
-
-                    // 4. Mandamos a redibujar las tarjetas
-                    // Al llamar a AplicarFiltros(), automáticamente se borran las tarjetas viejas,
-                    // se leen los datos nuevos y se generan las tarjetas con el nuevo stock
-                    AplicarFiltros();
+                    cajaAbierta.WindowState = FormWindowState.Normal;
+                    cajaAbierta.BringToFront();
+                    cajaAbierta.ActualizarPantallaDesdeCarrito();
+                }
+                else
+                {
+                    frmCajaCobro nuevaCaja = new frmCajaCobro(usuarioActual);
+                    nuevaCaja.Show();
                 }
             }
             catch (Exception ex)
             {
                 MessageBox.Show("Error al enviar productos a la caja: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-        }
+        }   
 
         private void dgvCarrito_SelectionChanged(object sender, EventArgs e)
         {

@@ -1,5 +1,7 @@
 ﻿using AsuFit.Negocio;
+using AsuFit.Entidades;
 using System;
+using System.Data;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -7,118 +9,116 @@ namespace AsuFit.Presentacion
 {
     public partial class frmArqueoCaja : Form
     {
-        private decimal totalSistema = 0;
-        private AsuFit.Entidades.Usuario usuarioActual;
+        private Usuario usuarioActual;
+        private int idTurnoActivo = 0; // Guardará el ID del turno si hay uno abierto
+        private DateTime fechaAperturaActiva;
 
-        public frmArqueoCaja(AsuFit.Entidades.Usuario user)
+        public frmArqueoCaja(Usuario user)
         {
             InitializeComponent();
+            usuarioActual = user;
         }
 
         private void frmArqueoCaja_Load(object sender, EventArgs e)
         {
-            // Al abrir la pantalla, busca la plata de hoy
-            CargarTotalSistema();
+            // Agregamos el prefijo "Cajero: " antes del nombre del usuario
+            lblCajeroActual.Text = "Cajero: " + usuarioActual.NombreCompleto;
+
+            RevisarEstadoDeCaja();
         }
 
-        // --- 1. EVENTOS DE ACTUALIZACIÓN AUTOMÁTICA ---
-
-        private void dtpFechaArqueo_ValueChanged(object sender, EventArgs e)
+        // ====================================================================
+        // MÉTODO MAESTRO: Define qué estado mostrar (Cerrado o Abierto)
+        // ====================================================================
+        private void RevisarEstadoDeCaja()
         {
-            // Si cambian la fecha, recalcula la plata de ese día
-            CargarTotalSistema();
-        }
+            ArqueoNegocio negocio = new ArqueoNegocio();
+            DataTable dtTurno = negocio.ObtenerTurnoAbierto(usuarioActual.IdUsuario);
 
-        private void txtEfectivoCaja_TextChanged(object sender, EventArgs e)
-        {
-            // A medida que el cajero escribe sus billetes, calcula la diferencia
-            CalcularDiferencia();
-        }
-
-        // --- 2. MÉTODOS DE CÁLCULO ---
-
-        private void CargarTotalSistema()
-        {
-            try
+            if (dtTurno.Rows.Count > 0)
             {
-                ArqueoNegocio negocio = new ArqueoNegocio();
-                totalSistema = negocio.ObtenerTotalDelDia(dtpFechaArqueo.Value);
-                lblTotalSistema.Text = totalSistema.ToString("N0");
+                DataRow turno = dtTurno.Rows[0];
+                idTurnoActivo = Convert.ToInt32(turno["IdTurno"]);
+                // Guardamos la fecha de apertura para enviarla al resumen y al PDF
+                fechaAperturaActiva = Convert.ToDateTime(turno["FechaApertura"]);
+                decimal fondoInicial = Convert.ToDecimal(turno["FondoInicial"]);
 
-                // Forzamos a que recalcule la diferencia
-                CalcularDiferencia();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Error al cargar el total: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
+                lblEstadoCaja.Text = "🟢 CAJA ABIERTA";
+                lblEstadoCaja.ForeColor = Color.MediumSeaGreen;
 
-        private void CalcularDiferencia()
-        {
-            decimal efectivoCaja = 0;
+                btnAbrirCaja.Enabled = false;
+                btnCerrarCaja.Enabled = true;
 
-            // Si el cajero escribió algo, lo convertimos a número
-            if (!string.IsNullOrWhiteSpace(txtEfectivoCaja.Text))
-            {
-                decimal.TryParse(txtEfectivoCaja.Text, out efectivoCaja);
-            }
+                lblFondoInicial.Text = "Gs. " + fondoInicial.ToString("N0");
 
-            decimal diferencia = efectivoCaja - totalSistema;
-            lblDiferencia.Text = diferencia.ToString("N0");
+                DataTable dtTotales = negocio.ObtenerTotalesEnVivo(usuarioActual.IdUsuario, fechaAperturaActiva);
+                if (dtTotales.Rows.Count > 0)
+                {
+                    DataRow totales = dtTotales.Rows[0];
+                    decimal efvo = Convert.ToDecimal(totales["TotalEfectivo"]);
+                    decimal trans = Convert.ToDecimal(totales["TotalTransferencia"]);
+                    decimal gastos = Convert.ToDecimal(totales["TotalGastos"]);
 
-            // Semáforo de colores
-            if (diferencia == 0)
-            {
-                lblDiferencia.ForeColor = Color.Green; // Todo perfecto
-            }
-            else if (diferencia < 0)
-            {
-                lblDiferencia.ForeColor = Color.Red; // Falta plata
+                    lblIngresosEfectivo.Text = "Gs. " + efvo.ToString("N0");
+                    lblIngresosTransferencia.Text = "Gs. " + trans.ToString("N0");
+                    lblTotalIngresos.Text = "Gs. " + (efvo + trans).ToString("N0");
+                    lblGastos.Text = "Gs. " + gastos.ToString("N0");
+
+                    decimal esperado = fondoInicial + efvo - gastos;
+                    lblTotalEsperado.Text = "Gs. " + esperado.ToString("N0");
+                }
             }
             else
             {
-                lblDiferencia.ForeColor = Color.Goldenrod; // Sobra plata
+                idTurnoActivo = 0;
+                lblEstadoCaja.Text = "🔴 CAJA CERRADA";
+                lblEstadoCaja.ForeColor = Color.IndianRed;
+
+                btnAbrirCaja.Enabled = true;
+                btnCerrarCaja.Enabled = false;
+
+                lblFondoInicial.Text = "Gs. 0";
+                lblIngresosEfectivo.Text = "Gs. 0";
+                lblIngresosTransferencia.Text = "Gs. 0";
+                lblTotalIngresos.Text = "Gs. 0";
+                lblGastos.Text = "Gs. 0";
+                lblTotalEsperado.Text = "Gs. 0";
             }
         }
 
-        // --- 3. GUARDAR EL CIERRE ---
-
-        private void btnCerrar_Click(object sender, EventArgs e)
+        // ====================================================================
+        // EVENTOS DE LOS BOTONES
+        // ====================================================================
+        private void btnAbrirCaja_Click(object sender, EventArgs e)
         {
-            if (string.IsNullOrWhiteSpace(txtEfectivoCaja.Text))
+            frmAbrirCaja frm = new frmAbrirCaja(usuarioActual);
+            // Si el usuario abrió la caja correctamente, refrescamos la pantalla
+            if (frm.ShowDialog() == DialogResult.OK)
             {
-                MessageBox.Show("Por favor, ingresá el efectivo físico que contaste en la caja.", "Atención", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
+                RevisarEstadoDeCaja();
             }
+        }
 
-            decimal efectivoCaja = Convert.ToDecimal(txtEfectivoCaja.Text);
-            decimal diferencia = efectivoCaja - totalSistema;
+        private void btnCerrarCaja_Click(object sender, EventArgs e)
+        {
+            // Limpiamos el texto "Gs. " y los puntos para poder hacer cálculos matemáticos
+            decimal fondo = Convert.ToDecimal(lblFondoInicial.Text.Replace("Gs. ", "").Replace(".", ""));
+            decimal ingEfvo = Convert.ToDecimal(lblIngresosEfectivo.Text.Replace("Gs. ", "").Replace(".", ""));
+            decimal ingTrans = Convert.ToDecimal(lblIngresosTransferencia.Text.Replace("Gs. ", "").Replace(".", ""));
+            decimal gastos = Convert.ToDecimal(lblGastos.Text.Replace("Gs. ", "").Replace(".", ""));
+            decimal esperado = Convert.ToDecimal(lblTotalEsperado.Text.Replace("Gs. ", "").Replace(".", ""));
 
-            DialogResult confirmacion = MessageBox.Show($"¿Confirmar cierre de caja con una diferencia de {diferencia.ToString("N0")} Gs?", "Confirmar Arqueo", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            // Le pasamos también la fecha de apertura al formulario de cierre
+            frmCerrarCaja frm = new frmCerrarCaja(idTurnoActivo, usuarioActual.NombreCompleto, fechaAperturaActiva, fondo, ingEfvo, ingTrans, gastos, esperado);
 
-            if (confirmacion == DialogResult.Yes)
+            if (frm.ShowDialog() == DialogResult.OK)
             {
-                try
-                {
-                    ArqueoNegocio negocio = new ArqueoNegocio();
-                    // Si en tu clase Usuario la propiedad se llama distinto, cámbiala aquí (ej. usuarioActual.Username)
-                    if (negocio.RegistrarCierre(totalSistema, efectivoCaja, diferencia, usuarioActual.NombreCompleto))
-                    {
-                        MessageBox.Show("Arqueo registrado exitosamente. La caja ha sido cerrada.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                        this.Close();
-                    }
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show("Error al guardar el arqueo: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
+                RevisarEstadoDeCaja();
             }
         }
 
         private void btnHistorialArqueos_Click(object sender, EventArgs e)
         {
-            // Abrimos la pantalla que ya tenés lista y blindada
             frmHistorialArqueos frm = new frmHistorialArqueos();
             frm.ShowDialog();
         }

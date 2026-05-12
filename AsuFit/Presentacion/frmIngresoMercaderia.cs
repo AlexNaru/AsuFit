@@ -1,4 +1,6 @@
 ﻿using System;
+using AsuFit.Entidades;
+using AsuFit.Datos;
 using System.Data;
 using System.Drawing;
 using System.Windows.Forms;
@@ -19,12 +21,13 @@ namespace AsuFit.Presentacion
         private InventarioNegocio negocio = new InventarioNegocio();
         private ProveedorNegocio negocioProveedor = new ProveedorNegocio();
         private IngresoMercaderiaNegocio negocioIngreso = new IngresoMercaderiaNegocio();
-
         private DataTable dtProductos;
+        private Usuario usuarioActual;
 
-        public frmIngresoMercaderia()
+        public frmIngresoMercaderia(Usuario userLogueado)
         {
             InitializeComponent();
+            usuarioActual = userLogueado;
         }
 
         private void frmIngresoMercaderia_Load(object sender, EventArgs e)
@@ -229,6 +232,7 @@ namespace AsuFit.Presentacion
 
                 if (exito)
                 {
+                    GestorAuditoria.Registrar(usuarioActual.NombreCompleto, "Inventario", "Ingreso de Mercadería", $"Ingresaron {cantidad} unid. de producto ID {idProducto} (Prov: {cmbProveedores.Text}).");
                     MessageBox.Show("¡Mercadería ingresada y stock actualizado correctamente!", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     btnLimpiar_Click(null, null);
                     CargarGrilla(); // Refrescamos la tabla para ver el nuevo stock
@@ -357,6 +361,21 @@ namespace AsuFit.Presentacion
             dgvProductos.ClearSelection();
             txtIdProductoSeleccionado.Clear();
             btnLimpiar_Click(null, null);
+        }
+
+        private void btnNuevoProducto_Click(object sender, EventArgs e)
+        {
+            frmNuevoProducto frmPopup = new frmNuevoProducto(usuarioActual);
+            frmPopup.ShowDialog();
+
+            CargarGrilla();
+            ConfigurarAutocompletado();
+
+            // EL TRUCO: Si la ventanita nos dejó un nombre guardado, lo pegamos en el buscador
+            if (frmPopup.ProductoRecienCreado != "")
+            {
+                txtBuscarProducto.Text = frmPopup.ProductoRecienCreado;
+            }
         }
     }
 }

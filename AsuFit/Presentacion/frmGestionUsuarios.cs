@@ -1,4 +1,5 @@
-﻿using AsuFit.Entidades;
+﻿using AsuFit.Datos;
+using AsuFit.Entidades;
 using AsuFit.Negocio;
 using System;
 using System.Collections.Generic;
@@ -16,15 +17,17 @@ namespace AsuFit.Presentacion
     public partial class frmGestionUsuarios : Form
     {
         private int idUsuarioSeleccionado = 0;
+        private Usuario usuarioActual;
 
         // 1. Traemos la función nativa de Windows
         [DllImport("user32.dll", CharSet = CharSet.Auto)]
         private static extern Int32 SendMessage(IntPtr hWnd, int msg, int wParam, [MarshalAs(UnmanagedType.LPWStr)] string lParam);
         private const int EM_SETCUEBANNER = 0x1501;
 
-        public frmGestionUsuarios()
+        public frmGestionUsuarios(Usuario userLogueado)
         {
             InitializeComponent();
+            usuarioActual = userLogueado;
 
             // 2. Aseguramos que la letra sea negra para que resalte sobre tu nuevo fondo blanco
             txtBuscar.ForeColor = Color.Black;
@@ -150,6 +153,7 @@ namespace AsuFit.Presentacion
                     UsuarioNegocio negocio = new UsuarioNegocio();
                     if (negocio.CambiarEstado(idUsuario, nuevoEstado))
                     {
+                        GestorAuditoria.Registrar(usuarioActual.NombreCompleto, "Usuarios", "Cambio de Estado", $"Cambió el estado de '{nombreUsuario}' a {nuevoEstado}.");
                         MessageBox.Show($"El usuario ahora está {nuevoEstado}.", "Operación Exitosa", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         RecargarGrilla();
                     }
@@ -175,6 +179,7 @@ namespace AsuFit.Presentacion
                     UsuarioNegocio negocio = new UsuarioNegocio();
                     if (negocio.ResetearClave(idUsuario))
                     {
+                        GestorAuditoria.Registrar(usuarioActual.NombreCompleto, "Usuarios", "Reset de Clave", $"Restableció la contraseña de '{nombreUsuario}'.");
                         MessageBox.Show("Contraseña restablecida con éxito a: 12345", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
                 }

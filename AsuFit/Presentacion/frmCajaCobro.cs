@@ -133,14 +133,61 @@ namespace AsuFit.Presentacion
             if (respuesta == DialogResult.Yes)
             {
                 CarritoGlobal.LimpiarCarrito();
+
+                // Limpiamos la pantalla de productos
+                frmPuntoVenta inventario = Application.OpenForms["frmPuntoVenta"] as frmPuntoVenta;
+                if (inventario != null) inventario.LimpiarGrillaVisual();
+
                 this.DialogResult = DialogResult.Cancel;
                 this.Close();
             }
         }
 
+        // =================================================================
+        // NUEVO MÉTODO PÚBLICO: El inventario lo usará para "despertar" a la caja
+        // =================================================================
+        public void ActualizarPantallaDesdeCarrito()
+        {
+            totalAPagar = CarritoGlobal.TotalAPagar;
+            lblTotalCobrar.Text = "Gs. " + totalAPagar.ToString("N0");
+
+            // Forzamos el recálculo del vuelto
+            txtMontoRecibido_TextChanged(null, null);
+        }
+
         private void btnAgregarMasCosas_Click(object sender, EventArgs e)
         {
+            // 1. Minimizamos la caja
             this.WindowState = FormWindowState.Minimized;
+
+            // 2. Buscamos tu Dashboard principal abierto
+            Form dashboardPrincipal = null;
+            foreach (Form f in Application.OpenForms)
+            {
+                if (f.Name == "frmDashboard")
+                {
+                    dashboardPrincipal = f;
+                    break;
+                }
+            }
+
+            if (dashboardPrincipal != null)
+            {
+                // 3. Buscamos tu botón del menú lateral
+                Control[] botonesMenu = dashboardPrincipal.Controls.Find("btnInventarioVentas", true);
+
+                if (botonesMenu.Length > 0 && botonesMenu[0] is Button)
+                {
+                    Button btnMenuVentas = (Button)botonesMenu[0];
+
+                    // El sistema hace clic en el menú lateral por el usuario
+                    btnMenuVentas.PerformClick();
+                }
+                else
+                {
+                    MessageBox.Show("No se encontró el botón 'btnInventarioVentas' en el Dashboard.", "Aviso");
+                }
+            }
         }
 
         private void btnConfirmar_Click(object sender, EventArgs e)
@@ -159,6 +206,8 @@ namespace AsuFit.Presentacion
             }
 
             string tipoComprobante = cmbTipoComprobante.SelectedItem?.ToString();
+            string metodoPago = cmbMetodoPago.SelectedItem.ToString();
+
             if (tipoComprobante == "Factura" && (txtRucCliente.Text == "Sin RUC" || string.IsNullOrWhiteSpace(txtRucCliente.Text)))
             {
                 MessageBox.Show("Para emitir una Factura legal, debe buscar un cliente que tenga un RUC registrado.", "Datos Incompletos", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -166,7 +215,7 @@ namespace AsuFit.Presentacion
                 return;
             }
 
-            if (cmbMetodoPago.SelectedItem != null && cmbMetodoPago.SelectedItem.ToString() == "Efectivo")
+            if (metodoPago == "Efectivo")
             {
                 if (decimal.TryParse(txtMontoRecibido.Text, out decimal recibido))
                 {
@@ -185,130 +234,72 @@ namespace AsuFit.Presentacion
                 }
             }
 
-            using (SqlConnection oConexion = Conexion.ObtenerConexion())
+            // =============================================================
+            // LLAMAMOS A NUESTRA NUEVA CAPA DE DATOS (ARQUITECTURA DE 3 CAPAS)
+            // =============================================================
+            VentaDatos datosVenta = new VentaDatos();
+            string mensajeError;
+            int? idCajero = cajeroActual?.IdUsuario;
+
+            int idNuevaVenta = datosVenta.RegistrarVentaCompleta(totalAPagar, metodoPago, tipoComprobante, idCajero, idClienteActual, carritoDetalles, out mensajeError);
+
+            if (idNuevaVenta > 0)
             {
-                oConexion.Open();
-                SqlTransaction transaccion = oConexion.BeginTransaction();
+                // AUDITORÍA Y TICKETS
+                string nombreCajero = cajeroActual != null ? cajeroActual.NombreCompleto : "Admin";
+                GestorAuditoria.Registrar(nombreCajero, "Caja", "Venta/Cobro Confirmado", $"Se registró la operación N° {idNuevaVenta} por Gs. {totalAPagar:N0}.");
 
-                try
+                MessageBox.Show($"¡Venta N° {idNuevaVenta} registrada con éxito!", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                // --- GENERACIÓN DE PDF Y CORREO (SE MANTIENE INTACTO) ---
+                AsuFit.Reportes.GeneradorPDF generador = new AsuFit.Reportes.GeneradorPDF();
+                string nomCliente = string.IsNullOrWhiteSpace(txtNombreCliente.Text) ? "Cliente Ocasional" : txtNombreCliente.Text;
+                string rucCliente = string.IsNullOrWhiteSpace(txtRucCliente.Text) ? "Sin RUC" : txtRucCliente.Text;
+                string ciCliente = string.IsNullOrWhiteSpace(txtBusquedaCliente.Text) ? "Sin CI" : txtBusquedaCliente.Text;
+                string numTicket = idNuevaVenta.ToString();
+
+                decimal dineroRecibido = 0;
+                decimal dineroVuelto = 0;
+
+                if (metodoPago == "Efectivo")
                 {
-                    string queryCabecera = @"INSERT INTO Ventas 
-                                   (IdSocio, Fecha, Total, MetodoPago, TipoComprobante, IdUsuario) 
-                                   VALUES 
-                                   (@IdSocio, GETDATE(), @Total, @Metodo, @Comprobante, @IdUsuario);
-                                   SELECT SCOPE_IDENTITY();";
-                    SqlCommand cmdCabecera = new SqlCommand(queryCabecera, oConexion, transaccion);
-                    cmdCabecera.Parameters.AddWithValue("@IdSocio", idClienteActual ?? (object)DBNull.Value);
-                    cmdCabecera.Parameters.AddWithValue("@Total", totalAPagar);
-                    cmdCabecera.Parameters.AddWithValue("@Metodo", cmbMetodoPago.SelectedItem.ToString());
-                    cmdCabecera.Parameters.AddWithValue("@Comprobante", tipoComprobante ?? "Ticket");
-                    cmdCabecera.Parameters.AddWithValue("@IdUsuario", cajeroActual != null ? cajeroActual.IdUsuario : (object)DBNull.Value);
-
-                    int idNuevaVenta = Convert.ToInt32(cmdCabecera.ExecuteScalar());
-
-                    foreach (DataRow fila in carritoDetalles.Rows)
-                    {
-                        int idProd = Convert.ToInt32(fila["IdProducto"]);
-                        int cantidadVendida = Convert.ToInt32(fila["Cantidad"]);
-
-                        string queryDetalle = @"INSERT INTO VentasDetalle 
-                                      (IdVenta, IdProducto, Concepto, Cantidad, PrecioUnitario, SubTotal) 
-                                      VALUES 
-                                      (@IdVenta, @IdProducto, @Concepto, @Cantidad, @Precio, @SubTotal)";
-                        SqlCommand cmdDetalle = new SqlCommand(queryDetalle, oConexion, transaccion);
-                        cmdDetalle.Parameters.AddWithValue("@IdVenta", idNuevaVenta);
-                        cmdDetalle.Parameters.AddWithValue("@IdProducto", idProd > 0 ? idProd : (object)DBNull.Value);
-                        cmdDetalle.Parameters.AddWithValue("@Concepto", fila["Concepto"].ToString());
-                        cmdDetalle.Parameters.AddWithValue("@Cantidad", cantidadVendida);
-                        cmdDetalle.Parameters.AddWithValue("@Precio", Convert.ToDecimal(fila["PrecioUnitario"]));
-                        cmdDetalle.Parameters.AddWithValue("@SubTotal", Convert.ToDecimal(fila["SubTotal"]));
-                        cmdDetalle.ExecuteNonQuery();
-
-                        if (idProd > 0)
-                        {
-                            string queryStock = "UPDATE Productos SET StockActual = StockActual - @cantidadVendida WHERE IdProducto = @idProducto";
-                            SqlCommand cmdStock = new SqlCommand(queryStock, oConexion, transaccion);
-                            cmdStock.Parameters.AddWithValue("@cantidadVendida", cantidadVendida);
-                            cmdStock.Parameters.AddWithValue("@idProducto", idProd);
-                            cmdStock.ExecuteNonQuery();
-                        }
-                    }
-
-                    transaccion.Commit();
-
-                    MessageBox.Show($"¡Venta N° {idNuevaVenta} registrada con éxito!", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
-
-                    AsuFit.Reportes.GeneradorPDF generador = new AsuFit.Reportes.GeneradorPDF();
-                    string nomCliente = string.IsNullOrWhiteSpace(txtNombreCliente.Text) ? "Cliente Ocasional" : txtNombreCliente.Text;
-                    string rucCliente = string.IsNullOrWhiteSpace(txtRucCliente.Text) ? "Sin RUC" : txtRucCliente.Text;
-                    string ciCliente = string.IsNullOrWhiteSpace(txtBusquedaCliente.Text) ? "Sin CI" : txtBusquedaCliente.Text;
-                    string metodo = cmbMetodoPago.SelectedItem.ToString();
-                    string numTicket = idNuevaVenta.ToString();
-
-                    decimal dineroRecibido = 0;
-                    decimal dineroVuelto = 0;
-
-                    if (metodo == "Efectivo")
-                    {
-                        decimal.TryParse(txtMontoRecibido.Text, out dineroRecibido);
-                        dineroVuelto = dineroRecibido - CarritoGlobal.TotalAPagar;
-                        if (dineroVuelto < 0) dineroVuelto = 0;
-                    }
-
-                    string nombreDelCajero = cajeroActual != null ? cajeroActual.NombreCompleto : "Admin (No detectado)";
-
-                    string correoFiltro = string.IsNullOrWhiteSpace(correoClienteActual) ? "Sin correo" : correoClienteActual;
-
-                    if (tipoComprobante == "Factura")
-                    {
-                        generador.GenerarFacturaLegalA4(
-                            CarritoGlobal.Detalles,
-                            CarritoGlobal.TotalAPagar,
-                            nomCliente,
-                            ciCliente,
-                            rucCliente,
-                            correoFiltro,
-                            metodo,
-                            dineroRecibido,
-                            dineroVuelto,
-                            nombreDelCajero,
-                            numTicket
-                        );
-                    }
-                    else
-                    {
-                        generador.GenerarTicketTermico(
-                            CarritoGlobal.Detalles,
-                            CarritoGlobal.TotalAPagar,
-                            nomCliente,
-                            ciCliente,
-                            rucCliente,
-                            metodo,
-                            dineroRecibido,
-                            dineroVuelto,
-                            nombreDelCajero,
-                            numTicket
-                        );
-                    }
-
-                    string rutaDescargas = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads");
-                    string nombreArchivo = tipoComprobante == "Factura" ? $"Factura_Legal_{numTicket}.pdf" : $"Comprobante_Venta_{numTicket}.pdf";
-                    string rutaCompletaPdf = System.IO.Path.Combine(rutaDescargas, nombreArchivo);
-
-                    if (correoFiltro != "Sin correo" && correoFiltro.Contains("@"))
-                    {
-                        EnviarCorreoConAdjunto(correoFiltro, rutaCompletaPdf, tipoComprobante ?? "Ticket", numTicket);
-                    }
-
-                    CarritoGlobal.LimpiarCarrito();
-                    this.DialogResult = DialogResult.OK;
-                    this.Close();
+                    decimal.TryParse(txtMontoRecibido.Text, out dineroRecibido);
+                    dineroVuelto = dineroRecibido - CarritoGlobal.TotalAPagar;
+                    if (dineroVuelto < 0) dineroVuelto = 0;
                 }
-                catch (Exception ex)
+
+                string correoFiltro = string.IsNullOrWhiteSpace(correoClienteActual) ? "Sin correo" : correoClienteActual;
+
+                if (tipoComprobante == "Factura")
                 {
-                    transaccion.Rollback();
-                    MessageBox.Show("Error al procesar la venta: " + ex.Message, "Error Crítico", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    generador.GenerarFacturaLegalA4(CarritoGlobal.Detalles, CarritoGlobal.TotalAPagar, nomCliente, ciCliente, rucCliente, correoFiltro, metodoPago, dineroRecibido, dineroVuelto, nombreCajero, numTicket);
                 }
+                else
+                {
+                    generador.GenerarTicketTermico(CarritoGlobal.Detalles, CarritoGlobal.TotalAPagar, nomCliente, ciCliente, rucCliente, metodoPago, dineroRecibido, dineroVuelto, nombreCajero, numTicket);
+                }
+
+                string rutaDescargas = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads");
+                string nombreArchivo = tipoComprobante == "Factura" ? $"Factura_Legal_{numTicket}.pdf" : $"Comprobante_Venta_{numTicket}.pdf";
+                string rutaCompletaPdf = System.IO.Path.Combine(rutaDescargas, nombreArchivo);
+
+                if (correoFiltro != "Sin correo" && correoFiltro.Contains("@"))
+                {
+                    EnviarCorreoConAdjunto(correoFiltro, rutaCompletaPdf, tipoComprobante ?? "Ticket", numTicket);
+                }
+
+                // --- LIMPIEZA FINAL DE LA NUBE Y DE LA PANTALLA DE INVENTARIO ---
+                CarritoGlobal.LimpiarCarrito();
+
+                frmPuntoVenta inventario = Application.OpenForms["frmPuntoVenta"] as frmPuntoVenta;
+                if (inventario != null) inventario.LimpiarGrillaVisual();
+
+                this.DialogResult = DialogResult.OK;
+                this.Close();
+            }
+            else
+            {
+                MessageBox.Show("Error crítico al procesar la venta: \n" + mensajeError, "Error de Base de Datos", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -318,38 +309,78 @@ namespace AsuFit.Presentacion
         }
 
         // =========================================================================================
-        // --- NUEVO MÉTODO: ENVÍO DE CORREO AUTOMÁTICO ---
+        // --- NUEVO MÉTODO: ENVÍO DE CORREO AUTOMÁTICO DESDE LA CONFIGURACIÓN ---
         // =========================================================================================
         private void EnviarCorreoConAdjunto(string correoDestino, string rutaArchivo, string tipoComprobante, string nroComprobante)
         {
             try
             {
-                string miCorreo = "alexisaguilarpsn@gmail.com";
-                string miContrasenaApp = "prtziaqqyegoxjmc";
+                string miCorreo = "";
+                string miContrasenaApp = "";
+                string nombreGym = "AsuFit GYM";
 
+                // --- 1. LEER EL CORREO CORPORATIVO DESDE LA BASE DE DATOS ---
+                using (SqlConnection oConexion = Conexion.ObtenerConexion())
+                {
+                    string query = "SELECT CorreoEmisor, ContrasenaCorreo, NombreGimnasio FROM Configuracion WHERE IdConfiguracion = 1";
+                    SqlCommand cmd = new SqlCommand(query, oConexion);
+                    oConexion.Open();
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            miCorreo = reader["CorreoEmisor"].ToString();
+                            miContrasenaApp = reader["ContrasenaCorreo"].ToString();
+                            nombreGym = reader["NombreGimnasio"].ToString();
+                        }
+                    }
+                }
+
+                // Si no hay correo configurado, cancelamos el envío en silencio para no trabar la venta
+                if (string.IsNullOrWhiteSpace(miCorreo) || string.IsNullOrWhiteSpace(miContrasenaApp))
+                {
+                    return;
+                }
+
+                // --- 2. ARMAMOS EL CORREO CON LOS DATOS DE LA EMPRESA ---
                 MailMessage correo = new MailMessage();
-                correo.From = new MailAddress(miCorreo, "AsuFit GYM");
+                correo.From = new MailAddress(miCorreo, nombreGym);
                 correo.To.Add(correoDestino);
-                correo.Subject = $"Tu {tipoComprobante} N° {nroComprobante} - AsuFit Gym";
+                correo.Subject = $"Tu {tipoComprobante} N° {nroComprobante} - {nombreGym}";
 
-                string cuerpo = $"Hola,\n\nAdjuntamos tu {tipoComprobante} correspondiente a tu última transacción en AsuFit Gym.\n\n¡Gracias por tu preferencia!\n\nSaludos,\nEl equipo de AsuFit Gym";
-                correo.Body = cuerpo;
-                correo.IsBodyHtml = false;
+                // --- 3. CÓDIGO ANTI-SPAM: USAMOS HTML EN LUGAR DE TEXTO PLANO ---
+                string cuerpoHtml = $@"
+                <div style='font-family: Arial, Helvetica, sans-serif; color: #333333; padding: 20px; border: 1px solid #eaeaea; border-radius: 10px; max-width: 600px;'>
+                    <h2 style='color: #2E86C1;'>¡Hola!</h2>
+                    <p>Adjuntamos tu comprobante (<strong>{tipoComprobante} N° {nroComprobante}</strong>) correspondiente a tu última transacción en <strong>{nombreGym}</strong>.</p>
+                    <p>Si tienes alguna consulta sobre este documento, no dudes en responder directamente a este correo.</p>
+                    <br>
+                    <p>¡Gracias por tu preferencia y por seguir entrenando con nosotros!</p>
+                    <hr style='border: none; border-top: 1px solid #eaeaea; margin: 20px 0;'>
+                    <p style='font-size: 12px; color: #888888;'>
+                        Saludos cordiales,<br>
+                        <strong>El equipo de {nombreGym}</strong>
+                    </p>
+                </div>";
 
+                correo.Body = cuerpoHtml;
+                correo.IsBodyHtml = true; // Fundamental para que Google lo vea como un correo profesional
+
+                // --- 4. ADJUNTAMOS EL PDF ---
                 if (System.IO.File.Exists(rutaArchivo))
                 {
                     Attachment adjunto = new Attachment(rutaArchivo);
                     correo.Attachments.Add(adjunto);
                 }
 
+                // --- 5. CONFIGURACIÓN DEL SERVIDOR Y ENVÍO ---
                 SmtpClient smtp = new SmtpClient("smtp.gmail.com");
                 smtp.Port = 587;
                 smtp.EnableSsl = true;
 
-                // --- LAS DOS LÍNEAS CLAVE PARA EVITAR EL BLOQUEO DE GOOGLE ---
+                // Las dos líneas clave para evitar el bloqueo de red
                 smtp.UseDefaultCredentials = false;
                 smtp.DeliveryMethod = SmtpDeliveryMethod.Network;
-                // -------------------------------------------------------------
 
                 smtp.Credentials = new NetworkCredential(miCorreo, miContrasenaApp);
 
