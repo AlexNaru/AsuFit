@@ -22,7 +22,6 @@ namespace AsuFit.Presentacion
         {
             InitializeComponent();
             usuarioActual = userLogueDado;
-            SendMessage(txtBuscarProducto.Handle, EM_SETCUEBANNER, 1, "Buscar producto...");
         }
 
         private InventarioNegocio negocio = new InventarioNegocio();
@@ -44,10 +43,15 @@ namespace AsuFit.Presentacion
                 row["NombreBusqueda"] = QuitarAcentos(nombreOriginal);
             }
 
-            // LLAMAMOS A NUESTRA NUEVA FUNCIÓN AQUÍ
+            // 1. Configuramos el autocompletado PRIMERO (esto recrea la caja de texto internamente en Windows)
             ConfigurarAutocompletado();
 
+            // Aplicamos los filtros iniciales si los hay
             AplicarFiltros();
+
+            // 2. LA SOLUCIÓN DEFINITIVA: 
+            // Con la caja ya recreada por el autocompletado, ahora sí le fijamos el texto gris.
+            SendMessage(txtBuscarProducto.Handle, EM_SETCUEBANNER, 1, "Buscar Bebidas, Snacks o Suplementos...");
         }
 
         // --- 1. CONFIGURACIÓN DE TABLA Y FILTROS ---

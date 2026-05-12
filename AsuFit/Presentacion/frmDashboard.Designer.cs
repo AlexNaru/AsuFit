@@ -52,10 +52,7 @@
             this.btnRegistroAsistencia = new System.Windows.Forms.Button();
             this.btnInicio = new System.Windows.Forms.Button();
             this.pnlContenedor = new System.Windows.Forms.Panel();
-            this.lblRolUsuario = new System.Windows.Forms.Label();
-            this.lblNombreUsuario = new System.Windows.Forms.Label();
             this.pnlSidebar.SuspendLayout();
-            this.pnlContenedor.SuspendLayout();
             this.SuspendLayout();
             // 
             // pnlSidebar
@@ -87,7 +84,7 @@
             this.pnlSidebar.Dock = System.Windows.Forms.DockStyle.Left;
             this.pnlSidebar.Location = new System.Drawing.Point(0, 0);
             this.pnlSidebar.Name = "pnlSidebar";
-            this.pnlSidebar.Size = new System.Drawing.Size(262, 985);
+            this.pnlSidebar.Size = new System.Drawing.Size(262, 947);
             this.pnlSidebar.TabIndex = 0;
             // 
             // btnCerrarSesion
@@ -401,40 +398,18 @@
             this.pnlContenedor.BackColor = System.Drawing.Color.Transparent;
             this.pnlContenedor.BackgroundImage = global::AsuFit.Properties.Resources.Gemini_Generated_Image_o4rjxpo4rjxpo4rj;
             this.pnlContenedor.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.pnlContenedor.Controls.Add(this.lblRolUsuario);
-            this.pnlContenedor.Controls.Add(this.lblNombreUsuario);
             this.pnlContenedor.Dock = System.Windows.Forms.DockStyle.Top;
             this.pnlContenedor.Location = new System.Drawing.Point(262, 0);
             this.pnlContenedor.Name = "pnlContenedor";
-            this.pnlContenedor.Size = new System.Drawing.Size(1916, 999);
+            this.pnlContenedor.Size = new System.Drawing.Size(1516, 947);
             this.pnlContenedor.TabIndex = 0;
-            // 
-            // lblRolUsuario
-            // 
-            this.lblRolUsuario.AutoSize = true;
-            this.lblRolUsuario.ForeColor = System.Drawing.Color.White;
-            this.lblRolUsuario.Location = new System.Drawing.Point(504, 236);
-            this.lblRolUsuario.Name = "lblRolUsuario";
-            this.lblRolUsuario.Size = new System.Drawing.Size(41, 20);
-            this.lblRolUsuario.TabIndex = 1;
-            this.lblRolUsuario.Text = "Rol: ";
-            // 
-            // lblNombreUsuario
-            // 
-            this.lblNombreUsuario.AutoSize = true;
-            this.lblNombreUsuario.ForeColor = System.Drawing.Color.White;
-            this.lblNombreUsuario.Location = new System.Drawing.Point(504, 202);
-            this.lblNombreUsuario.Name = "lblNombreUsuario";
-            this.lblNombreUsuario.Size = new System.Drawing.Size(91, 20);
-            this.lblNombreUsuario.TabIndex = 0;
-            this.lblNombreUsuario.Text = "Cargando...";
             // 
             // frmDashboard
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(30)))), ((int)(((byte)(30)))));
-            this.ClientSize = new System.Drawing.Size(2178, 985);
+            this.ClientSize = new System.Drawing.Size(1778, 947);
             this.Controls.Add(this.pnlContenedor);
             this.Controls.Add(this.pnlSidebar);
             this.Name = "frmDashboard";
@@ -444,8 +419,6 @@
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frmDashboard_FormClosing);
             this.Load += new System.EventHandler(this.frmDashboard_Load);
             this.pnlSidebar.ResumeLayout(false);
-            this.pnlContenedor.ResumeLayout(false);
-            this.pnlContenedor.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -456,8 +429,6 @@
         private System.Windows.Forms.Button btnRegistrarSocio;
         private System.Windows.Forms.Panel pnlContenedor;
         private System.Windows.Forms.Button btnGestionSocios;
-        private System.Windows.Forms.Label lblNombreUsuario;
-        private System.Windows.Forms.Label lblRolUsuario;
         private System.Windows.Forms.Button btnCerrarSesion;
         private System.Windows.Forms.Button btnGestionUsuarios;
         private System.Windows.Forms.Button btnRegistrarUsuario;

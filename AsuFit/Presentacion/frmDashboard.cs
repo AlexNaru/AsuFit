@@ -26,18 +26,6 @@ namespace AsuFit.Presentacion
         {
             AbrirFormularioHijo(new frmInicio());
             ResaltarBoton(btnInicio);
-
-            lblNombreUsuario.Text = "Bienvenido: " + usuarioActual.NombreCompleto;
-            lblRolUsuario.Text = "Nivel de acceso: " + usuarioActual.Rol.ToUpper();
-
-            if (usuarioActual.Rol == "Administrador")
-            {
-                lblRolUsuario.ForeColor = Color.Yellow;
-            }
-            else
-            {
-                lblRolUsuario.ForeColor = Color.Green;
-            }
         }
 
         // --- MÉTODO PARA LOS COLORES DEL MENÚ ---

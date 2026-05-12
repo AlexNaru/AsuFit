@@ -28,9 +28,9 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend2 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea7 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend7 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series7 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.lblUtilidad = new System.Windows.Forms.Label();
             this.lblEgresos = new System.Windows.Forms.Label();
             this.lblIngresos = new System.Windows.Forms.Label();
@@ -52,8 +52,8 @@
             this.panel5 = new System.Windows.Forms.Panel();
             this.panel6 = new System.Windows.Forms.Panel();
             this.panel7 = new System.Windows.Forms.Panel();
-            this.chartFinanzas = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.label5 = new System.Windows.Forms.Label();
+            this.chartFinanzas = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.panel8 = new System.Windows.Forms.Panel();
             this.dgvProductosStock = new System.Windows.Forms.DataGridView();
             this.label6 = new System.Windows.Forms.Label();
@@ -97,7 +97,7 @@
             // lblIngresos
             // 
             this.lblIngresos.AutoSize = true;
-            this.lblIngresos.Location = new System.Drawing.Point(26, 52);
+            this.lblIngresos.Location = new System.Drawing.Point(17, 52);
             this.lblIngresos.Name = "lblIngresos";
             this.lblIngresos.Size = new System.Drawing.Size(18, 20);
             this.lblIngresos.TabIndex = 3;
@@ -106,7 +106,7 @@
             // lblTituloVencimientos
             // 
             this.lblTituloVencimientos.AutoSize = true;
-            this.lblTituloVencimientos.Location = new System.Drawing.Point(23, 19);
+            this.lblTituloVencimientos.Location = new System.Drawing.Point(23, 13);
             this.lblTituloVencimientos.Name = "lblTituloVencimientos";
             this.lblTituloVencimientos.Size = new System.Drawing.Size(177, 20);
             this.lblTituloVencimientos.TabIndex = 4;
@@ -145,7 +145,7 @@
             this.dgvVencimientos.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.dgvVencimientos.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.dgvVencimientos.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvVencimientos.Location = new System.Drawing.Point(27, 49);
+            this.dgvVencimientos.Location = new System.Drawing.Point(27, 43);
             this.dgvVencimientos.Name = "dgvVencimientos";
             this.dgvVencimientos.ReadOnly = true;
             this.dgvVencimientos.RowHeadersVisible = false;
@@ -172,7 +172,7 @@
             this.dgvVencidos.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.dgvVencidos.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.dgvVencidos.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvVencidos.Location = new System.Drawing.Point(24, 49);
+            this.dgvVencidos.Location = new System.Drawing.Point(24, 43);
             this.dgvVencidos.Name = "dgvVencidos";
             this.dgvVencidos.ReadOnly = true;
             this.dgvVencidos.RowHeadersVisible = false;
@@ -187,7 +187,7 @@
             // lbl
             // 
             this.lbl.AutoSize = true;
-            this.lbl.Location = new System.Drawing.Point(20, 19);
+            this.lbl.Location = new System.Drawing.Point(20, 13);
             this.lbl.Name = "lbl";
             this.lbl.Size = new System.Drawing.Size(79, 20);
             this.lbl.TabIndex = 13;
@@ -196,7 +196,7 @@
             // lblVencimientos
             // 
             this.lblVencimientos.AutoSize = true;
-            this.lblVencimientos.Location = new System.Drawing.Point(105, 19);
+            this.lblVencimientos.Location = new System.Drawing.Point(105, 13);
             this.lblVencimientos.Name = "lblVencimientos";
             this.lblVencimientos.Size = new System.Drawing.Size(18, 20);
             this.lblVencimientos.TabIndex = 14;
@@ -266,9 +266,9 @@
             this.panel5.Controls.Add(this.dgvVencimientos);
             this.panel5.Controls.Add(this.lblTituloVencimientos);
             this.panel5.Controls.Add(this.lblProximosVencimientos);
-            this.panel5.Location = new System.Drawing.Point(59, 623);
+            this.panel5.Location = new System.Drawing.Point(805, 486);
             this.panel5.Name = "panel5";
-            this.panel5.Size = new System.Drawing.Size(490, 226);
+            this.panel5.Size = new System.Drawing.Size(490, 210);
             this.panel5.TabIndex = 19;
             // 
             // panel6
@@ -277,9 +277,9 @@
             this.panel6.Controls.Add(this.dgvVencidos);
             this.panel6.Controls.Add(this.lbl);
             this.panel6.Controls.Add(this.lblVencimientos);
-            this.panel6.Location = new System.Drawing.Point(568, 623);
+            this.panel6.Location = new System.Drawing.Point(805, 719);
             this.panel6.Name = "panel6";
-            this.panel6.Size = new System.Drawing.Size(490, 226);
+            this.panel6.Size = new System.Drawing.Size(490, 210);
             this.panel6.TabIndex = 20;
             // 
             // panel7
@@ -288,25 +288,8 @@
             this.panel7.Controls.Add(this.chartFinanzas);
             this.panel7.Location = new System.Drawing.Point(60, 145);
             this.panel7.Name = "panel7";
-            this.panel7.Size = new System.Drawing.Size(729, 443);
+            this.panel7.Size = new System.Drawing.Size(620, 443);
             this.panel7.TabIndex = 21;
-            // 
-            // chartFinanzas
-            // 
-            chartArea2.Name = "ChartArea1";
-            this.chartFinanzas.ChartAreas.Add(chartArea2);
-            legend2.Enabled = false;
-            legend2.Name = "Legend1";
-            this.chartFinanzas.Legends.Add(legend2);
-            this.chartFinanzas.Location = new System.Drawing.Point(27, 58);
-            this.chartFinanzas.Name = "chartFinanzas";
-            series2.ChartArea = "ChartArea1";
-            series2.Legend = "Legend1";
-            series2.Name = "Series1";
-            this.chartFinanzas.Series.Add(series2);
-            this.chartFinanzas.Size = new System.Drawing.Size(565, 360);
-            this.chartFinanzas.TabIndex = 6;
-            this.chartFinanzas.Text = "chart1";
             // 
             // label5
             // 
@@ -317,6 +300,23 @@
             this.label5.TabIndex = 7;
             this.label5.Text = "BALANCE MENSUAL";
             // 
+            // chartFinanzas
+            // 
+            chartArea7.Name = "ChartArea1";
+            this.chartFinanzas.ChartAreas.Add(chartArea7);
+            legend7.Enabled = false;
+            legend7.Name = "Legend1";
+            this.chartFinanzas.Legends.Add(legend7);
+            this.chartFinanzas.Location = new System.Drawing.Point(27, 58);
+            this.chartFinanzas.Name = "chartFinanzas";
+            series7.ChartArea = "ChartArea1";
+            series7.Legend = "Legend1";
+            series7.Name = "Series1";
+            this.chartFinanzas.Series.Add(series7);
+            this.chartFinanzas.Size = new System.Drawing.Size(565, 360);
+            this.chartFinanzas.TabIndex = 6;
+            this.chartFinanzas.Text = "chart1";
+            // 
             // panel8
             // 
             this.panel8.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
@@ -324,7 +324,7 @@
             this.panel8.Controls.Add(this.label6);
             this.panel8.Location = new System.Drawing.Point(809, 24);
             this.panel8.Name = "panel8";
-            this.panel8.Size = new System.Drawing.Size(490, 226);
+            this.panel8.Size = new System.Drawing.Size(490, 210);
             this.panel8.TabIndex = 21;
             // 
             // dgvProductosStock
@@ -337,7 +337,7 @@
             this.dgvProductosStock.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.dgvProductosStock.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.dgvProductosStock.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvProductosStock.Location = new System.Drawing.Point(24, 49);
+            this.dgvProductosStock.Location = new System.Drawing.Point(24, 43);
             this.dgvProductosStock.Name = "dgvProductosStock";
             this.dgvProductosStock.ReadOnly = true;
             this.dgvProductosStock.RowHeadersVisible = false;
@@ -351,7 +351,7 @@
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(20, 19);
+            this.label6.Location = new System.Drawing.Point(20, 13);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(157, 20);
             this.label6.TabIndex = 13;
@@ -362,9 +362,9 @@
             this.panel9.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panel9.Controls.Add(this.dgvProductosStockBajo);
             this.panel9.Controls.Add(this.label8);
-            this.panel9.Location = new System.Drawing.Point(809, 274);
+            this.panel9.Location = new System.Drawing.Point(809, 251);
             this.panel9.Name = "panel9";
-            this.panel9.Size = new System.Drawing.Size(490, 226);
+            this.panel9.Size = new System.Drawing.Size(490, 210);
             this.panel9.TabIndex = 21;
             // 
             // dgvProductosStockBajo
@@ -377,7 +377,7 @@
             this.dgvProductosStockBajo.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.dgvProductosStockBajo.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.dgvProductosStockBajo.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvProductosStockBajo.Location = new System.Drawing.Point(24, 49);
+            this.dgvProductosStockBajo.Location = new System.Drawing.Point(24, 42);
             this.dgvProductosStockBajo.Name = "dgvProductosStockBajo";
             this.dgvProductosStockBajo.ReadOnly = true;
             this.dgvProductosStockBajo.RowHeadersVisible = false;
@@ -391,7 +391,7 @@
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(20, 19);
+            this.label8.Location = new System.Drawing.Point(20, 13);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(196, 20);
             this.label8.TabIndex = 13;
@@ -401,7 +401,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1715, 911);
+            this.ClientSize = new System.Drawing.Size(1449, 941);
             this.Controls.Add(this.panel9);
             this.Controls.Add(this.panel8);
             this.Controls.Add(this.panel7);
