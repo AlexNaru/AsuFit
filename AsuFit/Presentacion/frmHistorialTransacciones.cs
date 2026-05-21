@@ -2,29 +2,39 @@
 using System;
 using System.Data;
 using System.Data.SqlClient;
+using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
 namespace AsuFit.Presentacion
 {
     public partial class frmHistorialTransacciones : Form
     {
+        #region 1. VARIABLES GLOBALES Y CONSTRUCTOR
+        [DllImport("user32.dll", CharSet = CharSet.Auto)]
+        private static extern Int32 SendMessage(IntPtr hWnd, int msg, int wParam, [MarshalAs(UnmanagedType.LPWStr)] string lParam);
+        private const int EM_SETCUEBANNER = 0x1501;
+
         public frmHistorialTransacciones()
         {
             InitializeComponent();
-
-            // --- EL CAMBIO CLAVE: Bloqueamos las columnas automáticas ---
             dgvVentas.AutoGenerateColumns = false;
-
             cmbFiltroTipo.SelectedIndex = 0;
         }
+        #endregion
 
+        #region 2. INICIALIZACIÓN
         private void frmHistorialTransacciones_Load(object sender, EventArgs e)
         {
             dtpDesde.Value = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
             dtpHasta.Value = DateTime.Now.Date;
+
+            SendMessage(txtBuscar.Handle, EM_SETCUEBANNER, 1, "Buscar por N° de Transacción, Cliente o Cédula...");
+
             BuscarVentas();
         }
+        #endregion
 
+        #region 3. SECCIÓN SUPERIOR: FILTROS Y BÚSQUEDA
         private void txtBuscar_TextChanged(object sender, EventArgs e)
         {
             BuscarVentas();
@@ -44,7 +54,9 @@ namespace AsuFit.Presentacion
         {
             BuscarVentas();
         }
+        #endregion
 
+        #region 4. SECCIÓN CENTRAL: PROCESAMIENTO DE DATOS Y GRILLA
         private void BuscarVentas()
         {
             if (cmbFiltroTipo.SelectedItem == null) return;
@@ -99,10 +111,7 @@ namespace AsuFit.Presentacion
                     DataTable dtVentas = new DataTable();
                     da.Fill(dtVentas);
 
-                    // Pasamos los datos. La grilla buscará los DataPropertyName que configuraste
                     dgvVentas.DataSource = dtVentas;
-
-                    // --- CÓDIGO LIMPIO: Ya no forzamos formatos visuales desde C# ---
 
                     CalcularTotales(dtVentas);
                 }
@@ -112,7 +121,9 @@ namespace AsuFit.Presentacion
                 }
             }
         }
+        #endregion
 
+        #region 5. SECCIÓN INFERIOR: TOTALES Y ACCIONES
         private void CalcularTotales(DataTable dt)
         {
             decimal totalRecaudado = 0;
@@ -129,7 +140,6 @@ namespace AsuFit.Presentacion
         {
             if (dgvVentas.SelectedRows.Count > 0)
             {
-                // ACTUALIZADO: Leemos los datos apuntando a los nuevos "Name" de las columnas visuales
                 int idVenta = Convert.ToInt32(dgvVentas.SelectedRows[0].Cells["colHistorialId"].Value);
                 string cliente = dgvVentas.SelectedRows[0].Cells["colHistorialCliente"].Value.ToString();
 
@@ -141,5 +151,6 @@ namespace AsuFit.Presentacion
                 MessageBox.Show("Por favor, selecciona una transacción de la tabla primero.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
+        #endregion
     }
 }

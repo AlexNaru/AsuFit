@@ -68,7 +68,7 @@
             this.dgvGastos.RowTemplate.Height = 28;
             this.dgvGastos.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dgvGastos.Size = new System.Drawing.Size(847, 150);
-            this.dgvGastos.TabIndex = 0;
+            this.dgvGastos.TabIndex = 4;
             this.dgvGastos.DataBindingComplete += new System.Windows.Forms.DataGridViewBindingCompleteEventHandler(this.dgvGastos_DataBindingComplete);
             // 
             // colGastoId
@@ -168,7 +168,7 @@
             this.cmbCategoria.Location = new System.Drawing.Point(16, 240);
             this.cmbCategoria.Name = "cmbCategoria";
             this.cmbCategoria.Size = new System.Drawing.Size(121, 28);
-            this.cmbCategoria.TabIndex = 5;
+            this.cmbCategoria.TabIndex = 0;
             // 
             // label3
             // 
@@ -184,7 +184,7 @@
             this.btnGuardar.Location = new System.Drawing.Point(743, 237);
             this.btnGuardar.Name = "btnGuardar";
             this.btnGuardar.Size = new System.Drawing.Size(120, 37);
-            this.btnGuardar.TabIndex = 7;
+            this.btnGuardar.TabIndex = 3;
             this.btnGuardar.Text = "GUARDAR";
             this.btnGuardar.UseVisualStyleBackColor = true;
             this.btnGuardar.Click += new System.EventHandler(this.btnGuardar_Click);

@@ -44,21 +44,21 @@
             this.txtPrecio.Location = new System.Drawing.Point(36, 166);
             this.txtPrecio.Name = "txtPrecio";
             this.txtPrecio.Size = new System.Drawing.Size(167, 26);
-            this.txtPrecio.TabIndex = 12;
+            this.txtPrecio.TabIndex = 1;
             // 
             // txtDuracionDias
             // 
             this.txtDuracionDias.Location = new System.Drawing.Point(36, 240);
             this.txtDuracionDias.Name = "txtDuracionDias";
             this.txtDuracionDias.Size = new System.Drawing.Size(167, 26);
-            this.txtDuracionDias.TabIndex = 11;
+            this.txtDuracionDias.TabIndex = 2;
             // 
             // txtNombrePlan
             // 
             this.txtNombrePlan.Location = new System.Drawing.Point(36, 92);
             this.txtNombrePlan.Name = "txtNombrePlan";
             this.txtNombrePlan.Size = new System.Drawing.Size(167, 26);
-            this.txtNombrePlan.TabIndex = 10;
+            this.txtNombrePlan.TabIndex = 0;
             // 
             // label3
             // 
@@ -101,7 +101,7 @@
             this.btnGuardar.Location = new System.Drawing.Point(59, 300);
             this.btnGuardar.Name = "btnGuardar";
             this.btnGuardar.Size = new System.Drawing.Size(123, 41);
-            this.btnGuardar.TabIndex = 14;
+            this.btnGuardar.TabIndex = 3;
             this.btnGuardar.Text = "GUARDAR";
             this.btnGuardar.UseVisualStyleBackColor = true;
             this.btnGuardar.Click += new System.EventHandler(this.btnGuardar_Click);
@@ -111,9 +111,10 @@
             this.btnCancelar.Location = new System.Drawing.Point(59, 364);
             this.btnCancelar.Name = "btnCancelar";
             this.btnCancelar.Size = new System.Drawing.Size(123, 41);
-            this.btnCancelar.TabIndex = 15;
+            this.btnCancelar.TabIndex = 4;
             this.btnCancelar.Text = "CANCELAR";
             this.btnCancelar.UseVisualStyleBackColor = true;
+            this.btnCancelar.Click += new System.EventHandler(this.btnCancelar_Click);
             // 
             // frmRegistrarPlan
             // 

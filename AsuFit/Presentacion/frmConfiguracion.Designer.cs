@@ -39,6 +39,8 @@
             this.label5 = new System.Windows.Forms.Label();
             this.tabPage4 = new System.Windows.Forms.TabPage();
             this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.btnCancelarNotificaciones = new System.Windows.Forms.Button();
+            this.btnGuardarNotificaciones = new System.Windows.Forms.Button();
             this.label17 = new System.Windows.Forms.Label();
             this.label16 = new System.Windows.Forms.Label();
             this.nudDiasAviso2 = new System.Windows.Forms.NumericUpDown();
@@ -67,8 +69,6 @@
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.tabControl1 = new System.Windows.Forms.TabControl();
-            this.btnGuardarNotificaciones = new System.Windows.Forms.Button();
-            this.btnCancelarNotificaciones = new System.Windows.Forms.Button();
             this.tabPage6.SuspendLayout();
             this.tabPage3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nudDiasAviso2)).BeginInit();
@@ -91,7 +91,7 @@
             this.tabPage6.Location = new System.Drawing.Point(4, 29);
             this.tabPage6.Name = "tabPage6";
             this.tabPage6.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage6.Size = new System.Drawing.Size(592, 425);
+            this.tabPage6.Size = new System.Drawing.Size(592, 451);
             this.tabPage6.TabIndex = 5;
             this.tabPage6.Text = "Sistema y Respaldos";
             this.tabPage6.UseVisualStyleBackColor = true;
@@ -175,7 +175,7 @@
             this.tabPage4.Location = new System.Drawing.Point(4, 29);
             this.tabPage4.Name = "tabPage4";
             this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage4.Size = new System.Drawing.Size(592, 425);
+            this.tabPage4.Size = new System.Drawing.Size(592, 451);
             this.tabPage4.TabIndex = 3;
             this.tabPage4.Text = "Operativo";
             this.tabPage4.UseVisualStyleBackColor = true;
@@ -204,6 +204,26 @@
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "Notificaciones";
             this.tabPage3.UseVisualStyleBackColor = true;
+            // 
+            // btnCancelarNotificaciones
+            // 
+            this.btnCancelarNotificaciones.Location = new System.Drawing.Point(313, 406);
+            this.btnCancelarNotificaciones.Name = "btnCancelarNotificaciones";
+            this.btnCancelarNotificaciones.Size = new System.Drawing.Size(116, 42);
+            this.btnCancelarNotificaciones.TabIndex = 16;
+            this.btnCancelarNotificaciones.Text = "CANCELAR";
+            this.btnCancelarNotificaciones.UseVisualStyleBackColor = true;
+            this.btnCancelarNotificaciones.Click += new System.EventHandler(this.btnCancelarNotificaciones_Click);
+            // 
+            // btnGuardarNotificaciones
+            // 
+            this.btnGuardarNotificaciones.Location = new System.Drawing.Point(84, 401);
+            this.btnGuardarNotificaciones.Name = "btnGuardarNotificaciones";
+            this.btnGuardarNotificaciones.Size = new System.Drawing.Size(116, 42);
+            this.btnGuardarNotificaciones.TabIndex = 15;
+            this.btnGuardarNotificaciones.Text = "GUARDAR";
+            this.btnGuardarNotificaciones.UseVisualStyleBackColor = true;
+            this.btnGuardarNotificaciones.Click += new System.EventHandler(this.btnGuardarNotificaciones_Click);
             // 
             // label17
             // 
@@ -331,7 +351,7 @@
             this.tabPage2.Location = new System.Drawing.Point(4, 29);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(592, 425);
+            this.tabPage2.Size = new System.Drawing.Size(592, 451);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Facturación";
             this.tabPage2.UseVisualStyleBackColor = true;
@@ -363,7 +383,7 @@
             this.btnGuardarCambios.Location = new System.Drawing.Point(180, 378);
             this.btnGuardarCambios.Name = "btnGuardarCambios";
             this.btnGuardarCambios.Size = new System.Drawing.Size(189, 41);
-            this.btnGuardarCambios.TabIndex = 11;
+            this.btnGuardarCambios.TabIndex = 5;
             this.btnGuardarCambios.Text = "GUARDAR CAMBIOS";
             this.btnGuardarCambios.UseVisualStyleBackColor = true;
             this.btnGuardarCambios.Click += new System.EventHandler(this.btnGuardarCambios_Click);
@@ -373,7 +393,7 @@
             this.btnSubirLogo.Location = new System.Drawing.Point(340, 248);
             this.btnSubirLogo.Name = "btnSubirLogo";
             this.btnSubirLogo.Size = new System.Drawing.Size(132, 46);
-            this.btnSubirLogo.TabIndex = 10;
+            this.btnSubirLogo.TabIndex = 4;
             this.btnSubirLogo.Text = "SUBIR LOGO";
             this.btnSubirLogo.UseVisualStyleBackColor = true;
             this.btnSubirLogo.Click += new System.EventHandler(this.btnSubirLogo_Click);
@@ -393,28 +413,28 @@
             this.txtDireccion.Location = new System.Drawing.Point(51, 297);
             this.txtDireccion.Name = "txtDireccion";
             this.txtDireccion.Size = new System.Drawing.Size(180, 26);
-            this.txtDireccion.TabIndex = 8;
+            this.txtDireccion.TabIndex = 3;
             // 
             // txtTelefono
             // 
             this.txtTelefono.Location = new System.Drawing.Point(51, 220);
             this.txtTelefono.Name = "txtTelefono";
             this.txtTelefono.Size = new System.Drawing.Size(180, 26);
-            this.txtTelefono.TabIndex = 7;
+            this.txtTelefono.TabIndex = 2;
             // 
             // txtRUC
             // 
             this.txtRUC.Location = new System.Drawing.Point(51, 146);
             this.txtRUC.Name = "txtRUC";
             this.txtRUC.Size = new System.Drawing.Size(180, 26);
-            this.txtRUC.TabIndex = 6;
+            this.txtRUC.TabIndex = 1;
             // 
             // txtNombreGimnasio
             // 
             this.txtNombreGimnasio.Location = new System.Drawing.Point(51, 77);
             this.txtNombreGimnasio.Name = "txtNombreGimnasio";
             this.txtNombreGimnasio.Size = new System.Drawing.Size(180, 26);
-            this.txtNombreGimnasio.TabIndex = 5;
+            this.txtNombreGimnasio.TabIndex = 0;
             // 
             // label8
             // 
@@ -474,26 +494,6 @@
             this.tabControl1.SelectedIndex = 0;
             this.tabControl1.Size = new System.Drawing.Size(600, 484);
             this.tabControl1.TabIndex = 0;
-            // 
-            // btnGuardarNotificaciones
-            // 
-            this.btnGuardarNotificaciones.Location = new System.Drawing.Point(84, 401);
-            this.btnGuardarNotificaciones.Name = "btnGuardarNotificaciones";
-            this.btnGuardarNotificaciones.Size = new System.Drawing.Size(116, 42);
-            this.btnGuardarNotificaciones.TabIndex = 15;
-            this.btnGuardarNotificaciones.Text = "GUARDAR";
-            this.btnGuardarNotificaciones.UseVisualStyleBackColor = true;
-            this.btnGuardarNotificaciones.Click += new System.EventHandler(this.btnGuardarNotificaciones_Click);
-            // 
-            // btnCancelarNotificaciones
-            // 
-            this.btnCancelarNotificaciones.Location = new System.Drawing.Point(313, 406);
-            this.btnCancelarNotificaciones.Name = "btnCancelarNotificaciones";
-            this.btnCancelarNotificaciones.Size = new System.Drawing.Size(116, 42);
-            this.btnCancelarNotificaciones.TabIndex = 16;
-            this.btnCancelarNotificaciones.Text = "CANCELAR";
-            this.btnCancelarNotificaciones.UseVisualStyleBackColor = true;
-            this.btnCancelarNotificaciones.Click += new System.EventHandler(this.btnCancelarNotificaciones_Click);
             // 
             // frmConfiguracion
             // 

@@ -96,7 +96,7 @@
             this.btnCerrarSesion.Location = new System.Drawing.Point(0, 900);
             this.btnCerrarSesion.Name = "btnCerrarSesion";
             this.btnCerrarSesion.Size = new System.Drawing.Size(262, 40);
-            this.btnCerrarSesion.TabIndex = 15;
+            this.btnCerrarSesion.TabIndex = 18;
             this.btnCerrarSesion.Text = "🏃 Cerrar Sesión";
             this.btnCerrarSesion.UseVisualStyleBackColor = true;
             this.btnCerrarSesion.Click += new System.EventHandler(this.btnCerrarSesion_Click);
@@ -112,7 +112,7 @@
             this.btnConfiguración.Margin = new System.Windows.Forms.Padding(0);
             this.btnConfiguración.Name = "btnConfiguración";
             this.btnConfiguración.Size = new System.Drawing.Size(262, 40);
-            this.btnConfiguración.TabIndex = 14;
+            this.btnConfiguración.TabIndex = 17;
             this.btnConfiguración.Text = "⚙️ Configuración";
             this.btnConfiguración.UseVisualStyleBackColor = false;
             this.btnConfiguración.Click += new System.EventHandler(this.btnConfiguración_Click);
@@ -128,7 +128,7 @@
             this.btnRespaldosAuditoría.Margin = new System.Windows.Forms.Padding(0);
             this.btnRespaldosAuditoría.Name = "btnRespaldosAuditoría";
             this.btnRespaldosAuditoría.Size = new System.Drawing.Size(262, 40);
-            this.btnRespaldosAuditoría.TabIndex = 13;
+            this.btnRespaldosAuditoría.TabIndex = 16;
             this.btnRespaldosAuditoría.Text = "Auditoría";
             this.btnRespaldosAuditoría.UseVisualStyleBackColor = false;
             this.btnRespaldosAuditoría.Click += new System.EventHandler(this.btnRespaldosAuditoría_Click);
@@ -142,7 +142,7 @@
             this.btnGestionUsuarios.Location = new System.Drawing.Point(0, 780);
             this.btnGestionUsuarios.Name = "btnGestionUsuarios";
             this.btnGestionUsuarios.Size = new System.Drawing.Size(262, 40);
-            this.btnGestionUsuarios.TabIndex = 12;
+            this.btnGestionUsuarios.TabIndex = 15;
             this.btnGestionUsuarios.Text = "🛡️ Gestión de Usuarios";
             this.btnGestionUsuarios.UseVisualStyleBackColor = true;
             this.btnGestionUsuarios.Click += new System.EventHandler(this.btnGestionUsuarios_Click);
@@ -156,7 +156,7 @@
             this.btnRegistrarUsuario.Location = new System.Drawing.Point(0, 740);
             this.btnRegistrarUsuario.Name = "btnRegistrarUsuario";
             this.btnRegistrarUsuario.Size = new System.Drawing.Size(262, 40);
-            this.btnRegistrarUsuario.TabIndex = 11;
+            this.btnRegistrarUsuario.TabIndex = 14;
             this.btnRegistrarUsuario.Text = "👷 Registrar Usuario";
             this.btnRegistrarUsuario.UseVisualStyleBackColor = true;
             this.btnRegistrarUsuario.Click += new System.EventHandler(this.btnRegistrarUsuario_Click);
@@ -179,7 +179,7 @@
             this.btnReportesEstadísticas.Location = new System.Drawing.Point(0, 640);
             this.btnReportesEstadísticas.Name = "btnReportesEstadísticas";
             this.btnReportesEstadísticas.Size = new System.Drawing.Size(262, 40);
-            this.btnReportesEstadísticas.TabIndex = 10;
+            this.btnReportesEstadísticas.TabIndex = 13;
             this.btnReportesEstadísticas.Text = "📈 Reportes y Estadísticas";
             this.btnReportesEstadísticas.UseVisualStyleBackColor = false;
             this.btnReportesEstadísticas.Click += new System.EventHandler(this.btnReportesEstadísticas_Click);
@@ -194,7 +194,7 @@
             this.btnProveedores.Location = new System.Drawing.Point(0, 600);
             this.btnProveedores.Name = "btnProveedores";
             this.btnProveedores.Size = new System.Drawing.Size(262, 40);
-            this.btnProveedores.TabIndex = 9;
+            this.btnProveedores.TabIndex = 12;
             this.btnProveedores.Text = "🚚 Proveedores";
             this.btnProveedores.UseVisualStyleBackColor = false;
             this.btnProveedores.Click += new System.EventHandler(this.btnProveedores_Click);
@@ -209,7 +209,7 @@
             this.btnIngresoMercaderia.Location = new System.Drawing.Point(0, 560);
             this.btnIngresoMercaderia.Name = "btnIngresoMercaderia";
             this.btnIngresoMercaderia.Size = new System.Drawing.Size(262, 40);
-            this.btnIngresoMercaderia.TabIndex = 22;
+            this.btnIngresoMercaderia.TabIndex = 11;
             this.btnIngresoMercaderia.Text = "Ingreso de Mercadería";
             this.btnIngresoMercaderia.UseVisualStyleBackColor = false;
             this.btnIngresoMercaderia.Click += new System.EventHandler(this.btnIngresoMercaderia_Click);
@@ -224,7 +224,7 @@
             this.btnGestionPlanes.Location = new System.Drawing.Point(0, 520);
             this.btnGestionPlanes.Name = "btnGestionPlanes";
             this.btnGestionPlanes.Size = new System.Drawing.Size(262, 40);
-            this.btnGestionPlanes.TabIndex = 8;
+            this.btnGestionPlanes.TabIndex = 10;
             this.btnGestionPlanes.Text = "📑 Gestión de Planes";
             this.btnGestionPlanes.UseVisualStyleBackColor = false;
             this.btnGestionPlanes.Click += new System.EventHandler(this.btnGestionPlanes_Click);
@@ -247,7 +247,7 @@
             this.btnArqueoCaja.Location = new System.Drawing.Point(0, 420);
             this.btnArqueoCaja.Name = "btnArqueoCaja";
             this.btnArqueoCaja.Size = new System.Drawing.Size(262, 40);
-            this.btnArqueoCaja.TabIndex = 7;
+            this.btnArqueoCaja.TabIndex = 9;
             this.btnArqueoCaja.Text = "💵 Arqueo de Caja";
             this.btnArqueoCaja.UseVisualStyleBackColor = false;
             this.btnArqueoCaja.Click += new System.EventHandler(this.btnArqueoCaja_Click);
@@ -262,7 +262,7 @@
             this.btnGestionGastos.Location = new System.Drawing.Point(0, 380);
             this.btnGestionGastos.Name = "btnGestionGastos";
             this.btnGestionGastos.Size = new System.Drawing.Size(262, 40);
-            this.btnGestionGastos.TabIndex = 6;
+            this.btnGestionGastos.TabIndex = 8;
             this.btnGestionGastos.Text = "💸 Gestión de Gastos";
             this.btnGestionGastos.UseVisualStyleBackColor = false;
             this.btnGestionGastos.Click += new System.EventHandler(this.btnGestionGastos_Click);
@@ -277,7 +277,7 @@
             this.btnHistorialVentas.Location = new System.Drawing.Point(0, 340);
             this.btnHistorialVentas.Name = "btnHistorialVentas";
             this.btnHistorialVentas.Size = new System.Drawing.Size(262, 40);
-            this.btnHistorialVentas.TabIndex = 23;
+            this.btnHistorialVentas.TabIndex = 7;
             this.btnHistorialVentas.Text = "Historial de Transacciones";
             this.btnHistorialVentas.UseVisualStyleBackColor = false;
             this.btnHistorialVentas.Click += new System.EventHandler(this.btnHistorialVentas_Click);
@@ -292,7 +292,7 @@
             this.btnGestionProductos.Location = new System.Drawing.Point(0, 300);
             this.btnGestionProductos.Name = "btnGestionProductos";
             this.btnGestionProductos.Size = new System.Drawing.Size(262, 40);
-            this.btnGestionProductos.TabIndex = 21;
+            this.btnGestionProductos.TabIndex = 6;
             this.btnGestionProductos.Text = "Gestión de Productos";
             this.btnGestionProductos.UseVisualStyleBackColor = false;
             this.btnGestionProductos.Click += new System.EventHandler(this.btnGestionProductos_Click);
@@ -307,7 +307,7 @@
             this.btnInventarioVentas.Location = new System.Drawing.Point(0, 260);
             this.btnInventarioVentas.Name = "btnInventarioVentas";
             this.btnInventarioVentas.Size = new System.Drawing.Size(262, 40);
-            this.btnInventarioVentas.TabIndex = 4;
+            this.btnInventarioVentas.TabIndex = 5;
             this.btnInventarioVentas.Text = "📦 Inventario y Ventas";
             this.btnInventarioVentas.UseVisualStyleBackColor = false;
             this.btnInventarioVentas.Click += new System.EventHandler(this.btnInventarioVentas_Click);
@@ -322,7 +322,7 @@
             this.btnRegistrarCobro.Location = new System.Drawing.Point(0, 220);
             this.btnRegistrarCobro.Name = "btnRegistrarCobro";
             this.btnRegistrarCobro.Size = new System.Drawing.Size(262, 40);
-            this.btnRegistrarCobro.TabIndex = 3;
+            this.btnRegistrarCobro.TabIndex = 4;
             this.btnRegistrarCobro.Text = "💰 Registrar Cobro";
             this.btnRegistrarCobro.UseVisualStyleBackColor = false;
             this.btnRegistrarCobro.Click += new System.EventHandler(this.btnRegistrarCobro_Click);
@@ -344,7 +344,7 @@
             this.btnGestionSocios.Location = new System.Drawing.Point(0, 120);
             this.btnGestionSocios.Name = "btnGestionSocios";
             this.btnGestionSocios.Size = new System.Drawing.Size(262, 40);
-            this.btnGestionSocios.TabIndex = 2;
+            this.btnGestionSocios.TabIndex = 3;
             this.btnGestionSocios.Text = "👥 Gestión de Socios";
             this.btnGestionSocios.UseVisualStyleBackColor = true;
             this.btnGestionSocios.Click += new System.EventHandler(this.btnGestionSocios_Click);
@@ -358,7 +358,7 @@
             this.btnRegistrarSocio.Location = new System.Drawing.Point(0, 80);
             this.btnRegistrarSocio.Name = "btnRegistrarSocio";
             this.btnRegistrarSocio.Size = new System.Drawing.Size(262, 40);
-            this.btnRegistrarSocio.TabIndex = 1;
+            this.btnRegistrarSocio.TabIndex = 2;
             this.btnRegistrarSocio.Text = "👤 Registrar Socio";
             this.btnRegistrarSocio.UseVisualStyleBackColor = true;
             this.btnRegistrarSocio.Click += new System.EventHandler(this.btnRegistrarSocio_Click);
@@ -373,7 +373,7 @@
             this.btnRegistroAsistencia.Location = new System.Drawing.Point(0, 40);
             this.btnRegistroAsistencia.Name = "btnRegistroAsistencia";
             this.btnRegistroAsistencia.Size = new System.Drawing.Size(262, 40);
-            this.btnRegistroAsistencia.TabIndex = 0;
+            this.btnRegistroAsistencia.TabIndex = 1;
             this.btnRegistroAsistencia.Text = "📋 Registro de Asistencia";
             this.btnRegistroAsistencia.UseVisualStyleBackColor = false;
             this.btnRegistroAsistencia.Click += new System.EventHandler(this.btnRegistroAsistencia_Click);
@@ -387,7 +387,7 @@
             this.btnInicio.Location = new System.Drawing.Point(0, 0);
             this.btnInicio.Name = "btnInicio";
             this.btnInicio.Size = new System.Drawing.Size(262, 40);
-            this.btnInicio.TabIndex = 20;
+            this.btnInicio.TabIndex = 0;
             this.btnInicio.Text = "Inicio";
             this.btnInicio.UseVisualStyleBackColor = true;
             this.btnInicio.Click += new System.EventHandler(this.btnInicio_Click);

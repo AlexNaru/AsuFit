@@ -148,12 +148,6 @@
     <Compile Include="Presentacion\frmDetalleTransaccion.Designer.cs">
       <DependentUpon>frmDetalleTransaccion.cs</DependentUpon>
     </Compile>
-    <Compile Include="Presentacion\frmEditarPlan.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Presentacion\frmEditarPlan.Designer.cs">
-      <DependentUpon>frmEditarPlan.cs</DependentUpon>
-    </Compile>
     <Compile Include="Presentacion\frmGestionGastos.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -317,9 +311,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Presentacion\frmDetalleTransaccion.resx">
       <DependentUpon>frmDetalleTransaccion.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Presentacion\frmEditarPlan.resx">
-      <DependentUpon>frmEditarPlan.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Presentacion\frmGestionGastos.resx">
       <DependentUpon>frmGestionGastos.cs</DependentUpon>

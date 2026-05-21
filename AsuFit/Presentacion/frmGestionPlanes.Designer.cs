@@ -31,16 +31,16 @@
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             this.label4 = new System.Windows.Forms.Label();
             this.dgvPlanes = new System.Windows.Forms.DataGridView();
+            this.colPlanId = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colPlanNombre = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colPlanPrecio = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colPlanDuracion = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.btnEditar = new System.Windows.Forms.Button();
             this.btnEstado = new System.Windows.Forms.Button();
             this.chkMostrarInactivos = new System.Windows.Forms.CheckBox();
             this.label1 = new System.Windows.Forms.Label();
             this.btnNuevo = new System.Windows.Forms.Button();
             this.lblTotal = new System.Windows.Forms.Label();
-            this.colPlanId = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colPlanNombre = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colPlanPrecio = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colPlanDuracion = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dgvPlanes)).BeginInit();
             this.SuspendLayout();
             // 
@@ -77,65 +77,6 @@
             this.dgvPlanes.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvPlanes_CellClick);
             this.dgvPlanes.DataBindingComplete += new System.Windows.Forms.DataGridViewBindingCompleteEventHandler(this.dgvPlanes_DataBindingComplete);
             // 
-            // btnEditar
-            // 
-            this.btnEditar.Location = new System.Drawing.Point(291, 339);
-            this.btnEditar.Name = "btnEditar";
-            this.btnEditar.Size = new System.Drawing.Size(126, 41);
-            this.btnEditar.TabIndex = 10;
-            this.btnEditar.Text = "EDITAR";
-            this.btnEditar.UseVisualStyleBackColor = true;
-            this.btnEditar.Click += new System.EventHandler(this.btnEditar_Click);
-            // 
-            // btnEstado
-            // 
-            this.btnEstado.Location = new System.Drawing.Point(518, 339);
-            this.btnEstado.Name = "btnEstado";
-            this.btnEstado.Size = new System.Drawing.Size(184, 41);
-            this.btnEstado.TabIndex = 11;
-            this.btnEstado.Text = "CAMBIAR ESTADO";
-            this.btnEstado.UseVisualStyleBackColor = true;
-            this.btnEstado.Click += new System.EventHandler(this.btnEstado_Click);
-            // 
-            // chkMostrarInactivos
-            // 
-            this.chkMostrarInactivos.AutoSize = true;
-            this.chkMostrarInactivos.Location = new System.Drawing.Point(418, 55);
-            this.chkMostrarInactivos.Name = "chkMostrarInactivos";
-            this.chkMostrarInactivos.Size = new System.Drawing.Size(284, 24);
-            this.chkMostrarInactivos.TabIndex = 12;
-            this.chkMostrarInactivos.Text = "Mostrar planes eliminados/inactivos";
-            this.chkMostrarInactivos.UseVisualStyleBackColor = true;
-            this.chkMostrarInactivos.CheckedChanged += new System.EventHandler(this.chkMostrarInactivos_CheckedChanged);
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(13, 9);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(175, 20);
-            this.label1.TabIndex = 13;
-            this.label1.Text = "GESTIÓN DE PLANES";
-            // 
-            // btnNuevo
-            // 
-            this.btnNuevo.Location = new System.Drawing.Point(17, 339);
-            this.btnNuevo.Name = "btnNuevo";
-            this.btnNuevo.Size = new System.Drawing.Size(126, 41);
-            this.btnNuevo.TabIndex = 14;
-            this.btnNuevo.Text = "NUEVO";
-            this.btnNuevo.UseVisualStyleBackColor = true;
-            this.btnNuevo.Click += new System.EventHandler(this.btnNuevo_Click);
-            // 
-            // lblTotal
-            // 
-            this.lblTotal.AutoSize = true;
-            this.lblTotal.Location = new System.Drawing.Point(13, 56);
-            this.lblTotal.Name = "lblTotal";
-            this.lblTotal.Size = new System.Drawing.Size(154, 20);
-            this.lblTotal.TabIndex = 15;
-            this.lblTotal.Text = "Planes encontrados:";
-            // 
             // colPlanId
             // 
             this.colPlanId.DataPropertyName = "IdPlan";
@@ -170,6 +111,65 @@
             this.colPlanDuracion.MinimumWidth = 8;
             this.colPlanDuracion.Name = "colPlanDuracion";
             this.colPlanDuracion.ReadOnly = true;
+            // 
+            // btnEditar
+            // 
+            this.btnEditar.Location = new System.Drawing.Point(291, 339);
+            this.btnEditar.Name = "btnEditar";
+            this.btnEditar.Size = new System.Drawing.Size(126, 41);
+            this.btnEditar.TabIndex = 2;
+            this.btnEditar.Text = "EDITAR";
+            this.btnEditar.UseVisualStyleBackColor = true;
+            this.btnEditar.Click += new System.EventHandler(this.btnEditar_Click);
+            // 
+            // btnEstado
+            // 
+            this.btnEstado.Location = new System.Drawing.Point(518, 339);
+            this.btnEstado.Name = "btnEstado";
+            this.btnEstado.Size = new System.Drawing.Size(184, 41);
+            this.btnEstado.TabIndex = 3;
+            this.btnEstado.Text = "CAMBIAR ESTADO";
+            this.btnEstado.UseVisualStyleBackColor = true;
+            this.btnEstado.Click += new System.EventHandler(this.btnEstado_Click);
+            // 
+            // chkMostrarInactivos
+            // 
+            this.chkMostrarInactivos.AutoSize = true;
+            this.chkMostrarInactivos.Location = new System.Drawing.Point(418, 55);
+            this.chkMostrarInactivos.Name = "chkMostrarInactivos";
+            this.chkMostrarInactivos.Size = new System.Drawing.Size(284, 24);
+            this.chkMostrarInactivos.TabIndex = 0;
+            this.chkMostrarInactivos.Text = "Mostrar planes eliminados/inactivos";
+            this.chkMostrarInactivos.UseVisualStyleBackColor = true;
+            this.chkMostrarInactivos.CheckedChanged += new System.EventHandler(this.chkMostrarInactivos_CheckedChanged);
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(13, 9);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(175, 20);
+            this.label1.TabIndex = 13;
+            this.label1.Text = "GESTIÓN DE PLANES";
+            // 
+            // btnNuevo
+            // 
+            this.btnNuevo.Location = new System.Drawing.Point(17, 339);
+            this.btnNuevo.Name = "btnNuevo";
+            this.btnNuevo.Size = new System.Drawing.Size(126, 41);
+            this.btnNuevo.TabIndex = 1;
+            this.btnNuevo.Text = "NUEVO";
+            this.btnNuevo.UseVisualStyleBackColor = true;
+            this.btnNuevo.Click += new System.EventHandler(this.btnNuevo_Click);
+            // 
+            // lblTotal
+            // 
+            this.lblTotal.AutoSize = true;
+            this.lblTotal.Location = new System.Drawing.Point(13, 56);
+            this.lblTotal.Name = "lblTotal";
+            this.lblTotal.Size = new System.Drawing.Size(154, 20);
+            this.lblTotal.TabIndex = 15;
+            this.lblTotal.Text = "Planes encontrados:";
             // 
             // frmGestionPlanes
             // 

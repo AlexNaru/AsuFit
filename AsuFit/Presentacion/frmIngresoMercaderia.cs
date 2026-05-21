@@ -13,6 +13,7 @@ namespace AsuFit.Presentacion
 {
     public partial class frmIngresoMercaderia : Form
     {
+        #region 1. VARIABLES GLOBALES Y CONSTRUCTOR
         [DllImport("user32.dll", CharSet = CharSet.Auto)]
         private static extern Int32 SendMessage(IntPtr hWnd, int msg, int wParam, [MarshalAs(UnmanagedType.LPWStr)] string lParam);
         private const int EM_SETCUEBANNER = 0x1501;
@@ -27,18 +28,19 @@ namespace AsuFit.Presentacion
         {
             InitializeComponent();
             usuarioActual = userLogueado;
-
-            // --- EL CAMBIO CLAVE: Bloqueamos las columnas automáticas ---
             dgvProductos.AutoGenerateColumns = false;
         }
+        #endregion
 
+        #region 2. INICIALIZACIÓN Y CARGA DE DATOS
         private void frmIngresoMercaderia_Load(object sender, EventArgs e)
         {
             CargarProveedores();
             CargarGrilla();
             ConfigurarAutocompletado();
-            SendMessage(txtBuscarProducto.Handle, EM_SETCUEBANNER, 1, "Buscar producto en el catálogo...");
 
+            // Placeholder para la barra de búsqueda
+            SendMessage(txtBuscarProducto.Handle, EM_SETCUEBANNER, 1, "Buscar producto en el catálogo...");
             txtBuscarProducto.Focus();
         }
 
@@ -53,7 +55,6 @@ namespace AsuFit.Presentacion
                 cmbProveedores.DisplayMember = "Nombre";
                 cmbProveedores.ValueMember = "IdProveedor";
                 cmbProveedores.DataSource = dv.ToTable();
-
                 cmbProveedores.SelectedIndex = -1;
             }
             catch (Exception ex)
@@ -78,13 +79,40 @@ namespace AsuFit.Presentacion
             }
 
             dgvProductos.DataSource = dtProductos;
-
-            // Filtramos la data subyacente para mostrar solo los activos
             (dgvProductos.DataSource as DataTable).DefaultView.RowFilter = "Estado = 'Activo'";
-
-            // --- CÓDIGO LIMPIO: Toda la configuración de ocultar/renombrar columnas se eliminó ---
-
             dgvProductos.ClearSelection();
+        }
+        #endregion
+
+        #region 3. SECCIÓN IZQUIERDA: BÚSQUEDA Y SELECCIÓN
+        private void btnNuevoProveedor_Click(object sender, EventArgs e)
+        {
+            frmAgregarProveedor frmPopup = new frmAgregarProveedor();
+            frmPopup.ShowDialog();
+            CargarProveedores();
+        }
+
+        private void btnNuevoProducto_Click(object sender, EventArgs e)
+        {
+            frmNuevoProducto frmPopup = new frmNuevoProducto(usuarioActual);
+            frmPopup.ShowDialog();
+
+            CargarGrilla();
+            ConfigurarAutocompletado();
+
+            if (frmPopup.ProductoRecienCreado != "")
+            {
+                txtBuscarProducto.Text = frmPopup.ProductoRecienCreado;
+            }
+        }
+
+        private void txtBuscarProducto_TextChanged(object sender, EventArgs e)
+        {
+            if (dtProductos == null) return;
+
+            string textoLimpio = QuitarAcentos(txtBuscarProducto.Text);
+            string filtro = "Estado = 'Activo' AND NombreBusqueda LIKE '%" + textoLimpio + "%'";
+            (dgvProductos.DataSource as DataTable).DefaultView.RowFilter = filtro;
         }
 
         private void dgvProductos_CellClick(object sender, DataGridViewCellEventArgs e)
@@ -93,7 +121,6 @@ namespace AsuFit.Presentacion
             {
                 DataGridViewRow fila = dgvProductos.Rows[e.RowIndex];
 
-                // ACTUALIZADO: Leemos usando los Name de las columnas
                 txtIdProductoSeleccionado.Text = fila.Cells["colIngresoId"].Value.ToString();
                 lblDetalleProducto.Text = "Producto: " + fila.Cells["colIngresoNombre"].Value.ToString();
                 lblDetalleCodigo.Text = "Código: " + fila.Cells["colIngresoCodigo"].Value.ToString();
@@ -131,6 +158,59 @@ namespace AsuFit.Presentacion
             }
         }
 
+        private void dgvProductos_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
+        {
+            dgvProductos.ClearSelection();
+        }
+
+        private void LimpiarSeleccion_Click(object sender, EventArgs e)
+        {
+            dgvProductos.ClearSelection();
+            txtIdProductoSeleccionado.Clear();
+            btnLimpiar_Click(null, null);
+        }
+
+        private void ConfigurarAutocompletado()
+        {
+            AutoCompleteStringCollection listaSugerencias = new AutoCompleteStringCollection();
+
+            foreach (DataRow row in dtProductos.Rows)
+            {
+                if (row["Estado"].ToString() == "Activo")
+                {
+                    string nombreOriginal = row["Nombre"].ToString();
+                    string nombreSinAcento = row["NombreBusqueda"].ToString();
+
+                    if (!listaSugerencias.Contains(nombreOriginal)) listaSugerencias.Add(nombreOriginal);
+
+                    string[] palabras = nombreSinAcento.Split(' ');
+                    foreach (string palabra in palabras)
+                    {
+                        if (palabra.Length > 2 && !listaSugerencias.Contains(palabra))
+                            listaSugerencias.Add(palabra);
+                    }
+                }
+            }
+            txtBuscarProducto.AutoCompleteCustomSource = listaSugerencias;
+            txtBuscarProducto.AutoCompleteMode = AutoCompleteMode.Suggest;
+            txtBuscarProducto.AutoCompleteSource = AutoCompleteSource.CustomSource;
+        }
+
+        private string QuitarAcentos(string texto)
+        {
+            var textoNormalizado = texto.Normalize(NormalizationForm.FormD);
+            var constructor = new StringBuilder();
+
+            foreach (var c in textoNormalizado)
+            {
+                var categoria = CharUnicodeInfo.GetUnicodeCategory(c);
+                if (categoria != UnicodeCategory.NonSpacingMark) constructor.Append(c);
+            }
+            return constructor.ToString().Normalize(NormalizationForm.FormC);
+        }
+        #endregion
+
+        #region 4. SECCIÓN CENTRAL Y DERECHA: DETALLES, RESUMEN Y CÁLCULOS
         private void ActualizarResumen()
         {
             int cantidad = 0;
@@ -139,11 +219,8 @@ namespace AsuFit.Presentacion
             string textoCantidad = txtCantidadIngreso.Text.Replace(".", "").Trim();
             string textoCosto = txtCostoTotal.Text.Replace(".", "").Trim();
 
-            if (!string.IsNullOrWhiteSpace(textoCantidad))
-                int.TryParse(textoCantidad, out cantidad);
-
-            if (!string.IsNullOrWhiteSpace(textoCosto))
-                decimal.TryParse(textoCosto, out costoTotal);
+            if (!string.IsNullOrWhiteSpace(textoCantidad)) int.TryParse(textoCantidad, out cantidad);
+            if (!string.IsNullOrWhiteSpace(textoCosto)) decimal.TryParse(textoCosto, out costoTotal);
 
             if (cantidad > 0 && costoTotal > 0)
             {
@@ -156,18 +233,12 @@ namespace AsuFit.Presentacion
             }
 
             txtResumenProveedor.Text = cmbProveedores.SelectedIndex != -1 ? cmbProveedores.Text : "";
-
-            if (txtIdProductoSeleccionado.Text != "")
-                txtResumenProducto.Text = lblDetalleProducto.Text.Replace("Producto: ", "");
-            else
-                txtResumenProducto.Text = "";
-
+            txtResumenProducto.Text = txtIdProductoSeleccionado.Text != "" ? lblDetalleProducto.Text.Replace("Producto: ", "") : "";
             txtResumenCantidad.Text = cantidad.ToString();
             txtResumenTotal.Text = costoTotal > 0 ? "Gs. " + costoTotal.ToString("N0") : "Gs. 0";
 
             if (dgvProductos.CurrentRow != null && txtIdProductoSeleccionado.Text != "")
             {
-                // ACTUALIZADO: Leemos el stock de la columna correcta
                 int stockActual = Convert.ToInt32(dgvProductos.CurrentRow.Cells["colIngresoStock"].Value);
                 int nuevoStock = stockActual + cantidad;
                 txtResumenNuevoStock.Text = nuevoStock.ToString();
@@ -178,6 +249,22 @@ namespace AsuFit.Presentacion
             }
         }
 
+        private void txtCantidadIngreso_TextChanged(object sender, EventArgs e) { ActualizarResumen(); }
+        private void txtCostoTotal_TextChanged(object sender, EventArgs e) { ActualizarResumen(); }
+        private void cmbProveedores_SelectedIndexChanged(object sender, EventArgs e) { ActualizarResumen(); }
+
+        private void txtCantidadIngreso_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar)) e.Handled = true;
+        }
+
+        private void txtCostoTotal_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar)) e.Handled = true;
+        }
+        #endregion
+
+        #region 5. ACCIONES INFERIORES: CONFIRMAR Y LIMPIAR
         private void btnConfirmarIngreso_Click(object sender, EventArgs e)
         {
             if (txtIdProductoSeleccionado.Text == "")
@@ -245,101 +332,6 @@ namespace AsuFit.Presentacion
         {
             this.Close();
         }
-
-        private void txtCantidadIngreso_TextChanged(object sender, EventArgs e) { ActualizarResumen(); }
-        private void txtCostoTotal_TextChanged(object sender, EventArgs e) { ActualizarResumen(); }
-        private void cmbProveedores_SelectedIndexChanged(object sender, EventArgs e) { ActualizarResumen(); }
-
-        private void txtCantidadIngreso_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar)) e.Handled = true;
-        }
-
-        private void txtCostoTotal_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar)) e.Handled = true;
-        }
-
-        private void txtBuscarProducto_TextChanged(object sender, EventArgs e)
-        {
-            if (dtProductos == null) return;
-
-            string textoLimpio = QuitarAcentos(txtBuscarProducto.Text);
-            string filtro = "Estado = 'Activo' AND NombreBusqueda LIKE '%" + textoLimpio + "%'";
-            (dgvProductos.DataSource as DataTable).DefaultView.RowFilter = filtro;
-        }
-
-        private void btnNuevoProveedor_Click(object sender, EventArgs e)
-        {
-            frmAgregarProveedor frmPopup = new frmAgregarProveedor();
-            frmPopup.ShowDialog();
-            CargarProveedores();
-        }
-
-        private void ConfigurarAutocompletado()
-        {
-            AutoCompleteStringCollection listaSugerencias = new AutoCompleteStringCollection();
-
-            foreach (DataRow row in dtProductos.Rows)
-            {
-                if (row["Estado"].ToString() == "Activo")
-                {
-                    string nombreOriginal = row["Nombre"].ToString();
-                    string nombreSinAcento = row["NombreBusqueda"].ToString();
-
-                    if (!listaSugerencias.Contains(nombreOriginal)) listaSugerencias.Add(nombreOriginal);
-
-                    string[] palabras = nombreSinAcento.Split(' ');
-
-                    foreach (string palabra in palabras)
-                    {
-                        if (palabra.Length > 2 && !listaSugerencias.Contains(palabra))
-                            listaSugerencias.Add(palabra);
-                    }
-                }
-            }
-            txtBuscarProducto.AutoCompleteCustomSource = listaSugerencias;
-            txtBuscarProducto.AutoCompleteMode = AutoCompleteMode.Suggest;
-            txtBuscarProducto.AutoCompleteSource = AutoCompleteSource.CustomSource;
-        }
-
-        private string QuitarAcentos(string texto)
-        {
-            var textoNormalizado = texto.Normalize(NormalizationForm.FormD);
-            var constructor = new StringBuilder();
-
-            foreach (var c in textoNormalizado)
-            {
-                var categoria = CharUnicodeInfo.GetUnicodeCategory(c);
-                if (categoria != UnicodeCategory.NonSpacingMark) constructor.Append(c);
-            }
-            return constructor.ToString().Normalize(NormalizationForm.FormC);
-        }
-
-        private void dgvProductos_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
-        {
-            dgvProductos.ClearSelection();
-        }
-
-        private void LimpiarSeleccion_Click(object sender, EventArgs e)
-        {
-            dgvProductos.ClearSelection();
-            txtIdProductoSeleccionado.Clear();
-            btnLimpiar_Click(null, null);
-        }
-
-        private void btnNuevoProducto_Click(object sender, EventArgs e)
-        {
-            frmNuevoProducto frmPopup = new frmNuevoProducto(usuarioActual);
-            frmPopup.ShowDialog();
-
-            CargarGrilla();
-            ConfigurarAutocompletado();
-
-            if (frmPopup.ProductoRecienCreado != "")
-            {
-                txtBuscarProducto.Text = frmPopup.ProductoRecienCreado;
-            }
-        }
+        #endregion
     }
 }

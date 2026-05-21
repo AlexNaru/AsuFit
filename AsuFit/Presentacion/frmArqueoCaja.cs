@@ -9,8 +9,9 @@ namespace AsuFit.Presentacion
 {
     public partial class frmArqueoCaja : Form
     {
+        #region 1. VARIABLES GLOBALES Y CONSTRUCTOR
         private Usuario usuarioActual;
-        private int idTurnoActivo = 0; // Guardará el ID del turno si hay uno abierto
+        private int idTurnoActivo = 0;
         private DateTime fechaAperturaActiva;
 
         public frmArqueoCaja(Usuario user)
@@ -18,18 +19,17 @@ namespace AsuFit.Presentacion
             InitializeComponent();
             usuarioActual = user;
         }
+        #endregion
 
+        #region 2. INICIALIZACIÓN
         private void frmArqueoCaja_Load(object sender, EventArgs e)
         {
-            // Agregamos el prefijo "Cajero: " antes del nombre del usuario
             lblCajeroActual.Text = "Cajero: " + usuarioActual.NombreCompleto;
-
             RevisarEstadoDeCaja();
         }
+        #endregion
 
-        // ====================================================================
-        // MÉTODO MAESTRO: Define qué estado mostrar (Cerrado o Abierto)
-        // ====================================================================
+        #region 3. SECCIÓN SUPERIOR Y CENTRAL: ESTADO DE CAJA Y RESUMEN
         private void RevisarEstadoDeCaja()
         {
             ArqueoNegocio negocio = new ArqueoNegocio();
@@ -39,7 +39,6 @@ namespace AsuFit.Presentacion
             {
                 DataRow turno = dtTurno.Rows[0];
                 idTurnoActivo = Convert.ToInt32(turno["IdTurno"]);
-                // Guardamos la fecha de apertura para enviarla al resumen y al PDF
                 fechaAperturaActiva = Convert.ToDateTime(turno["FechaApertura"]);
                 decimal fondoInicial = Convert.ToDecimal(turno["FondoInicial"]);
 
@@ -52,6 +51,7 @@ namespace AsuFit.Presentacion
                 lblFondoInicial.Text = "Gs. " + fondoInicial.ToString("N0");
 
                 DataTable dtTotales = negocio.ObtenerTotalesEnVivo(usuarioActual.IdUsuario, fechaAperturaActiva);
+
                 if (dtTotales.Rows.Count > 0)
                 {
                     DataRow totales = dtTotales.Rows[0];
@@ -85,14 +85,13 @@ namespace AsuFit.Presentacion
                 lblTotalEsperado.Text = "Gs. 0";
             }
         }
+        #endregion
 
-        // ====================================================================
-        // EVENTOS DE LOS BOTONES
-        // ====================================================================
+        #region 4. SECCIÓN INFERIOR: ACCIONES DE CAJA
         private void btnAbrirCaja_Click(object sender, EventArgs e)
         {
             frmAbrirCaja frm = new frmAbrirCaja(usuarioActual);
-            // Si el usuario abrió la caja correctamente, refrescamos la pantalla
+
             if (frm.ShowDialog() == DialogResult.OK)
             {
                 RevisarEstadoDeCaja();
@@ -101,14 +100,12 @@ namespace AsuFit.Presentacion
 
         private void btnCerrarCaja_Click(object sender, EventArgs e)
         {
-            // Limpiamos el texto "Gs. " y los puntos para poder hacer cálculos matemáticos
             decimal fondo = Convert.ToDecimal(lblFondoInicial.Text.Replace("Gs. ", "").Replace(".", ""));
             decimal ingEfvo = Convert.ToDecimal(lblIngresosEfectivo.Text.Replace("Gs. ", "").Replace(".", ""));
             decimal ingTrans = Convert.ToDecimal(lblIngresosTransferencia.Text.Replace("Gs. ", "").Replace(".", ""));
             decimal gastos = Convert.ToDecimal(lblGastos.Text.Replace("Gs. ", "").Replace(".", ""));
             decimal esperado = Convert.ToDecimal(lblTotalEsperado.Text.Replace("Gs. ", "").Replace(".", ""));
 
-            // Le pasamos también la fecha de apertura al formulario de cierre
             frmCerrarCaja frm = new frmCerrarCaja(idTurnoActivo, usuarioActual.NombreCompleto, fechaAperturaActiva, fondo, ingEfvo, ingTrans, gastos, esperado);
 
             if (frm.ShowDialog() == DialogResult.OK)
@@ -122,5 +119,6 @@ namespace AsuFit.Presentacion
             frmHistorialArqueos frm = new frmHistorialArqueos();
             frm.ShowDialog();
         }
+        #endregion
     }
 }

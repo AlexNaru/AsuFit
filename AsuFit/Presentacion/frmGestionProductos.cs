@@ -14,32 +14,34 @@ namespace AsuFit.Presentacion
 {
     public partial class frmGestionProductos : Form
     {
+        #region 1. VARIABLES GLOBALES Y CONSTRUCTOR
         [DllImport("user32.dll", CharSet = CharSet.Auto)]
         private static extern Int32 SendMessage(IntPtr hWnd, int msg, int wParam, [MarshalAs(UnmanagedType.LPWStr)] string lParam);
         private const int EM_SETCUEBANNER = 0x1501;
+
         private Usuario usuarioActual;
+        private InventarioNegocio negocio = new InventarioNegocio();
+        private ProveedorNegocio negocioProveedor = new ProveedorNegocio();
+        private DataTable dtProductos;
+
+        private string rutaFotoOrigen = "";
+        private const string carpetaFotos = @"C:\AsuFit_Fotos\";
 
         public frmGestionProductos(Usuario userLogueado)
         {
             InitializeComponent();
             usuarioActual = userLogueado;
-
-            // --- EL CAMBIO CLAVE: Bloqueamos las columnas automáticas ---
             dgvProductos.AutoGenerateColumns = false;
         }
+        #endregion
 
-        private InventarioNegocio negocio = new InventarioNegocio();
-        private ProveedorNegocio negocioProveedor = new ProveedorNegocio();
-
-        private DataTable dtProductos;
-        private string rutaFotoOrigen = "";
-        private const string carpetaFotos = @"C:\AsuFit_Fotos\";
-
+        #region 2. INICIALIZACIÓN Y CARGA DE DATOS
         private void frmGestionProductos_Load(object sender, EventArgs e)
         {
             ConfigurarFiltros();
             CargarProveedores();
             CargarGrilla();
+
             if (!Directory.Exists(carpetaFotos)) Directory.CreateDirectory(carpetaFotos);
 
             dgvProductos.ClearSelection();
@@ -77,28 +79,45 @@ namespace AsuFit.Presentacion
             }
         }
 
-        private void FiltrarDatos()
+        private void ConfigurarAutocompletado()
         {
             if (dtProductos == null) return;
+            AutoCompleteStringCollection listaSugerencias = new AutoCompleteStringCollection();
 
-            string filtroEstado = chkMostrarInactivos.Checked ? "Estado = 'Inactivo'" : "Estado = 'Activo'";
-            string textoBusqueda = QuitarAcentos(txtBuscarProducto.Text.Trim()).ToLower().Replace("'", "''");
-            string filtroFinal = filtroEstado;
-
-            if (!string.IsNullOrEmpty(textoBusqueda))
+            foreach (DataRow row in dtProductos.Rows)
             {
-                filtroFinal = $"{filtroEstado} AND NombreBusqueda LIKE '%{textoBusqueda}%'";
+                string nombreOriginal = row["Nombre"].ToString();
+                string nombreSinAcento = row["NombreBusqueda"].ToString();
+
+                if (!listaSugerencias.Contains(nombreOriginal)) listaSugerencias.Add(nombreOriginal);
+
+                string[] palabras = nombreSinAcento.Split(' ');
+                foreach (string palabra in palabras)
+                {
+                    if (palabra.Length > 2 && !listaSugerencias.Contains(palabra))
+                        listaSugerencias.Add(palabra);
+                }
             }
-
-            DataView dv = dtProductos.DefaultView;
-            dv.RowFilter = filtroFinal;
-            dgvProductos.DataSource = dv;
-
-            // --- CÓDIGO LIMPIO: Ya no ocultamos columnas desde aquí ---
-
-            dgvProductos.ClearSelection();
+            txtBuscarProducto.AutoCompleteCustomSource = listaSugerencias;
+            txtBuscarProducto.AutoCompleteMode = AutoCompleteMode.Suggest;
+            txtBuscarProducto.AutoCompleteSource = AutoCompleteSource.CustomSource;
         }
 
+        private string QuitarAcentos(string texto)
+        {
+            var textoNormalizado = texto.Normalize(NormalizationForm.FormD);
+            var constructor = new StringBuilder();
+
+            foreach (var c in textoNormalizado)
+            {
+                if (CharUnicodeInfo.GetUnicodeCategory(c) != UnicodeCategory.NonSpacingMark)
+                    constructor.Append(c);
+            }
+            return constructor.ToString().Normalize(NormalizationForm.FormC);
+        }
+        #endregion
+
+        #region 3. SECCIÓN DERECHA: BÚSQUEDA Y GRILLA DE PRODUCTOS
         private void CargarGrilla()
         {
             dtProductos = negocio.ListarProductos();
@@ -117,14 +136,32 @@ namespace AsuFit.Presentacion
 
                 FiltrarDatos();
 
-                // --- CÓDIGO LIMPIO: Eliminamos configuraciones manuales de formato y texto ---
-
                 dgvProductos.AllowUserToAddRows = false;
                 dgvProductos.RowHeadersVisible = false;
                 dgvProductos.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
                 dgvProductos.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
                 dgvProductos.ReadOnly = true;
             }
+        }
+
+        private void FiltrarDatos()
+        {
+            if (dtProductos == null) return;
+
+            string filtroEstado = chkMostrarInactivos.Checked ? "Estado = 'Inactivo'" : "Estado = 'Activo'";
+            string textoBusqueda = QuitarAcentos(txtBuscarProducto.Text.Trim()).ToLower().Replace("'", "''");
+            string filtroFinal = filtroEstado;
+
+            if (!string.IsNullOrEmpty(textoBusqueda))
+            {
+                filtroFinal = $"{filtroEstado} AND NombreBusqueda LIKE '%{textoBusqueda}%'";
+            }
+
+            DataView dv = dtProductos.DefaultView;
+            dv.RowFilter = filtroFinal;
+            dgvProductos.DataSource = dv;
+
+            dgvProductos.ClearSelection();
         }
 
         private void txtBuscarProducto_TextChanged(object sender, EventArgs e)
@@ -145,7 +182,6 @@ namespace AsuFit.Presentacion
             {
                 DataGridViewRow fila = dgvProductos.Rows[e.RowIndex];
 
-                // --- ACTUALIZADO: Referencias con los nuevos nombres visuales ---
                 txtId.Text = fila.Cells["colProductoId"].Value.ToString();
                 txtCodigo.Text = fila.Cells["colProductoCodigo"].Value.ToString();
                 txtNombre.Text = fila.Cells["colProductoNombre"].Value.ToString();
@@ -187,6 +223,37 @@ namespace AsuFit.Presentacion
             }
         }
 
+        private void dgvProductos_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
+        {
+            foreach (DataGridViewRow row in dgvProductos.Rows)
+            {
+                if (row.Cells["colProductoStock"].Value != DBNull.Value && row.Cells["colProductoStockMin"].Value != DBNull.Value)
+                {
+                    int stockActual = Convert.ToInt32(row.Cells["colProductoStock"].Value);
+                    int stockMinimo = Convert.ToInt32(row.Cells["colProductoStockMin"].Value);
+
+                    if (stockActual == 0)
+                    {
+                        row.DefaultCellStyle.BackColor = Color.IndianRed;
+                        row.DefaultCellStyle.ForeColor = Color.White;
+                    }
+                    else if (stockActual <= stockMinimo)
+                    {
+                        row.DefaultCellStyle.BackColor = Color.Khaki;
+                        row.DefaultCellStyle.ForeColor = Color.Black;
+                    }
+                    else
+                    {
+                        row.DefaultCellStyle.BackColor = Color.White;
+                        row.DefaultCellStyle.ForeColor = Color.Black;
+                    }
+                }
+            }
+            dgvProductos.ClearSelection();
+        }
+        #endregion
+
+        #region 4. SECCIÓN IZQUIERDA: FORMULARIO Y FOTO
         private void btnSubirFoto_Click(object sender, EventArgs e)
         {
             if (txtCodigo.Text.Trim() == "")
@@ -240,7 +307,7 @@ namespace AsuFit.Presentacion
                 }
 
                 objProducto.PorcentajeIva = 10;
-                // --- ACTUALIZADO: Buscando la columna de IVA por su nuevo nombre ---
+
                 if (objProducto.IdProducto > 0 && dgvProductos.CurrentRow != null &&
                     dgvProductos.Columns.Contains("colProductoIva") &&
                     dgvProductos.CurrentRow.Cells["colProductoIva"].Value != DBNull.Value)
@@ -258,6 +325,17 @@ namespace AsuFit.Presentacion
                         : $"Se modificó el producto '{objProducto.Nombre}'.";
 
                     GestorAuditoria.Registrar(usuarioActual.NombreCompleto, "Inventario", accion, detalle);
+
+                    // Guardado físico de la foto en la carpeta local
+                    if (!string.IsNullOrEmpty(rutaFotoOrigen))
+                    {
+                        string rutaDestino = carpetaFotos + objProducto.CodigoBarras + ".jpg";
+                        if (File.Exists(rutaDestino))
+                        {
+                            File.Delete(rutaDestino);
+                        }
+                        File.Copy(rutaFotoOrigen, rutaDestino);
+                    }
 
                     MessageBox.Show("Producto guardado correctamente.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
@@ -278,7 +356,9 @@ namespace AsuFit.Presentacion
                 MessageBox.Show("Error al guardar: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+        #endregion
 
+        #region 5. ACCIONES DE ESTADO Y LIMPIEZA
         private void btnCambiarEstado_Click(object sender, EventArgs e)
         {
             if (txtId.Text == "")
@@ -290,8 +370,6 @@ namespace AsuFit.Presentacion
             try
             {
                 int id = Convert.ToInt32(txtId.Text);
-
-                // --- ACTUALIZADO: Leyendo el estado desde la columna correcta ---
                 string estadoActual = dgvProductos.CurrentRow.Cells["colProductoEstado"].Value.ToString();
 
                 string nuevoEstado = estadoActual == "Activo" ? "Inactivo" : "Activo";
@@ -347,71 +425,6 @@ namespace AsuFit.Presentacion
             dgvProductos.ClearSelection();
             LimpiarFormulario();
         }
-
-        private void dgvProductos_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
-        {
-            foreach (DataGridViewRow row in dgvProductos.Rows)
-            {
-                // --- ACTUALIZADO: Pintado de celdas referenciando a las nuevas columnas ---
-                if (row.Cells["colProductoStock"].Value != DBNull.Value && row.Cells["colProductoStockMin"].Value != DBNull.Value)
-                {
-                    int stockActual = Convert.ToInt32(row.Cells["colProductoStock"].Value);
-                    int stockMinimo = Convert.ToInt32(row.Cells["colProductoStockMin"].Value);
-
-                    if (stockActual == 0)
-                    {
-                        row.DefaultCellStyle.BackColor = Color.IndianRed;
-                        row.DefaultCellStyle.ForeColor = Color.White;
-                    }
-                    else if (stockActual <= stockMinimo)
-                    {
-                        row.DefaultCellStyle.BackColor = Color.Khaki;
-                        row.DefaultCellStyle.ForeColor = Color.Black;
-                    }
-                    else
-                    {
-                        row.DefaultCellStyle.BackColor = Color.White;
-                        row.DefaultCellStyle.ForeColor = Color.Black;
-                    }
-                }
-            }
-            dgvProductos.ClearSelection();
-        }
-
-        private void ConfigurarAutocompletado()
-        {
-            if (dtProductos == null) return;
-            AutoCompleteStringCollection listaSugerencias = new AutoCompleteStringCollection();
-            foreach (DataRow row in dtProductos.Rows)
-            {
-                string nombreOriginal = row["Nombre"].ToString();
-                string nombreSinAcento = row["NombreBusqueda"].ToString();
-
-                if (!listaSugerencias.Contains(nombreOriginal)) listaSugerencias.Add(nombreOriginal);
-
-                string[] palabras = nombreSinAcento.Split(' ');
-                foreach (string palabra in palabras)
-                {
-                    if (palabra.Length > 2 && !listaSugerencias.Contains(palabra))
-                        listaSugerencias.Add(palabra);
-                }
-            }
-            txtBuscarProducto.AutoCompleteCustomSource = listaSugerencias;
-            txtBuscarProducto.AutoCompleteMode = AutoCompleteMode.Suggest;
-            txtBuscarProducto.AutoCompleteSource = AutoCompleteSource.CustomSource;
-        }
-
-        private string QuitarAcentos(string texto)
-        {
-            var textoNormalizado = texto.Normalize(NormalizationForm.FormD);
-            var constructor = new StringBuilder();
-
-            foreach (var c in textoNormalizado)
-            {
-                if (CharUnicodeInfo.GetUnicodeCategory(c) != UnicodeCategory.NonSpacingMark)
-                    constructor.Append(c);
-            }
-            return constructor.ToString().Normalize(NormalizationForm.FormC);
-        }
+        #endregion
     }
 }

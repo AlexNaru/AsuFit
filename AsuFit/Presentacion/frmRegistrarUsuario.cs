@@ -1,20 +1,14 @@
 ﻿using AsuFit.Entidades;
 using AsuFit.Negocio;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace AsuFit.Presentacion
 {
     public partial class frmRegistrarUsuario : Form
     {
+        #region 1. VARIABLES GLOBALES Y CONSTRUCTORES
         private Usuario usuarioAEditar = null;
         private bool puedeGuardar = false;
 
@@ -42,29 +36,50 @@ namespace AsuFit.Presentacion
 
             CargarDatosEnPantalla();
         }
+        #endregion
 
+        #region 2. INICIALIZACIÓN DE PANTALLA
         private void frmRegistrarUsuario_Load(object sender, EventArgs e)
         {
             CambiarEstadoBoton(false);
         }
 
-        // --- LA SOLUCIÓN DEFINITIVA PARA EL FOCUS ---
         private void frmRegistrarUsuario_Shown(object sender, EventArgs e)
         {
             txtNombreCompleto.Focus();
         }
 
-        private void CambiarEstadoBoton(bool activo)
+        private void CargarDatosEnPantalla()
         {
-            puedeGuardar = activo;
-
-            if (activo)
+            if (usuarioAEditar != null)
             {
-                btnGuardar.Cursor = Cursors.Hand;
+                txtNombreCompleto.Text = usuarioAEditar.NombreCompleto;
+                txtUsername.Text = usuarioAEditar.Username;
+                cmbRol.Text = usuarioAEditar.Rol;
+                txtEmail.Text = usuarioAEditar.Email;
+                txtRespuesta.Text = usuarioAEditar.RespuestaSeguridad;
+
+                chkActivo.Checked = (usuarioAEditar.Estado == "Activo");
+            }
+        }
+        #endregion
+
+        #region 3. CAMPOS DEL FORMULARIO Y NAVEGACIÓN VERTICAL
+        private void VerificarCamposObligatorios(object sender, EventArgs e)
+        {
+            if (!string.IsNullOrWhiteSpace(txtNombreCompleto.Text) &&
+                !string.IsNullOrWhiteSpace(txtUsername.Text) &&
+                !string.IsNullOrWhiteSpace(txtPassword.Text) &&
+                !string.IsNullOrWhiteSpace(txtConfirmarPassword.Text) &&
+                !string.IsNullOrWhiteSpace(txtEmail.Text) &&
+                !string.IsNullOrWhiteSpace(txtRespuesta.Text) &&
+                cmbRol.SelectedIndex != -1)
+            {
+                CambiarEstadoBoton(true);
             }
             else
             {
-                btnGuardar.Cursor = Cursors.Default;
+                CambiarEstadoBoton(false);
             }
         }
 
@@ -85,14 +100,12 @@ namespace AsuFit.Presentacion
 
                 if (txtActivo != null)
                 {
-                    // 1. VALIDACIÓN DE VACÍOS (AHORA TODOS SON OBLIGATORIOS)
                     if (string.IsNullOrWhiteSpace(txtActivo.Text))
                     {
                         MessageBox.Show("Este campo es obligatorio y no puede estar vacío.", "Campo requerido", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                         return;
                     }
 
-                    // 2. VALIDACIÓN TEMPRANA DEL EMAIL (AHORA OBLIGATORIO)
                     if (txtActivo.Name == "txtEmail")
                     {
                         string patronEmail = @"^[^@\s]+@[^@\s]+\.[^@\s]+$";
@@ -104,7 +117,6 @@ namespace AsuFit.Presentacion
                         }
                     }
 
-                    // 3. VALIDACIÓN TEMPRANA DE CONTRASEÑAS
                     if (txtActivo.Name == "txtConfirmarPassword")
                     {
                         if (txtPassword.Text != txtConfirmarPassword.Text)
@@ -139,39 +151,14 @@ namespace AsuFit.Presentacion
             }
         }
 
-        private void VerificarCamposObligatorios(object sender, EventArgs e)
+        private void CambiarEstadoBoton(bool activo)
         {
-            // AHORA EL EMAIL TAMBIÉN ESTÁ EN LA LISTA ESTRICTA DE REQUISITOS
-            if (!string.IsNullOrWhiteSpace(txtNombreCompleto.Text) &&
-                !string.IsNullOrWhiteSpace(txtUsername.Text) &&
-                !string.IsNullOrWhiteSpace(txtPassword.Text) &&
-                !string.IsNullOrWhiteSpace(txtConfirmarPassword.Text) &&
-                !string.IsNullOrWhiteSpace(txtEmail.Text) && // <-- Agregado
-                !string.IsNullOrWhiteSpace(txtRespuesta.Text) &&
-                cmbRol.SelectedIndex != -1)
-            {
-                CambiarEstadoBoton(true);
-            }
-            else
-            {
-                CambiarEstadoBoton(false);
-            }
+            puedeGuardar = activo;
+            btnGuardar.Cursor = activo ? Cursors.Hand : Cursors.Default;
         }
+        #endregion
 
-        private void CargarDatosEnPantalla()
-        {
-            if (usuarioAEditar != null)
-            {
-                txtNombreCompleto.Text = usuarioAEditar.NombreCompleto;
-                txtUsername.Text = usuarioAEditar.Username;
-                cmbRol.Text = usuarioAEditar.Rol;
-                txtEmail.Text = usuarioAEditar.Email;
-                txtRespuesta.Text = usuarioAEditar.RespuestaSeguridad;
-
-                chkActivo.Checked = (usuarioAEditar.Estado == "Activo");
-            }
-        }
-
+        #region 4. BOTONES INFERIORES: GUARDAR Y CANCELAR
         private void btnGuardar_Click(object sender, EventArgs e)
         {
             if (!puedeGuardar)
@@ -187,7 +174,6 @@ namespace AsuFit.Presentacion
                 return;
             }
 
-            // VALIDACIÓN DEL CORREO OBLIGATORIO AL GUARDAR
             string patronMail = @"^[^@\s]+@[^@\s]+\.[^@\s]+$";
             if (!Regex.IsMatch(txtEmail.Text, patronMail))
             {
@@ -216,12 +202,13 @@ namespace AsuFit.Presentacion
                 nuevo.Username = txtUsername.Text.Trim();
                 nuevo.Password = txtPassword.Text.Trim();
                 nuevo.Rol = cmbRol.Text;
-                nuevo.Email = txtEmail.Text.Trim(); // Ahora toma el valor real sin excepciones
+                nuevo.Email = txtEmail.Text.Trim();
                 nuevo.RespuestaSeguridad = txtRespuesta.Text.Trim();
                 nuevo.PreguntaSeguridad = lblPreguntaSeguridad.Text;
                 nuevo.Estado = chkActivo.Checked ? "Activo" : "Inactivo";
 
                 exito = negocio.RegistrarUsuario(nuevo, out mensajeError);
+
                 if (exito)
                 {
                     MessageBox.Show("¡Usuario registrado con éxito!", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -244,11 +231,12 @@ namespace AsuFit.Presentacion
                 usuarioAEditar.NombreCompleto = txtNombreCompleto.Text.Trim();
                 usuarioAEditar.Username = txtUsername.Text.Trim();
                 usuarioAEditar.Rol = cmbRol.Text;
-                usuarioAEditar.Email = txtEmail.Text.Trim(); // Valor real
+                usuarioAEditar.Email = txtEmail.Text.Trim();
                 usuarioAEditar.RespuestaSeguridad = txtRespuesta.Text.Trim();
                 usuarioAEditar.Estado = chkActivo.Checked ? "Activo" : "Inactivo";
 
                 exito = negocio.EditarUsuario(usuarioAEditar, out mensajeError);
+
                 if (exito)
                 {
                     MessageBox.Show("Usuario actualizado con éxito.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -266,5 +254,6 @@ namespace AsuFit.Presentacion
         {
             this.Close();
         }
+        #endregion
     }
 }

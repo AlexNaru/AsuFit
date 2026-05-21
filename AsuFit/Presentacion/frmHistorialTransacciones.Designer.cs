@@ -28,26 +28,26 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             this.label1 = new System.Windows.Forms.Label();
             this.lblTotalRecaudado = new System.Windows.Forms.Label();
             this.lblCantidadVentas = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.dgvVentas = new System.Windows.Forms.DataGridView();
-            this.txtBuscar = new System.Windows.Forms.MaskedTextBox();
-            this.dtpHasta = new System.Windows.Forms.DateTimePicker();
-            this.dtpDesde = new System.Windows.Forms.DateTimePicker();
-            this.btnVerDetalle = new System.Windows.Forms.Button();
-            this.cmbFiltroTipo = new System.Windows.Forms.ComboBox();
-            this.label6 = new System.Windows.Forms.Label();
             this.colHistorialId = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colHistorialFecha = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colHistorialCliente = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colHistorialMetodo = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colHistorialTipo = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colHistorialTotal = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.txtBuscar = new System.Windows.Forms.MaskedTextBox();
+            this.dtpHasta = new System.Windows.Forms.DateTimePicker();
+            this.dtpDesde = new System.Windows.Forms.DateTimePicker();
+            this.btnVerDetalle = new System.Windows.Forms.Button();
+            this.cmbFiltroTipo = new System.Windows.Forms.ComboBox();
+            this.label6 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dgvVentas)).BeginInit();
             this.SuspendLayout();
             // 
@@ -81,7 +81,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(381, 58);
+            this.label2.Location = new System.Drawing.Point(444, 58);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(56, 20);
             this.label2.TabIndex = 15;
@@ -117,67 +117,7 @@
             this.dgvVentas.RowTemplate.Height = 28;
             this.dgvVentas.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dgvVentas.Size = new System.Drawing.Size(819, 231);
-            this.dgvVentas.TabIndex = 13;
-            // 
-            // txtBuscar
-            // 
-            this.txtBuscar.Location = new System.Drawing.Point(16, 96);
-            this.txtBuscar.Name = "txtBuscar";
-            this.txtBuscar.Size = new System.Drawing.Size(308, 26);
-            this.txtBuscar.TabIndex = 12;
-            this.txtBuscar.TextChanged += new System.EventHandler(this.txtBuscar_TextChanged);
-            // 
-            // dtpHasta
-            // 
-            this.dtpHasta.Format = System.Windows.Forms.DateTimePickerFormat.Short;
-            this.dtpHasta.Location = new System.Drawing.Point(438, 52);
-            this.dtpHasta.Name = "dtpHasta";
-            this.dtpHasta.Size = new System.Drawing.Size(153, 26);
-            this.dtpHasta.TabIndex = 11;
-            this.dtpHasta.ValueChanged += new System.EventHandler(this.dtpHasta_ValueChanged);
-            // 
-            // dtpDesde
-            // 
-            this.dtpDesde.Format = System.Windows.Forms.DateTimePickerFormat.Short;
-            this.dtpDesde.Location = new System.Drawing.Point(69, 52);
-            this.dtpDesde.Name = "dtpDesde";
-            this.dtpDesde.Size = new System.Drawing.Size(155, 26);
-            this.dtpDesde.TabIndex = 10;
-            this.dtpDesde.ValueChanged += new System.EventHandler(this.dtpDesde_ValueChanged);
-            // 
-            // btnVerDetalle
-            // 
-            this.btnVerDetalle.Location = new System.Drawing.Point(302, 498);
-            this.btnVerDetalle.Name = "btnVerDetalle";
-            this.btnVerDetalle.Size = new System.Drawing.Size(240, 38);
-            this.btnVerDetalle.TabIndex = 20;
-            this.btnVerDetalle.Text = "VER DETALLE DE VENTA";
-            this.btnVerDetalle.UseVisualStyleBackColor = true;
-            this.btnVerDetalle.Click += new System.EventHandler(this.btnVerDetalle_Click);
-            // 
-            // cmbFiltroTipo
-            // 
-            this.cmbFiltroTipo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbFiltroTipo.FormattingEnabled = true;
-            this.cmbFiltroTipo.Items.AddRange(new object[] {
-            "Todos",
-            "Solo Productos",
-            "Solo Mensualidades",
-            "Mixtos"});
-            this.cmbFiltroTipo.Location = new System.Drawing.Point(438, 96);
-            this.cmbFiltroTipo.Name = "cmbFiltroTipo";
-            this.cmbFiltroTipo.Size = new System.Drawing.Size(153, 28);
-            this.cmbFiltroTipo.TabIndex = 21;
-            this.cmbFiltroTipo.SelectedIndexChanged += new System.EventHandler(this.cmbFiltroTipo_SelectedIndexChanged);
-            // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(381, 99);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(43, 20);
-            this.label6.TabIndex = 22;
-            this.label6.Text = "Tipo:";
+            this.dgvVentas.TabIndex = 5;
             // 
             // colHistorialId
             // 
@@ -190,8 +130,8 @@
             // colHistorialFecha
             // 
             this.colHistorialFecha.DataPropertyName = "Fecha";
-            dataGridViewCellStyle7.Format = "dd/MM/yyyy HH:mm";
-            this.colHistorialFecha.DefaultCellStyle = dataGridViewCellStyle7;
+            dataGridViewCellStyle1.Format = "dd/MM/yyyy HH:mm";
+            this.colHistorialFecha.DefaultCellStyle = dataGridViewCellStyle1;
             this.colHistorialFecha.FillWeight = 120F;
             this.colHistorialFecha.HeaderText = "Fecha";
             this.colHistorialFecha.MinimumWidth = 8;
@@ -228,13 +168,73 @@
             // colHistorialTotal
             // 
             this.colHistorialTotal.DataPropertyName = "Total Cobrado";
-            dataGridViewCellStyle8.Format = "N0";
-            this.colHistorialTotal.DefaultCellStyle = dataGridViewCellStyle8;
+            dataGridViewCellStyle2.Format = "N0";
+            this.colHistorialTotal.DefaultCellStyle = dataGridViewCellStyle2;
             this.colHistorialTotal.FillWeight = 80F;
             this.colHistorialTotal.HeaderText = "Total Cobrado";
             this.colHistorialTotal.MinimumWidth = 8;
             this.colHistorialTotal.Name = "colHistorialTotal";
             this.colHistorialTotal.ReadOnly = true;
+            // 
+            // txtBuscar
+            // 
+            this.txtBuscar.Location = new System.Drawing.Point(16, 96);
+            this.txtBuscar.Name = "txtBuscar";
+            this.txtBuscar.Size = new System.Drawing.Size(401, 26);
+            this.txtBuscar.TabIndex = 2;
+            this.txtBuscar.TextChanged += new System.EventHandler(this.txtBuscar_TextChanged);
+            // 
+            // dtpHasta
+            // 
+            this.dtpHasta.Format = System.Windows.Forms.DateTimePickerFormat.Short;
+            this.dtpHasta.Location = new System.Drawing.Point(501, 52);
+            this.dtpHasta.Name = "dtpHasta";
+            this.dtpHasta.Size = new System.Drawing.Size(153, 26);
+            this.dtpHasta.TabIndex = 1;
+            this.dtpHasta.ValueChanged += new System.EventHandler(this.dtpHasta_ValueChanged);
+            // 
+            // dtpDesde
+            // 
+            this.dtpDesde.Format = System.Windows.Forms.DateTimePickerFormat.Short;
+            this.dtpDesde.Location = new System.Drawing.Point(69, 52);
+            this.dtpDesde.Name = "dtpDesde";
+            this.dtpDesde.Size = new System.Drawing.Size(155, 26);
+            this.dtpDesde.TabIndex = 0;
+            this.dtpDesde.ValueChanged += new System.EventHandler(this.dtpDesde_ValueChanged);
+            // 
+            // btnVerDetalle
+            // 
+            this.btnVerDetalle.Location = new System.Drawing.Point(302, 498);
+            this.btnVerDetalle.Name = "btnVerDetalle";
+            this.btnVerDetalle.Size = new System.Drawing.Size(240, 38);
+            this.btnVerDetalle.TabIndex = 4;
+            this.btnVerDetalle.Text = "VER DETALLE DE VENTA";
+            this.btnVerDetalle.UseVisualStyleBackColor = true;
+            this.btnVerDetalle.Click += new System.EventHandler(this.btnVerDetalle_Click);
+            // 
+            // cmbFiltroTipo
+            // 
+            this.cmbFiltroTipo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbFiltroTipo.FormattingEnabled = true;
+            this.cmbFiltroTipo.Items.AddRange(new object[] {
+            "Todos",
+            "Solo Productos",
+            "Solo Mensualidades",
+            "Mixtos"});
+            this.cmbFiltroTipo.Location = new System.Drawing.Point(501, 96);
+            this.cmbFiltroTipo.Name = "cmbFiltroTipo";
+            this.cmbFiltroTipo.Size = new System.Drawing.Size(153, 28);
+            this.cmbFiltroTipo.TabIndex = 3;
+            this.cmbFiltroTipo.SelectedIndexChanged += new System.EventHandler(this.cmbFiltroTipo_SelectedIndexChanged);
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(444, 99);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(43, 20);
+            this.label6.TabIndex = 22;
+            this.label6.Text = "Tipo:";
             // 
             // frmHistorialTransacciones
             // 

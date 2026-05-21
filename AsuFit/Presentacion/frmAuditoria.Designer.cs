@@ -36,14 +36,14 @@
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage4 = new System.Windows.Forms.TabPage();
             this.dgvAuditoria = new System.Windows.Forms.DataGridView();
-            this.txtBuscar = new System.Windows.Forms.TextBox();
-            this.cmbFiltroModulo = new System.Windows.Forms.ComboBox();
-            this.label3 = new System.Windows.Forms.Label();
             this.colAuditoriaFecha = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colAuditoriaUsuario = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colAuditoriaModulo = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colAuditoriaAccion = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colAuditoriaDetalle = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.txtBuscar = new System.Windows.Forms.TextBox();
+            this.cmbFiltroModulo = new System.Windows.Forms.ComboBox();
+            this.label3 = new System.Windows.Forms.Label();
             this.tabPage1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage4.SuspendLayout();
@@ -58,7 +58,7 @@
             this.tabPage1.Location = new System.Drawing.Point(4, 29);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(1275, 327);
+            this.tabPage1.Size = new System.Drawing.Size(1185, 327);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Cierres de Caja";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -68,7 +68,7 @@
             this.btnAbrirHistorial.Location = new System.Drawing.Point(12, 113);
             this.btnAbrirHistorial.Name = "btnAbrirHistorial";
             this.btnAbrirHistorial.Size = new System.Drawing.Size(306, 35);
-            this.btnAbrirHistorial.TabIndex = 13;
+            this.btnAbrirHistorial.TabIndex = 0;
             this.btnAbrirHistorial.Text = "📊 ABRIR HISTORIAL DE ARQUEOS";
             this.btnAbrirHistorial.UseVisualStyleBackColor = true;
             this.btnAbrirHistorial.Click += new System.EventHandler(this.btnAbrirHistorial_Click);
@@ -134,47 +134,8 @@
             this.dgvAuditoria.RowHeadersWidth = 62;
             this.dgvAuditoria.RowTemplate.Height = 28;
             this.dgvAuditoria.Size = new System.Drawing.Size(1158, 246);
-            this.dgvAuditoria.TabIndex = 3;
-            // 
-            // txtBuscar
-            // 
-            this.txtBuscar.Location = new System.Drawing.Point(322, 17);
-            this.txtBuscar.Name = "txtBuscar";
-            this.txtBuscar.Size = new System.Drawing.Size(360, 26);
-            this.txtBuscar.TabIndex = 2;
-            this.txtBuscar.TextChanged += new System.EventHandler(this.txtBuscar_TextChanged);
-            // 
-            // cmbFiltroModulo
-            // 
-            this.cmbFiltroModulo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbFiltroModulo.FormattingEnabled = true;
-            this.cmbFiltroModulo.Items.AddRange(new object[] {
-            "Todos",
-            "Seguridad",
-            "Caja",
-            "Cobros",
-            "Gastos",
-            "Socios",
-            "Usuarios",
-            "Planes",
-            "Inventario",
-            "Proveedores",
-            "Configuración",
-            "Sistema"});
-            this.cmbFiltroModulo.Location = new System.Drawing.Point(150, 17);
-            this.cmbFiltroModulo.Name = "cmbFiltroModulo";
-            this.cmbFiltroModulo.Size = new System.Drawing.Size(121, 28);
-            this.cmbFiltroModulo.TabIndex = 1;
-            this.cmbFiltroModulo.SelectedIndexChanged += new System.EventHandler(this.cmbFiltroModulo_SelectedIndexChanged);
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(8, 20);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(136, 20);
-            this.label3.TabIndex = 0;
-            this.label3.Text = "Filtrar por Módulo:";
+            this.dgvAuditoria.TabIndex = 2;
+            this.dgvAuditoria.DataBindingComplete += new System.Windows.Forms.DataGridViewBindingCompleteEventHandler(this.dgvAuditoria_DataBindingComplete);
             // 
             // colAuditoriaFecha
             // 
@@ -212,6 +173,46 @@
             this.colAuditoriaDetalle.HeaderText = "Detalle";
             this.colAuditoriaDetalle.MinimumWidth = 8;
             this.colAuditoriaDetalle.Name = "colAuditoriaDetalle";
+            // 
+            // txtBuscar
+            // 
+            this.txtBuscar.Location = new System.Drawing.Point(322, 17);
+            this.txtBuscar.Name = "txtBuscar";
+            this.txtBuscar.Size = new System.Drawing.Size(360, 26);
+            this.txtBuscar.TabIndex = 1;
+            this.txtBuscar.TextChanged += new System.EventHandler(this.txtBuscar_TextChanged);
+            // 
+            // cmbFiltroModulo
+            // 
+            this.cmbFiltroModulo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbFiltroModulo.FormattingEnabled = true;
+            this.cmbFiltroModulo.Items.AddRange(new object[] {
+            "Todos",
+            "Seguridad",
+            "Caja",
+            "Cobros",
+            "Gastos",
+            "Socios",
+            "Usuarios",
+            "Planes",
+            "Inventario",
+            "Proveedores",
+            "Configuración",
+            "Sistema"});
+            this.cmbFiltroModulo.Location = new System.Drawing.Point(150, 17);
+            this.cmbFiltroModulo.Name = "cmbFiltroModulo";
+            this.cmbFiltroModulo.Size = new System.Drawing.Size(121, 28);
+            this.cmbFiltroModulo.TabIndex = 0;
+            this.cmbFiltroModulo.SelectedIndexChanged += new System.EventHandler(this.cmbFiltroModulo_SelectedIndexChanged);
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(8, 20);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(136, 20);
+            this.label3.TabIndex = 0;
+            this.label3.Text = "Filtrar por Módulo:";
             // 
             // frmAuditoria
             // 

@@ -301,6 +301,7 @@
             this.Name = "frmRegistrarUsuario";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "frmRegistrarUsuario";
+            this.Load += new System.EventHandler(this.frmRegistrarUsuario_Load);
             this.Shown += new System.EventHandler(this.frmRegistrarUsuario_Shown);
             this.TextChanged += new System.EventHandler(this.VerificarCamposObligatorios);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.NavegacionEnter_KeyDown);

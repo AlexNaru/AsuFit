@@ -11,7 +11,10 @@ namespace AsuFit.Presentacion
 {
     public partial class frmPuntoVenta : Form
     {
+        #region 1. VARIABLES GLOBALES Y CONSTRUCTOR
         private Usuario usuarioActual;
+        private InventarioNegocio negocio = new InventarioNegocio();
+        private DataTable dtCatalogo;
 
         [DllImport("user32.dll", CharSet = CharSet.Auto)]
         private static extern Int32 SendMessage(IntPtr hWnd, int msg, int wParam, [MarshalAs(UnmanagedType.LPWStr)] string lParam);
@@ -23,10 +26,9 @@ namespace AsuFit.Presentacion
             usuarioActual = userLogueDado;
             dgvCarrito.AutoGenerateColumns = false;
         }
+        #endregion
 
-        private InventarioNegocio negocio = new InventarioNegocio();
-        private DataTable dtCatalogo;
-
+        #region 2. INICIALIZACIÓN Y CARGA DE DATOS
         private void frmPuntoVenta_Load(object sender, EventArgs e)
         {
             ConfigurarCarrito();
@@ -34,6 +36,7 @@ namespace AsuFit.Presentacion
 
             dtCatalogo = negocio.ListarProductos();
 
+            // Agregar columna auxiliar para búsquedas sin acentos
             dtCatalogo.Columns.Add("NombreBusqueda", typeof(string));
             foreach (DataRow row in dtCatalogo.Rows)
             {
@@ -55,6 +58,7 @@ namespace AsuFit.Presentacion
             dgvCarrito.ReadOnly = true;
             dgvCarrito.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
 
+            // Evitar duplicación de eventos
             dgvCarrito.CellContentClick -= dgvCarrito_CellContentClick;
             dgvCarrito.CellContentDoubleClick -= dgvCarrito_CellContentClick;
             dgvCarrito.CellContentClick += dgvCarrito_CellContentClick;
@@ -63,22 +67,17 @@ namespace AsuFit.Presentacion
 
         private void ConfigurarFiltros()
         {
-            cmbFiltroCategoria.Items.Add("Todas");
-            cmbFiltroCategoria.Items.Add("Suplementos");
-            cmbFiltroCategoria.Items.Add("Bebidas");
-            cmbFiltroCategoria.Items.Add("Snacks");
-            cmbFiltroCategoria.SelectedIndex = 0;
+            // Selecciona el primer ítem por defecto (si existen)
+            if (cmbFiltroCategoria.Items.Count > 0) cmbFiltroCategoria.SelectedIndex = 0;
+            if (cmbOrdenar.Items.Count > 0) cmbOrdenar.SelectedIndex = 0;
 
-            cmbOrdenar.Items.Add("Nombre (A-Z)");
-            cmbOrdenar.Items.Add("Nombre (Z-A)");
-            cmbOrdenar.Items.Add("Precio (Menor a Mayor)");
-            cmbOrdenar.Items.Add("Precio (Mayor a Menor)");
-            cmbOrdenar.SelectedIndex = 0;
-
+            // Conectar eventos dinámicamente
             cmbFiltroCategoria.SelectedIndexChanged += CombosFiltro_SelectedIndexChanged;
             cmbOrdenar.SelectedIndexChanged += CombosFiltro_SelectedIndexChanged;
         }
+        #endregion
 
+        #region 3. SECCIÓN SUPERIOR: BÚSQUEDA Y FILTROS
         private void txtBuscarProducto_TextChanged(object sender, EventArgs e)
         {
             AplicarFiltros();
@@ -87,51 +86,6 @@ namespace AsuFit.Presentacion
         private void CombosFiltro_SelectedIndexChanged(object sender, EventArgs e)
         {
             AplicarFiltros();
-        }
-
-        private string QuitarAcentos(string texto)
-        {
-            if (string.IsNullOrEmpty(texto)) return texto;
-
-            string conAcentos = "áéíóúÁÉÍÓÚ";
-            string sinAcentos = "aeiouAEIOU";
-
-            for (int i = 0; i < conAcentos.Length; i++)
-            {
-                texto = texto.Replace(conAcentos[i], sinAcentos[i]);
-            }
-            return texto;
-        }
-
-        private void ConfigurarAutocompletado()
-        {
-            AutoCompleteStringCollection listaSugerencias = new AutoCompleteStringCollection();
-
-            foreach (DataRow row in dtCatalogo.Rows)
-            {
-                string nombreOriginal = row["Nombre"].ToString();
-                string nombreSinAcento = row["NombreBusqueda"].ToString();
-
-                if (!listaSugerencias.Contains(nombreOriginal))
-                    listaSugerencias.Add(nombreOriginal);
-
-                if (!listaSugerencias.Contains(nombreSinAcento))
-                    listaSugerencias.Add(nombreSinAcento);
-
-                string[] palabras = nombreSinAcento.Split(' ');
-
-                foreach (string palabra in palabras)
-                {
-                    if (palabra.Length > 2 && !listaSugerencias.Contains(palabra))
-                    {
-                        listaSugerencias.Add(palabra);
-                    }
-                }
-            }
-
-            txtBuscarProducto.AutoCompleteCustomSource = listaSugerencias;
-            txtBuscarProducto.AutoCompleteMode = AutoCompleteMode.Suggest;
-            txtBuscarProducto.AutoCompleteSource = AutoCompleteSource.CustomSource;
         }
 
         private void AplicarFiltros()
@@ -162,6 +116,49 @@ namespace AsuFit.Presentacion
             GenerarTarjetas(filtro, orden);
         }
 
+        private void ConfigurarAutocompletado()
+        {
+            AutoCompleteStringCollection listaSugerencias = new AutoCompleteStringCollection();
+
+            foreach (DataRow row in dtCatalogo.Rows)
+            {
+                string nombreOriginal = row["Nombre"].ToString();
+                string nombreSinAcento = row["NombreBusqueda"].ToString();
+
+                if (!listaSugerencias.Contains(nombreOriginal)) listaSugerencias.Add(nombreOriginal);
+                if (!listaSugerencias.Contains(nombreSinAcento)) listaSugerencias.Add(nombreSinAcento);
+
+                string[] palabras = nombreSinAcento.Split(' ');
+                foreach (string palabra in palabras)
+                {
+                    if (palabra.Length > 2 && !listaSugerencias.Contains(palabra))
+                    {
+                        listaSugerencias.Add(palabra);
+                    }
+                }
+            }
+
+            txtBuscarProducto.AutoCompleteCustomSource = listaSugerencias;
+            txtBuscarProducto.AutoCompleteMode = AutoCompleteMode.Suggest;
+            txtBuscarProducto.AutoCompleteSource = AutoCompleteSource.CustomSource;
+        }
+
+        private string QuitarAcentos(string texto)
+        {
+            if (string.IsNullOrEmpty(texto)) return texto;
+
+            string conAcentos = "áéíóúÁÉÍÓÚ";
+            string sinAcentos = "aeiouAEIOU";
+
+            for (int i = 0; i < conAcentos.Length; i++)
+            {
+                texto = texto.Replace(conAcentos[i], sinAcentos[i]);
+            }
+            return texto;
+        }
+        #endregion
+
+        #region 4. SECCIÓN IZQUIERDA: CATÁLOGO DE PRODUCTOS (TARJETAS)
         private void GenerarTarjetas(string filtro, string orden)
         {
             flpCatalogo.SuspendLayout();
@@ -258,7 +255,6 @@ namespace AsuFit.Presentacion
                 string nombre = filaProducto[0]["Nombre"].ToString();
                 decimal precio = Convert.ToDecimal(filaProducto[0]["PrecioVenta"]);
                 string codigoBarras = filaProducto[0]["CodigoBarras"].ToString();
-
                 int iva = filaProducto[0]["PorcentajeIva"] != DBNull.Value ? Convert.ToInt32(filaProducto[0]["PorcentajeIva"]) : 10;
 
                 bool existeEnCarrito = false;
@@ -292,7 +288,9 @@ namespace AsuFit.Presentacion
                 ActualizarTotal();
             }
         }
+        #endregion
 
+        #region 5. SECCIÓN DERECHA: CARRITO DE COMPRAS
         private void dgvCarrito_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex >= 0)
@@ -343,6 +341,13 @@ namespace AsuFit.Presentacion
             lblTotalPagar.Text = "Gs. " + totalPagar.ToString("N0");
         }
 
+        private void dgvCarrito_SelectionChanged(object sender, EventArgs e)
+        {
+            dgvCarrito.ClearSelection();
+        }
+        #endregion
+
+        #region 6. ACCIONES FINALES: LIMPIAR Y VENDER
         public void LimpiarGrillaVisual()
         {
             dgvCarrito.Rows.Clear();
@@ -414,10 +419,6 @@ namespace AsuFit.Presentacion
                 MessageBox.Show("Error al enviar productos a la caja: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-
-        private void dgvCarrito_SelectionChanged(object sender, EventArgs e)
-        {
-            dgvCarrito.ClearSelection();
-        }
+        #endregion
     }
 }

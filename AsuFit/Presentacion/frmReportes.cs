@@ -7,29 +7,39 @@ namespace AsuFit.Presentacion
 {
     public partial class frmReportes : Form
     {
-        // Instanciamos nuestra nueva capa de negocio
+        #region 1. VARIABLES GLOBALES Y CONSTRUCTOR
         private ReportesNegocio negocio = new ReportesNegocio();
 
         public frmReportes()
         {
             InitializeComponent();
-
-            // Bloqueamos las columnas automáticas de ambas tablas
             dgvIngresos.AutoGenerateColumns = false;
             dgvTopProductos.AutoGenerateColumns = false;
         }
+        #endregion
 
+        #region 2. INICIALIZACIÓN Y CARGA INICIAL
         private void frmReportes_Load(object sender, EventArgs e)
         {
-            // Fechas para la pestaña 1 (Ingresos)
             dtpDesde.Value = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
             dtpHasta.Value = DateTime.Now;
             CargarReporteIngresos();
 
-            // Fechas para la pestaña 2 (Top Productos)
             dtpDesdeTop.Value = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
             dtpHastaTop.Value = DateTime.Now;
             CargarTopProductos();
+        }
+        #endregion
+
+        #region 3. PESTAÑA 1: INGRESOS POR FECHAS
+        private void dtpDesde_ValueChanged(object sender, EventArgs e)
+        {
+            CargarReporteIngresos();
+        }
+
+        private void dtpHasta_ValueChanged(object sender, EventArgs e)
+        {
+            CargarReporteIngresos();
         }
 
         private void CargarReporteIngresos()
@@ -43,11 +53,9 @@ namespace AsuFit.Presentacion
 
             try
             {
-                // Llamamos a la capa de negocio, el formulario ya no sabe nada de SQL
                 DataTable dtIngresos = negocio.ListarIngresosPorFechas(dtpDesde.Value, dtpHasta.Value);
                 dgvIngresos.DataSource = dtIngresos;
 
-                // Sumamos los totales
                 decimal sumaTotal = 0;
                 foreach (DataRow fila in dtIngresos.Rows)
                 {
@@ -63,15 +71,17 @@ namespace AsuFit.Presentacion
                 MessageBox.Show("Error al generar el reporte: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+        #endregion
 
-        private void dtpDesde_ValueChanged(object sender, EventArgs e)
+        #region 4. PESTAÑA 2: TOP PRODUCTOS MÁS VENDIDOS
+        private void dtpDesdeTop_ValueChanged(object sender, EventArgs e)
         {
-            CargarReporteIngresos();
+            CargarTopProductos();
         }
 
-        private void dtpHasta_ValueChanged(object sender, EventArgs e)
+        private void dtpHastaTop_ValueChanged(object sender, EventArgs e)
         {
-            CargarReporteIngresos();
+            CargarTopProductos();
         }
 
         private void CargarTopProductos()
@@ -80,7 +90,6 @@ namespace AsuFit.Presentacion
 
             try
             {
-                // Llamamos a la capa de negocio
                 DataTable dtTop = negocio.ListarTopProductos(dtpDesdeTop.Value, dtpHastaTop.Value);
                 dgvTopProductos.DataSource = dtTop;
 
@@ -91,15 +100,6 @@ namespace AsuFit.Presentacion
                 MessageBox.Show("Error al cargar el Top 5: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-
-        private void dtpDesdeTop_ValueChanged(object sender, EventArgs e)
-        {
-            CargarTopProductos();
-        }
-
-        private void dtpHastaTop_ValueChanged(object sender, EventArgs e)
-        {
-            CargarTopProductos();
-        }
+        #endregion
     }
 }

@@ -10,6 +10,7 @@ namespace AsuFit.Presentacion
 {
     public partial class frmProveedores : Form
     {
+        #region 1. VARIABLES GLOBALES Y CONSTRUCTOR
         [DllImport("user32.dll", CharSet = CharSet.Auto)]
         private static extern Int32 SendMessage(IntPtr hWnd, int msg, int wParam, [MarshalAs(UnmanagedType.LPWStr)] string lParam);
         private const int EM_SETCUEBANNER = 0x1501;
@@ -22,11 +23,11 @@ namespace AsuFit.Presentacion
         {
             InitializeComponent();
             usuarioActual = userLogueado;
-
-            // --- EL CAMBIO CLAVE: Bloqueamos las columnas automáticas ---
             dgvProveedores.AutoGenerateColumns = false;
         }
+        #endregion
 
+        #region 2. INICIALIZACIÓN Y CARGA DE DATOS
         private void frmProveedores_Load(object sender, EventArgs e)
         {
             ConfigurarBuscador();
@@ -47,7 +48,6 @@ namespace AsuFit.Presentacion
                 dtProveedores = negocio.ListarProveedores();
                 if (dtProveedores != null)
                 {
-                    // Aplicamos el filtrado inicial al cargar
                     FiltrarDatos();
                 }
             }
@@ -56,7 +56,9 @@ namespace AsuFit.Presentacion
                 MessageBox.Show("Error de Base de Datos: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+        #endregion
 
+        #region 3. SECCIÓN IZQUIERDA: CATÁLOGO Y BÚSQUEDA
         private void FiltrarDatos()
         {
             if (dtProveedores == null) return;
@@ -76,34 +78,24 @@ namespace AsuFit.Presentacion
             dv.RowFilter = filtroFinal;
             dgvProveedores.DataSource = dv;
 
-            // --- CÓDIGO LIMPIO: Ya no forzamos visibilidad de columnas aquí ---
-
             ActualizarResumen();
             dgvProveedores.ClearSelection();
         }
 
-        private void ActualizarResumen()
+        private void txtBuscarProveedor_TextChanged(object sender, EventArgs e)
         {
-            if (dtProveedores == null) return;
-
-            int total = dtProveedores.Rows.Count;
-            int activos = 0;
-            int inactivos = 0;
-
-            foreach (DataRow row in dtProveedores.Rows)
-            {
-                if (row["Estado"].ToString() == "Activo") activos++;
-                else inactivos++;
-            }
-
-            lblTotal.Text = total.ToString();
-            lblActivos.Text = activos.ToString();
-            lblInactivos.Text = inactivos.ToString();
+            if (txtBuscarProveedor.Text != "Buscar por Nombre o RUC...")
+                FiltrarDatos();
         }
 
         private void chkMostrarInactivos_CheckedChanged(object sender, EventArgs e)
         {
             FiltrarDatos();
+        }
+
+        private void dgvProveedores_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
+        {
+            dgvProveedores.ClearSelection();
         }
 
         private void dgvProveedores_CellClick(object sender, DataGridViewCellEventArgs e)
@@ -112,7 +104,6 @@ namespace AsuFit.Presentacion
             {
                 DataGridViewRow fila = dgvProveedores.Rows[e.RowIndex];
 
-                // ACTUALIZADO: Usamos los nuevos Name de las columnas
                 txtId.Text = fila.Cells["colProvId"].Value.ToString();
                 txtRuc.Text = fila.Cells["colProvRuc"].Value.ToString();
                 txtNombre.Text = fila.Cells["colProvNombre"].Value.ToString();
@@ -125,7 +116,9 @@ namespace AsuFit.Presentacion
                 chkActivo.Checked = (fila.Cells["colProvEstado"].Value.ToString() == "Activo");
             }
         }
+        #endregion
 
+        #region 4. SECCIÓN DERECHA SUPERIOR: DETALLES DEL PROVEEDOR Y ACCIONES
         private void btnNuevo_Click(object sender, EventArgs e)
         {
             LimpiarFormulario();
@@ -215,20 +208,31 @@ namespace AsuFit.Presentacion
             txtNombre.Focus();
         }
 
-        private void txtBuscarProveedor_TextChanged(object sender, EventArgs e)
-        {
-            if (txtBuscarProveedor.Text != "Buscar por Nombre o RUC...")
-                FiltrarDatos();
-        }
-
-        private void dgvProveedores_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
-        {
-            dgvProveedores.ClearSelection();
-        }
-
         private void LimpiarSeleccion_Click(object sender, EventArgs e)
         {
             LimpiarFormulario();
         }
+        #endregion
+
+        #region 5. SECCIÓN DERECHA INFERIOR: RESUMEN
+        private void ActualizarResumen()
+        {
+            if (dtProveedores == null) return;
+
+            int total = dtProveedores.Rows.Count;
+            int activos = 0;
+            int inactivos = 0;
+
+            foreach (DataRow row in dtProveedores.Rows)
+            {
+                if (row["Estado"].ToString() == "Activo") activos++;
+                else inactivos++;
+            }
+
+            lblTotal.Text = total.ToString();
+            lblActivos.Text = activos.ToString();
+            lblInactivos.Text = inactivos.ToString();
+        }
+        #endregion
     }
 }

@@ -8,6 +8,7 @@ namespace AsuFit.Presentacion
 {
     public partial class frmGestionPlanes : Form
     {
+        #region 1. VARIABLES GLOBALES Y CONSTRUCTOR
         private int idPlanSeleccionado = 0;
         private Usuario usuarioActual;
 
@@ -15,11 +16,11 @@ namespace AsuFit.Presentacion
         {
             InitializeComponent();
             usuarioActual = userLogueado;
-
-            // --- EL CAMBIO CLAVE: Bloqueamos las columnas automáticas ---
             dgvPlanes.AutoGenerateColumns = false;
         }
+        #endregion
 
+        #region 2. INICIALIZACIÓN Y CARGA DE DATOS
         private void frmGestionPlanes_Load(object sender, EventArgs e)
         {
             CargarGrilla();
@@ -37,13 +38,11 @@ namespace AsuFit.Presentacion
                 PlanNegocio negocio = new PlanNegocio();
                 string estadoFiltro = chkMostrarInactivos.Checked ? "Inactivo" : "Activo";
 
-                // Al asignar el DataSource, los datos se acomodarán solos según el DataPropertyName
                 dgvPlanes.DataSource = negocio.ListarPlanes(estadoFiltro);
 
                 dgvPlanes.ClearSelection();
                 idPlanSeleccionado = 0;
 
-                // Actualizamos la etiqueta con el total de planes encontrados
                 int cantidad = dgvPlanes.Rows.Count;
                 lblTotal.Text = "Planes encontrados: " + cantidad.ToString();
             }
@@ -52,16 +51,30 @@ namespace AsuFit.Presentacion
                 MessageBox.Show("Error al cargar la lista de planes: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+        #endregion
 
+        #region 3. SECCIÓN CENTRAL: GRILLA DE PLANES
         private void dgvPlanes_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex >= 0)
             {
-                // Capturamos el ID usando el Name de la columna
                 idPlanSeleccionado = Convert.ToInt32(dgvPlanes.Rows[e.RowIndex].Cells["colPlanId"].Value);
             }
         }
 
+        private void dgvPlanes_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
+        {
+            dgvPlanes.ClearSelection();
+        }
+
+        private void frmGestionPlanes_Click(object sender, EventArgs e)
+        {
+            dgvPlanes.ClearSelection();
+            idPlanSeleccionado = 0;
+        }
+        #endregion
+
+        #region 4. SECCIÓN INFERIOR: ACCIONES
         private void btnNuevo_Click(object sender, EventArgs e)
         {
             frmRegistrarPlan ventanaRegistro = new frmRegistrarPlan(usuarioActual);
@@ -75,8 +88,6 @@ namespace AsuFit.Presentacion
             {
                 DataGridViewRow fila = dgvPlanes.CurrentRow;
 
-                // --- CÓDIGO LIMPIO RESTAURADO ---
-                // Como los DataPropertyName ya están correctos, podemos convertir directamente
                 Plan planSeleccionado = new Plan
                 {
                     IdPlan = idPlanSeleccionado,
@@ -125,16 +136,6 @@ namespace AsuFit.Presentacion
                 }
             }
         }
-
-        private void dgvPlanes_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
-        {
-            dgvPlanes.ClearSelection();
-        }
-
-        private void frmGestionPlanes_Click(object sender, EventArgs e)
-        {
-            dgvPlanes.ClearSelection();
-            idPlanSeleccionado = 0;
-        }
+        #endregion
     }
 }

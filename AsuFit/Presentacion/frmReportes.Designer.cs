@@ -36,23 +36,23 @@
             this.tabIngresos = new System.Windows.Forms.TabPage();
             this.lblTotalIngresos = new System.Windows.Forms.Label();
             this.dgvIngresos = new System.Windows.Forms.DataGridView();
+            this.colRepIngresoFecha = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colRepIngresoComprobante = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colRepIngresoMetodo = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colRepIngresoTotal = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.dtpHasta = new System.Windows.Forms.DateTimePicker();
             this.dtpDesde = new System.Windows.Forms.DateTimePicker();
             this.tabTopProductos = new System.Windows.Forms.TabPage();
             this.dgvTopProductos = new System.Windows.Forms.DataGridView();
+            this.colTopProducto = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colTopCantidad = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colTopIngresos = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.label3 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.dtpHastaTop = new System.Windows.Forms.DateTimePicker();
             this.dtpDesdeTop = new System.Windows.Forms.DateTimePicker();
-            this.colRepIngresoFecha = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colRepIngresoComprobante = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colRepIngresoMetodo = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colRepIngresoTotal = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colTopProducto = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colTopCantidad = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colTopIngresos = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.tabControlReportes.SuspendLayout();
             this.tabIngresos.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvIngresos)).BeginInit();
@@ -117,7 +117,44 @@
             this.dgvIngresos.RowTemplate.Height = 28;
             this.dgvIngresos.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dgvIngresos.Size = new System.Drawing.Size(575, 230);
-            this.dgvIngresos.TabIndex = 10;
+            this.dgvIngresos.TabIndex = 2;
+            // 
+            // colRepIngresoFecha
+            // 
+            this.colRepIngresoFecha.DataPropertyName = "Fecha";
+            dataGridViewCellStyle1.Format = "dd/MM/yyyy HH:mm";
+            this.colRepIngresoFecha.DefaultCellStyle = dataGridViewCellStyle1;
+            this.colRepIngresoFecha.HeaderText = "Fecha";
+            this.colRepIngresoFecha.MinimumWidth = 8;
+            this.colRepIngresoFecha.Name = "colRepIngresoFecha";
+            this.colRepIngresoFecha.ReadOnly = true;
+            // 
+            // colRepIngresoComprobante
+            // 
+            this.colRepIngresoComprobante.DataPropertyName = "Comprobante";
+            this.colRepIngresoComprobante.HeaderText = "Comprobante";
+            this.colRepIngresoComprobante.MinimumWidth = 8;
+            this.colRepIngresoComprobante.Name = "colRepIngresoComprobante";
+            this.colRepIngresoComprobante.ReadOnly = true;
+            // 
+            // colRepIngresoMetodo
+            // 
+            this.colRepIngresoMetodo.DataPropertyName = "MetodoPago";
+            this.colRepIngresoMetodo.HeaderText = "Método de Pago";
+            this.colRepIngresoMetodo.MinimumWidth = 8;
+            this.colRepIngresoMetodo.Name = "colRepIngresoMetodo";
+            this.colRepIngresoMetodo.ReadOnly = true;
+            // 
+            // colRepIngresoTotal
+            // 
+            this.colRepIngresoTotal.DataPropertyName = "Total";
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle2.Format = "N0";
+            this.colRepIngresoTotal.DefaultCellStyle = dataGridViewCellStyle2;
+            this.colRepIngresoTotal.HeaderText = "Total";
+            this.colRepIngresoTotal.MinimumWidth = 8;
+            this.colRepIngresoTotal.Name = "colRepIngresoTotal";
+            this.colRepIngresoTotal.ReadOnly = true;
             // 
             // label2
             // 
@@ -143,7 +180,7 @@
             this.dtpHasta.Location = new System.Drawing.Point(434, 15);
             this.dtpHasta.Name = "dtpHasta";
             this.dtpHasta.Size = new System.Drawing.Size(153, 26);
-            this.dtpHasta.TabIndex = 7;
+            this.dtpHasta.TabIndex = 1;
             this.dtpHasta.ValueChanged += new System.EventHandler(this.dtpHasta_ValueChanged);
             // 
             // dtpDesde
@@ -152,7 +189,7 @@
             this.dtpDesde.Location = new System.Drawing.Point(65, 15);
             this.dtpDesde.Name = "dtpDesde";
             this.dtpDesde.Size = new System.Drawing.Size(155, 26);
-            this.dtpDesde.TabIndex = 6;
+            this.dtpDesde.TabIndex = 0;
             this.dtpDesde.ValueChanged += new System.EventHandler(this.dtpDesde_ValueChanged);
             // 
             // tabTopProductos
@@ -192,6 +229,37 @@
             this.dgvTopProductos.Size = new System.Drawing.Size(575, 230);
             this.dgvTopProductos.TabIndex = 15;
             // 
+            // colTopProducto
+            // 
+            this.colTopProducto.DataPropertyName = "Producto";
+            this.colTopProducto.FillWeight = 130F;
+            this.colTopProducto.HeaderText = "Producto";
+            this.colTopProducto.MinimumWidth = 8;
+            this.colTopProducto.Name = "colTopProducto";
+            this.colTopProducto.ReadOnly = true;
+            // 
+            // colTopCantidad
+            // 
+            this.colTopCantidad.DataPropertyName = "CantidadVendida";
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.colTopCantidad.DefaultCellStyle = dataGridViewCellStyle3;
+            this.colTopCantidad.HeaderText = "Cantidad Vendida";
+            this.colTopCantidad.MinimumWidth = 8;
+            this.colTopCantidad.Name = "colTopCantidad";
+            this.colTopCantidad.ReadOnly = true;
+            // 
+            // colTopIngresos
+            // 
+            this.colTopIngresos.DataPropertyName = "Ingresos";
+            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            dataGridViewCellStyle4.Format = "N0";
+            this.colTopIngresos.DefaultCellStyle = dataGridViewCellStyle4;
+            this.colTopIngresos.FillWeight = 60F;
+            this.colTopIngresos.HeaderText = "Ingresos";
+            this.colTopIngresos.MinimumWidth = 8;
+            this.colTopIngresos.Name = "colTopIngresos";
+            this.colTopIngresos.ReadOnly = true;
+            // 
             // label3
             // 
             this.label3.AutoSize = true;
@@ -227,74 +295,6 @@
             this.dtpDesdeTop.Size = new System.Drawing.Size(155, 26);
             this.dtpDesdeTop.TabIndex = 11;
             this.dtpDesdeTop.ValueChanged += new System.EventHandler(this.dtpDesdeTop_ValueChanged);
-            // 
-            // colRepIngresoFecha
-            // 
-            this.colRepIngresoFecha.DataPropertyName = "Fecha";
-            dataGridViewCellStyle1.Format = "dd/MM/yyyy HH:mm";
-            this.colRepIngresoFecha.DefaultCellStyle = dataGridViewCellStyle1;
-            this.colRepIngresoFecha.HeaderText = "Fecha";
-            this.colRepIngresoFecha.MinimumWidth = 8;
-            this.colRepIngresoFecha.Name = "colRepIngresoFecha";
-            this.colRepIngresoFecha.ReadOnly = true;
-            // 
-            // colRepIngresoComprobante
-            // 
-            this.colRepIngresoComprobante.DataPropertyName = "Comprobante";
-            this.colRepIngresoComprobante.HeaderText = "Comprobante";
-            this.colRepIngresoComprobante.MinimumWidth = 8;
-            this.colRepIngresoComprobante.Name = "colRepIngresoComprobante";
-            this.colRepIngresoComprobante.ReadOnly = true;
-            // 
-            // colRepIngresoMetodo
-            // 
-            this.colRepIngresoMetodo.DataPropertyName = "MetodoPago";
-            this.colRepIngresoMetodo.HeaderText = "Método de Pago";
-            this.colRepIngresoMetodo.MinimumWidth = 8;
-            this.colRepIngresoMetodo.Name = "colRepIngresoMetodo";
-            this.colRepIngresoMetodo.ReadOnly = true;
-            // 
-            // colRepIngresoTotal
-            // 
-            this.colRepIngresoTotal.DataPropertyName = "Total";
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle2.Format = "N0";
-            this.colRepIngresoTotal.DefaultCellStyle = dataGridViewCellStyle2;
-            this.colRepIngresoTotal.HeaderText = "Total";
-            this.colRepIngresoTotal.MinimumWidth = 8;
-            this.colRepIngresoTotal.Name = "colRepIngresoTotal";
-            this.colRepIngresoTotal.ReadOnly = true;
-            // 
-            // colTopProducto
-            // 
-            this.colTopProducto.DataPropertyName = "Producto";
-            this.colTopProducto.FillWeight = 130F;
-            this.colTopProducto.HeaderText = "Producto";
-            this.colTopProducto.MinimumWidth = 8;
-            this.colTopProducto.Name = "colTopProducto";
-            this.colTopProducto.ReadOnly = true;
-            // 
-            // colTopCantidad
-            // 
-            this.colTopCantidad.DataPropertyName = "CantidadVendida";
-            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.colTopCantidad.DefaultCellStyle = dataGridViewCellStyle3;
-            this.colTopCantidad.HeaderText = "Cantidad Vendida";
-            this.colTopCantidad.MinimumWidth = 8;
-            this.colTopCantidad.Name = "colTopCantidad";
-            this.colTopCantidad.ReadOnly = true;
-            // 
-            // colTopIngresos
-            // 
-            this.colTopIngresos.DataPropertyName = "Ingresos";
-            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle4.Format = "N0";
-            this.colTopIngresos.DefaultCellStyle = dataGridViewCellStyle4;
-            this.colTopIngresos.FillWeight = 60F;
-            this.colTopIngresos.HeaderText = "Ingresos";
-            this.colTopIngresos.MinimumWidth = 8;
-            this.colTopIngresos.Name = "colTopIngresos";
-            this.colTopIngresos.ReadOnly = true;
             // 
             // frmReportes
             // 

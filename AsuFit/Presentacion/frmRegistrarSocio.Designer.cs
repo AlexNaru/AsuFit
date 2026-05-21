@@ -66,7 +66,7 @@
             this.txtCedula.Location = new System.Drawing.Point(10, 69);
             this.txtCedula.Name = "txtCedula";
             this.txtCedula.Size = new System.Drawing.Size(153, 26);
-            this.txtCedula.TabIndex = 0;
+            this.txtCedula.TabIndex = 1;
             this.txtCedula.TextChanged += new System.EventHandler(this.VerificarCamposObligatorios);
             this.txtCedula.KeyDown += new System.Windows.Forms.KeyEventHandler(this.NavegacionEnter_KeyDown);
             this.txtCedula.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.ValidarNumeros_KeyPress);
@@ -78,7 +78,7 @@
             this.txtNombre.Location = new System.Drawing.Point(196, 69);
             this.txtNombre.Name = "txtNombre";
             this.txtNombre.Size = new System.Drawing.Size(153, 26);
-            this.txtNombre.TabIndex = 1;
+            this.txtNombre.TabIndex = 2;
             this.txtNombre.TextChanged += new System.EventHandler(this.VerificarCamposObligatorios);
             this.txtNombre.KeyDown += new System.Windows.Forms.KeyEventHandler(this.NavegacionEnter_KeyDown);
             // 
@@ -89,7 +89,7 @@
             this.txtApellido.Location = new System.Drawing.Point(386, 69);
             this.txtApellido.Name = "txtApellido";
             this.txtApellido.Size = new System.Drawing.Size(153, 26);
-            this.txtApellido.TabIndex = 2;
+            this.txtApellido.TabIndex = 3;
             this.txtApellido.TextChanged += new System.EventHandler(this.VerificarCamposObligatorios);
             this.txtApellido.KeyDown += new System.Windows.Forms.KeyEventHandler(this.NavegacionEnter_KeyDown);
             // 
@@ -100,7 +100,7 @@
             this.btnGuardar.Location = new System.Drawing.Point(202, 484);
             this.btnGuardar.Name = "btnGuardar";
             this.btnGuardar.Size = new System.Drawing.Size(110, 41);
-            this.btnGuardar.TabIndex = 9;
+            this.btnGuardar.TabIndex = 3;
             this.btnGuardar.Text = "GUARDAR";
             this.btnGuardar.UseVisualStyleBackColor = true;
             this.btnGuardar.Click += new System.EventHandler(this.btnGuardar_Click);
@@ -112,7 +112,7 @@
             this.txtEmail.Location = new System.Drawing.Point(196, 145);
             this.txtEmail.Name = "txtEmail";
             this.txtEmail.Size = new System.Drawing.Size(153, 26);
-            this.txtEmail.TabIndex = 3;
+            this.txtEmail.TabIndex = 6;
             this.txtEmail.KeyDown += new System.Windows.Forms.KeyEventHandler(this.NavegacionEnter_KeyDown);
             // 
             // txtTelefono
@@ -122,7 +122,7 @@
             this.txtTelefono.Location = new System.Drawing.Point(10, 145);
             this.txtTelefono.Name = "txtTelefono";
             this.txtTelefono.Size = new System.Drawing.Size(153, 26);
-            this.txtTelefono.TabIndex = 4;
+            this.txtTelefono.TabIndex = 5;
             this.txtTelefono.TextChanged += new System.EventHandler(this.VerificarCamposObligatorios);
             this.txtTelefono.KeyDown += new System.Windows.Forms.KeyEventHandler(this.NavegacionEnter_KeyDown);
             this.txtTelefono.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.ValidarNumeros_KeyPress);
@@ -133,7 +133,7 @@
             this.dtpFechaNacimiento.Location = new System.Drawing.Point(569, 69);
             this.dtpFechaNacimiento.Name = "dtpFechaNacimiento";
             this.dtpFechaNacimiento.Size = new System.Drawing.Size(153, 26);
-            this.dtpFechaNacimiento.TabIndex = 5;
+            this.dtpFechaNacimiento.TabIndex = 4;
             // 
             // txtContactoEmergencia
             // 
@@ -142,7 +142,7 @@
             this.txtContactoEmergencia.Location = new System.Drawing.Point(10, 72);
             this.txtContactoEmergencia.Name = "txtContactoEmergencia";
             this.txtContactoEmergencia.Size = new System.Drawing.Size(153, 26);
-            this.txtContactoEmergencia.TabIndex = 6;
+            this.txtContactoEmergencia.TabIndex = 0;
             this.txtContactoEmergencia.KeyDown += new System.Windows.Forms.KeyEventHandler(this.NavegacionEnter_KeyDown);
             // 
             // txtTelefonoEmergencia
@@ -152,7 +152,7 @@
             this.txtTelefonoEmergencia.Location = new System.Drawing.Point(186, 72);
             this.txtTelefonoEmergencia.Name = "txtTelefonoEmergencia";
             this.txtTelefonoEmergencia.Size = new System.Drawing.Size(153, 26);
-            this.txtTelefonoEmergencia.TabIndex = 7;
+            this.txtTelefonoEmergencia.TabIndex = 1;
             this.txtTelefonoEmergencia.TextChanged += new System.EventHandler(this.VerificarCamposObligatorios);
             this.txtTelefonoEmergencia.KeyDown += new System.Windows.Forms.KeyEventHandler(this.NavegacionEnter_KeyDown);
             this.txtTelefonoEmergencia.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.ValidarNumeros_KeyPress);
@@ -251,7 +251,7 @@
             this.cmbPlanes.Location = new System.Drawing.Point(69, 43);
             this.cmbPlanes.Name = "cmbPlanes";
             this.cmbPlanes.Size = new System.Drawing.Size(153, 28);
-            this.cmbPlanes.TabIndex = 8;
+            this.cmbPlanes.TabIndex = 0;
             this.cmbPlanes.SelectedIndexChanged += new System.EventHandler(this.VerificarCamposObligatorios);
             // 
             // label9
@@ -271,7 +271,7 @@
             this.btnCancelar.Location = new System.Drawing.Point(415, 484);
             this.btnCancelar.Name = "btnCancelar";
             this.btnCancelar.Size = new System.Drawing.Size(127, 41);
-            this.btnCancelar.TabIndex = 19;
+            this.btnCancelar.TabIndex = 4;
             this.btnCancelar.Text = "CANCELAR";
             this.btnCancelar.UseVisualStyleBackColor = true;
             this.btnCancelar.Click += new System.EventHandler(this.btnCancelar_Click);
@@ -293,7 +293,7 @@
             this.txtRuc.Location = new System.Drawing.Point(386, 145);
             this.txtRuc.Name = "txtRuc";
             this.txtRuc.Size = new System.Drawing.Size(153, 26);
-            this.txtRuc.TabIndex = 23;
+            this.txtRuc.TabIndex = 7;
             // 
             // label10
             // 
@@ -324,7 +324,7 @@
             this.groupBox1.Location = new System.Drawing.Point(16, 64);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(733, 188);
-            this.groupBox1.TabIndex = 25;
+            this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "DATOS PERSONALES";
             // 
@@ -337,7 +337,7 @@
             this.groupBox2.Location = new System.Drawing.Point(16, 258);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(733, 113);
-            this.groupBox2.TabIndex = 26;
+            this.groupBox2.TabIndex = 1;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "CONTACTO DE EMERGENCIA";
             // 
@@ -348,7 +348,7 @@
             this.groupBox3.Location = new System.Drawing.Point(16, 377);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Size = new System.Drawing.Size(733, 89);
-            this.groupBox3.TabIndex = 26;
+            this.groupBox3.TabIndex = 2;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "SUSCRIPCIÓN";
             // 

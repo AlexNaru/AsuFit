@@ -11,6 +11,7 @@ namespace AsuFit.Presentacion
 {
     public partial class frmGestionUsuarios : Form
     {
+        #region 1. VARIABLES GLOBALES Y CONSTRUCTOR
         private int idUsuarioSeleccionado = 0;
         private Usuario usuarioActual;
 
@@ -22,41 +23,23 @@ namespace AsuFit.Presentacion
         {
             InitializeComponent();
             usuarioActual = userLogueado;
-
-            // --- EL CAMBIO CLAVE: Bloqueamos las columnas automáticas ---
             dgvUsuarios.AutoGenerateColumns = false;
-
-            txtBuscar.ForeColor = Color.Black;
-            SendMessage(txtBuscar.Handle, EM_SETCUEBANNER, 1, "Buscar por Usuario, Nombre o Rol...");
         }
+        #endregion
 
+        #region 2. INICIALIZACIÓN Y CARGA DE DATOS
         private void frmGestionUsuarios_Load(object sender, EventArgs e)
         {
+            txtBuscar.ForeColor = Color.Black;
+            SendMessage(txtBuscar.Handle, EM_SETCUEBANNER, 1, "Buscar por Usuario, Nombre o Rol...");
+
             CargarGrilla("Activo");
-        }
-
-        private void txtBuscar_TextChanged(object sender, EventArgs e)
-        {
-            if (dgvUsuarios.DataSource is DataTable dt)
-            {
-                dt.DefaultView.RowFilter = $"NombreCompleto LIKE '%{txtBuscar.Text}%' OR Username LIKE '%{txtBuscar.Text}%'";
-                lblTotal.Text = "Registros encontrados: " + dgvUsuarios.Rows.Count.ToString();
-            }
-        }
-
-        private void chkMostrarInactivos_CheckedChanged(object sender, EventArgs e)
-        {
-            RecargarGrilla();
         }
 
         private void CargarGrilla(string estado)
         {
             UsuarioNegocio negocio = new UsuarioNegocio();
-
-            // Los datos se acomodarán solos según los DataPropertyName
             dgvUsuarios.DataSource = negocio.ListarUsuarios(estado);
-
-            // --- CÓDIGO LIMPIO: Ya no ocultamos columnas por código ---
 
             lblTotal.Text = "Registros encontrados: " + dgvUsuarios.Rows.Count.ToString();
 
@@ -71,16 +54,46 @@ namespace AsuFit.Presentacion
             else
                 CargarGrilla("Activo");
         }
+        #endregion
 
+        #region 3. SECCIÓN SUPERIOR: BÚSQUEDA Y FILTROS
+        private void txtBuscar_TextChanged(object sender, EventArgs e)
+        {
+            if (dgvUsuarios.DataSource is DataTable dt)
+            {
+                dt.DefaultView.RowFilter = $"NombreCompleto LIKE '%{txtBuscar.Text}%' OR Username LIKE '%{txtBuscar.Text}%'";
+                lblTotal.Text = "Registros encontrados: " + dgvUsuarios.Rows.Count.ToString();
+            }
+        }
+
+        private void chkMostrarInactivos_CheckedChanged(object sender, EventArgs e)
+        {
+            RecargarGrilla();
+        }
+        #endregion
+
+        #region 4. SECCIÓN CENTRAL: GRILLA DE USUARIOS
         private void dgvUsuarios_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex >= 0)
             {
-                // ACTUALIZADO: Leemos desde el nuevo "Name" de la columna
                 idUsuarioSeleccionado = Convert.ToInt32(dgvUsuarios.Rows[e.RowIndex].Cells["colUsuarioId"].Value);
             }
         }
 
+        private void dgvUsuarios_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
+        {
+            dgvUsuarios.ClearSelection();
+        }
+
+        private void frmGestionUsuarios_Click(object sender, EventArgs e)
+        {
+            dgvUsuarios.ClearSelection();
+            idUsuarioSeleccionado = 0;
+        }
+        #endregion
+
+        #region 5. SECCIÓN INFERIOR: ACCIONES DE GESTIÓN
         private void btnNuevo_Click(object sender, EventArgs e)
         {
             frmRegistrarUsuario frm = new frmRegistrarUsuario(true);
@@ -92,7 +105,6 @@ namespace AsuFit.Presentacion
         {
             if (idUsuarioSeleccionado > 0)
             {
-                // ACTUALIZADO: Referenciando los nuevos nombres visuales
                 Usuario userSeleccionado = new Usuario()
                 {
                     IdUsuario = Convert.ToInt32(dgvUsuarios.CurrentRow.Cells["colUsuarioId"].Value),
@@ -117,7 +129,6 @@ namespace AsuFit.Presentacion
         {
             if (idUsuarioSeleccionado > 0)
             {
-                // ACTUALIZADO: Referenciando los nuevos nombres visuales
                 int idUsuario = Convert.ToInt32(dgvUsuarios.CurrentRow.Cells["colUsuarioId"].Value);
                 string estadoActual = dgvUsuarios.CurrentRow.Cells["colUsuarioEstado"].Value.ToString();
                 string nombreUsuario = dgvUsuarios.CurrentRow.Cells["colUsuarioUsername"].Value.ToString();
@@ -147,7 +158,6 @@ namespace AsuFit.Presentacion
         {
             if (idUsuarioSeleccionado > 0)
             {
-                // ACTUALIZADO: Referenciando los nuevos nombres visuales
                 int idUsuario = Convert.ToInt32(dgvUsuarios.CurrentRow.Cells["colUsuarioId"].Value);
                 string nombreUsuario = dgvUsuarios.CurrentRow.Cells["colUsuarioUsername"].Value.ToString();
 
@@ -168,16 +178,6 @@ namespace AsuFit.Presentacion
                 MessageBox.Show("Por favor, seleccioná un usuario de la lista.", "Atención", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
-
-        private void dgvUsuarios_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
-        {
-            dgvUsuarios.ClearSelection();
-        }
-
-        private void frmGestionUsuarios_Click(object sender, EventArgs e)
-        {
-            dgvUsuarios.ClearSelection();
-            idUsuarioSeleccionado = 0;
-        }
+        #endregion
     }
 }

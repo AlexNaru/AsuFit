@@ -115,7 +115,7 @@
             this.txtBusquedaCliente.Location = new System.Drawing.Point(170, 196);
             this.txtBusquedaCliente.Name = "txtBusquedaCliente";
             this.txtBusquedaCliente.Size = new System.Drawing.Size(171, 26);
-            this.txtBusquedaCliente.TabIndex = 7;
+            this.txtBusquedaCliente.TabIndex = 0;
             this.txtBusquedaCliente.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtBusquedaCliente_KeyPress);
             // 
             // txtNombreCliente
@@ -173,12 +173,11 @@
             this.cmbMetodoPago.FormattingEnabled = true;
             this.cmbMetodoPago.Items.AddRange(new object[] {
             "Efectivo",
-            "Tarjeta",
             "Transferencia"});
             this.cmbMetodoPago.Location = new System.Drawing.Point(170, 415);
             this.cmbMetodoPago.Name = "cmbMetodoPago";
             this.cmbMetodoPago.Size = new System.Drawing.Size(170, 28);
-            this.cmbMetodoPago.TabIndex = 13;
+            this.cmbMetodoPago.TabIndex = 2;
             this.cmbMetodoPago.SelectedIndexChanged += new System.EventHandler(this.cmbMetodoPago_SelectedIndexChanged);
             // 
             // cmbTipoComprobante
@@ -191,7 +190,7 @@
             this.cmbTipoComprobante.Location = new System.Drawing.Point(170, 457);
             this.cmbTipoComprobante.Name = "cmbTipoComprobante";
             this.cmbTipoComprobante.Size = new System.Drawing.Size(170, 28);
-            this.cmbTipoComprobante.TabIndex = 14;
+            this.cmbTipoComprobante.TabIndex = 3;
             // 
             // label11
             // 
@@ -207,7 +206,7 @@
             this.txtMontoRecibido.Location = new System.Drawing.Point(170, 574);
             this.txtMontoRecibido.Name = "txtMontoRecibido";
             this.txtMontoRecibido.Size = new System.Drawing.Size(171, 26);
-            this.txtMontoRecibido.TabIndex = 17;
+            this.txtMontoRecibido.TabIndex = 4;
             this.txtMontoRecibido.TextChanged += new System.EventHandler(this.txtMontoRecibido_TextChanged);
             this.txtMontoRecibido.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtMontoRecibido_KeyPress);
             // 
@@ -254,7 +253,7 @@
             this.btnMinimizar.Location = new System.Drawing.Point(38, 763);
             this.btnMinimizar.Name = "btnMinimizar";
             this.btnMinimizar.Size = new System.Drawing.Size(219, 36);
-            this.btnMinimizar.TabIndex = 21;
+            this.btnMinimizar.TabIndex = 5;
             this.btnMinimizar.Text = "+ AGREGAR MÁS COSAS";
             this.btnMinimizar.UseVisualStyleBackColor = true;
             this.btnMinimizar.Click += new System.EventHandler(this.btnAgregarMasCosas_Click);
@@ -264,7 +263,7 @@
             this.btnCancelar.Location = new System.Drawing.Point(216, 830);
             this.btnCancelar.Name = "btnCancelar";
             this.btnCancelar.Size = new System.Drawing.Size(125, 36);
-            this.btnCancelar.TabIndex = 22;
+            this.btnCancelar.TabIndex = 7;
             this.btnCancelar.Text = "CANCELAR";
             this.btnCancelar.UseVisualStyleBackColor = true;
             this.btnCancelar.Click += new System.EventHandler(this.btnCancelar_Click);
@@ -274,7 +273,7 @@
             this.btnConfirmar.Location = new System.Drawing.Point(277, 763);
             this.btnConfirmar.Name = "btnConfirmar";
             this.btnConfirmar.Size = new System.Drawing.Size(269, 36);
-            this.btnConfirmar.TabIndex = 23;
+            this.btnConfirmar.TabIndex = 6;
             this.btnConfirmar.Text = "CONFIRMAR E IMPRIMIR";
             this.btnConfirmar.UseVisualStyleBackColor = true;
             this.btnConfirmar.Click += new System.EventHandler(this.btnConfirmar_Click);
@@ -295,7 +294,7 @@
             this.btnBuscarCliente.Location = new System.Drawing.Point(347, 191);
             this.btnBuscarCliente.Name = "btnBuscarCliente";
             this.btnBuscarCliente.Size = new System.Drawing.Size(113, 36);
-            this.btnBuscarCliente.TabIndex = 25;
+            this.btnBuscarCliente.TabIndex = 1;
             this.btnBuscarCliente.Text = "BUSCAR";
             this.btnBuscarCliente.UseVisualStyleBackColor = true;
             this.btnBuscarCliente.Click += new System.EventHandler(this.btnBuscarCliente_Click);

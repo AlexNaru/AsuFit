@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             this.btnEstado = new System.Windows.Forms.Button();
             this.btnEditar = new System.Windows.Forms.Button();
             this.btnNuevo = new System.Windows.Forms.Button();
@@ -55,7 +55,7 @@
             this.btnEstado.Location = new System.Drawing.Point(811, 362);
             this.btnEstado.Name = "btnEstado";
             this.btnEstado.Size = new System.Drawing.Size(180, 49);
-            this.btnEstado.TabIndex = 9;
+            this.btnEstado.TabIndex = 4;
             this.btnEstado.Text = "CAMBIAR ESTADO";
             this.btnEstado.UseVisualStyleBackColor = false;
             this.btnEstado.Click += new System.EventHandler(this.btnEstado_Click);
@@ -67,7 +67,7 @@
             this.btnEditar.Location = new System.Drawing.Point(658, 362);
             this.btnEditar.Name = "btnEditar";
             this.btnEditar.Size = new System.Drawing.Size(86, 49);
-            this.btnEditar.TabIndex = 8;
+            this.btnEditar.TabIndex = 3;
             this.btnEditar.Text = "EDITAR";
             this.btnEditar.UseVisualStyleBackColor = false;
             this.btnEditar.Click += new System.EventHandler(this.btnEditar_Click);
@@ -79,7 +79,7 @@
             this.btnNuevo.Location = new System.Drawing.Point(496, 362);
             this.btnNuevo.Name = "btnNuevo";
             this.btnNuevo.Size = new System.Drawing.Size(91, 49);
-            this.btnNuevo.TabIndex = 7;
+            this.btnNuevo.TabIndex = 2;
             this.btnNuevo.Text = "NUEVO";
             this.btnNuevo.UseVisualStyleBackColor = false;
             this.btnNuevo.Click += new System.EventHandler(this.btnNuevo_Click);
@@ -91,7 +91,7 @@
             this.btnResetearClave.Location = new System.Drawing.Point(1048, 362);
             this.btnResetearClave.Name = "btnResetearClave";
             this.btnResetearClave.Size = new System.Drawing.Size(168, 49);
-            this.btnResetearClave.TabIndex = 10;
+            this.btnResetearClave.TabIndex = 5;
             this.btnResetearClave.Text = "RESETEAR CLAVE";
             this.btnResetearClave.UseVisualStyleBackColor = false;
             this.btnResetearClave.Click += new System.EventHandler(this.btnResetearClave_Click);
@@ -122,7 +122,7 @@
             this.dgvUsuarios.RowTemplate.Height = 28;
             this.dgvUsuarios.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dgvUsuarios.Size = new System.Drawing.Size(1198, 246);
-            this.dgvUsuarios.TabIndex = 12;
+            this.dgvUsuarios.TabIndex = 6;
             this.dgvUsuarios.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvUsuarios_CellClick);
             this.dgvUsuarios.DataBindingComplete += new System.Windows.Forms.DataGridViewBindingCompleteEventHandler(this.dgvUsuarios_DataBindingComplete);
             // 
@@ -178,8 +178,8 @@
             // colUsuarioFecha
             // 
             this.colUsuarioFecha.DataPropertyName = "FechaRegistro";
-            dataGridViewCellStyle4.Format = "dd/MM/yyyy HH:mm";
-            this.colUsuarioFecha.DefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle1.Format = "dd/MM/yyyy HH:mm";
+            this.colUsuarioFecha.DefaultCellStyle = dataGridViewCellStyle1;
             this.colUsuarioFecha.HeaderText = "Fecha de Registro";
             this.colUsuarioFecha.MinimumWidth = 8;
             this.colUsuarioFecha.Name = "colUsuarioFecha";
@@ -192,7 +192,7 @@
             this.txtBuscar.Location = new System.Drawing.Point(367, 61);
             this.txtBuscar.Name = "txtBuscar";
             this.txtBuscar.Size = new System.Drawing.Size(386, 26);
-            this.txtBuscar.TabIndex = 11;
+            this.txtBuscar.TabIndex = 0;
             this.txtBuscar.TextChanged += new System.EventHandler(this.txtBuscar_TextChanged);
             // 
             // lblTotal
@@ -210,7 +210,7 @@
             this.chkMostrarInactivos.Location = new System.Drawing.Point(993, 63);
             this.chkMostrarInactivos.Name = "chkMostrarInactivos";
             this.chkMostrarInactivos.Size = new System.Drawing.Size(223, 24);
-            this.chkMostrarInactivos.TabIndex = 14;
+            this.chkMostrarInactivos.TabIndex = 1;
             this.chkMostrarInactivos.Text = "Mostrar Usuarios Inactivos";
             this.chkMostrarInactivos.UseVisualStyleBackColor = true;
             this.chkMostrarInactivos.CheckedChanged += new System.EventHandler(this.chkMostrarInactivos_CheckedChanged);

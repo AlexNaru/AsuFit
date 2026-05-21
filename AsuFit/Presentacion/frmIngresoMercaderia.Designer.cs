@@ -28,11 +28,11 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle9 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle10 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
@@ -48,6 +48,15 @@
             this.btnConfirmarIngreso = new System.Windows.Forms.Button();
             this.txtBuscarProducto = new System.Windows.Forms.TextBox();
             this.dgvProductos = new System.Windows.Forms.DataGridView();
+            this.colIngresoId = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colIngresoCodigo = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colIngresoNombre = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colIngresoCategoria = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colIngresoPrecio = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colIngresoStock = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colIngresoStockMin = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colIngresoProveedor = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colIngresoIva = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.label10 = new System.Windows.Forms.Label();
             this.label11 = new System.Windows.Forms.Label();
             this.label12 = new System.Windows.Forms.Label();
@@ -75,15 +84,6 @@
             this.txtResumenCantidad = new System.Windows.Forms.TextBox();
             this.txtResumenProducto = new System.Windows.Forms.TextBox();
             this.txtResumenProveedor = new System.Windows.Forms.TextBox();
-            this.colIngresoId = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colIngresoCodigo = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colIngresoNombre = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colIngresoCategoria = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colIngresoPrecio = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colIngresoStock = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colIngresoStockMin = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colIngresoProveedor = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colIngresoIva = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dgvProductos)).BeginInit();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
@@ -125,7 +125,7 @@
             this.cmbProveedores.Location = new System.Drawing.Point(15, 93);
             this.cmbProveedores.Name = "cmbProveedores";
             this.cmbProveedores.Size = new System.Drawing.Size(377, 28);
-            this.cmbProveedores.TabIndex = 3;
+            this.cmbProveedores.TabIndex = 0;
             this.cmbProveedores.SelectedIndexChanged += new System.EventHandler(this.cmbProveedores_SelectedIndexChanged);
             // 
             // btnNuevoProveedor
@@ -133,7 +133,7 @@
             this.btnNuevoProveedor.Location = new System.Drawing.Point(15, 127);
             this.btnNuevoProveedor.Name = "btnNuevoProveedor";
             this.btnNuevoProveedor.Size = new System.Drawing.Size(196, 34);
-            this.btnNuevoProveedor.TabIndex = 4;
+            this.btnNuevoProveedor.TabIndex = 1;
             this.btnNuevoProveedor.Text = "NUEVO PROVEEDOR";
             this.btnNuevoProveedor.UseVisualStyleBackColor = true;
             this.btnNuevoProveedor.Click += new System.EventHandler(this.btnNuevoProveedor_Click);
@@ -179,7 +179,7 @@
             this.txtCantidadIngreso.Location = new System.Drawing.Point(18, 311);
             this.txtCantidadIngreso.Name = "txtCantidadIngreso";
             this.txtCantidadIngreso.Size = new System.Drawing.Size(100, 26);
-            this.txtCantidadIngreso.TabIndex = 1;
+            this.txtCantidadIngreso.TabIndex = 0;
             this.txtCantidadIngreso.TextChanged += new System.EventHandler(this.txtCantidadIngreso_TextChanged);
             this.txtCantidadIngreso.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtCantidadIngreso_KeyPress);
             // 
@@ -198,14 +198,14 @@
             this.txtCostoUnitario.Name = "txtCostoUnitario";
             this.txtCostoUnitario.ReadOnly = true;
             this.txtCostoUnitario.Size = new System.Drawing.Size(149, 26);
-            this.txtCostoUnitario.TabIndex = 13;
+            this.txtCostoUnitario.TabIndex = 2;
             // 
             // btnConfirmarIngreso
             // 
             this.btnConfirmarIngreso.Location = new System.Drawing.Point(37, 511);
             this.btnConfirmarIngreso.Name = "btnConfirmarIngreso";
             this.btnConfirmarIngreso.Size = new System.Drawing.Size(196, 34);
-            this.btnConfirmarIngreso.TabIndex = 3;
+            this.btnConfirmarIngreso.TabIndex = 0;
             this.btnConfirmarIngreso.Text = "CONFIRMAR INGRESO";
             this.btnConfirmarIngreso.UseVisualStyleBackColor = true;
             this.btnConfirmarIngreso.Click += new System.EventHandler(this.btnConfirmarIngreso_Click);
@@ -215,7 +215,7 @@
             this.txtBuscarProducto.Location = new System.Drawing.Point(226, 197);
             this.txtBuscarProducto.Name = "txtBuscarProducto";
             this.txtBuscarProducto.Size = new System.Drawing.Size(332, 26);
-            this.txtBuscarProducto.TabIndex = 16;
+            this.txtBuscarProducto.TabIndex = 3;
             this.txtBuscarProducto.TextChanged += new System.EventHandler(this.txtBuscarProducto_TextChanged);
             // 
             // dgvProductos
@@ -225,14 +225,14 @@
             this.dgvProductos.AllowUserToResizeColumns = false;
             this.dgvProductos.AllowUserToResizeRows = false;
             this.dgvProductos.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dgvProductos.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle6.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle6.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle6.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle6.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle6.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dgvProductos.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle6;
             this.dgvProductos.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvProductos.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.colIngresoId,
@@ -244,24 +244,24 @@
             this.colIngresoStockMin,
             this.colIngresoProveedor,
             this.colIngresoIva});
-            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle4.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dgvProductos.DefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle9.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle9.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle9.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle9.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle9.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle9.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dgvProductos.DefaultCellStyle = dataGridViewCellStyle9;
             this.dgvProductos.Location = new System.Drawing.Point(15, 243);
             this.dgvProductos.Name = "dgvProductos";
-            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle5.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle5.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle5.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle5.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle5.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dgvProductos.RowHeadersDefaultCellStyle = dataGridViewCellStyle5;
+            dataGridViewCellStyle10.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle10.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle10.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle10.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle10.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle10.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle10.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dgvProductos.RowHeadersDefaultCellStyle = dataGridViewCellStyle10;
             this.dgvProductos.RowHeadersVisible = false;
             this.dgvProductos.RowHeadersWidth = 62;
             this.dgvProductos.RowTemplate.Height = 28;
@@ -269,6 +269,74 @@
             this.dgvProductos.TabIndex = 17;
             this.dgvProductos.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvProductos_CellClick);
             this.dgvProductos.DataBindingComplete += new System.Windows.Forms.DataGridViewBindingCompleteEventHandler(this.dgvProductos_DataBindingComplete);
+            // 
+            // colIngresoId
+            // 
+            this.colIngresoId.DataPropertyName = "IdProducto";
+            this.colIngresoId.HeaderText = "Id Producto";
+            this.colIngresoId.MinimumWidth = 8;
+            this.colIngresoId.Name = "colIngresoId";
+            this.colIngresoId.Visible = false;
+            // 
+            // colIngresoCodigo
+            // 
+            this.colIngresoCodigo.DataPropertyName = "CodigoBarras";
+            this.colIngresoCodigo.HeaderText = "Código";
+            this.colIngresoCodigo.MinimumWidth = 8;
+            this.colIngresoCodigo.Name = "colIngresoCodigo";
+            // 
+            // colIngresoNombre
+            // 
+            this.colIngresoNombre.DataPropertyName = "Nombre";
+            this.colIngresoNombre.HeaderText = "Nombre";
+            this.colIngresoNombre.MinimumWidth = 8;
+            this.colIngresoNombre.Name = "colIngresoNombre";
+            // 
+            // colIngresoCategoria
+            // 
+            this.colIngresoCategoria.DataPropertyName = "Categoria";
+            this.colIngresoCategoria.HeaderText = "Categoría";
+            this.colIngresoCategoria.MinimumWidth = 8;
+            this.colIngresoCategoria.Name = "colIngresoCategoria";
+            // 
+            // colIngresoPrecio
+            // 
+            this.colIngresoPrecio.DataPropertyName = "PrecioVenta";
+            this.colIngresoPrecio.HeaderText = "Precio Venta";
+            this.colIngresoPrecio.MinimumWidth = 8;
+            this.colIngresoPrecio.Name = "colIngresoPrecio";
+            // 
+            // colIngresoStock
+            // 
+            this.colIngresoStock.DataPropertyName = "StockActual";
+            dataGridViewCellStyle7.Format = "N0";
+            this.colIngresoStock.DefaultCellStyle = dataGridViewCellStyle7;
+            this.colIngresoStock.HeaderText = "Stock Actual";
+            this.colIngresoStock.MinimumWidth = 8;
+            this.colIngresoStock.Name = "colIngresoStock";
+            // 
+            // colIngresoStockMin
+            // 
+            this.colIngresoStockMin.DataPropertyName = "StockMinimo";
+            dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.colIngresoStockMin.DefaultCellStyle = dataGridViewCellStyle8;
+            this.colIngresoStockMin.HeaderText = "Stock Mínimo";
+            this.colIngresoStockMin.MinimumWidth = 8;
+            this.colIngresoStockMin.Name = "colIngresoStockMin";
+            // 
+            // colIngresoProveedor
+            // 
+            this.colIngresoProveedor.DataPropertyName = "Proveedor";
+            this.colIngresoProveedor.HeaderText = "Proveedor";
+            this.colIngresoProveedor.MinimumWidth = 8;
+            this.colIngresoProveedor.Name = "colIngresoProveedor";
+            // 
+            // colIngresoIva
+            // 
+            this.colIngresoIva.DataPropertyName = "PorcentajeIva";
+            this.colIngresoIva.HeaderText = "% IVA";
+            this.colIngresoIva.MinimumWidth = 8;
+            this.colIngresoIva.Name = "colIngresoIva";
             // 
             // label10
             // 
@@ -348,7 +416,7 @@
             this.panel1.Location = new System.Drawing.Point(16, 53);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(577, 631);
-            this.panel1.TabIndex = 32;
+            this.panel1.TabIndex = 0;
             this.panel1.Click += new System.EventHandler(this.LimpiarSeleccion_Click);
             // 
             // btnNuevoProducto
@@ -356,7 +424,7 @@
             this.btnNuevoProducto.Location = new System.Drawing.Point(15, 186);
             this.btnNuevoProducto.Name = "btnNuevoProducto";
             this.btnNuevoProducto.Size = new System.Drawing.Size(196, 37);
-            this.btnNuevoProducto.TabIndex = 19;
+            this.btnNuevoProducto.TabIndex = 2;
             this.btnNuevoProducto.Text = "NUEVO PRODUCTO";
             this.btnNuevoProducto.UseVisualStyleBackColor = true;
             this.btnNuevoProducto.Click += new System.EventHandler(this.btnNuevoProducto_Click);
@@ -391,7 +459,7 @@
             this.panel2.Location = new System.Drawing.Point(609, 53);
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(488, 631);
-            this.panel2.TabIndex = 33;
+            this.panel2.TabIndex = 1;
             this.panel2.Click += new System.EventHandler(this.LimpiarSeleccion_Click);
             // 
             // lblProveedorProducto
@@ -454,7 +522,7 @@
             this.txtCostoTotal.Location = new System.Drawing.Point(156, 311);
             this.txtCostoTotal.Name = "txtCostoTotal";
             this.txtCostoTotal.Size = new System.Drawing.Size(129, 26);
-            this.txtCostoTotal.TabIndex = 2;
+            this.txtCostoTotal.TabIndex = 1;
             this.txtCostoTotal.TextChanged += new System.EventHandler(this.txtCostoTotal_TextChanged);
             // 
             // label5
@@ -496,7 +564,7 @@
             this.panel3.Location = new System.Drawing.Point(1111, 53);
             this.panel3.Name = "panel3";
             this.panel3.Size = new System.Drawing.Size(277, 631);
-            this.panel3.TabIndex = 33;
+            this.panel3.TabIndex = 2;
             this.panel3.Click += new System.EventHandler(this.LimpiarSeleccion_Click);
             // 
             // btnCancelar
@@ -553,74 +621,6 @@
             this.txtResumenProveedor.ReadOnly = true;
             this.txtResumenProveedor.Size = new System.Drawing.Size(236, 26);
             this.txtResumenProveedor.TabIndex = 21;
-            // 
-            // colIngresoId
-            // 
-            this.colIngresoId.DataPropertyName = "IdProducto";
-            this.colIngresoId.HeaderText = "Id Producto";
-            this.colIngresoId.MinimumWidth = 8;
-            this.colIngresoId.Name = "colIngresoId";
-            this.colIngresoId.Visible = false;
-            // 
-            // colIngresoCodigo
-            // 
-            this.colIngresoCodigo.DataPropertyName = "CodigoBarras";
-            this.colIngresoCodigo.HeaderText = "Código";
-            this.colIngresoCodigo.MinimumWidth = 8;
-            this.colIngresoCodigo.Name = "colIngresoCodigo";
-            // 
-            // colIngresoNombre
-            // 
-            this.colIngresoNombre.DataPropertyName = "Nombre";
-            this.colIngresoNombre.HeaderText = "Nombre";
-            this.colIngresoNombre.MinimumWidth = 8;
-            this.colIngresoNombre.Name = "colIngresoNombre";
-            // 
-            // colIngresoCategoria
-            // 
-            this.colIngresoCategoria.DataPropertyName = "Categoria";
-            this.colIngresoCategoria.HeaderText = "Categoría";
-            this.colIngresoCategoria.MinimumWidth = 8;
-            this.colIngresoCategoria.Name = "colIngresoCategoria";
-            // 
-            // colIngresoPrecio
-            // 
-            this.colIngresoPrecio.DataPropertyName = "PrecioVenta";
-            this.colIngresoPrecio.HeaderText = "Precio Venta";
-            this.colIngresoPrecio.MinimumWidth = 8;
-            this.colIngresoPrecio.Name = "colIngresoPrecio";
-            // 
-            // colIngresoStock
-            // 
-            this.colIngresoStock.DataPropertyName = "StockActual";
-            dataGridViewCellStyle2.Format = "N0";
-            this.colIngresoStock.DefaultCellStyle = dataGridViewCellStyle2;
-            this.colIngresoStock.HeaderText = "Stock Actual";
-            this.colIngresoStock.MinimumWidth = 8;
-            this.colIngresoStock.Name = "colIngresoStock";
-            // 
-            // colIngresoStockMin
-            // 
-            this.colIngresoStockMin.DataPropertyName = "StockMinimo";
-            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.colIngresoStockMin.DefaultCellStyle = dataGridViewCellStyle3;
-            this.colIngresoStockMin.HeaderText = "Stock Mínimo";
-            this.colIngresoStockMin.MinimumWidth = 8;
-            this.colIngresoStockMin.Name = "colIngresoStockMin";
-            // 
-            // colIngresoProveedor
-            // 
-            this.colIngresoProveedor.DataPropertyName = "Proveedor";
-            this.colIngresoProveedor.HeaderText = "Proveedor";
-            this.colIngresoProveedor.MinimumWidth = 8;
-            this.colIngresoProveedor.Name = "colIngresoProveedor";
-            // 
-            // colIngresoIva
-            // 
-            this.colIngresoIva.DataPropertyName = "PorcentajeIva";
-            this.colIngresoIva.HeaderText = "% IVA";
-            this.colIngresoIva.MinimumWidth = 8;
-            this.colIngresoIva.Name = "colIngresoIva";
             // 
             // frmIngresoMercaderia
             // 
