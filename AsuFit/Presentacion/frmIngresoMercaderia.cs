@@ -17,7 +17,6 @@ namespace AsuFit.Presentacion
         private static extern Int32 SendMessage(IntPtr hWnd, int msg, int wParam, [MarshalAs(UnmanagedType.LPWStr)] string lParam);
         private const int EM_SETCUEBANNER = 0x1501;
 
-        // 1. SOLUCIÓN AL ERROR CS0103: Declaramos las tres capas de negocio que necesitamos
         private InventarioNegocio negocio = new InventarioNegocio();
         private ProveedorNegocio negocioProveedor = new ProveedorNegocio();
         private IngresoMercaderiaNegocio negocioIngreso = new IngresoMercaderiaNegocio();
@@ -28,11 +27,14 @@ namespace AsuFit.Presentacion
         {
             InitializeComponent();
             usuarioActual = userLogueado;
+
+            // --- EL CAMBIO CLAVE: Bloqueamos las columnas automáticas ---
+            dgvProductos.AutoGenerateColumns = false;
         }
 
         private void frmIngresoMercaderia_Load(object sender, EventArgs e)
         {
-            CargarProveedores(); // Ahora carga los reales
+            CargarProveedores();
             CargarGrilla();
             ConfigurarAutocompletado();
             SendMessage(txtBuscarProducto.Handle, EM_SETCUEBANNER, 1, "Buscar producto en el catálogo...");
@@ -40,23 +42,19 @@ namespace AsuFit.Presentacion
             txtBuscarProducto.Focus();
         }
 
-        // 2. NUEVO MÉTODO: Carga los proveedores reales desde SQL Server
         private void CargarProveedores()
         {
             try
             {
                 DataTable dtProveedores = negocioProveedor.ListarProveedores();
-
-                // Filtramos para que solo aparezcan los proveedores que están "Activos"
                 DataView dv = new DataView(dtProveedores);
                 dv.RowFilter = "Estado = 'Activo'";
 
-                // Le decimos al ComboBox qué mostrar y qué valor oculto guardar (el ID)
                 cmbProveedores.DisplayMember = "Nombre";
                 cmbProveedores.ValueMember = "IdProveedor";
                 cmbProveedores.DataSource = dv.ToTable();
 
-                cmbProveedores.SelectedIndex = -1; // Lo dejamos en blanco al inicio
+                cmbProveedores.SelectedIndex = -1;
             }
             catch (Exception ex)
             {
@@ -81,34 +79,11 @@ namespace AsuFit.Presentacion
 
             dgvProductos.DataSource = dtProductos;
 
-            if (dgvProductos.Columns.Contains("NombreBusqueda")) dgvProductos.Columns["NombreBusqueda"].Visible = false;
-            if (dgvProductos.Columns.Contains("IdProducto")) dgvProductos.Columns["IdProducto"].Visible = false;
-            if (dgvProductos.Columns.Contains("PrecioCompra")) dgvProductos.Columns["PrecioCompra"].Visible = false;
-
-            if (dgvProductos.Columns.Contains("IdProveedor")) dgvProductos.Columns["IdProveedor"].Visible = false;
-
-            // Filtramos para que SOLO salgan los activos (A diferencia de Gestión de Productos)
+            // Filtramos la data subyacente para mostrar solo los activos
             (dgvProductos.DataSource as DataTable).DefaultView.RowFilter = "Estado = 'Activo'";
-            if (dgvProductos.Columns.Contains("Estado")) dgvProductos.Columns["Estado"].Visible = false;
 
-            if (dgvProductos.Columns.Contains("Proveedor"))
-            {
-                dgvProductos.Columns["Proveedor"].Visible = true;
-                dgvProductos.Columns["Proveedor"].HeaderText = "Proveedor Principal";
-            }
+            // --- CÓDIGO LIMPIO: Toda la configuración de ocultar/renombrar columnas se eliminó ---
 
-            if (dgvProductos.Columns.Contains("StockMinimo"))
-            {
-                dgvProductos.Columns["StockMinimo"].Visible = true;
-                dgvProductos.Columns["StockMinimo"].HeaderText = "Stock Mín.";
-                dgvProductos.Columns["StockMinimo"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            }
-
-            dgvProductos.AllowUserToAddRows = false;
-            dgvProductos.RowHeadersVisible = false;
-            dgvProductos.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-            dgvProductos.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            dgvProductos.ReadOnly = true;
             dgvProductos.ClearSelection();
         }
 
@@ -118,18 +93,18 @@ namespace AsuFit.Presentacion
             {
                 DataGridViewRow fila = dgvProductos.Rows[e.RowIndex];
 
-                txtIdProductoSeleccionado.Text = fila.Cells["IdProducto"].Value.ToString();
-                lblDetalleProducto.Text = "Producto: " + fila.Cells["Nombre"].Value.ToString();
-                lblDetalleCodigo.Text = "Código: " + fila.Cells["CodigoBarras"].Value.ToString();
-                lblDetalleCategoria.Text = "Categoría: " + fila.Cells["Categoria"].Value.ToString();
-                lblDetalleStock.Text = "Stock Actual: " + fila.Cells["StockActual"].Value.ToString();
-                lblDetalleStockMinimo.Text = "Stock Mínimo: " + fila.Cells["StockMinimo"].Value.ToString();
+                // ACTUALIZADO: Leemos usando los Name de las columnas
+                txtIdProductoSeleccionado.Text = fila.Cells["colIngresoId"].Value.ToString();
+                lblDetalleProducto.Text = "Producto: " + fila.Cells["colIngresoNombre"].Value.ToString();
+                lblDetalleCodigo.Text = "Código: " + fila.Cells["colIngresoCodigo"].Value.ToString();
+                lblDetalleCategoria.Text = "Categoría: " + fila.Cells["colIngresoCategoria"].Value.ToString();
+                lblDetalleStock.Text = "Stock Actual: " + fila.Cells["colIngresoStock"].Value.ToString();
+                lblDetalleStockMinimo.Text = "Stock Mínimo: " + fila.Cells["colIngresoStockMin"].Value.ToString();
 
-                // Auto-seleccionar el proveedor del producto en el ComboBox y actualizar el Label
-                if (fila.Cells["Proveedor"].Value != DBNull.Value && fila.Cells["Proveedor"].Value != null)
+                if (fila.Cells["colIngresoProveedor"].Value != DBNull.Value && fila.Cells["colIngresoProveedor"].Value != null)
                 {
-                    cmbProveedores.Text = fila.Cells["Proveedor"].Value.ToString();
-                    lblProveedorProducto.Text = "Proveedor: " + fila.Cells["Proveedor"].Value.ToString();
+                    cmbProveedores.Text = fila.Cells["colIngresoProveedor"].Value.ToString();
+                    lblProveedorProducto.Text = "Proveedor: " + fila.Cells["colIngresoProveedor"].Value.ToString();
                 }
                 else
                 {
@@ -137,8 +112,7 @@ namespace AsuFit.Presentacion
                     lblProveedorProducto.Text = "Proveedor: Sin asignar";
                 }
 
-                // Cargar la imagen del producto
-                string codigo = fila.Cells["CodigoBarras"].Value.ToString();
+                string codigo = fila.Cells["colIngresoCodigo"].Value.ToString();
                 string rutaFoto = @"C:\AsuFit_Fotos\" + codigo + ".jpg";
 
                 if (System.IO.File.Exists(rutaFoto))
@@ -181,7 +155,6 @@ namespace AsuFit.Presentacion
                 txtCostoUnitario.Text = "0";
             }
 
-            // Evitamos error si el ComboBox está vacío
             txtResumenProveedor.Text = cmbProveedores.SelectedIndex != -1 ? cmbProveedores.Text : "";
 
             if (txtIdProductoSeleccionado.Text != "")
@@ -194,7 +167,8 @@ namespace AsuFit.Presentacion
 
             if (dgvProductos.CurrentRow != null && txtIdProductoSeleccionado.Text != "")
             {
-                int stockActual = Convert.ToInt32(dgvProductos.CurrentRow.Cells["StockActual"].Value);
+                // ACTUALIZADO: Leemos el stock de la columna correcta
+                int stockActual = Convert.ToInt32(dgvProductos.CurrentRow.Cells["colIngresoStock"].Value);
                 int nuevoStock = stockActual + cantidad;
                 txtResumenNuevoStock.Text = nuevoStock.ToString();
             }
@@ -223,11 +197,8 @@ namespace AsuFit.Presentacion
                 int idProducto = Convert.ToInt32(txtIdProductoSeleccionado.Text);
                 int cantidad = Convert.ToInt32(txtCantidadIngreso.Text);
                 decimal costoTotal = Convert.ToDecimal(txtCostoTotal.Text);
-
-                // 3. CAPTURAMOS EL ID REAL DEL PROVEEDOR
                 int idProveedorReal = Convert.ToInt32(cmbProveedores.SelectedValue);
 
-                // Registramos el ingreso en la Base de Datos usando la transacción
                 bool exito = negocioIngreso.RegistrarIngreso(idProveedorReal, idProducto, cantidad, costoTotal, DateTime.Now, "Ingreso desde sistema");
 
                 if (exito)
@@ -235,7 +206,7 @@ namespace AsuFit.Presentacion
                     GestorAuditoria.Registrar(usuarioActual.NombreCompleto, "Inventario", "Ingreso de Mercadería", $"Ingresaron {cantidad} unid. de producto ID {idProducto} (Prov: {cmbProveedores.Text}).");
                     MessageBox.Show("¡Mercadería ingresada y stock actualizado correctamente!", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     btnLimpiar_Click(null, null);
-                    CargarGrilla(); // Refrescamos la tabla para ver el nuevo stock
+                    CargarGrilla();
                 }
             }
             catch (Exception ex)
@@ -258,7 +229,7 @@ namespace AsuFit.Presentacion
             lblDetalleCategoria.Text = "Categoría: ";
             lblDetalleStock.Text = "Stock Actual: ";
             lblDetalleStockMinimo.Text = "Stock Mínimo: ";
-            lblProveedorProducto.Text = "Proveedor: "; // <-- Agregado para limpiar bien
+            lblProveedorProducto.Text = "Proveedor: ";
             picProducto.Image = null;
 
             txtResumenProveedor.Clear();
@@ -294,23 +265,14 @@ namespace AsuFit.Presentacion
             if (dtProductos == null) return;
 
             string textoLimpio = QuitarAcentos(txtBuscarProducto.Text);
-            string filtro = "NombreBusqueda LIKE '%" + textoLimpio + "%'";
+            string filtro = "Estado = 'Activo' AND NombreBusqueda LIKE '%" + textoLimpio + "%'";
             (dgvProductos.DataSource as DataTable).DefaultView.RowFilter = filtro;
         }
 
         private void btnNuevoProveedor_Click(object sender, EventArgs e)
         {
-            // 1. Instanciamos el nuevo mini-formulario
             frmAgregarProveedor frmPopup = new frmAgregarProveedor();
-
-            // 2. Lo abrimos con ShowDialog() para que el usuario no pueda hacer 
-            // clic en la ventana de atrás hasta que termine de guardar el proveedor.
             frmPopup.ShowDialog();
-
-            // 3. ¡EL TRUCO DE ORO! 
-            // Cuando el usuario cierre la ventanita, el código continuará aquí.
-            // Entonces, mandamos a recargar el ComboBox para que el proveedor 
-            // que acaban de crear aparezca mágicamente en la lista.
             CargarProveedores();
         }
 
@@ -320,17 +282,20 @@ namespace AsuFit.Presentacion
 
             foreach (DataRow row in dtProductos.Rows)
             {
-                string nombreOriginal = row["Nombre"].ToString();
-                string nombreSinAcento = row["NombreBusqueda"].ToString();
-
-                if (!listaSugerencias.Contains(nombreOriginal)) listaSugerencias.Add(nombreOriginal);
-
-                string[] palabras = nombreSinAcento.Split(' ');
-
-                foreach (string palabra in palabras)
+                if (row["Estado"].ToString() == "Activo")
                 {
-                    if (palabra.Length > 2 && !listaSugerencias.Contains(palabra))
-                        listaSugerencias.Add(palabra);
+                    string nombreOriginal = row["Nombre"].ToString();
+                    string nombreSinAcento = row["NombreBusqueda"].ToString();
+
+                    if (!listaSugerencias.Contains(nombreOriginal)) listaSugerencias.Add(nombreOriginal);
+
+                    string[] palabras = nombreSinAcento.Split(' ');
+
+                    foreach (string palabra in palabras)
+                    {
+                        if (palabra.Length > 2 && !listaSugerencias.Contains(palabra))
+                            listaSugerencias.Add(palabra);
+                    }
                 }
             }
             txtBuscarProducto.AutoCompleteCustomSource = listaSugerencias;
@@ -371,7 +336,6 @@ namespace AsuFit.Presentacion
             CargarGrilla();
             ConfigurarAutocompletado();
 
-            // EL TRUCO: Si la ventanita nos dejó un nombre guardado, lo pegamos en el buscador
             if (frmPopup.ProductoRecienCreado != "")
             {
                 txtBuscarProducto.Text = frmPopup.ProductoRecienCreado;

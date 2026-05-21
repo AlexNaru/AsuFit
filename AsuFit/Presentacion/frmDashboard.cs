@@ -55,7 +55,19 @@ namespace AsuFit.Presentacion
             formularioHijo.TopLevel = false;
             formularioHijo.FormBorderStyle = FormBorderStyle.None;
 
-            // 3. Lo agregamos al panel gris y lo mostramos
+            // 3. Calculamos el centro exacto del contenedor gris
+            int x = (pnlContenedor.Width - formularioHijo.Width) / 2;
+            int y = (pnlContenedor.Height - formularioHijo.Height) / 2;
+
+            // Evitamos que se corte si algún formulario llega a ser más grande que el panel
+            if (x < 0) x = 0;
+            if (y < 0) y = 0;
+
+            // 4. Lo posicionamos en el centro y le quitamos los anclajes para que flote
+            formularioHijo.Location = new Point(x, y);
+            formularioHijo.Anchor = AnchorStyles.None;
+
+            // 5. Lo agregamos al panel gris y lo mostramos
             pnlContenedor.Controls.Add(formularioHijo);
             formularioHijo.Show();
         }
@@ -72,7 +84,7 @@ namespace AsuFit.Presentacion
         private void btnRegistrarSocio_Click(object sender, EventArgs e)
         {
             ResaltarBoton(sender);
-            AbrirFormularioHijo(new frmRegistrarSocio());
+            AbrirFormularioHijo(new frmRegistrarSocio(usuarioActual));
         }
 
         private void btnGestionSocios_Click(object sender, EventArgs e)

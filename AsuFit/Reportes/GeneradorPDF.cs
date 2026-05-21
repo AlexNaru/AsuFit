@@ -102,10 +102,8 @@ namespace AsuFit.Reportes
                     string subtotalStr = subtotalFila.ToString("N0");
                     totalArticulos += cantidadItem;
 
-                    // Leemos el IVA real que viene desde la base de datos
                     int ivaItem = fila.Table.Columns.Contains("PorcentajeIva") && fila["PorcentajeIva"] != DBNull.Value ? Convert.ToInt32(fila["PorcentajeIva"]) : 10;
 
-                    // Acumulamos en su respectiva bolsa
                     if (ivaItem == 0) totalExentas += subtotalFila;
                     else if (ivaItem == 5) totalGravado5 += subtotalFila;
                     else if (ivaItem == 10) totalGravado10 += subtotalFila;
@@ -146,9 +144,14 @@ namespace AsuFit.Reportes
                 }
                 doc.Add(tablaTotales);
 
+                // --- NUEVO: TOTAL EN LETRAS PARA EL TICKET ALINEADO A LA IZQUIERDA ---
+                string montoEnLetras = ConvertirMontoALetras(total);
+                Paragraph pLetras = new Paragraph($"TOTAL A PAGAR: Gs. ({montoEnLetras} GUARANÍES)", fuenteNegrita);
+                pLetras.Alignment = Element.ALIGN_LEFT;
+                doc.Add(pLetras);
+
                 doc.Add(new Paragraph("------------------------------------------------------------\n", fuenteNormal));
 
-                // --- CÁLCULO REAL DEL IVA ---
                 decimal liqIva5 = Math.Round(totalGravado5 / 21);
                 decimal liqIva10 = Math.Round(totalGravado10 / 11);
                 decimal totalIva = liqIva5 + liqIva10;
@@ -186,6 +189,14 @@ namespace AsuFit.Reportes
                 pie.Add($"Total artículos vendidos: {totalArticulos}\n");
                 pie.Add($"Atendido por: {cajero}\n\n");
                 doc.Add(pie);
+
+                // --- NUEVO: CÓDIGO QR EN EL TICKET (CENTRADO) ---
+                string datosQr = $"Comprobante Nro. {nroTicket} - AsuFit GYM - Total: Gs. {total.ToString("N0")}";
+                BarcodeQRCode qrCode = new BarcodeQRCode(datosQr, 100, 100, null);
+                Image imgQr = qrCode.GetImage();
+                imgQr.ScaleAbsolute(70, 70);
+                imgQr.Alignment = Element.ALIGN_CENTER;
+                doc.Add(imgQr);
 
                 Paragraph saludo = new Paragraph("¡Gracias por su preferencia!\nGuarde este ticket como comprobante.", fuenteNormal);
                 saludo.Alignment = Element.ALIGN_CENTER;
@@ -296,7 +307,6 @@ namespace AsuFit.Reportes
                     tablaDetalles.AddCell(celda);
                 }
 
-                // --- VARIABLES DE ACUMULACIÓN ---
                 decimal totalExentas = 0;
                 decimal totalGravado5 = 0;
                 decimal totalGravado10 = 0;
@@ -325,7 +335,6 @@ namespace AsuFit.Reportes
                     tablaDetalles.AddCell(new PdfPCell(new Phrase(subtotal.ToString("N0"), fuenteTabla)) { Border = bordesLaterales, BorderColor = colorBorde, HorizontalAlignment = Element.ALIGN_RIGHT });
                     tablaDetalles.AddCell(new PdfPCell(new Phrase("0", fuenteTabla)) { Border = bordesLaterales, BorderColor = colorBorde, HorizontalAlignment = Element.ALIGN_RIGHT });
 
-                    // Columnas de IVA separadas
                     tablaDetalles.AddCell(new PdfPCell(new Phrase(colExenta, fuenteTabla)) { Border = bordesLaterales, BorderColor = colorBorde, HorizontalAlignment = Element.ALIGN_RIGHT });
                     tablaDetalles.AddCell(new PdfPCell(new Phrase(colIva5, fuenteTabla)) { Border = bordesLaterales, BorderColor = colorBorde, HorizontalAlignment = Element.ALIGN_RIGHT });
                     tablaDetalles.AddCell(new PdfPCell(new Phrase(colIva10, fuenteTabla)) { Border = bordesLaterales, BorderColor = colorBorde, HorizontalAlignment = Element.ALIGN_RIGHT });
@@ -386,6 +395,19 @@ namespace AsuFit.Reportes
                 tablaDetalles.AddCell(celdaIva);
 
                 doc.Add(tablaDetalles);
+
+                // --- NUEVO: CÓDIGO QR TIPO "KUATIA" PARA LA FACTURA ---
+                string datosQrFac = $"Factura Nro. {nroFactura} - AsuFit GYM - Total: Gs. {total.ToString("N0")} - Cliente: {cliente} - RUC: {ruc}";
+                BarcodeQRCode qrCodeFac = new BarcodeQRCode(datosQrFac, 100, 100, null);
+                Image imgQrFac = qrCodeFac.GetImage();
+                imgQrFac.ScaleAbsolute(90, 90);
+
+                // --- CAMBIO APLICADO: QR CENTRADO EN LA FACTURA ---
+                imgQrFac.Alignment = Element.ALIGN_CENTER;
+
+                doc.Add(new Paragraph("\n"));
+                doc.Add(imgQrFac);
+
                 doc.Close();
                 Process.Start(rutaArchivo);
             }
@@ -488,14 +510,12 @@ namespace AsuFit.Reportes
                 Paragraph info = new Paragraph();
                 info.Font = fuenteNormal;
                 info.Add($"Turno Nro.: {idTurno}\n");
-                // --- AQUÍ ESTÁ LA FECHA DE APERTURA ---
                 info.Add($"Apertura: {fechaApertura.ToString("dd'/'MM'/'yyyy HH:mm")}\n");
                 info.Add($"Cierre: {DateTime.Now.ToString("dd'/'MM'/'yyyy HH:mm")}\n");
                 info.Add($"Cajero: {cajero}\n");
                 info.Add("--------------------------------------------------\n");
                 doc.Add(info);
 
-                // --- INGRESOS ---
                 PdfPTable tIngresos = new PdfPTable(2);
                 tIngresos.WidthPercentage = 100;
                 tIngresos.SetWidths(new float[] { 6f, 4f });
@@ -513,7 +533,6 @@ namespace AsuFit.Reportes
 
                 doc.Add(new Paragraph("--------------------------------------------------\n", fuenteNormal));
 
-                // --- FLUJO FÍSICO DE CAJA ---
                 PdfPTable tFlujo = new PdfPTable(2);
                 tFlujo.WidthPercentage = 100;
                 tFlujo.SetWidths(new float[] { 6.5f, 3.5f });
@@ -534,7 +553,6 @@ namespace AsuFit.Reportes
 
                 doc.Add(new Paragraph("--------------------------------------------------\n", fuenteNormal));
 
-                // --- DESCUADRE ---
                 PdfPTable tDescuadre = new PdfPTable(2);
                 tDescuadre.WidthPercentage = 100;
                 tDescuadre.SetWidths(new float[] { 6f, 4f });
@@ -546,17 +564,14 @@ namespace AsuFit.Reportes
                 tDescuadre.AddCell(new PdfPCell(new Phrase("Gs. " + diferencia.ToString("N0"), fuenteNegrita)) { Border = 0, HorizontalAlignment = Element.ALIGN_RIGHT, PaddingTop = 5f });
                 doc.Add(tDescuadre);
 
-                // --- FIRMAS ---
                 Paragraph firmas = new Paragraph("\n\n\n___________________________\nFirma del Cajero\n", fuenteNormal);
                 firmas.Alignment = Element.ALIGN_CENTER;
                 doc.Add(firmas);
 
                 doc.Close();
 
-                // Abrimos el PDF generado automáticamente
                 Process.Start(rutaArchivo);
 
-                // Retornamos la ruta para que el formulario se la pase al correo
                 return rutaArchivo;
             }
             catch (Exception ex)

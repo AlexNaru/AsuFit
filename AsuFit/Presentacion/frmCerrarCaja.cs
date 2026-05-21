@@ -1,6 +1,7 @@
-﻿using System;
-using System.Windows.Forms;
+﻿using AsuFit.Entidades;
 using AsuFit.Negocio;
+using System;
+using System.Windows.Forms;
 
 namespace AsuFit.Presentacion
 {
@@ -62,8 +63,17 @@ namespace AsuFit.Presentacion
             {
                 try
                 {
+                    TurnoCaja turnoCierre = new TurnoCaja();
+                    turnoCierre.IdTurno = idTurno;
+                    turnoCierre.IngresosEfectivo = ingEfectivo;
+                    turnoCierre.IngresosTransferencia = ingTrans;
+                    turnoCierre.GastosEfectivo = gastos;
+                    turnoCierre.MontoEsperado = totalEsperado;
+                    turnoCierre.MontoContado = montoContado;
+                    turnoCierre.Diferencia = diferencia;
+
                     ArqueoNegocio negocio = new ArqueoNegocio();
-                    bool exito = negocio.CerrarCaja(idTurno, ingEfectivo, ingTrans, gastos, totalEsperado, montoContado, diferencia);
+                    bool exito = negocio.CerrarCaja(turnoCierre);
 
                     if (exito)
                     {

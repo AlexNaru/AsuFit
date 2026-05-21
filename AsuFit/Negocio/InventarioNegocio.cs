@@ -1,4 +1,5 @@
 ﻿using AsuFit.Datos;
+using AsuFit.Entidades;
 using System.Data;
 
 namespace AsuFit.Negocio
@@ -11,9 +12,11 @@ namespace AsuFit.Negocio
         public DataTable ListarProductos() { return objDatos.ListarProductos(); }
         public bool RegistrarVenta(decimal total, DataTable detalleVenta) { return objDatos.RegistrarVenta(total, detalleVenta); }
 
-        public bool GuardarProducto(int id, string codigo, string nombre, string categoria, decimal precio, int stock, int idProveedor, int porcentajeIva)
+        // --- MÉTODO ACTUALIZADO ---
+        public bool GuardarProducto(Producto obj)
         {
-            return objDatos.GuardarProducto(id, codigo, nombre, categoria, precio, stock, idProveedor, porcentajeIva);
+            // Aquí en el futuro puedes agregar reglas como "if(obj.PrecioVenta < 0) return false;"
+            return objDatos.GuardarProducto(obj);
         }
 
         public bool CambiarEstado(int id, string nuevoEstado) { return objDatos.CambiarEstado(id, nuevoEstado); }

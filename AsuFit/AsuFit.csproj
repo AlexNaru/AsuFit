@@ -55,6 +55,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Datos\ArqueoDatos.cs" />
+    <Compile Include="Datos\AsistenciaDatos.cs" />
+    <Compile Include="Datos\AuditoriaDatos.cs" />
     <Compile Include="Datos\Conexion.cs" />
     <Compile Include="Datos\DashboardDatos.cs" />
     <Compile Include="Datos\GastoDatos.cs" />
@@ -63,23 +65,35 @@
     <Compile Include="Datos\InventarioDatos.cs" />
     <Compile Include="Datos\PlanDatos.cs" />
     <Compile Include="Datos\ProveedorDatos.cs" />
+    <Compile Include="Datos\ReportesDatos.cs" />
     <Compile Include="Datos\SocioDatos.cs" />
     <Compile Include="Datos\UsuarioDatos.cs" />
     <Compile Include="Datos\VentaDatos.cs" />
+    <Compile Include="Entidades\Asistencia.cs" />
+    <Compile Include="Entidades\AuditoriaLog.cs" />
     <Compile Include="Entidades\CarritoGlobal.cs" />
+    <Compile Include="Entidades\DetalleVenta.cs" />
     <Compile Include="Entidades\Gasto.cs" />
     <Compile Include="Entidades\Pago.cs" />
     <Compile Include="Entidades\Plan.cs" />
+    <Compile Include="Entidades\Producto.cs" />
+    <Compile Include="Entidades\Proveedor.cs" />
     <Compile Include="Entidades\Rol.cs" />
     <Compile Include="Entidades\Socio.cs" />
+    <Compile Include="Entidades\TurnoCaja.cs" />
     <Compile Include="Entidades\Usuario.cs" />
+    <Compile Include="Entidades\Venta.cs" />
     <Compile Include="Negocio\ArqueoNegocio.cs" />
+    <Compile Include="Negocio\AsistenciaNegocio.cs" />
+    <Compile Include="Negocio\AuditoriaNegocio.cs" />
     <Compile Include="Negocio\DashboardNegocio.cs" />
     <Compile Include="Negocio\GastoNegocio.cs" />
     <Compile Include="Negocio\IngresoMercaderiaNegocio.cs" />
     <Compile Include="Negocio\InventarioNegocio.cs" />
     <Compile Include="Negocio\PlanNegocio.cs" />
     <Compile Include="Negocio\ProveedorNegocio.cs" />
+    <Compile Include="Negocio\ReportesNegocio.cs" />
+    <Compile Include="Negocio\VentaNegocio.cs" />
     <Compile Include="Presentacion\frmAbrirCaja.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -244,6 +258,12 @@
     <Compile Include="Presentacion\frmRegistrarCobro.Designer.cs">
       <DependentUpon>frmRegistrarCobro.cs</DependentUpon>
     </Compile>
+    <Compile Include="Presentacion\frmRegistrarPlan.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Presentacion\frmRegistrarPlan.Designer.cs">
+      <DependentUpon>frmRegistrarPlan.cs</DependentUpon>
+    </Compile>
     <Compile Include="Presentacion\frmRegistrarSocio.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -348,6 +368,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Presentacion\frmRegistrarCobro.resx">
       <DependentUpon>frmRegistrarCobro.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Presentacion\frmRegistrarPlan.resx">
+      <DependentUpon>frmRegistrarPlan.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Presentacion\frmRegistrarSocio.resx">
       <DependentUpon>frmRegistrarSocio.cs</DependentUpon>

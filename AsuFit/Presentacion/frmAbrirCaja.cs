@@ -51,8 +51,13 @@ namespace AsuFit.Presentacion
             try
             {
                 // --- AQUÍ ESTÁ LA MAGIA DE LAS 3 CAPAS ---
+                TurnoCaja nuevoTurno = new TurnoCaja();
+                nuevoTurno.IdUsuario = usuarioActual.IdUsuario;
+                nuevoTurno.CajeroNombre = usuarioActual.NombreCompleto;
+                nuevoTurno.FondoInicial = fondoInicial;
+
                 ArqueoNegocio negocio = new ArqueoNegocio();
-                bool exito = negocio.AbrirCaja(usuarioActual.IdUsuario, usuarioActual.NombreCompleto, fondoInicial);
+                bool exito = negocio.AbrirCaja(nuevoTurno);
 
                 if (exito)
                 {

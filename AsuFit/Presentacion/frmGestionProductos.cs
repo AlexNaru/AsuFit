@@ -23,9 +23,11 @@ namespace AsuFit.Presentacion
         {
             InitializeComponent();
             usuarioActual = userLogueado;
+
+            // --- EL CAMBIO CLAVE: Bloqueamos las columnas automáticas ---
+            dgvProductos.AutoGenerateColumns = false;
         }
 
-        // Capas de negocio conectadas
         private InventarioNegocio negocio = new InventarioNegocio();
         private ProveedorNegocio negocioProveedor = new ProveedorNegocio();
 
@@ -43,16 +45,11 @@ namespace AsuFit.Presentacion
             dgvProductos.ClearSelection();
             dgvProductos.CurrentCell = null;
 
-            // EL SECRETO DE INGRESO DE MERCADERÍA:
-            // 1. Primero se cargan las sugerencias
             ConfigurarAutocompletado();
-            // 2. Después se pinta el texto de fondo gris
             SendMessage(txtBuscarProducto.Handle, EM_SETCUEBANNER, 1, "Buscar producto...");
-            // 3. Foco a la caja de texto
             txtBuscarProducto.Focus();
         }
 
-        // --- 1. CONFIGURACIÓN INICIAL ---
         private void ConfigurarFiltros()
         {
             cmbCategoria.Items.Clear();
@@ -67,7 +64,7 @@ namespace AsuFit.Presentacion
             {
                 DataTable dtProveedores = negocioProveedor.ListarProveedores();
                 DataView dv = new DataView(dtProveedores);
-                dv.RowFilter = "Estado = 'Activo'"; // Solo mostramos los activos en el combo
+                dv.RowFilter = "Estado = 'Activo'";
 
                 cmbProveedor.DisplayMember = "Nombre";
                 cmbProveedor.ValueMember = "IdProveedor";
@@ -80,16 +77,12 @@ namespace AsuFit.Presentacion
             }
         }
 
-        // --- 2. FILTROS Y GRILLA ---
         private void FiltrarDatos()
         {
             if (dtProductos == null) return;
 
             string filtroEstado = chkMostrarInactivos.Checked ? "Estado = 'Inactivo'" : "Estado = 'Activo'";
-
-            // Lectura directa de lo que escribe el usuario
             string textoBusqueda = QuitarAcentos(txtBuscarProducto.Text.Trim()).ToLower().Replace("'", "''");
-
             string filtroFinal = filtroEstado;
 
             if (!string.IsNullOrEmpty(textoBusqueda))
@@ -101,10 +94,7 @@ namespace AsuFit.Presentacion
             dv.RowFilter = filtroFinal;
             dgvProductos.DataSource = dv;
 
-            if (dgvProductos.Columns.Contains("Estado")) dgvProductos.Columns["Estado"].Visible = false;
-            if (dgvProductos.Columns.Contains("NombreBusqueda")) dgvProductos.Columns["NombreBusqueda"].Visible = false;
-            if (dgvProductos.Columns.Contains("IdProducto")) dgvProductos.Columns["IdProducto"].Visible = false;
-            if (dgvProductos.Columns.Contains("IdProveedor")) dgvProductos.Columns["IdProveedor"].Visible = false;
+            // --- CÓDIGO LIMPIO: Ya no ocultamos columnas desde aquí ---
 
             dgvProductos.ClearSelection();
         }
@@ -115,7 +105,6 @@ namespace AsuFit.Presentacion
 
             if (dtProductos != null)
             {
-                // Crear columna oculta sin acentos para búsquedas
                 if (!dtProductos.Columns.Contains("NombreBusqueda"))
                 {
                     dtProductos.Columns.Add("NombreBusqueda", typeof(string));
@@ -128,17 +117,13 @@ namespace AsuFit.Presentacion
 
                 FiltrarDatos();
 
+                // --- CÓDIGO LIMPIO: Eliminamos configuraciones manuales de formato y texto ---
+
                 dgvProductos.AllowUserToAddRows = false;
                 dgvProductos.RowHeadersVisible = false;
                 dgvProductos.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
                 dgvProductos.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
                 dgvProductos.ReadOnly = true;
-
-                if (dgvProductos.Columns.Contains("PrecioVenta"))
-                    dgvProductos.Columns["PrecioVenta"].DefaultCellStyle.Format = "N0";
-
-                if (dgvProductos.Columns.Contains("Proveedor"))
-                    dgvProductos.Columns["Proveedor"].HeaderText = "Proveedor";
             }
         }
 
@@ -154,41 +139,39 @@ namespace AsuFit.Presentacion
             LimpiarFormulario();
         }
 
-        // --- 3. LÓGICA DE GESTIÓN (CRUD) ---
         private void dgvProductos_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex >= 0)
             {
                 DataGridViewRow fila = dgvProductos.Rows[e.RowIndex];
 
-                txtId.Text = fila.Cells["IdProducto"].Value.ToString();
-                txtCodigo.Text = fila.Cells["CodigoBarras"].Value.ToString();
-                txtNombre.Text = fila.Cells["Nombre"].Value.ToString();
-                cmbCategoria.Text = fila.Cells["Categoria"].Value.ToString();
-                txtPrecio.Text = Convert.ToDecimal(fila.Cells["PrecioVenta"].Value).ToString("N0");
-                txtStock.Text = fila.Cells["StockActual"].Value.ToString();
+                // --- ACTUALIZADO: Referencias con los nuevos nombres visuales ---
+                txtId.Text = fila.Cells["colProductoId"].Value.ToString();
+                txtCodigo.Text = fila.Cells["colProductoCodigo"].Value.ToString();
+                txtNombre.Text = fila.Cells["colProductoNombre"].Value.ToString();
+                cmbCategoria.Text = fila.Cells["colProductoCategoria"].Value.ToString();
+                txtPrecio.Text = Convert.ToDecimal(fila.Cells["colProductoPrecioVenta"].Value).ToString("N0");
+                txtStock.Text = fila.Cells["colProductoStock"].Value.ToString();
 
-                // Auto-seleccionar el proveedor
-                if (fila.Cells["Proveedor"].Value != DBNull.Value && fila.Cells["Proveedor"].Value != null)
+                if (fila.Cells["colProductoProveedor"].Value != DBNull.Value && fila.Cells["colProductoProveedor"].Value != null)
                 {
-                    cmbProveedor.Text = fila.Cells["Proveedor"].Value.ToString();
+                    cmbProveedor.Text = fila.Cells["colProductoProveedor"].Value.ToString();
                 }
                 else
                 {
                     cmbProveedor.SelectedIndex = -1;
                 }
 
-                // --- NUEVO: LEER EL IVA DESDE LA GRILLA AL COMBOBOX VISUAL ---
-                if (dgvProductos.Columns.Contains("PorcentajeIva") && fila.Cells["PorcentajeIva"].Value != DBNull.Value)
+                if (dgvProductos.Columns.Contains("colProductoIva") && fila.Cells["colProductoIva"].Value != DBNull.Value)
                 {
-                    cmbIva.Text = fila.Cells["PorcentajeIva"].Value.ToString();
+                    cmbIva.Text = fila.Cells["colProductoIva"].Value.ToString();
                 }
                 else
                 {
                     cmbIva.SelectedIndex = -1;
                 }
 
-                string codigo = fila.Cells["CodigoBarras"].Value.ToString();
+                string codigo = fila.Cells["colProductoCodigo"].Value.ToString();
                 string rutaFoto = carpetaFotos + codigo + ".jpg";
 
                 if (File.Exists(rutaFoto))
@@ -235,56 +218,60 @@ namespace AsuFit.Presentacion
 
         private void btnGuardar_Click(object sender, EventArgs e)
         {
+            if (string.IsNullOrWhiteSpace(txtNombre.Text) || string.IsNullOrWhiteSpace(txtPrecio.Text))
+            {
+                MessageBox.Show("El Nombre y el Precio son campos obligatorios.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
             try
             {
-                if (txtCodigo.Text == "" || txtNombre.Text == "" || txtPrecio.Text == "" || txtStock.Text == "" || cmbCategoria.Text == "" || cmbProveedor.SelectedIndex == -1)
+                Producto objProducto = new Producto();
+                objProducto.IdProducto = string.IsNullOrWhiteSpace(txtId.Text) ? 0 : Convert.ToInt32(txtId.Text);
+                objProducto.CodigoBarras = txtCodigo.Text.Trim();
+                objProducto.Nombre = txtNombre.Text.Trim();
+                objProducto.Categoria = cmbCategoria.Text;
+                objProducto.PrecioVenta = Convert.ToDecimal(txtPrecio.Text.Trim());
+                objProducto.StockActual = string.IsNullOrWhiteSpace(txtStock.Text) ? 0 : Convert.ToInt32(txtStock.Text.Trim());
+
+                if (cmbProveedor.SelectedValue != null)
                 {
-                    MessageBox.Show("Por favor, complete todos los campos obligatorios, incluyendo el Proveedor.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    return;
+                    objProducto.IdProveedor = Convert.ToInt32(cmbProveedor.SelectedValue);
                 }
 
-                int id = txtId.Text == "" ? 0 : Convert.ToInt32(txtId.Text);
-                string codigo = txtCodigo.Text;
-                decimal precio = Convert.ToDecimal(txtPrecio.Text);
-                int stock = Convert.ToInt32(txtStock.Text);
-                int idProveedor = Convert.ToInt32(cmbProveedor.SelectedValue);
-
-                // --- SOLUCIÓN AL ERROR CS7036 ---
-                // Leemos el IVA de la grilla (si existe), si no, asumimos 10% por defecto.
-                int ivaAsignado = 10;
-                if (id > 0 && dgvProductos.CurrentRow != null && dgvProductos.Columns.Contains("PorcentajeIva") && dgvProductos.CurrentRow.Cells["PorcentajeIva"].Value != DBNull.Value)
+                objProducto.PorcentajeIva = 10;
+                // --- ACTUALIZADO: Buscando la columna de IVA por su nuevo nombre ---
+                if (objProducto.IdProducto > 0 && dgvProductos.CurrentRow != null &&
+                    dgvProductos.Columns.Contains("colProductoIva") &&
+                    dgvProductos.CurrentRow.Cells["colProductoIva"].Value != DBNull.Value)
                 {
-                    ivaAsignado = Convert.ToInt32(dgvProductos.CurrentRow.Cells["PorcentajeIva"].Value);
+                    objProducto.PorcentajeIva = Convert.ToInt32(dgvProductos.CurrentRow.Cells["colProductoIva"].Value);
                 }
 
-                // Ahora enviamos los 8 parámetros sin problema
-                bool exito = negocio.GuardarProducto(id, codigo, txtNombre.Text, cmbCategoria.Text, precio, stock, idProveedor, ivaAsignado);
+                bool exito = negocio.GuardarProducto(objProducto);
 
                 if (exito)
                 {
-                    string accion = (id == 0) ? "Nuevo Producto" : "Edición";
-                    GestorAuditoria.Registrar(usuarioActual.NombreCompleto, "Inventario", accion, $"Guardó el producto '{txtNombre.Text}' (Cod: {codigo}).");
+                    string accion = objProducto.IdProducto == 0 ? "Alta" : "Edición";
+                    string detalle = objProducto.IdProducto == 0
+                        ? $"Se registró el producto '{objProducto.Nombre}'."
+                        : $"Se modificó el producto '{objProducto.Nombre}'.";
 
-                    if (rutaFotoOrigen != "")
-                    {
-                        string rutaFinal = carpetaFotos + codigo + ".jpg";
-
-                        if (File.Exists(rutaFinal))
-                        {
-                            picFoto.Image = null;
-                            GC.Collect();
-                            GC.WaitForPendingFinalizers();
-                            File.Delete(rutaFinal);
-                        }
-
-                        File.Copy(rutaFotoOrigen, rutaFinal);
-                        rutaFotoOrigen = "";
-                    }
+                    GestorAuditoria.Registrar(usuarioActual.NombreCompleto, "Inventario", accion, detalle);
 
                     MessageBox.Show("Producto guardado correctamente.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
                     LimpiarFormulario();
                     CargarGrilla();
                 }
+                else
+                {
+                    MessageBox.Show("No se pudo guardar el producto.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+            catch (FormatException)
+            {
+                MessageBox.Show("Por favor, ingresá solo números válidos en Precio y Stock.", "Error de Formato", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
             catch (Exception ex)
             {
@@ -303,7 +290,9 @@ namespace AsuFit.Presentacion
             try
             {
                 int id = Convert.ToInt32(txtId.Text);
-                string estadoActual = dgvProductos.CurrentRow.Cells["Estado"].Value.ToString();
+
+                // --- ACTUALIZADO: Leyendo el estado desde la columna correcta ---
+                string estadoActual = dgvProductos.CurrentRow.Cells["colProductoEstado"].Value.ToString();
 
                 string nuevoEstado = estadoActual == "Activo" ? "Inactivo" : "Activo";
                 string mensaje = estadoActual == "Activo" ? "¿Desea dar de baja (desactivar) este producto?" : "¿Desea reactivar este producto?";
@@ -342,7 +331,6 @@ namespace AsuFit.Presentacion
             cmbCategoria.SelectedIndex = -1;
             cmbProveedor.SelectedIndex = -1;
 
-            // --- LÍNEA NUEVA PARA LIMPIAR EL IVA ---
             if (cmbIva != null) cmbIva.SelectedIndex = -1;
 
             txtPrecio.Clear();
@@ -350,7 +338,6 @@ namespace AsuFit.Presentacion
             picFoto.Image = null;
             rutaFotoOrigen = "";
 
-            // Limpieza normal como en el otro formulario
             txtBuscarProducto.Clear();
             dgvProductos.ClearSelection();
         }
@@ -365,23 +352,27 @@ namespace AsuFit.Presentacion
         {
             foreach (DataGridViewRow row in dgvProductos.Rows)
             {
-                int stockActual = Convert.ToInt32(row.Cells["StockActual"].Value);
-                int stockMinimo = Convert.ToInt32(row.Cells["StockMinimo"].Value);
+                // --- ACTUALIZADO: Pintado de celdas referenciando a las nuevas columnas ---
+                if (row.Cells["colProductoStock"].Value != DBNull.Value && row.Cells["colProductoStockMin"].Value != DBNull.Value)
+                {
+                    int stockActual = Convert.ToInt32(row.Cells["colProductoStock"].Value);
+                    int stockMinimo = Convert.ToInt32(row.Cells["colProductoStockMin"].Value);
 
-                if (stockActual == 0)
-                {
-                    row.DefaultCellStyle.BackColor = Color.IndianRed;
-                    row.DefaultCellStyle.ForeColor = Color.White;
-                }
-                else if (stockActual <= stockMinimo)
-                {
-                    row.DefaultCellStyle.BackColor = Color.Khaki;
-                    row.DefaultCellStyle.ForeColor = Color.Black;
-                }
-                else
-                {
-                    row.DefaultCellStyle.BackColor = Color.White;
-                    row.DefaultCellStyle.ForeColor = Color.Black;
+                    if (stockActual == 0)
+                    {
+                        row.DefaultCellStyle.BackColor = Color.IndianRed;
+                        row.DefaultCellStyle.ForeColor = Color.White;
+                    }
+                    else if (stockActual <= stockMinimo)
+                    {
+                        row.DefaultCellStyle.BackColor = Color.Khaki;
+                        row.DefaultCellStyle.ForeColor = Color.Black;
+                    }
+                    else
+                    {
+                        row.DefaultCellStyle.BackColor = Color.White;
+                        row.DefaultCellStyle.ForeColor = Color.Black;
+                    }
                 }
             }
             dgvProductos.ClearSelection();

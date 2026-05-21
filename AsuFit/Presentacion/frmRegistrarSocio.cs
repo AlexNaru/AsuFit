@@ -2,42 +2,71 @@
 using AsuFit.Negocio;
 using System;
 using System.Drawing;
+using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
 namespace AsuFit.Presentacion
 {
     public partial class frmRegistrarSocio : Form
     {
+        #region 1. VARIABLES GLOBALES Y CONSTRUCTORES
         private Socio socioEdicion = null;
         private bool puedeGuardar = false;
+        private Usuario usuarioActual;
 
-        public frmRegistrarSocio()
+        [DllImport("user32.dll", CharSet = CharSet.Auto)]
+        private static extern Int32 SendMessage(IntPtr hWnd, int msg, int wParam, [MarshalAs(UnmanagedType.LPWStr)] string lParam);
+        private const int EM_SETCUEBANNER = 0x1501;
+
+        public frmRegistrarSocio(Usuario userLogueado)
         {
             InitializeComponent();
+            usuarioActual = userLogueado;
         }
 
-        public frmRegistrarSocio(Socio socioParaEditar)
+        public frmRegistrarSocio(Socio socioParaEditar, Usuario userLogueado)
         {
             InitializeComponent();
             this.socioEdicion = socioParaEditar;
+            usuarioActual = userLogueado;
 
             cmbPlanes.Enabled = false;
 
             btnGuardar.Text = "ACTUALIZAR DATOS";
-            btnGuardar.Size = new System.Drawing.Size(130, 30);
+            btnGuardar.Size = new System.Drawing.Size(145, 30);
 
-            int centroX = (this.ClientSize.Width - btnGuardar.Width) / 2;
-            int posicionY = btnGuardar.Location.Y;
-            btnGuardar.Location = new System.Drawing.Point(centroX, posicionY);
+            // Centrado en bloque para evitar superposición
+            int separacion = 15;
+            int anchoTotal = btnGuardar.Width + separacion + btnCancelar.Width;
+            int posX = (this.ClientSize.Width - anchoTotal) / 2;
+
+            btnGuardar.Location = new System.Drawing.Point(posX, btnGuardar.Location.Y);
+            btnCancelar.Location = new System.Drawing.Point(posX + btnGuardar.Width + separacion, btnCancelar.Location.Y);
 
             CargarDatosEnPantalla();
         }
+        #endregion
 
+        #region 2. INICIALIZACIÓN Y CARGA DE DATOS
         private void frmRegistrarSocio_Load(object sender, EventArgs e)
         {
+            ConfigurarTextosDeAyuda();
+
             txtCedula.Focus();
             txtCedula.MaxLength = 7;
             CambiarEstadoBoton(false);
+        }
+
+        private void ConfigurarTextosDeAyuda()
+        {
+            SendMessage(txtCedula.Handle, EM_SETCUEBANNER, 1, "Ej: 4588999");
+            SendMessage(txtRuc.Handle, EM_SETCUEBANNER, 1, "Ej: 4588999-5");
+            SendMessage(txtNombre.Handle, EM_SETCUEBANNER, 1, "Ej: Carlos Miguel");
+            SendMessage(txtApellido.Handle, EM_SETCUEBANNER, 1, "Ej: Benítez Rojas");
+            SendMessage(txtEmail.Handle, EM_SETCUEBANNER, 1, "ejemplo@correo.com");
+            SendMessage(txtTelefono.Handle, EM_SETCUEBANNER, 1, "09XX XXX XXX");
+            SendMessage(txtContactoEmergencia.Handle, EM_SETCUEBANNER, 1, "Ej: Laura Rojas");
+            SendMessage(txtTelefonoEmergencia.Handle, EM_SETCUEBANNER, 1, "09XX XXX XXX");
         }
 
         private void CambiarEstadoBoton(bool activo)
@@ -56,7 +85,9 @@ namespace AsuFit.Presentacion
                 btnGuardar.FlatAppearance.BorderColor = Color.Silver;
             }
         }
+        #endregion
 
+        #region 3. EVENTOS DE CAMPOS
         private void ValidarNumeros_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar))
@@ -74,7 +105,6 @@ namespace AsuFit.Presentacion
 
                 if (txtActivo != null && string.IsNullOrWhiteSpace(txtActivo.Text))
                 {
-                    // Email, Contacto, Teléfono de Emergencia y RUC son opcionales
                     if (txtActivo.Name != "txtEmail" && txtActivo.Name != "txtContactoEmergencia" &&
                         txtActivo.Name != "txtTelefonoEmergencia" && txtActivo.Name != "txtRuc")
                     {
@@ -83,7 +113,6 @@ namespace AsuFit.Presentacion
                     }
                 }
 
-                // Forzar el salto al ComboBox y abrir la lista automáticamente
                 if (txtActivo != null && txtActivo.Name == "txtTelefonoEmergencia")
                 {
                     cmbPlanes.Focus();
@@ -122,18 +151,16 @@ namespace AsuFit.Presentacion
             txtNombre.Text = socioEdicion.Nombre;
             txtApellido.Text = socioEdicion.Apellido;
             txtEmail.Text = socioEdicion.Email;
-
-            // --- AQUÍ ESTIRAMOS EL RUC AL EDITAR ---
             txtRuc.Text = socioEdicion.Ruc;
-
             txtTelefono.Text = socioEdicion.Telefono;
             dtpFechaNacimiento.Value = socioEdicion.FechaNacimiento;
             txtContactoEmergencia.Text = socioEdicion.NombreContactoEmergencia;
             txtTelefonoEmergencia.Text = socioEdicion.TelefonoEmergencia;
-
             cmbPlanes.Text = "Plan Mensual";
         }
+        #endregion
 
+        #region 4. ACCIONES PRINCIPALES (Guardar/Cancelar)
         private void btnGuardar_Click(object sender, EventArgs e)
         {
             if (string.IsNullOrWhiteSpace(txtCedula.Text) || string.IsNullOrWhiteSpace(txtNombre.Text) ||
@@ -174,7 +201,7 @@ namespace AsuFit.Presentacion
 
             if (planInfo == null)
             {
-                MessageBox.Show("No se pudo encontrar la información del plan.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("No se pudo encontrar la información del plan.", "Error interno", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
@@ -197,8 +224,7 @@ namespace AsuFit.Presentacion
 
                 if (nuevoIdSocio > 0)
                 {
-                    // --- MAGIA: Escondemos los DÍAS y el ID DEL NUEVO SOCIO ---
-                    string codigoPlanArtificial = $"PLAN-{planInfo.DuracionDias}-{nuevoIdSocio}";
+                    string codigoPlanArtificial = $"PLAN-{planInfo.DuracionDias}-{nuevoIdSocio}-{planInfo.IdPlan}";
                     CarritoGlobal.AgregarItem(0, codigoPlanArtificial, "Inscripción y " + planInfo.NombrePlan, 1, planInfo.Precio, 10);
 
                     if (CarritoGlobal.IdSocioPagara == null) CarritoGlobal.IdSocioPagara = nuevoIdSocio;
@@ -212,7 +238,7 @@ namespace AsuFit.Presentacion
                     }
                     else
                     {
-                        frmCajaCobro nuevaCaja = new frmCajaCobro(null);
+                        frmCajaCobro nuevaCaja = new frmCajaCobro(usuarioActual);
                         nuevaCaja.Show();
                     }
                     LimpiarCampos();
@@ -224,26 +250,24 @@ namespace AsuFit.Presentacion
             }
         }
 
+        private void btnCancelar_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+
         private void LimpiarCampos()
         {
             txtCedula.Clear();
             txtNombre.Clear();
             txtApellido.Clear();
             txtEmail.Clear();
-
-            // --- LIMPIAMOS EL RUC AL TERMINAR ---
             txtRuc.Clear();
-
             txtTelefono.Clear();
             txtContactoEmergencia.Clear();
             txtTelefonoEmergencia.Clear();
             dtpFechaNacimiento.Value = DateTime.Now;
             cmbPlanes.SelectedIndex = -1;
         }
-
-        private void btnCancelar_Click(object sender, EventArgs e)
-        {
-            this.Close();
-        }
+        #endregion
     }
 }

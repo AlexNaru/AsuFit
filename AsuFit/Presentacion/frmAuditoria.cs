@@ -1,64 +1,53 @@
-﻿using AsuFit.Datos; // O el namespace donde tengas tu Conexion
+﻿using AsuFit.Datos;
 using System;
 using System.Data;
 using System.Data.SqlClient;
+using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
 namespace AsuFit.Presentacion
 {
     public partial class frmAuditoria : Form
     {
-        // Variable global para guardar los datos en memoria y buscar súper rápido
         private DataTable dtAuditoria = new DataTable();
+
+        [DllImport("user32.dll", CharSet = CharSet.Auto)]
+        private static extern Int32 SendMessage(IntPtr hWnd, int msg, int wParam, [MarshalAs(UnmanagedType.LPWStr)] string lParam);
+        private const int EM_SETCUEBANNER = 0x1501;
 
         public frmAuditoria()
         {
             InitializeComponent();
+
+            // Bloqueamos las columnas automáticas
+            dgvAuditoria.AutoGenerateColumns = false;
         }
 
-        // EVENTO LOAD: Se ejecuta al abrir la pantalla
         private void frmAuditoria_Load(object sender, EventArgs e)
         {
-            // Ponemos el combo en "Todos" por defecto
             if (cmbFiltroModulo.Items.Count > 0)
                 cmbFiltroModulo.SelectedIndex = 0;
 
             CargarAuditoria();
 
-            // Evita que la primera celda se seleccione de color azul por defecto al abrir
-            dgvAuditoria.ClearSelection();
+            SendMessage(txtBuscar.Handle, EM_SETCUEBANNER, 1, "Buscar por usuario, acción o detalle...");
         }
 
         private void btnAbrirHistorial_Click(object sender, EventArgs e)
         {
-            // Abrimos la pantalla que ya tenés lista y blindada
             frmHistorialArqueos frm = new frmHistorialArqueos();
             frm.ShowDialog();
         }
 
-        // MÉTODO PARA TRAER LA TABLA DE SQL
         private void CargarAuditoria()
         {
             try
             {
-                using (SqlConnection oConexion = Conexion.ObtenerConexion())
-                {
-                    string query = "SELECT FechaHora AS [Fecha y Hora], Usuario, Modulo AS Módulo, Accion AS Acción, Detalle FROM LogAuditoria ORDER BY FechaHora DESC";
-                    SqlDataAdapter da = new SqlDataAdapter(query, oConexion);
+                AsuFit.Negocio.AuditoriaNegocio negocio = new AsuFit.Negocio.AuditoriaNegocio();
+                dtAuditoria = negocio.ListarAuditoria();
 
-                    dtAuditoria.Clear();
-                    da.Fill(dtAuditoria);
-
-                    dgvAuditoria.DataSource = dtAuditoria;
-                    dgvAuditoria.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-
-                    // --- AJUSTES VISUALES ---
-                    // 1. Quita la primera columna vacía de la izquierda (la de la flechita)
-                    dgvAuditoria.RowHeadersVisible = false;
-
-                    // 2. Quita la última fila vacía de abajo (la del asterisco)
-                    dgvAuditoria.AllowUserToAddRows = false;
-                }
+                dgvAuditoria.DataSource = dtAuditoria;
+                dgvAuditoria.ClearSelection();
             }
             catch (Exception ex)
             {
@@ -66,7 +55,6 @@ namespace AsuFit.Presentacion
             }
         }
 
-        // MOTOR DE BÚSQUEDA EN TIEMPO REAL
         private void AplicarFiltros()
         {
             if (dtAuditoria == null || dtAuditoria.Rows.Count == 0) return;
@@ -75,29 +63,34 @@ namespace AsuFit.Presentacion
             string busqueda = txtBuscar.Text.Trim();
             string filtro = "1=1";
 
+            // Buscamos 'Modulo' sin tilde, tal como está en SQL
             if (modulo != "Todos" && !string.IsNullOrEmpty(modulo))
             {
-                filtro += $" AND Módulo = '{modulo}'"; // Usamos el alias de la consulta SQL
+                filtro += $" AND Modulo = '{modulo}'";
             }
 
+            // Buscamos 'Accion' sin tilde, tal como está en SQL
             if (!string.IsNullOrEmpty(busqueda))
             {
-                filtro += $" AND (Usuario LIKE '%{busqueda}%' OR Acción LIKE '%{busqueda}%' OR Detalle LIKE '%{busqueda}%')";
+                filtro += $" AND (Usuario LIKE '%{busqueda}%' OR Accion LIKE '%{busqueda}%' OR Detalle LIKE '%{busqueda}%')";
             }
 
             dtAuditoria.DefaultView.RowFilter = filtro;
         }
 
-        // EVENTO: Cuando el usuario teclea en el cuadro de búsqueda
         private void txtBuscar_TextChanged(object sender, EventArgs e)
         {
             AplicarFiltros();
         }
 
-        // EVENTO: Cuando el usuario cambia la opción del ComboBox
         private void cmbFiltroModulo_SelectedIndexChanged(object sender, EventArgs e)
         {
             AplicarFiltros();
+        }
+
+        private void dgvAuditoria_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
+        {
+            dgvAuditoria.ClearSelection();
         }
     }
 }

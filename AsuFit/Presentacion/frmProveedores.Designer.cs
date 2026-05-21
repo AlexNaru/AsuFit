@@ -59,13 +59,24 @@
             this.txtNombre = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.panel3 = new System.Windows.Forms.Panel();
+            this.lblInactivos = new System.Windows.Forms.Label();
+            this.lblActivos = new System.Windows.Forms.Label();
+            this.lblTotal = new System.Windows.Forms.Label();
             this.label14 = new System.Windows.Forms.Label();
             this.label13 = new System.Windows.Forms.Label();
             this.label12 = new System.Windows.Forms.Label();
             this.label11 = new System.Windows.Forms.Label();
-            this.lblTotal = new System.Windows.Forms.Label();
-            this.lblActivos = new System.Windows.Forms.Label();
-            this.lblInactivos = new System.Windows.Forms.Label();
+            this.label15 = new System.Windows.Forms.Label();
+            this.colProvId = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colProvNombre = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colProvRuc = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colProvCategoria = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colProvContacto = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colProvTelefono = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colProvCorreo = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colProvDireccion = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colProvCiudad = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colProvEstado = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvProveedores)).BeginInit();
             this.panel2.SuspendLayout();
@@ -79,7 +90,7 @@
             this.panel1.Controls.Add(this.dgvProveedores);
             this.panel1.Controls.Add(this.txtBuscarProveedor);
             this.panel1.Controls.Add(this.label1);
-            this.panel1.Location = new System.Drawing.Point(34, 36);
+            this.panel1.Location = new System.Drawing.Point(16, 61);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(657, 667);
             this.panel1.TabIndex = 0;
@@ -98,7 +109,20 @@
             // 
             // dgvProveedores
             // 
+            this.dgvProveedores.AllowUserToAddRows = false;
+            this.dgvProveedores.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.dgvProveedores.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgvProveedores.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.colProvId,
+            this.colProvNombre,
+            this.colProvRuc,
+            this.colProvCategoria,
+            this.colProvContacto,
+            this.colProvTelefono,
+            this.colProvCorreo,
+            this.colProvDireccion,
+            this.colProvCiudad,
+            this.colProvEstado});
             this.dgvProveedores.Location = new System.Drawing.Point(23, 111);
             this.dgvProveedores.Name = "dgvProveedores";
             this.dgvProveedores.RowHeadersVisible = false;
@@ -153,7 +177,7 @@
             this.panel2.Controls.Add(this.label3);
             this.panel2.Controls.Add(this.txtNombre);
             this.panel2.Controls.Add(this.label2);
-            this.panel2.Location = new System.Drawing.Point(714, 36);
+            this.panel2.Location = new System.Drawing.Point(696, 61);
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(572, 485);
             this.panel2.TabIndex = 1;
@@ -379,11 +403,38 @@
             this.panel3.Controls.Add(this.label13);
             this.panel3.Controls.Add(this.label12);
             this.panel3.Controls.Add(this.label11);
-            this.panel3.Location = new System.Drawing.Point(714, 542);
+            this.panel3.Location = new System.Drawing.Point(696, 567);
             this.panel3.Name = "panel3";
             this.panel3.Size = new System.Drawing.Size(572, 161);
             this.panel3.TabIndex = 2;
             this.panel3.Click += new System.EventHandler(this.LimpiarSeleccion_Click);
+            // 
+            // lblInactivos
+            // 
+            this.lblInactivos.AutoSize = true;
+            this.lblInactivos.Location = new System.Drawing.Point(429, 109);
+            this.lblInactivos.Name = "lblInactivos";
+            this.lblInactivos.Size = new System.Drawing.Size(18, 20);
+            this.lblInactivos.TabIndex = 27;
+            this.lblInactivos.Text = "0";
+            // 
+            // lblActivos
+            // 
+            this.lblActivos.AutoSize = true;
+            this.lblActivos.Location = new System.Drawing.Point(248, 109);
+            this.lblActivos.Name = "lblActivos";
+            this.lblActivos.Size = new System.Drawing.Size(18, 20);
+            this.lblActivos.TabIndex = 26;
+            this.lblActivos.Text = "0";
+            // 
+            // lblTotal
+            // 
+            this.lblTotal.AutoSize = true;
+            this.lblTotal.Location = new System.Drawing.Point(66, 109);
+            this.lblTotal.Name = "lblTotal";
+            this.lblTotal.Size = new System.Drawing.Size(18, 20);
+            this.lblTotal.TabIndex = 25;
+            this.lblTotal.Text = "0";
             // 
             // label14
             // 
@@ -421,38 +472,92 @@
             this.label11.TabIndex = 22;
             this.label11.Text = "3. RESUMEN DE PROVEEDORES";
             // 
-            // lblTotal
+            // label15
             // 
-            this.lblTotal.AutoSize = true;
-            this.lblTotal.Location = new System.Drawing.Point(66, 109);
-            this.lblTotal.Name = "lblTotal";
-            this.lblTotal.Size = new System.Drawing.Size(18, 20);
-            this.lblTotal.TabIndex = 25;
-            this.lblTotal.Text = "0";
+            this.label15.AutoSize = true;
+            this.label15.Location = new System.Drawing.Point(12, 9);
+            this.label15.Name = "label15";
+            this.label15.Size = new System.Drawing.Size(134, 20);
+            this.label15.TabIndex = 29;
+            this.label15.Text = "PROVEEDORES";
             // 
-            // lblActivos
+            // colProvId
             // 
-            this.lblActivos.AutoSize = true;
-            this.lblActivos.Location = new System.Drawing.Point(248, 109);
-            this.lblActivos.Name = "lblActivos";
-            this.lblActivos.Size = new System.Drawing.Size(18, 20);
-            this.lblActivos.TabIndex = 26;
-            this.lblActivos.Text = "0";
+            this.colProvId.DataPropertyName = "IdProveedor";
+            this.colProvId.HeaderText = "Id Proveedor";
+            this.colProvId.MinimumWidth = 8;
+            this.colProvId.Name = "colProvId";
+            this.colProvId.Visible = false;
             // 
-            // lblInactivos
+            // colProvNombre
             // 
-            this.lblInactivos.AutoSize = true;
-            this.lblInactivos.Location = new System.Drawing.Point(429, 109);
-            this.lblInactivos.Name = "lblInactivos";
-            this.lblInactivos.Size = new System.Drawing.Size(18, 20);
-            this.lblInactivos.TabIndex = 27;
-            this.lblInactivos.Text = "0";
+            this.colProvNombre.DataPropertyName = "Nombre";
+            this.colProvNombre.HeaderText = "Nombre";
+            this.colProvNombre.MinimumWidth = 8;
+            this.colProvNombre.Name = "colProvNombre";
+            // 
+            // colProvRuc
+            // 
+            this.colProvRuc.DataPropertyName = "RUC";
+            this.colProvRuc.HeaderText = "RUC";
+            this.colProvRuc.MinimumWidth = 8;
+            this.colProvRuc.Name = "colProvRuc";
+            // 
+            // colProvCategoria
+            // 
+            this.colProvCategoria.DataPropertyName = "Categoria";
+            this.colProvCategoria.HeaderText = "Categoría";
+            this.colProvCategoria.MinimumWidth = 8;
+            this.colProvCategoria.Name = "colProvCategoria";
+            // 
+            // colProvContacto
+            // 
+            this.colProvContacto.DataPropertyName = "Contacto";
+            this.colProvContacto.HeaderText = "Contacto";
+            this.colProvContacto.MinimumWidth = 8;
+            this.colProvContacto.Name = "colProvContacto";
+            // 
+            // colProvTelefono
+            // 
+            this.colProvTelefono.DataPropertyName = "Telefono";
+            this.colProvTelefono.HeaderText = "Teléfono";
+            this.colProvTelefono.MinimumWidth = 8;
+            this.colProvTelefono.Name = "colProvTelefono";
+            // 
+            // colProvCorreo
+            // 
+            this.colProvCorreo.DataPropertyName = "Correo";
+            this.colProvCorreo.HeaderText = "Correo";
+            this.colProvCorreo.MinimumWidth = 8;
+            this.colProvCorreo.Name = "colProvCorreo";
+            // 
+            // colProvDireccion
+            // 
+            this.colProvDireccion.DataPropertyName = "Direccion";
+            this.colProvDireccion.HeaderText = "Dirección";
+            this.colProvDireccion.MinimumWidth = 8;
+            this.colProvDireccion.Name = "colProvDireccion";
+            // 
+            // colProvCiudad
+            // 
+            this.colProvCiudad.DataPropertyName = "Ciudad";
+            this.colProvCiudad.HeaderText = "Ciudad";
+            this.colProvCiudad.MinimumWidth = 8;
+            this.colProvCiudad.Name = "colProvCiudad";
+            // 
+            // colProvEstado
+            // 
+            this.colProvEstado.DataPropertyName = "Estado";
+            this.colProvEstado.HeaderText = "Estado";
+            this.colProvEstado.MinimumWidth = 8;
+            this.colProvEstado.Name = "colProvEstado";
             // 
             // frmProveedores
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1314, 722);
+            this.ClientSize = new System.Drawing.Size(1285, 740);
+            this.Controls.Add(this.label15);
             this.Controls.Add(this.panel3);
             this.Controls.Add(this.panel2);
             this.Controls.Add(this.panel1);
@@ -468,6 +573,7 @@
             this.panel3.ResumeLayout(false);
             this.panel3.PerformLayout();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -511,5 +617,16 @@
         private System.Windows.Forms.Label lblInactivos;
         private System.Windows.Forms.Label lblActivos;
         private System.Windows.Forms.Label lblTotal;
+        private System.Windows.Forms.Label label15;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colProvId;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colProvNombre;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colProvRuc;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colProvCategoria;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colProvContacto;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colProvTelefono;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colProvCorreo;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colProvDireccion;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colProvCiudad;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colProvEstado;
     }
 }

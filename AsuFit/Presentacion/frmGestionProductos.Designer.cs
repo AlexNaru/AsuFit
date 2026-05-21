@@ -28,6 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
             this.panel1 = new System.Windows.Forms.Panel();
             this.label8 = new System.Windows.Forms.Label();
             this.cmbIva = new System.Windows.Forms.ComboBox();
@@ -54,6 +56,19 @@
             this.btnCambiarEstado = new System.Windows.Forms.Button();
             this.txtBuscarProducto = new System.Windows.Forms.TextBox();
             this.dgvProductos = new System.Windows.Forms.DataGridView();
+            this.colProductoId = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colProductoCodigo = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colProductoNombre = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colProductoCategoria = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colProductoPrecioCompra = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colProductoPrecioVenta = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colProductoStock = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colProductoStockMin = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colProductoProveedor = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colProductoIva = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colProductoEstado = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colProductoIdProveedor = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.label9 = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picFoto)).BeginInit();
             this.panel2.SuspendLayout();
@@ -83,7 +98,7 @@
             this.panel1.Controls.Add(this.txtCodigo);
             this.panel1.Controls.Add(this.btnSubirFoto);
             this.panel1.Controls.Add(this.picFoto);
-            this.panel1.Location = new System.Drawing.Point(23, 12);
+            this.panel1.Location = new System.Drawing.Point(17, 53);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(347, 699);
             this.panel1.TabIndex = 22;
@@ -282,7 +297,7 @@
             this.panel2.Controls.Add(this.btnCambiarEstado);
             this.panel2.Controls.Add(this.txtBuscarProducto);
             this.panel2.Controls.Add(this.dgvProductos);
-            this.panel2.Location = new System.Drawing.Point(385, 12);
+            this.panel2.Location = new System.Drawing.Point(379, 53);
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(827, 699);
             this.panel2.TabIndex = 23;
@@ -320,23 +335,149 @@
             // 
             // dgvProductos
             // 
+            this.dgvProductos.AllowUserToAddRows = false;
             this.dgvProductos.AllowUserToResizeColumns = false;
             this.dgvProductos.AllowUserToResizeRows = false;
             this.dgvProductos.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgvProductos.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.colProductoId,
+            this.colProductoCodigo,
+            this.colProductoNombre,
+            this.colProductoCategoria,
+            this.colProductoPrecioCompra,
+            this.colProductoPrecioVenta,
+            this.colProductoStock,
+            this.colProductoStockMin,
+            this.colProductoProveedor,
+            this.colProductoIva,
+            this.colProductoEstado,
+            this.colProductoIdProveedor});
             this.dgvProductos.Location = new System.Drawing.Point(37, 69);
             this.dgvProductos.Name = "dgvProductos";
             this.dgvProductos.RowHeadersWidth = 62;
             this.dgvProductos.RowTemplate.Height = 28;
-            this.dgvProductos.Size = new System.Drawing.Size(751, 404);
+            this.dgvProductos.Size = new System.Drawing.Size(751, 530);
             this.dgvProductos.TabIndex = 20;
             this.dgvProductos.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvProductos_CellClick);
             this.dgvProductos.DataBindingComplete += new System.Windows.Forms.DataGridViewBindingCompleteEventHandler(this.dgvProductos_DataBindingComplete);
+            // 
+            // colProductoId
+            // 
+            this.colProductoId.DataPropertyName = "IdProducto";
+            this.colProductoId.HeaderText = "Id Producto";
+            this.colProductoId.MinimumWidth = 8;
+            this.colProductoId.Name = "colProductoId";
+            this.colProductoId.Visible = false;
+            this.colProductoId.Width = 150;
+            // 
+            // colProductoCodigo
+            // 
+            this.colProductoCodigo.DataPropertyName = "CodigoBarras";
+            this.colProductoCodigo.HeaderText = "Código";
+            this.colProductoCodigo.MinimumWidth = 8;
+            this.colProductoCodigo.Name = "colProductoCodigo";
+            this.colProductoCodigo.Width = 150;
+            // 
+            // colProductoNombre
+            // 
+            this.colProductoNombre.DataPropertyName = "Nombre";
+            this.colProductoNombre.HeaderText = "Nombre";
+            this.colProductoNombre.MinimumWidth = 8;
+            this.colProductoNombre.Name = "colProductoNombre";
+            this.colProductoNombre.Width = 150;
+            // 
+            // colProductoCategoria
+            // 
+            this.colProductoCategoria.DataPropertyName = "Categoria";
+            this.colProductoCategoria.HeaderText = "Categoría";
+            this.colProductoCategoria.MinimumWidth = 8;
+            this.colProductoCategoria.Name = "colProductoCategoria";
+            this.colProductoCategoria.Width = 150;
+            // 
+            // colProductoPrecioCompra
+            // 
+            this.colProductoPrecioCompra.DataPropertyName = "PrecioCompra";
+            dataGridViewCellStyle3.Format = "N0";
+            this.colProductoPrecioCompra.DefaultCellStyle = dataGridViewCellStyle3;
+            this.colProductoPrecioCompra.HeaderText = "Precio Compra";
+            this.colProductoPrecioCompra.MinimumWidth = 8;
+            this.colProductoPrecioCompra.Name = "colProductoPrecioCompra";
+            this.colProductoPrecioCompra.Width = 150;
+            // 
+            // colProductoPrecioVenta
+            // 
+            this.colProductoPrecioVenta.DataPropertyName = "PrecioVenta";
+            dataGridViewCellStyle4.Format = "N0";
+            this.colProductoPrecioVenta.DefaultCellStyle = dataGridViewCellStyle4;
+            this.colProductoPrecioVenta.HeaderText = "Precio Venta";
+            this.colProductoPrecioVenta.MinimumWidth = 8;
+            this.colProductoPrecioVenta.Name = "colProductoPrecioVenta";
+            this.colProductoPrecioVenta.Width = 150;
+            // 
+            // colProductoStock
+            // 
+            this.colProductoStock.DataPropertyName = "StockActual";
+            this.colProductoStock.HeaderText = "Stock Actual";
+            this.colProductoStock.MinimumWidth = 8;
+            this.colProductoStock.Name = "colProductoStock";
+            this.colProductoStock.Width = 150;
+            // 
+            // colProductoStockMin
+            // 
+            this.colProductoStockMin.DataPropertyName = "StockMinimo";
+            this.colProductoStockMin.HeaderText = "Stock Mínimo";
+            this.colProductoStockMin.MinimumWidth = 8;
+            this.colProductoStockMin.Name = "colProductoStockMin";
+            this.colProductoStockMin.Width = 150;
+            // 
+            // colProductoProveedor
+            // 
+            this.colProductoProveedor.DataPropertyName = "Proveedor";
+            this.colProductoProveedor.HeaderText = "Proveedor";
+            this.colProductoProveedor.MinimumWidth = 8;
+            this.colProductoProveedor.Name = "colProductoProveedor";
+            this.colProductoProveedor.Width = 150;
+            // 
+            // colProductoIva
+            // 
+            this.colProductoIva.DataPropertyName = "PorcentajeIva";
+            this.colProductoIva.HeaderText = "% IVA";
+            this.colProductoIva.MinimumWidth = 8;
+            this.colProductoIva.Name = "colProductoIva";
+            this.colProductoIva.Width = 150;
+            // 
+            // colProductoEstado
+            // 
+            this.colProductoEstado.DataPropertyName = "Estado";
+            this.colProductoEstado.HeaderText = "Estado";
+            this.colProductoEstado.MinimumWidth = 8;
+            this.colProductoEstado.Name = "colProductoEstado";
+            this.colProductoEstado.Width = 150;
+            // 
+            // colProductoIdProveedor
+            // 
+            this.colProductoIdProveedor.DataPropertyName = "IdProveedor";
+            this.colProductoIdProveedor.HeaderText = "Id Proveedor";
+            this.colProductoIdProveedor.MinimumWidth = 8;
+            this.colProductoIdProveedor.Name = "colProductoIdProveedor";
+            this.colProductoIdProveedor.Visible = false;
+            this.colProductoIdProveedor.Width = 150;
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(13, 13);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(213, 20);
+            this.label9.TabIndex = 24;
+            this.label9.Text = "GESTIÓN DE PRODUCTOS";
             // 
             // frmGestionProductos
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1224, 734);
+            this.ClientSize = new System.Drawing.Size(1224, 764);
+            this.Controls.Add(this.label9);
             this.Controls.Add(this.panel2);
             this.Controls.Add(this.panel1);
             this.Name = "frmGestionProductos";
@@ -350,6 +491,7 @@
             this.panel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvProductos)).EndInit();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -380,5 +522,18 @@
         private System.Windows.Forms.DataGridView dgvProductos;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.ComboBox cmbIva;
+        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colProductoId;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colProductoCodigo;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colProductoNombre;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colProductoCategoria;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colProductoPrecioCompra;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colProductoPrecioVenta;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colProductoStock;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colProductoStockMin;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colProductoProveedor;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colProductoIva;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colProductoEstado;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colProductoIdProveedor;
     }
 }

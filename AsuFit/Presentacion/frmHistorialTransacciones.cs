@@ -12,14 +12,14 @@ namespace AsuFit.Presentacion
         {
             InitializeComponent();
 
-            // 2. Seleccionamos "Todas" por defecto para que la casilla nunca esté vacía
+            // --- EL CAMBIO CLAVE: Bloqueamos las columnas automáticas ---
+            dgvVentas.AutoGenerateColumns = false;
+
             cmbFiltroTipo.SelectedIndex = 0;
         }
 
-        // ¡NOMBRE CORREGIDO!
         private void frmHistorialTransacciones_Load(object sender, EventArgs e)
         {
-            // Ponemos por defecto desde el día 1 del mes actual hasta hoy
             dtpDesde.Value = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
             dtpHasta.Value = DateTime.Now.Date;
             BuscarVentas();
@@ -84,9 +84,9 @@ namespace AsuFit.Presentacion
                              OR s.Cedula LIKE '%' + @Filtro + '%'
                              OR CAST(v.IdVenta AS VARCHAR) LIKE '%' + @Filtro + '%')
                         AND (@TipoFiltro = 'Todos' OR @TipoFiltro = 'Todas'
-                             OR (@TipoFiltro = 'Producto' AND c.CantProductos > 0 AND c.CantMensualidades = 0)
-                             OR (@TipoFiltro = 'Mensualidad' AND c.CantMensualidades > 0 AND c.CantProductos = 0)
-                             OR (@TipoFiltro = 'Mixtos' AND c.CantProductos > 0 AND c.CantMensualidades > 0))
+                             OR (@TipoFiltro LIKE '%Producto%' AND c.CantProductos > 0 AND c.CantMensualidades = 0)
+                             OR (@TipoFiltro LIKE '%Mensualidad%' AND c.CantMensualidades > 0 AND c.CantProductos = 0)
+                             OR (@TipoFiltro LIKE '%Mixto%' AND c.CantProductos > 0 AND c.CantMensualidades > 0))
                         ORDER BY v.Fecha DESC";
 
                     SqlCommand cmd = new SqlCommand(query, oConexion);
@@ -99,14 +99,10 @@ namespace AsuFit.Presentacion
                     DataTable dtVentas = new DataTable();
                     da.Fill(dtVentas);
 
+                    // Pasamos los datos. La grilla buscará los DataPropertyName que configuraste
                     dgvVentas.DataSource = dtVentas;
 
-                    if (dgvVentas.Columns.Count > 0)
-                    {
-                        dgvVentas.Columns["Fecha"].DefaultCellStyle.Format = "dd/MM/yyyy HH:mm";
-                        dgvVentas.Columns["Total Cobrado"].DefaultCellStyle.Format = "N0";
-                        dgvVentas.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-                    }
+                    // --- CÓDIGO LIMPIO: Ya no forzamos formatos visuales desde C# ---
 
                     CalcularTotales(dtVentas);
                 }
@@ -125,7 +121,6 @@ namespace AsuFit.Presentacion
                 totalRecaudado += Convert.ToDecimal(row["Total Cobrado"]);
             }
 
-            // Mantenemos la lógica de poner todo el texto en los Labels directamente
             lblCantidadVentas.Text = "Transacciones Encontradas: " + dt.Rows.Count.ToString();
             lblTotalRecaudado.Text = "TOTAL RECAUDADO: Gs. " + totalRecaudado.ToString("N0");
         }
@@ -134,10 +129,10 @@ namespace AsuFit.Presentacion
         {
             if (dgvVentas.SelectedRows.Count > 0)
             {
-                int idVenta = Convert.ToInt32(dgvVentas.SelectedRows[0].Cells["N° Transacción"].Value);
-                string cliente = dgvVentas.SelectedRows[0].Cells["Cliente"].Value.ToString();
+                // ACTUALIZADO: Leemos los datos apuntando a los nuevos "Name" de las columnas visuales
+                int idVenta = Convert.ToInt32(dgvVentas.SelectedRows[0].Cells["colHistorialId"].Value);
+                string cliente = dgvVentas.SelectedRows[0].Cells["colHistorialCliente"].Value.ToString();
 
-                // Instanciamos el formulario físico que creaste y le pasamos los datos
                 frmDetalleTransaccion ventanaDetalle = new frmDetalleTransaccion(idVenta, cliente);
                 ventanaDetalle.ShowDialog();
             }

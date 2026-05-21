@@ -3,7 +3,7 @@ using System.Data;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
-using AsuFit.Entidades;
+using AsuFit.Entidades; // <-- Ya lo tenías, excelente
 using AsuFit.Negocio;
 using AsuFit.Datos;
 
@@ -84,21 +84,19 @@ namespace AsuFit.Presentacion
 
             try
             {
-                string codigo = txtCodigoBarras.Text.Trim();
-                string nombre = txtNombre.Text.Trim();
-                string categoria = cmbCategoria.Text;
-                decimal precioVenta = Convert.ToDecimal(txtPrecio.Text);
-                int stockActual = string.IsNullOrWhiteSpace(txtStock.Text) ? 0 : Convert.ToInt32(txtStock.Text);
+                // 1. EMPAQUETAMOS LOS DATOS EN LA ENTIDAD
+                Producto objProducto = new Producto();
+                objProducto.IdProducto = 0; // Es 0 porque es un producto nuevo
+                objProducto.CodigoBarras = txtCodigoBarras.Text.Trim();
+                objProducto.Nombre = txtNombre.Text.Trim();
+                objProducto.Categoria = cmbCategoria.Text;
+                objProducto.PrecioVenta = Convert.ToDecimal(txtPrecio.Text);
+                objProducto.StockActual = string.IsNullOrWhiteSpace(txtStock.Text) ? 0 : Convert.ToInt32(txtStock.Text);
+                objProducto.IdProveedor = Convert.ToInt32(cmbProveedor.SelectedValue);
+                objProducto.PorcentajeIva = string.IsNullOrWhiteSpace(cmbIva.Text) ? 10 : Convert.ToInt32(cmbIva.Text);
 
-                // Obtenemos el ID real del proveedor seleccionado
-                int idProveedor = Convert.ToInt32(cmbProveedor.SelectedValue);
-
-                // --- SOLUCIÓN AL ERROR CS7036 ---
-                // Capturamos el valor del IVA desde el ComboBox (Si está vacío por alguna razón, asumimos 10)
-                int ivaAsignado = string.IsNullOrWhiteSpace(cmbIva.Text) ? 10 : Convert.ToInt32(cmbIva.Text);
-
-                // Ahora le pasamos los 8 parámetros que la función exige, incluyendo "ivaAsignado" al final
-                bool exito = negocio.GuardarProducto(0, codigo, nombre, categoria, precioVenta, stockActual, idProveedor, ivaAsignado);
+                // 2. ENVIAMOS LA ENTIDAD ARMADA A LA CAPA DE NEGOCIO
+                bool exito = negocio.GuardarProducto(objProducto);
 
                 if (exito)
                 {
@@ -107,15 +105,15 @@ namespace AsuFit.Presentacion
                         string carpetaDestino = @"C:\AsuFit_Fotos\";
                         if (!Directory.Exists(carpetaDestino)) Directory.CreateDirectory(carpetaDestino);
 
-                        string rutaDestinoFinal = Path.Combine(carpetaDestino, codigo + ".jpg");
+                        string rutaDestinoFinal = Path.Combine(carpetaDestino, objProducto.CodigoBarras + ".jpg");
                         if (File.Exists(rutaDestinoFinal)) File.Delete(rutaDestinoFinal);
                         File.Copy(rutaFotoOrigen, rutaDestinoFinal);
                     }
 
-                    GestorAuditoria.Registrar(usuarioActual.NombreCompleto, "Inventario", "Alta Rápida", $"Se registró el producto '{nombre}'.");
+                    GestorAuditoria.Registrar(usuarioActual.NombreCompleto, "Inventario", "Alta Rápida", $"Se registró el producto '{objProducto.Nombre}'.");
                     MessageBox.Show("¡Producto registrado con éxito!", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-                    ProductoRecienCreado = nombre;
+                    ProductoRecienCreado = objProducto.Nombre;
                     this.Close();
                 }
             }

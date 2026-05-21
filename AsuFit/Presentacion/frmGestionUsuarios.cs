@@ -2,14 +2,9 @@
 using AsuFit.Entidades;
 using AsuFit.Negocio;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Runtime.InteropServices; // <-- Agregado para el Cue Banner nativo
-using System.Text;
-using System.Threading.Tasks;
+using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
 namespace AsuFit.Presentacion
@@ -19,7 +14,6 @@ namespace AsuFit.Presentacion
         private int idUsuarioSeleccionado = 0;
         private Usuario usuarioActual;
 
-        // 1. Traemos la función nativa de Windows
         [DllImport("user32.dll", CharSet = CharSet.Auto)]
         private static extern Int32 SendMessage(IntPtr hWnd, int msg, int wParam, [MarshalAs(UnmanagedType.LPWStr)] string lParam);
         private const int EM_SETCUEBANNER = 0x1501;
@@ -29,35 +23,26 @@ namespace AsuFit.Presentacion
             InitializeComponent();
             usuarioActual = userLogueado;
 
-            // 2. Aseguramos que la letra sea negra para que resalte sobre tu nuevo fondo blanco
-            txtBuscar.ForeColor = Color.Black;
+            // --- EL CAMBIO CLAVE: Bloqueamos las columnas automáticas ---
+            dgvUsuarios.AutoGenerateColumns = false;
 
-            // 3. Aplicamos el placeholder nativo (el "1" evita que se borre al hacer clic)
+            txtBuscar.ForeColor = Color.Black;
             SendMessage(txtBuscar.Handle, EM_SETCUEBANNER, 1, "Buscar por Usuario, Nombre o Rol...");
         }
 
         private void frmGestionUsuarios_Load(object sender, EventArgs e)
         {
-            // Por defecto, cargamos solo los usuarios Activos
             CargarGrilla("Activo");
         }
 
-        // --- 1. BUSCADOR LIMPIO ---
-
         private void txtBuscar_TextChanged(object sender, EventArgs e)
         {
-            // Verificamos que la grilla tenga datos cargados
             if (dgvUsuarios.DataSource is DataTable dt)
             {
-                // 1. Filtramos dinámicamente por Nombre Completo o Username
                 dt.DefaultView.RowFilter = $"NombreCompleto LIKE '%{txtBuscar.Text}%' OR Username LIKE '%{txtBuscar.Text}%'";
-
-                // 2. ACTUALIZAMOS EL CONTADOR en base a las filas filtradas
                 lblTotal.Text = "Registros encontrados: " + dgvUsuarios.Rows.Count.ToString();
             }
         }
-
-        // --- 2. GRILLA Y FILTROS ---
 
         private void chkMostrarInactivos_CheckedChanged(object sender, EventArgs e)
         {
@@ -67,26 +52,18 @@ namespace AsuFit.Presentacion
         private void CargarGrilla(string estado)
         {
             UsuarioNegocio negocio = new UsuarioNegocio();
+
+            // Los datos se acomodarán solos según los DataPropertyName
             dgvUsuarios.DataSource = negocio.ListarUsuarios(estado);
 
-            // 1. Primero ocultamos y configuramos todo el aspecto de la tabla
-            if (dgvUsuarios.Columns["IdUsuario"] != null)
-                dgvUsuarios.Columns["IdUsuario"].Visible = false;
+            // --- CÓDIGO LIMPIO: Ya no ocultamos columnas por código ---
 
-            if (dgvUsuarios.Columns["Password"] != null)
-                dgvUsuarios.Columns["Password"].Visible = false;
-
-            dgvUsuarios.AllowUserToAddRows = false;
             lblTotal.Text = "Registros encontrados: " + dgvUsuarios.Rows.Count.ToString();
 
-            // 2. AHORA SÍ, al final de todo, limpiamos la selección para que quede en blanco
             dgvUsuarios.ClearSelection();
-
-            // Y reseteamos la variable interna por seguridad
             idUsuarioSeleccionado = 0;
         }
 
-        // OPTIMIZACIÓN: Método para no repetir el "if/else"
         private void RecargarGrilla()
         {
             if (chkMostrarInactivos.Checked)
@@ -99,11 +76,10 @@ namespace AsuFit.Presentacion
         {
             if (e.RowIndex >= 0)
             {
-                idUsuarioSeleccionado = Convert.ToInt32(dgvUsuarios.Rows[e.RowIndex].Cells["IdUsuario"].Value);
+                // ACTUALIZADO: Leemos desde el nuevo "Name" de la columna
+                idUsuarioSeleccionado = Convert.ToInt32(dgvUsuarios.Rows[e.RowIndex].Cells["colUsuarioId"].Value);
             }
         }
-
-        // --- 3. BOTONES ---
 
         private void btnNuevo_Click(object sender, EventArgs e)
         {
@@ -116,14 +92,15 @@ namespace AsuFit.Presentacion
         {
             if (idUsuarioSeleccionado > 0)
             {
+                // ACTUALIZADO: Referenciando los nuevos nombres visuales
                 Usuario userSeleccionado = new Usuario()
                 {
-                    IdUsuario = Convert.ToInt32(dgvUsuarios.CurrentRow.Cells["IdUsuario"].Value),
-                    NombreCompleto = dgvUsuarios.CurrentRow.Cells["NombreCompleto"].Value.ToString(),
-                    Username = dgvUsuarios.CurrentRow.Cells["Username"].Value.ToString(),
-                    Rol = dgvUsuarios.CurrentRow.Cells["Rol"].Value.ToString(),
-                    Email = dgvUsuarios.CurrentRow.Cells["Email"].Value.ToString(),
-                    Estado = dgvUsuarios.CurrentRow.Cells["Estado"].Value.ToString()
+                    IdUsuario = Convert.ToInt32(dgvUsuarios.CurrentRow.Cells["colUsuarioId"].Value),
+                    NombreCompleto = dgvUsuarios.CurrentRow.Cells["colUsuarioNombre"].Value.ToString(),
+                    Username = dgvUsuarios.CurrentRow.Cells["colUsuarioUsername"].Value.ToString(),
+                    Rol = dgvUsuarios.CurrentRow.Cells["colUsuarioRol"].Value.ToString(),
+                    Email = dgvUsuarios.CurrentRow.Cells["colUsuarioEmail"].Value.ToString(),
+                    Estado = dgvUsuarios.CurrentRow.Cells["colUsuarioEstado"].Value.ToString()
                 };
 
                 frmRegistrarUsuario frm = new frmRegistrarUsuario(userSeleccionado);
@@ -140,9 +117,10 @@ namespace AsuFit.Presentacion
         {
             if (idUsuarioSeleccionado > 0)
             {
-                int idUsuario = Convert.ToInt32(dgvUsuarios.CurrentRow.Cells["IdUsuario"].Value);
-                string estadoActual = dgvUsuarios.CurrentRow.Cells["Estado"].Value.ToString();
-                string nombreUsuario = dgvUsuarios.CurrentRow.Cells["Username"].Value.ToString();
+                // ACTUALIZADO: Referenciando los nuevos nombres visuales
+                int idUsuario = Convert.ToInt32(dgvUsuarios.CurrentRow.Cells["colUsuarioId"].Value);
+                string estadoActual = dgvUsuarios.CurrentRow.Cells["colUsuarioEstado"].Value.ToString();
+                string nombreUsuario = dgvUsuarios.CurrentRow.Cells["colUsuarioUsername"].Value.ToString();
 
                 string nuevoEstado = estadoActual == "Activo" ? "Inactivo" : "Activo";
 
@@ -169,8 +147,9 @@ namespace AsuFit.Presentacion
         {
             if (idUsuarioSeleccionado > 0)
             {
-                int idUsuario = Convert.ToInt32(dgvUsuarios.CurrentRow.Cells["IdUsuario"].Value);
-                string nombreUsuario = dgvUsuarios.CurrentRow.Cells["Username"].Value.ToString();
+                // ACTUALIZADO: Referenciando los nuevos nombres visuales
+                int idUsuario = Convert.ToInt32(dgvUsuarios.CurrentRow.Cells["colUsuarioId"].Value);
+                string nombreUsuario = dgvUsuarios.CurrentRow.Cells["colUsuarioUsername"].Value.ToString();
 
                 DialogResult pregunta = MessageBox.Show($"¿Deseás restablecer la contraseña del usuario '{nombreUsuario}' a '12345'?",
                                                         "Confirmar Reset", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);

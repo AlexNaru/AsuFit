@@ -28,9 +28,9 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea7 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend7 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series7 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.lblUtilidad = new System.Windows.Forms.Label();
             this.lblEgresos = new System.Windows.Forms.Label();
             this.lblIngresos = new System.Windows.Forms.Label();
@@ -39,8 +39,14 @@
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.dgvVencimientos = new System.Windows.Forms.DataGridView();
+            this.colProxNombre = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colProxApellido = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colProxVencimiento = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.lblProximosVencimientos = new System.Windows.Forms.Label();
             this.dgvVencidos = new System.Windows.Forms.DataGridView();
+            this.colVencidoNombre = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colVencidoApellido = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colVencidoVencimiento = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.lbl = new System.Windows.Forms.Label();
             this.lblVencimientos = new System.Windows.Forms.Label();
             this.lblActivos = new System.Windows.Forms.Label();
@@ -56,9 +62,13 @@
             this.chartFinanzas = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.panel8 = new System.Windows.Forms.Panel();
             this.dgvProductosStock = new System.Windows.Forms.DataGridView();
+            this.colStockNombre = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colStockActual = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.label6 = new System.Windows.Forms.Label();
             this.panel9 = new System.Windows.Forms.Panel();
             this.dgvProductosStockBajo = new System.Windows.Forms.DataGridView();
+            this.colBajoNombre = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colBajoActual = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.label8 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dgvVencimientos)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvVencidos)).BeginInit();
@@ -145,6 +155,10 @@
             this.dgvVencimientos.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.dgvVencimientos.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.dgvVencimientos.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgvVencimientos.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.colProxNombre,
+            this.colProxApellido,
+            this.colProxVencimiento});
             this.dgvVencimientos.Location = new System.Drawing.Point(27, 43);
             this.dgvVencimientos.Name = "dgvVencimientos";
             this.dgvVencimientos.ReadOnly = true;
@@ -157,10 +171,34 @@
             this.dgvVencimientos.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.dgvVencimientos_CellFormatting);
             this.dgvVencimientos.DataBindingComplete += new System.Windows.Forms.DataGridViewBindingCompleteEventHandler(this.dgvVencimientos_DataBindingComplete);
             // 
+            // colProxNombre
+            // 
+            this.colProxNombre.DataPropertyName = "Nombre";
+            this.colProxNombre.HeaderText = "Nombre";
+            this.colProxNombre.MinimumWidth = 8;
+            this.colProxNombre.Name = "colProxNombre";
+            this.colProxNombre.ReadOnly = true;
+            // 
+            // colProxApellido
+            // 
+            this.colProxApellido.DataPropertyName = "Apellido";
+            this.colProxApellido.HeaderText = "Apellido";
+            this.colProxApellido.MinimumWidth = 8;
+            this.colProxApellido.Name = "colProxApellido";
+            this.colProxApellido.ReadOnly = true;
+            // 
+            // colProxVencimiento
+            // 
+            this.colProxVencimiento.DataPropertyName = "FechaVencimiento";
+            this.colProxVencimiento.HeaderText = "Vencimiento";
+            this.colProxVencimiento.MinimumWidth = 8;
+            this.colProxVencimiento.Name = "colProxVencimiento";
+            this.colProxVencimiento.ReadOnly = true;
+            // 
             // lblProximosVencimientos
             // 
             this.lblProximosVencimientos.AutoSize = true;
-            this.lblProximosVencimientos.Location = new System.Drawing.Point(206, 19);
+            this.lblProximosVencimientos.Location = new System.Drawing.Point(206, 13);
             this.lblProximosVencimientos.Name = "lblProximosVencimientos";
             this.lblProximosVencimientos.Size = new System.Drawing.Size(18, 20);
             this.lblProximosVencimientos.TabIndex = 11;
@@ -172,6 +210,10 @@
             this.dgvVencidos.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.dgvVencidos.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.dgvVencidos.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgvVencidos.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.colVencidoNombre,
+            this.colVencidoApellido,
+            this.colVencidoVencimiento});
             this.dgvVencidos.Location = new System.Drawing.Point(24, 43);
             this.dgvVencidos.Name = "dgvVencidos";
             this.dgvVencidos.ReadOnly = true;
@@ -183,6 +225,30 @@
             this.dgvVencidos.TabIndex = 12;
             this.dgvVencidos.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.dgvVencidos_CellFormatting);
             this.dgvVencidos.DataBindingComplete += new System.Windows.Forms.DataGridViewBindingCompleteEventHandler(this.dgvVencidos_DataBindingComplete);
+            // 
+            // colVencidoNombre
+            // 
+            this.colVencidoNombre.DataPropertyName = "Nombre";
+            this.colVencidoNombre.HeaderText = "Nombre";
+            this.colVencidoNombre.MinimumWidth = 8;
+            this.colVencidoNombre.Name = "colVencidoNombre";
+            this.colVencidoNombre.ReadOnly = true;
+            // 
+            // colVencidoApellido
+            // 
+            this.colVencidoApellido.DataPropertyName = "Apellido";
+            this.colVencidoApellido.HeaderText = "Apellido";
+            this.colVencidoApellido.MinimumWidth = 8;
+            this.colVencidoApellido.Name = "colVencidoApellido";
+            this.colVencidoApellido.ReadOnly = true;
+            // 
+            // colVencidoVencimiento
+            // 
+            this.colVencidoVencimiento.DataPropertyName = "FechaVencimiento";
+            this.colVencidoVencimiento.HeaderText = "FechaVencimiento";
+            this.colVencidoVencimiento.MinimumWidth = 8;
+            this.colVencidoVencimiento.Name = "colVencidoVencimiento";
+            this.colVencidoVencimiento.ReadOnly = true;
             // 
             // lbl
             // 
@@ -302,17 +368,17 @@
             // 
             // chartFinanzas
             // 
-            chartArea7.Name = "ChartArea1";
-            this.chartFinanzas.ChartAreas.Add(chartArea7);
-            legend7.Enabled = false;
-            legend7.Name = "Legend1";
-            this.chartFinanzas.Legends.Add(legend7);
+            chartArea1.Name = "ChartArea1";
+            this.chartFinanzas.ChartAreas.Add(chartArea1);
+            legend1.Enabled = false;
+            legend1.Name = "Legend1";
+            this.chartFinanzas.Legends.Add(legend1);
             this.chartFinanzas.Location = new System.Drawing.Point(27, 58);
             this.chartFinanzas.Name = "chartFinanzas";
-            series7.ChartArea = "ChartArea1";
-            series7.Legend = "Legend1";
-            series7.Name = "Series1";
-            this.chartFinanzas.Series.Add(series7);
+            series1.ChartArea = "ChartArea1";
+            series1.Legend = "Legend1";
+            series1.Name = "Series1";
+            this.chartFinanzas.Series.Add(series1);
             this.chartFinanzas.Size = new System.Drawing.Size(565, 360);
             this.chartFinanzas.TabIndex = 6;
             this.chartFinanzas.Text = "chart1";
@@ -337,6 +403,9 @@
             this.dgvProductosStock.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.dgvProductosStock.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.dgvProductosStock.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgvProductosStock.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.colStockNombre,
+            this.colStockActual});
             this.dgvProductosStock.Location = new System.Drawing.Point(24, 43);
             this.dgvProductosStock.Name = "dgvProductosStock";
             this.dgvProductosStock.ReadOnly = true;
@@ -347,6 +416,22 @@
             this.dgvProductosStock.Size = new System.Drawing.Size(451, 150);
             this.dgvProductosStock.TabIndex = 12;
             this.dgvProductosStock.DataBindingComplete += new System.Windows.Forms.DataGridViewBindingCompleteEventHandler(this.dgvProductosStock_DataBindingComplete);
+            // 
+            // colStockNombre
+            // 
+            this.colStockNombre.DataPropertyName = "Nombre";
+            this.colStockNombre.HeaderText = "Nombre";
+            this.colStockNombre.MinimumWidth = 8;
+            this.colStockNombre.Name = "colStockNombre";
+            this.colStockNombre.ReadOnly = true;
+            // 
+            // colStockActual
+            // 
+            this.colStockActual.DataPropertyName = "StockActual";
+            this.colStockActual.HeaderText = "Stock Actual";
+            this.colStockActual.MinimumWidth = 8;
+            this.colStockActual.Name = "colStockActual";
+            this.colStockActual.ReadOnly = true;
             // 
             // label6
             // 
@@ -377,6 +462,9 @@
             this.dgvProductosStockBajo.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.dgvProductosStockBajo.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.dgvProductosStockBajo.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgvProductosStockBajo.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.colBajoNombre,
+            this.colBajoActual});
             this.dgvProductosStockBajo.Location = new System.Drawing.Point(24, 42);
             this.dgvProductosStockBajo.Name = "dgvProductosStockBajo";
             this.dgvProductosStockBajo.ReadOnly = true;
@@ -386,7 +474,24 @@
             this.dgvProductosStockBajo.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dgvProductosStockBajo.Size = new System.Drawing.Size(451, 150);
             this.dgvProductosStockBajo.TabIndex = 12;
+            this.dgvProductosStockBajo.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.dgvProductosStockBajo_CellFormatting);
             this.dgvProductosStockBajo.DataBindingComplete += new System.Windows.Forms.DataGridViewBindingCompleteEventHandler(this.dgvProductosStockBajo_DataBindingComplete);
+            // 
+            // colBajoNombre
+            // 
+            this.colBajoNombre.DataPropertyName = "Nombre";
+            this.colBajoNombre.HeaderText = "Nombre";
+            this.colBajoNombre.MinimumWidth = 8;
+            this.colBajoNombre.Name = "colBajoNombre";
+            this.colBajoNombre.ReadOnly = true;
+            // 
+            // colBajoActual
+            // 
+            this.colBajoActual.DataPropertyName = "StockActual";
+            this.colBajoActual.HeaderText = "Stock Actual";
+            this.colBajoActual.MinimumWidth = 8;
+            this.colBajoActual.Name = "colBajoActual";
+            this.colBajoActual.ReadOnly = true;
             // 
             // label8
             // 
@@ -471,5 +576,15 @@
         private System.Windows.Forms.Panel panel9;
         private System.Windows.Forms.DataGridView dgvProductosStockBajo;
         private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colProxNombre;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colProxApellido;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colProxVencimiento;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colStockNombre;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colStockActual;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colVencidoNombre;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colVencidoApellido;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colVencidoVencimiento;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colBajoNombre;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colBajoActual;
     }
 }

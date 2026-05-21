@@ -22,6 +22,9 @@ namespace AsuFit.Presentacion
         {
             InitializeComponent();
             usuarioActual = userLogueado;
+
+            // --- EL CAMBIO CLAVE: Bloqueamos las columnas automáticas ---
+            dgvProveedores.AutoGenerateColumns = false;
         }
 
         private void frmProveedores_Load(object sender, EventArgs e)
@@ -34,8 +37,6 @@ namespace AsuFit.Presentacion
         private void ConfigurarBuscador()
         {
             txtBuscarProveedor.ForeColor = System.Drawing.Color.Black;
-
-            // El "1" le dice al sistema que mantenga el texto aunque el control tenga el foco
             SendMessage(txtBuscarProveedor.Handle, EM_SETCUEBANNER, 1, "Buscar por Nombre o RUC...");
         }
 
@@ -43,16 +44,10 @@ namespace AsuFit.Presentacion
         {
             try
             {
-                // Traemos los datos de SQL
                 dtProveedores = negocio.ListarProveedores();
-
                 if (dtProveedores != null)
                 {
-                    dgvProveedores.AutoGenerateColumns = true;
-
-                    // ¡EL CAMBIO CLAVE! 
-                    // No asignamos el DataSource directamente aquí. 
-                    // Llamamos a FiltrarDatos() para que aplique el filtro de "Activos" de entrada.
+                    // Aplicamos el filtrado inicial al cargar
                     FiltrarDatos();
                 }
             }
@@ -66,48 +61,31 @@ namespace AsuFit.Presentacion
         {
             if (dtProveedores == null) return;
 
-            // 1. EL CAMBIO CLAVE: O filtramos estrictamente por 'Inactivo', o estrictamente por 'Activo'
             string filtroEstado = chkMostrarInactivos.Checked ? "Estado = 'Inactivo'" : "Estado = 'Activo'";
-
-            // 2. Buscador por texto
             string textoBusqueda = txtBuscarProveedor.Text == "Buscar por Nombre o RUC..." ? "" : txtBuscarProveedor.Text.Trim();
 
             string filtroFinal = filtroEstado;
 
-            // 3. Si el usuario escribió algo en el buscador, lo combinamos con el estado actual
             if (!string.IsNullOrEmpty(textoBusqueda))
             {
                 string busquedaSegura = textoBusqueda.Replace("'", "''");
-                string filtroTexto = $"(Nombre LIKE '%{busquedaSegura}%' OR RUC LIKE '%{busquedaSegura}%')";
-
-                // Como filtroEstado siempre tiene un valor ahora, simplemente los unimos con un AND
-                filtroFinal = $"{filtroEstado} AND {filtroTexto}";
+                filtroFinal = $"{filtroEstado} AND (Nombre LIKE '%{busquedaSegura}%' OR RUC LIKE '%{busquedaSegura}%')";
             }
 
-            // 4. Aplicamos los filtros a la vista de la grilla
             DataView dv = dtProveedores.DefaultView;
             dv.RowFilter = filtroFinal;
             dgvProveedores.DataSource = dv;
 
-            FormatearGrilla();
+            // --- CÓDIGO LIMPIO: Ya no forzamos visibilidad de columnas aquí ---
+
             ActualizarResumen();
             dgvProveedores.ClearSelection();
-        }
-
-        private void FormatearGrilla()
-        {
-            if (dgvProveedores.Columns.Contains("IdProveedor")) dgvProveedores.Columns["IdProveedor"].Visible = false;
-            dgvProveedores.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-            dgvProveedores.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            dgvProveedores.AllowUserToAddRows = false;
-            dgvProveedores.ReadOnly = true;
         }
 
         private void ActualizarResumen()
         {
             if (dtProveedores == null) return;
 
-            // Contamos directamente desde el DataTable original para los totales globales
             int total = dtProveedores.Rows.Count;
             int activos = 0;
             int inactivos = 0;
@@ -118,15 +96,9 @@ namespace AsuFit.Presentacion
                 else inactivos++;
             }
 
-            // ASIGNACIÓN A LABELS: Asegurate de que los nombres coincidan exactamente
             lblTotal.Text = total.ToString();
             lblActivos.Text = activos.ToString();
             lblInactivos.Text = inactivos.ToString();
-
-            // Forzamos el refresco visual de los labels
-            lblTotal.Refresh();
-            lblActivos.Refresh();
-            lblInactivos.Refresh();
         }
 
         private void chkMostrarInactivos_CheckedChanged(object sender, EventArgs e)
@@ -140,16 +112,17 @@ namespace AsuFit.Presentacion
             {
                 DataGridViewRow fila = dgvProveedores.Rows[e.RowIndex];
 
-                txtId.Text = fila.Cells["IdProveedor"].Value.ToString();
-                txtRuc.Text = fila.Cells["RUC"].Value.ToString();
-                txtNombre.Text = fila.Cells["Nombre"].Value.ToString();
-                cmbCategoria.Text = fila.Cells["Categoria"].Value.ToString();
-                txtContacto.Text = fila.Cells["Contacto"].Value.ToString();
-                txtTelefono.Text = fila.Cells["Telefono"].Value.ToString();
-                txtCorreo.Text = fila.Cells["Correo"].Value.ToString();
-                txtDireccion.Text = fila.Cells["Direccion"].Value.ToString();
-                txtCiudad.Text = fila.Cells["Ciudad"].Value.ToString();
-                chkActivo.Checked = (fila.Cells["Estado"].Value.ToString() == "Activo");
+                // ACTUALIZADO: Usamos los nuevos Name de las columnas
+                txtId.Text = fila.Cells["colProvId"].Value.ToString();
+                txtRuc.Text = fila.Cells["colProvRuc"].Value.ToString();
+                txtNombre.Text = fila.Cells["colProvNombre"].Value.ToString();
+                cmbCategoria.Text = fila.Cells["colProvCategoria"].Value.ToString();
+                txtContacto.Text = fila.Cells["colProvContacto"].Value.ToString();
+                txtTelefono.Text = fila.Cells["colProvTelefono"].Value.ToString();
+                txtCorreo.Text = fila.Cells["colProvCorreo"].Value.ToString();
+                txtDireccion.Text = fila.Cells["colProvDireccion"].Value.ToString();
+                txtCiudad.Text = fila.Cells["colProvCiudad"].Value.ToString();
+                chkActivo.Checked = (fila.Cells["colProvEstado"].Value.ToString() == "Activo");
             }
         }
 
@@ -168,37 +141,29 @@ namespace AsuFit.Presentacion
 
             try
             {
-                // Convertimos el valor del CheckBox a texto para la Base de Datos
-                string estadoTexto = chkActivo.Checked ? "Activo" : "Inactivo";
+                Proveedor objProveedor = new Proveedor();
+                objProveedor.IdProveedor = string.IsNullOrWhiteSpace(txtId.Text) ? 0 : Convert.ToInt32(txtId.Text);
+                objProveedor.Nombre = txtNombre.Text.Trim();
+                objProveedor.RUC = txtRuc.Text.Trim();
+                objProveedor.Categoria = cmbCategoria.Text;
+                objProveedor.Contacto = txtContacto.Text.Trim();
+                objProveedor.Telefono = txtTelefono.Text.Trim();
+                objProveedor.Correo = txtCorreo.Text.Trim();
+                objProveedor.Direccion = txtDireccion.Text.Trim();
+                objProveedor.Ciudad = txtCiudad.Text.Trim();
+                objProveedor.Estado = chkActivo.Checked ? "Activo" : "Inactivo";
 
-                if (string.IsNullOrWhiteSpace(txtId.Text))
+                bool exito = negocio.GuardarProveedor(objProveedor);
+
+                if (exito)
                 {
-                    // NUEVO PROVEEDOR
-                    bool exito = negocio.InsertarProveedor(txtNombre.Text, txtRuc.Text, cmbCategoria.Text, txtContacto.Text, txtTelefono.Text, txtCorreo.Text, txtDireccion.Text, txtCiudad.Text, estadoTexto);
-                    if (exito)
-                    {
-                        // --- AUDITORÍA: NUEVO ---
-                        GestorAuditoria.Registrar(usuarioActual.NombreCompleto, "Proveedores", "Alta", $"Se registró al proveedor '{txtNombre.Text}'.");
+                    string accion = objProveedor.IdProveedor == 0 ? "Alta" : "Edición";
+                    GestorAuditoria.Registrar(usuarioActual.NombreCompleto, "Proveedores", accion, $"Se gestionó al proveedor '{objProveedor.Nombre}'.");
+                    MessageBox.Show("Proveedor guardado correctamente.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-                        MessageBox.Show("Proveedor registrado con éxito.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    } // <-- Aquí estaba el corchete "]" por error. Ya está corregido con "}"
+                    LimpiarFormulario();
+                    CargarGrilla();
                 }
-                else
-                {
-                    // EDITAR EXISTENTE
-                    int idProveedor = Convert.ToInt32(txtId.Text);
-                    bool exito = negocio.EditarProveedor(idProveedor, txtNombre.Text, txtRuc.Text, cmbCategoria.Text, txtContacto.Text, txtTelefono.Text, txtCorreo.Text, txtDireccion.Text, txtCiudad.Text, estadoTexto);
-                    if (exito)
-                    {
-                        // --- AUDITORÍA: EDICIÓN ---
-                        GestorAuditoria.Registrar(usuarioActual.NombreCompleto, "Proveedores", "Edición", $"Se modificaron los datos del proveedor '{txtNombre.Text}'.");
-
-                        MessageBox.Show("Proveedor actualizado correctamente.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    }
-                }
-
-                LimpiarFormulario();
-                CargarGrilla();
             }
             catch (Exception ex)
             {
@@ -217,14 +182,11 @@ namespace AsuFit.Presentacion
             try
             {
                 int idProveedor = Convert.ToInt32(txtId.Text);
-
-                // Si está marcado (Activo), el nuevo estado será "Inactivo", y viceversa
                 string nuevoEstadoTexto = chkActivo.Checked ? "Inactivo" : "Activo";
 
-                bool exito = negocio.CambiarEstado(idProveedor, nuevoEstadoTexto);
-                if (exito)
+                if (negocio.CambiarEstado(idProveedor, nuevoEstadoTexto))
                 {
-                    GestorAuditoria.Registrar(usuarioActual.NombreCompleto, "Proveedores", "Cambio de Estado", $"El estado del proveedor ID {idProveedor} cambió a {nuevoEstadoTexto}.");
+                    GestorAuditoria.Registrar(usuarioActual.NombreCompleto, "Proveedores", "Cambio de Estado", $"Estado del proveedor ID {idProveedor} a {nuevoEstadoTexto}.");
                     MessageBox.Show($"El estado del proveedor ha sido cambiado a: {nuevoEstadoTexto}.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     LimpiarFormulario();
                     CargarGrilla();

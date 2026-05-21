@@ -412,6 +412,8 @@
             this.ClientSize = new System.Drawing.Size(1778, 947);
             this.Controls.Add(this.pnlContenedor);
             this.Controls.Add(this.pnlSidebar);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.MaximizeBox = false;
             this.Name = "frmDashboard";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Tag = "";

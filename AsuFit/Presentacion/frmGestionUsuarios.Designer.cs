@@ -28,23 +28,31 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
             this.btnEstado = new System.Windows.Forms.Button();
             this.btnEditar = new System.Windows.Forms.Button();
             this.btnNuevo = new System.Windows.Forms.Button();
             this.btnResetearClave = new System.Windows.Forms.Button();
             this.dgvUsuarios = new System.Windows.Forms.DataGridView();
+            this.colUsuarioId = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colUsuarioNombre = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colUsuarioUsername = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colUsuarioRol = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colUsuarioEmail = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colUsuarioEstado = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colUsuarioFecha = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.txtBuscar = new System.Windows.Forms.TextBox();
             this.lblTotal = new System.Windows.Forms.Label();
             this.chkMostrarInactivos = new System.Windows.Forms.CheckBox();
+            this.label1 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dgvUsuarios)).BeginInit();
             this.SuspendLayout();
             // 
             // btnEstado
             // 
-            this.btnEstado.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnEstado.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(30)))), ((int)(((byte)(30)))));
-            this.btnEstado.ForeColor = System.Drawing.Color.White;
-            this.btnEstado.Location = new System.Drawing.Point(568, 520);
+            this.btnEstado.BackColor = System.Drawing.Color.White;
+            this.btnEstado.ForeColor = System.Drawing.Color.Black;
+            this.btnEstado.Location = new System.Drawing.Point(811, 362);
             this.btnEstado.Name = "btnEstado";
             this.btnEstado.Size = new System.Drawing.Size(180, 49);
             this.btnEstado.TabIndex = 9;
@@ -54,10 +62,9 @@
             // 
             // btnEditar
             // 
-            this.btnEditar.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnEditar.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(30)))), ((int)(((byte)(30)))));
-            this.btnEditar.ForeColor = System.Drawing.Color.White;
-            this.btnEditar.Location = new System.Drawing.Point(415, 520);
+            this.btnEditar.BackColor = System.Drawing.Color.White;
+            this.btnEditar.ForeColor = System.Drawing.Color.Black;
+            this.btnEditar.Location = new System.Drawing.Point(658, 362);
             this.btnEditar.Name = "btnEditar";
             this.btnEditar.Size = new System.Drawing.Size(86, 49);
             this.btnEditar.TabIndex = 8;
@@ -67,10 +74,9 @@
             // 
             // btnNuevo
             // 
-            this.btnNuevo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnNuevo.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(30)))), ((int)(((byte)(30)))));
-            this.btnNuevo.ForeColor = System.Drawing.Color.White;
-            this.btnNuevo.Location = new System.Drawing.Point(253, 520);
+            this.btnNuevo.BackColor = System.Drawing.Color.White;
+            this.btnNuevo.ForeColor = System.Drawing.Color.Black;
+            this.btnNuevo.Location = new System.Drawing.Point(496, 362);
             this.btnNuevo.Name = "btnNuevo";
             this.btnNuevo.Size = new System.Drawing.Size(91, 49);
             this.btnNuevo.TabIndex = 7;
@@ -80,10 +86,9 @@
             // 
             // btnResetearClave
             // 
-            this.btnResetearClave.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnResetearClave.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(30)))), ((int)(((byte)(30)))));
-            this.btnResetearClave.ForeColor = System.Drawing.Color.White;
-            this.btnResetearClave.Location = new System.Drawing.Point(805, 520);
+            this.btnResetearClave.BackColor = System.Drawing.Color.White;
+            this.btnResetearClave.ForeColor = System.Drawing.Color.Black;
+            this.btnResetearClave.Location = new System.Drawing.Point(1048, 362);
             this.btnResetearClave.Name = "btnResetearClave";
             this.btnResetearClave.Size = new System.Drawing.Size(168, 49);
             this.btnResetearClave.TabIndex = 10;
@@ -96,12 +101,19 @@
             this.dgvUsuarios.AllowUserToAddRows = false;
             this.dgvUsuarios.AllowUserToResizeColumns = false;
             this.dgvUsuarios.AllowUserToResizeRows = false;
-            this.dgvUsuarios.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
+            this.dgvUsuarios.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.dgvUsuarios.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.dgvUsuarios.BackgroundColor = System.Drawing.Color.White;
             this.dgvUsuarios.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgvUsuarios.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.colUsuarioId,
+            this.colUsuarioNombre,
+            this.colUsuarioUsername,
+            this.colUsuarioRol,
+            this.colUsuarioEmail,
+            this.colUsuarioEstado,
+            this.colUsuarioFecha});
             this.dgvUsuarios.Location = new System.Drawing.Point(18, 101);
             this.dgvUsuarios.Name = "dgvUsuarios";
             this.dgvUsuarios.ReadOnly = true;
@@ -109,16 +121,75 @@
             this.dgvUsuarios.RowHeadersWidth = 62;
             this.dgvUsuarios.RowTemplate.Height = 28;
             this.dgvUsuarios.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgvUsuarios.Size = new System.Drawing.Size(1198, 202);
+            this.dgvUsuarios.Size = new System.Drawing.Size(1198, 246);
             this.dgvUsuarios.TabIndex = 12;
             this.dgvUsuarios.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvUsuarios_CellClick);
             this.dgvUsuarios.DataBindingComplete += new System.Windows.Forms.DataGridViewBindingCompleteEventHandler(this.dgvUsuarios_DataBindingComplete);
+            // 
+            // colUsuarioId
+            // 
+            this.colUsuarioId.DataPropertyName = "IdUsuario";
+            this.colUsuarioId.HeaderText = "Id Usuario";
+            this.colUsuarioId.MinimumWidth = 8;
+            this.colUsuarioId.Name = "colUsuarioId";
+            this.colUsuarioId.ReadOnly = true;
+            this.colUsuarioId.Visible = false;
+            // 
+            // colUsuarioNombre
+            // 
+            this.colUsuarioNombre.DataPropertyName = "NombreCompleto";
+            this.colUsuarioNombre.HeaderText = "Nombre Completo";
+            this.colUsuarioNombre.MinimumWidth = 8;
+            this.colUsuarioNombre.Name = "colUsuarioNombre";
+            this.colUsuarioNombre.ReadOnly = true;
+            // 
+            // colUsuarioUsername
+            // 
+            this.colUsuarioUsername.DataPropertyName = "Username";
+            this.colUsuarioUsername.HeaderText = "Username";
+            this.colUsuarioUsername.MinimumWidth = 8;
+            this.colUsuarioUsername.Name = "colUsuarioUsername";
+            this.colUsuarioUsername.ReadOnly = true;
+            // 
+            // colUsuarioRol
+            // 
+            this.colUsuarioRol.DataPropertyName = "Rol";
+            this.colUsuarioRol.HeaderText = "Rol";
+            this.colUsuarioRol.MinimumWidth = 8;
+            this.colUsuarioRol.Name = "colUsuarioRol";
+            this.colUsuarioRol.ReadOnly = true;
+            // 
+            // colUsuarioEmail
+            // 
+            this.colUsuarioEmail.DataPropertyName = "Email";
+            this.colUsuarioEmail.HeaderText = "Email";
+            this.colUsuarioEmail.MinimumWidth = 8;
+            this.colUsuarioEmail.Name = "colUsuarioEmail";
+            this.colUsuarioEmail.ReadOnly = true;
+            // 
+            // colUsuarioEstado
+            // 
+            this.colUsuarioEstado.DataPropertyName = "Estado";
+            this.colUsuarioEstado.HeaderText = "Estado";
+            this.colUsuarioEstado.MinimumWidth = 8;
+            this.colUsuarioEstado.Name = "colUsuarioEstado";
+            this.colUsuarioEstado.ReadOnly = true;
+            // 
+            // colUsuarioFecha
+            // 
+            this.colUsuarioFecha.DataPropertyName = "FechaRegistro";
+            dataGridViewCellStyle4.Format = "dd/MM/yyyy HH:mm";
+            this.colUsuarioFecha.DefaultCellStyle = dataGridViewCellStyle4;
+            this.colUsuarioFecha.HeaderText = "Fecha de Registro";
+            this.colUsuarioFecha.MinimumWidth = 8;
+            this.colUsuarioFecha.Name = "colUsuarioFecha";
+            this.colUsuarioFecha.ReadOnly = true;
             // 
             // txtBuscar
             // 
             this.txtBuscar.BackColor = System.Drawing.Color.White;
             this.txtBuscar.ForeColor = System.Drawing.Color.Black;
-            this.txtBuscar.Location = new System.Drawing.Point(285, 32);
+            this.txtBuscar.Location = new System.Drawing.Point(367, 61);
             this.txtBuscar.Name = "txtBuscar";
             this.txtBuscar.Size = new System.Drawing.Size(386, 26);
             this.txtBuscar.TabIndex = 11;
@@ -136,7 +207,7 @@
             // chkMostrarInactivos
             // 
             this.chkMostrarInactivos.AutoSize = true;
-            this.chkMostrarInactivos.Location = new System.Drawing.Point(781, 34);
+            this.chkMostrarInactivos.Location = new System.Drawing.Point(993, 63);
             this.chkMostrarInactivos.Name = "chkMostrarInactivos";
             this.chkMostrarInactivos.Size = new System.Drawing.Size(223, 24);
             this.chkMostrarInactivos.TabIndex = 14;
@@ -144,11 +215,21 @@
             this.chkMostrarInactivos.UseVisualStyleBackColor = true;
             this.chkMostrarInactivos.CheckedChanged += new System.EventHandler(this.chkMostrarInactivos_CheckedChanged);
             // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(13, 13);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(198, 20);
+            this.label1.TabIndex = 15;
+            this.label1.Text = "GESTIÓN DE USUARIOS";
+            // 
             // frmGestionUsuarios
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1242, 587);
+            this.ClientSize = new System.Drawing.Size(1242, 427);
+            this.Controls.Add(this.label1);
             this.Controls.Add(this.chkMostrarInactivos);
             this.Controls.Add(this.lblTotal);
             this.Controls.Add(this.dgvUsuarios);
@@ -177,5 +258,13 @@
         private System.Windows.Forms.TextBox txtBuscar;
         private System.Windows.Forms.Label lblTotal;
         private System.Windows.Forms.CheckBox chkMostrarInactivos;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colUsuarioId;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colUsuarioNombre;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colUsuarioUsername;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colUsuarioRol;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colUsuarioEmail;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colUsuarioEstado;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colUsuarioFecha;
+        private System.Windows.Forms.Label label1;
     }
 }

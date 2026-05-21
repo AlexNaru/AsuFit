@@ -11,6 +11,9 @@ namespace AsuFit.Presentacion
         public frmGestionGastos()
         {
             InitializeComponent();
+
+            // --- EL CAMBIO CLAVE: Bloqueamos las columnas automáticas ---
+            dgvGastos.AutoGenerateColumns = false;
         }
 
         private void frmGestionGastos_Load(object sender, EventArgs e)
@@ -23,15 +26,13 @@ namespace AsuFit.Presentacion
             try
             {
                 GastoNegocio negocio = new GastoNegocio();
+
+                // Al asignar el DataSource, los datos buscarán los DataPropertyName configurados visualmente
                 dgvGastos.DataSource = negocio.ListarGastos();
 
-                if (dgvGastos.Columns.Count > 0)
-                {
-                    // Ocultamos datos técnicos o redundantes
-                    if (dgvGastos.Columns.Contains("IdGasto")) dgvGastos.Columns["IdGasto"].Visible = false;
+                // --- CÓDIGO LIMPIO: Ya no ocultamos columnas ni damos formato desde aquí ---
 
-                    dgvGastos.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-                }
+                dgvGastos.ClearSelection();
             }
             catch (Exception ex)
             {
@@ -39,21 +40,22 @@ namespace AsuFit.Presentacion
             }
         }
 
-        // --- EL EVENTO PARA EVITAR LA SELECCIÓN AUTOMÁTICA QUE VIMOS HOY ---
-        private void dgvGastos_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
-        {
-            dgvGastos.ClearSelection();
-        }
-
         private void btnGuardar_Click(object sender, EventArgs e)
         {
+            if (string.IsNullOrWhiteSpace(txtDescripcion.Text) || string.IsNullOrWhiteSpace(txtMonto.Text) || cmbCategoria.SelectedIndex == -1)
+            {
+                MessageBox.Show("Por favor, complete todos los campos antes de guardar.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
             try
             {
                 Gasto nuevoGasto = new Gasto();
                 nuevoGasto.Descripcion = txtDescripcion.Text.Trim();
                 nuevoGasto.Categoria = cmbCategoria.Text;
                 nuevoGasto.Monto = Convert.ToDecimal(txtMonto.Text.Trim().Replace(".", ""));
-                // Asumimos que el usuario actual se llama "Admin" (esto luego lo conectamos con tu Login real)
+
+                // Asumimos que el usuario actual se llama "Admin" (luego lo conectaremos al Login)
                 nuevoGasto.UsuarioRegistra = "Admin";
 
                 GastoNegocio negocio = new GastoNegocio();
@@ -65,12 +67,12 @@ namespace AsuFit.Presentacion
 
                     MessageBox.Show("Gasto registrado correctamente en la caja.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-                    // Limpiamos los campos para el siguiente gasto
+                    // Limpiamos los campos
                     txtDescripcion.Clear();
                     txtMonto.Clear();
                     cmbCategoria.SelectedIndex = -1;
 
-                    // Recargamos la tabla para ver el nuevo registro
+                    // Recargamos la tabla
                     CargarGrillaGastos();
                 }
                 else
@@ -84,14 +86,13 @@ namespace AsuFit.Presentacion
             }
         }
 
-        private void dgvGastos_DataBindingComplete_1(object sender, DataGridViewBindingCompleteEventArgs e)
+        private void dgvGastos_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
         {
             dgvGastos.ClearSelection();
         }
 
         private void frmGestionGastos_Click(object sender, EventArgs e)
         {
-            // Cambiá el nombre si tu grilla se llama distinto
             dgvGastos.ClearSelection();
         }
     }

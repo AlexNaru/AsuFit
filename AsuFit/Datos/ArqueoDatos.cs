@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AsuFit.Entidades;
+using System;
 using System.Data;
 using System.Data.SqlClient;
 
@@ -9,7 +10,7 @@ namespace AsuFit.Datos
         // =======================================================
         // 1. ABRIR CAJA 
         // =======================================================
-        public bool AbrirCaja(int idUsuario, string cajeroNombre, decimal fondoInicial)
+        public bool AbrirCaja(TurnoCaja obj)
         {
             bool respuesta = false;
             using (SqlConnection oConexion = Conexion.ObtenerConexion())
@@ -20,17 +21,14 @@ namespace AsuFit.Datos
                                      VALUES (@idUser, @nombre, @fondo, 'Abierta')";
 
                     SqlCommand cmd = new SqlCommand(query, oConexion);
-                    cmd.Parameters.AddWithValue("@idUser", idUsuario);
-                    cmd.Parameters.AddWithValue("@nombre", cajeroNombre);
-                    cmd.Parameters.AddWithValue("@fondo", fondoInicial);
+                    cmd.Parameters.AddWithValue("@idUser", obj.IdUsuario);
+                    cmd.Parameters.AddWithValue("@nombre", obj.CajeroNombre);
+                    cmd.Parameters.AddWithValue("@fondo", obj.FondoInicial);
 
                     oConexion.Open();
                     respuesta = cmd.ExecuteNonQuery() > 0;
                 }
-                catch (Exception)
-                {
-                    throw;
-                }
+                catch (Exception) { throw; }
             }
             return respuesta;
         }
@@ -127,7 +125,7 @@ namespace AsuFit.Datos
         // =======================================================
         // 5. CERRAR TURNO 
         // =======================================================
-        public bool CerrarCaja(int idTurno, decimal ingresosEfectivo, decimal ingresosTransferencia, decimal gastosEfectivo, decimal montoEsperado, decimal montoContado, decimal diferencia)
+        public bool CerrarCaja(TurnoCaja obj)
         {
             bool respuesta = false;
             using (SqlConnection oConexion = Conexion.ObtenerConexion())
@@ -146,21 +144,18 @@ namespace AsuFit.Datos
                                      WHERE IdTurno = @idTurno";
 
                     SqlCommand cmd = new SqlCommand(query, oConexion);
-                    cmd.Parameters.AddWithValue("@ingEfvo", ingresosEfectivo);
-                    cmd.Parameters.AddWithValue("@ingTrans", ingresosTransferencia);
-                    cmd.Parameters.AddWithValue("@gastos", gastosEfectivo);
-                    cmd.Parameters.AddWithValue("@esperado", montoEsperado);
-                    cmd.Parameters.AddWithValue("@contado", montoContado);
-                    cmd.Parameters.AddWithValue("@diferencia", diferencia);
-                    cmd.Parameters.AddWithValue("@idTurno", idTurno);
+                    cmd.Parameters.AddWithValue("@ingEfvo", obj.IngresosEfectivo);
+                    cmd.Parameters.AddWithValue("@ingTrans", obj.IngresosTransferencia);
+                    cmd.Parameters.AddWithValue("@gastos", obj.GastosEfectivo);
+                    cmd.Parameters.AddWithValue("@esperado", obj.MontoEsperado);
+                    cmd.Parameters.AddWithValue("@contado", obj.MontoContado);
+                    cmd.Parameters.AddWithValue("@diferencia", obj.Diferencia);
+                    cmd.Parameters.AddWithValue("@idTurno", obj.IdTurno);
 
                     oConexion.Open();
                     respuesta = cmd.ExecuteNonQuery() > 0;
                 }
-                catch (Exception)
-                {
-                    throw;
-                }
+                catch (Exception) { throw; }
             }
             return respuesta;
         }

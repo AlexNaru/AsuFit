@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             this.txtBuscar = new System.Windows.Forms.TextBox();
             this.dgvSocios = new System.Windows.Forms.DataGridView();
             this.btnNuevo = new System.Windows.Forms.Button();
@@ -35,6 +36,22 @@
             this.lblTotal = new System.Windows.Forms.Label();
             this.chkActivo = new System.Windows.Forms.CheckBox();
             this.btnEstado = new System.Windows.Forms.Button();
+            this.label1 = new System.Windows.Forms.Label();
+            this.colSocioId = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colSocioCedula = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colSocioNombre = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colSocioApellido = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colSocioEmail = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colSocioRuc = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colSocioTelefono = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colSocioFechaNacim = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colSocioFechaReg = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colSocioPlan = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colSocioPrecio = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colSocioVencimiento = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colSocioEstado = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colSocioContEmerg = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colSocioTelEmerg = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dgvSocios)).BeginInit();
             this.SuspendLayout();
             // 
@@ -42,7 +59,7 @@
             // 
             this.txtBuscar.BackColor = System.Drawing.Color.White;
             this.txtBuscar.ForeColor = System.Drawing.Color.Black;
-            this.txtBuscar.Location = new System.Drawing.Point(391, 37);
+            this.txtBuscar.Location = new System.Drawing.Point(390, 63);
             this.txtBuscar.Name = "txtBuscar";
             this.txtBuscar.Size = new System.Drawing.Size(457, 26);
             this.txtBuscar.TabIndex = 0;
@@ -53,11 +70,25 @@
             this.dgvSocios.AllowUserToAddRows = false;
             this.dgvSocios.AllowUserToResizeColumns = false;
             this.dgvSocios.AllowUserToResizeRows = false;
-            this.dgvSocios.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
             this.dgvSocios.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.dgvSocios.BackgroundColor = System.Drawing.Color.White;
             this.dgvSocios.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgvSocios.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.colSocioId,
+            this.colSocioCedula,
+            this.colSocioNombre,
+            this.colSocioApellido,
+            this.colSocioEmail,
+            this.colSocioRuc,
+            this.colSocioTelefono,
+            this.colSocioFechaNacim,
+            this.colSocioFechaReg,
+            this.colSocioPlan,
+            this.colSocioPrecio,
+            this.colSocioVencimiento,
+            this.colSocioEstado,
+            this.colSocioContEmerg,
+            this.colSocioTelEmerg});
             this.dgvSocios.Location = new System.Drawing.Point(12, 105);
             this.dgvSocios.Name = "dgvSocios";
             this.dgvSocios.ReadOnly = true;
@@ -65,7 +96,7 @@
             this.dgvSocios.RowHeadersWidth = 62;
             this.dgvSocios.RowTemplate.Height = 28;
             this.dgvSocios.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgvSocios.Size = new System.Drawing.Size(1273, 211);
+            this.dgvSocios.Size = new System.Drawing.Size(1273, 230);
             this.dgvSocios.TabIndex = 1;
             this.dgvSocios.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvSocios_CellClick);
             this.dgvSocios.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.dgvSocios_CellFormatting);
@@ -73,11 +104,11 @@
             // 
             // btnNuevo
             // 
-            this.btnNuevo.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(30)))), ((int)(((byte)(30)))));
-            this.btnNuevo.ForeColor = System.Drawing.Color.White;
-            this.btnNuevo.Location = new System.Drawing.Point(367, 361);
+            this.btnNuevo.BackColor = System.Drawing.Color.White;
+            this.btnNuevo.ForeColor = System.Drawing.Color.Black;
+            this.btnNuevo.Location = new System.Drawing.Point(839, 357);
             this.btnNuevo.Name = "btnNuevo";
-            this.btnNuevo.Size = new System.Drawing.Size(91, 37);
+            this.btnNuevo.Size = new System.Drawing.Size(109, 49);
             this.btnNuevo.TabIndex = 2;
             this.btnNuevo.Text = "NUEVO";
             this.btnNuevo.UseVisualStyleBackColor = false;
@@ -85,11 +116,11 @@
             // 
             // btnEditar
             // 
-            this.btnEditar.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(30)))), ((int)(((byte)(30)))));
-            this.btnEditar.ForeColor = System.Drawing.Color.White;
-            this.btnEditar.Location = new System.Drawing.Point(548, 361);
+            this.btnEditar.BackColor = System.Drawing.Color.White;
+            this.btnEditar.ForeColor = System.Drawing.Color.Black;
+            this.btnEditar.Location = new System.Drawing.Point(980, 357);
             this.btnEditar.Name = "btnEditar";
-            this.btnEditar.Size = new System.Drawing.Size(86, 37);
+            this.btnEditar.Size = new System.Drawing.Size(96, 49);
             this.btnEditar.TabIndex = 3;
             this.btnEditar.Text = "EDITAR";
             this.btnEditar.UseVisualStyleBackColor = false;
@@ -107,7 +138,7 @@
             // chkActivo
             // 
             this.chkActivo.AutoSize = true;
-            this.chkActivo.Location = new System.Drawing.Point(928, 39);
+            this.chkActivo.Location = new System.Drawing.Point(1080, 65);
             this.chkActivo.Name = "chkActivo";
             this.chkActivo.Size = new System.Drawing.Size(208, 24);
             this.chkActivo.TabIndex = 6;
@@ -117,10 +148,9 @@
             // 
             // btnEstado
             // 
-            this.btnEstado.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnEstado.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(30)))), ((int)(((byte)(30)))));
-            this.btnEstado.ForeColor = System.Drawing.Color.White;
-            this.btnEstado.Location = new System.Drawing.Point(726, 355);
+            this.btnEstado.BackColor = System.Drawing.Color.White;
+            this.btnEstado.ForeColor = System.Drawing.Color.Black;
+            this.btnEstado.Location = new System.Drawing.Point(1105, 357);
             this.btnEstado.Name = "btnEstado";
             this.btnEstado.Size = new System.Drawing.Size(180, 49);
             this.btnEstado.TabIndex = 10;
@@ -128,12 +158,149 @@
             this.btnEstado.UseVisualStyleBackColor = false;
             this.btnEstado.Click += new System.EventHandler(this.btnEstado_Click);
             // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(12, 9);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(174, 20);
+            this.label1.TabIndex = 11;
+            this.label1.Text = "GESTIÓN DE SOCIOS";
+            // 
+            // colSocioId
+            // 
+            this.colSocioId.DataPropertyName = "IdSocio";
+            this.colSocioId.HeaderText = "ID";
+            this.colSocioId.MinimumWidth = 8;
+            this.colSocioId.Name = "colSocioId";
+            this.colSocioId.ReadOnly = true;
+            this.colSocioId.Visible = false;
+            // 
+            // colSocioCedula
+            // 
+            this.colSocioCedula.DataPropertyName = "Cedula";
+            this.colSocioCedula.HeaderText = "Cédula";
+            this.colSocioCedula.MinimumWidth = 8;
+            this.colSocioCedula.Name = "colSocioCedula";
+            this.colSocioCedula.ReadOnly = true;
+            // 
+            // colSocioNombre
+            // 
+            this.colSocioNombre.DataPropertyName = "Nombre";
+            this.colSocioNombre.HeaderText = "Nombre";
+            this.colSocioNombre.MinimumWidth = 8;
+            this.colSocioNombre.Name = "colSocioNombre";
+            this.colSocioNombre.ReadOnly = true;
+            // 
+            // colSocioApellido
+            // 
+            this.colSocioApellido.DataPropertyName = "Apellido";
+            this.colSocioApellido.HeaderText = "Apellido";
+            this.colSocioApellido.MinimumWidth = 8;
+            this.colSocioApellido.Name = "colSocioApellido";
+            this.colSocioApellido.ReadOnly = true;
+            // 
+            // colSocioEmail
+            // 
+            this.colSocioEmail.DataPropertyName = "Email";
+            this.colSocioEmail.HeaderText = "Email";
+            this.colSocioEmail.MinimumWidth = 8;
+            this.colSocioEmail.Name = "colSocioEmail";
+            this.colSocioEmail.ReadOnly = true;
+            // 
+            // colSocioRuc
+            // 
+            this.colSocioRuc.DataPropertyName = "RUC";
+            this.colSocioRuc.HeaderText = "RUC";
+            this.colSocioRuc.MinimumWidth = 8;
+            this.colSocioRuc.Name = "colSocioRuc";
+            this.colSocioRuc.ReadOnly = true;
+            // 
+            // colSocioTelefono
+            // 
+            this.colSocioTelefono.DataPropertyName = "Telefono";
+            this.colSocioTelefono.HeaderText = "Teléfono";
+            this.colSocioTelefono.MinimumWidth = 8;
+            this.colSocioTelefono.Name = "colSocioTelefono";
+            this.colSocioTelefono.ReadOnly = true;
+            // 
+            // colSocioFechaNacim
+            // 
+            this.colSocioFechaNacim.DataPropertyName = "FechaNacimiento";
+            this.colSocioFechaNacim.HeaderText = "Fecha Nacimiento";
+            this.colSocioFechaNacim.MinimumWidth = 8;
+            this.colSocioFechaNacim.Name = "colSocioFechaNacim";
+            this.colSocioFechaNacim.ReadOnly = true;
+            // 
+            // colSocioFechaReg
+            // 
+            this.colSocioFechaReg.DataPropertyName = "FechaRegistro";
+            this.colSocioFechaReg.HeaderText = "Fecha Registro";
+            this.colSocioFechaReg.MinimumWidth = 8;
+            this.colSocioFechaReg.Name = "colSocioFechaReg";
+            this.colSocioFechaReg.ReadOnly = true;
+            // 
+            // colSocioPlan
+            // 
+            this.colSocioPlan.DataPropertyName = "TipoPlan";
+            this.colSocioPlan.HeaderText = "Plan";
+            this.colSocioPlan.MinimumWidth = 8;
+            this.colSocioPlan.Name = "colSocioPlan";
+            this.colSocioPlan.ReadOnly = true;
+            // 
+            // colSocioPrecio
+            // 
+            this.colSocioPrecio.DataPropertyName = "Precio";
+            dataGridViewCellStyle2.Format = "N0";
+            this.colSocioPrecio.DefaultCellStyle = dataGridViewCellStyle2;
+            this.colSocioPrecio.HeaderText = "Precio";
+            this.colSocioPrecio.MinimumWidth = 8;
+            this.colSocioPrecio.Name = "colSocioPrecio";
+            this.colSocioPrecio.ReadOnly = true;
+            // 
+            // colSocioVencimiento
+            // 
+            this.colSocioVencimiento.DataPropertyName = "FechaVencimiento";
+            this.colSocioVencimiento.FillWeight = 120F;
+            this.colSocioVencimiento.HeaderText = "Vencimiento";
+            this.colSocioVencimiento.MinimumWidth = 8;
+            this.colSocioVencimiento.Name = "colSocioVencimiento";
+            this.colSocioVencimiento.ReadOnly = true;
+            // 
+            // colSocioEstado
+            // 
+            this.colSocioEstado.DataPropertyName = "Estado";
+            this.colSocioEstado.FillWeight = 80F;
+            this.colSocioEstado.HeaderText = "Estado";
+            this.colSocioEstado.MinimumWidth = 8;
+            this.colSocioEstado.Name = "colSocioEstado";
+            this.colSocioEstado.ReadOnly = true;
+            // 
+            // colSocioContEmerg
+            // 
+            this.colSocioContEmerg.DataPropertyName = "NombreContactoEmergencia";
+            this.colSocioContEmerg.HeaderText = "Contacto Emergencia";
+            this.colSocioContEmerg.MinimumWidth = 8;
+            this.colSocioContEmerg.Name = "colSocioContEmerg";
+            this.colSocioContEmerg.ReadOnly = true;
+            this.colSocioContEmerg.Visible = false;
+            // 
+            // colSocioTelEmerg
+            // 
+            this.colSocioTelEmerg.DataPropertyName = "TelefonoEmergencia";
+            this.colSocioTelEmerg.HeaderText = "Telefono Emergencia";
+            this.colSocioTelEmerg.MinimumWidth = 8;
+            this.colSocioTelEmerg.Name = "colSocioTelEmerg";
+            this.colSocioTelEmerg.ReadOnly = true;
+            this.colSocioTelEmerg.Visible = false;
+            // 
             // frmGestionSocios
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(1310, 450);
+            this.BackColor = System.Drawing.SystemColors.Control;
+            this.ClientSize = new System.Drawing.Size(1300, 419);
+            this.Controls.Add(this.label1);
             this.Controls.Add(this.btnEstado);
             this.Controls.Add(this.chkActivo);
             this.Controls.Add(this.lblTotal);
@@ -160,5 +327,21 @@
         private System.Windows.Forms.Label lblTotal;
         private System.Windows.Forms.CheckBox chkActivo;
         private System.Windows.Forms.Button btnEstado;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colSocioId;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colSocioCedula;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colSocioNombre;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colSocioApellido;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colSocioEmail;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colSocioRuc;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colSocioTelefono;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colSocioFechaNacim;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colSocioFechaReg;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colSocioPlan;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colSocioPrecio;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colSocioVencimiento;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colSocioEstado;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colSocioContEmerg;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colSocioTelEmerg;
     }
 }

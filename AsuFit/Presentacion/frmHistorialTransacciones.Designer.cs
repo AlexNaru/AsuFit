@@ -28,6 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
             this.label1 = new System.Windows.Forms.Label();
             this.lblTotalRecaudado = new System.Windows.Forms.Label();
             this.lblCantidadVentas = new System.Windows.Forms.Label();
@@ -40,6 +42,12 @@
             this.btnVerDetalle = new System.Windows.Forms.Button();
             this.cmbFiltroTipo = new System.Windows.Forms.ComboBox();
             this.label6 = new System.Windows.Forms.Label();
+            this.colHistorialId = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colHistorialFecha = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colHistorialCliente = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colHistorialMetodo = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colHistorialTipo = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colHistorialTotal = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dgvVentas)).BeginInit();
             this.SuspendLayout();
             // 
@@ -55,7 +63,7 @@
             // lblTotalRecaudado
             // 
             this.lblTotalRecaudado.AutoSize = true;
-            this.lblTotalRecaudado.Location = new System.Drawing.Point(312, 334);
+            this.lblTotalRecaudado.Location = new System.Drawing.Point(564, 424);
             this.lblTotalRecaudado.Name = "lblTotalRecaudado";
             this.lblTotalRecaudado.Size = new System.Drawing.Size(171, 20);
             this.lblTotalRecaudado.TabIndex = 18;
@@ -64,7 +72,7 @@
             // lblCantidadVentas
             // 
             this.lblCantidadVentas.AutoSize = true;
-            this.lblCantidadVentas.Location = new System.Drawing.Point(12, 334);
+            this.lblCantidadVentas.Location = new System.Drawing.Point(12, 424);
             this.lblCantidadVentas.Name = "lblCantidadVentas";
             this.lblCantidadVentas.Size = new System.Drawing.Size(211, 20);
             this.lblCantidadVentas.TabIndex = 16;
@@ -94,6 +102,13 @@
             this.dgvVentas.AllowUserToDeleteRows = false;
             this.dgvVentas.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.dgvVentas.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgvVentas.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.colHistorialId,
+            this.colHistorialFecha,
+            this.colHistorialCliente,
+            this.colHistorialMetodo,
+            this.colHistorialTipo,
+            this.colHistorialTotal});
             this.dgvVentas.Location = new System.Drawing.Point(16, 158);
             this.dgvVentas.Name = "dgvVentas";
             this.dgvVentas.ReadOnly = true;
@@ -101,7 +116,7 @@
             this.dgvVentas.RowHeadersWidth = 62;
             this.dgvVentas.RowTemplate.Height = 28;
             this.dgvVentas.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgvVentas.Size = new System.Drawing.Size(575, 150);
+            this.dgvVentas.Size = new System.Drawing.Size(819, 231);
             this.dgvVentas.TabIndex = 13;
             // 
             // txtBuscar
@@ -132,7 +147,7 @@
             // 
             // btnVerDetalle
             // 
-            this.btnVerDetalle.Location = new System.Drawing.Point(184, 407);
+            this.btnVerDetalle.Location = new System.Drawing.Point(302, 498);
             this.btnVerDetalle.Name = "btnVerDetalle";
             this.btnVerDetalle.Size = new System.Drawing.Size(240, 38);
             this.btnVerDetalle.TabIndex = 20;
@@ -164,11 +179,68 @@
             this.label6.TabIndex = 22;
             this.label6.Text = "Tipo:";
             // 
+            // colHistorialId
+            // 
+            this.colHistorialId.DataPropertyName = "N° Transacción";
+            this.colHistorialId.HeaderText = "N° Transacción";
+            this.colHistorialId.MinimumWidth = 8;
+            this.colHistorialId.Name = "colHistorialId";
+            this.colHistorialId.ReadOnly = true;
+            // 
+            // colHistorialFecha
+            // 
+            this.colHistorialFecha.DataPropertyName = "Fecha";
+            dataGridViewCellStyle7.Format = "dd/MM/yyyy HH:mm";
+            this.colHistorialFecha.DefaultCellStyle = dataGridViewCellStyle7;
+            this.colHistorialFecha.FillWeight = 120F;
+            this.colHistorialFecha.HeaderText = "Fecha";
+            this.colHistorialFecha.MinimumWidth = 8;
+            this.colHistorialFecha.Name = "colHistorialFecha";
+            this.colHistorialFecha.ReadOnly = true;
+            // 
+            // colHistorialCliente
+            // 
+            this.colHistorialCliente.DataPropertyName = "Cliente";
+            this.colHistorialCliente.FillWeight = 110F;
+            this.colHistorialCliente.HeaderText = "Cliente";
+            this.colHistorialCliente.MinimumWidth = 8;
+            this.colHistorialCliente.Name = "colHistorialCliente";
+            this.colHistorialCliente.ReadOnly = true;
+            // 
+            // colHistorialMetodo
+            // 
+            this.colHistorialMetodo.DataPropertyName = "Método";
+            this.colHistorialMetodo.FillWeight = 95F;
+            this.colHistorialMetodo.HeaderText = "Método";
+            this.colHistorialMetodo.MinimumWidth = 8;
+            this.colHistorialMetodo.Name = "colHistorialMetodo";
+            this.colHistorialMetodo.ReadOnly = true;
+            // 
+            // colHistorialTipo
+            // 
+            this.colHistorialTipo.DataPropertyName = "Tipo Operación";
+            this.colHistorialTipo.FillWeight = 95F;
+            this.colHistorialTipo.HeaderText = "Tipo Operación";
+            this.colHistorialTipo.MinimumWidth = 8;
+            this.colHistorialTipo.Name = "colHistorialTipo";
+            this.colHistorialTipo.ReadOnly = true;
+            // 
+            // colHistorialTotal
+            // 
+            this.colHistorialTotal.DataPropertyName = "Total Cobrado";
+            dataGridViewCellStyle8.Format = "N0";
+            this.colHistorialTotal.DefaultCellStyle = dataGridViewCellStyle8;
+            this.colHistorialTotal.FillWeight = 80F;
+            this.colHistorialTotal.HeaderText = "Total Cobrado";
+            this.colHistorialTotal.MinimumWidth = 8;
+            this.colHistorialTotal.Name = "colHistorialTotal";
+            this.colHistorialTotal.ReadOnly = true;
+            // 
             // frmHistorialTransacciones
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(613, 469);
+            this.ClientSize = new System.Drawing.Size(847, 543);
             this.Controls.Add(this.label6);
             this.Controls.Add(this.cmbFiltroTipo);
             this.Controls.Add(this.btnVerDetalle);
@@ -204,5 +276,11 @@
         private System.Windows.Forms.Button btnVerDetalle;
         private System.Windows.Forms.ComboBox cmbFiltroTipo;
         private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colHistorialId;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colHistorialFecha;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colHistorialCliente;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colHistorialMetodo;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colHistorialTipo;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colHistorialTotal;
     }
 }

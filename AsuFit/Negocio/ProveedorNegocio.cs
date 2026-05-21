@@ -1,5 +1,6 @@
-﻿using System.Data;
-using AsuFit.Datos;
+﻿using AsuFit.Datos;
+using AsuFit.Entidades;
+using System.Data;
 
 namespace AsuFit.Negocio
 {
@@ -12,14 +13,9 @@ namespace AsuFit.Negocio
             return datos.Listar();
         }
 
-        public bool InsertarProveedor(string nombre, string ruc, string categoria, string contacto, string telefono, string correo, string direccion, string ciudad, string estado)
+        public bool GuardarProveedor(Proveedor obj)
         {
-            return datos.Insertar(nombre, ruc, categoria, contacto, telefono, correo, direccion, ciudad, estado);
-        }
-
-        public bool EditarProveedor(int idProveedor, string nombre, string ruc, string categoria, string contacto, string telefono, string correo, string direccion, string ciudad, string estado)
-        {
-            return datos.Editar(idProveedor, nombre, ruc, categoria, contacto, telefono, correo, direccion, ciudad, estado);
+            return datos.Guardar(obj);
         }
 
         public bool CambiarEstado(int idProveedor, string nuevoEstado)

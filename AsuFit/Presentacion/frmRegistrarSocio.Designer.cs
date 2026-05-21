@@ -51,13 +51,19 @@
             this.label11 = new System.Windows.Forms.Label();
             this.txtRuc = new System.Windows.Forms.TextBox();
             this.label10 = new System.Windows.Forms.Label();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.groupBox1.SuspendLayout();
+            this.groupBox2.SuspendLayout();
+            this.groupBox3.SuspendLayout();
             this.SuspendLayout();
             // 
             // txtCedula
             // 
-            this.txtCedula.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(48)))));
-            this.txtCedula.ForeColor = System.Drawing.Color.White;
-            this.txtCedula.Location = new System.Drawing.Point(205, 80);
+            this.txtCedula.BackColor = System.Drawing.SystemColors.Window;
+            this.txtCedula.ForeColor = System.Drawing.SystemColors.WindowText;
+            this.txtCedula.Location = new System.Drawing.Point(10, 69);
             this.txtCedula.Name = "txtCedula";
             this.txtCedula.Size = new System.Drawing.Size(153, 26);
             this.txtCedula.TabIndex = 0;
@@ -67,9 +73,9 @@
             // 
             // txtNombre
             // 
-            this.txtNombre.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(48)))));
-            this.txtNombre.ForeColor = System.Drawing.Color.White;
-            this.txtNombre.Location = new System.Drawing.Point(205, 176);
+            this.txtNombre.BackColor = System.Drawing.SystemColors.Window;
+            this.txtNombre.ForeColor = System.Drawing.SystemColors.WindowText;
+            this.txtNombre.Location = new System.Drawing.Point(196, 69);
             this.txtNombre.Name = "txtNombre";
             this.txtNombre.Size = new System.Drawing.Size(153, 26);
             this.txtNombre.TabIndex = 1;
@@ -78,9 +84,9 @@
             // 
             // txtApellido
             // 
-            this.txtApellido.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(48)))));
-            this.txtApellido.ForeColor = System.Drawing.Color.White;
-            this.txtApellido.Location = new System.Drawing.Point(205, 217);
+            this.txtApellido.BackColor = System.Drawing.SystemColors.Window;
+            this.txtApellido.ForeColor = System.Drawing.SystemColors.WindowText;
+            this.txtApellido.Location = new System.Drawing.Point(386, 69);
             this.txtApellido.Name = "txtApellido";
             this.txtApellido.Size = new System.Drawing.Size(153, 26);
             this.txtApellido.TabIndex = 2;
@@ -89,10 +95,9 @@
             // 
             // btnGuardar
             // 
-            this.btnGuardar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnGuardar.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
-            this.btnGuardar.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
-            this.btnGuardar.Location = new System.Drawing.Point(143, 598);
+            this.btnGuardar.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.btnGuardar.Location = new System.Drawing.Point(202, 484);
             this.btnGuardar.Name = "btnGuardar";
             this.btnGuardar.Size = new System.Drawing.Size(110, 41);
             this.btnGuardar.TabIndex = 9;
@@ -102,9 +107,9 @@
             // 
             // txtEmail
             // 
-            this.txtEmail.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(48)))));
-            this.txtEmail.ForeColor = System.Drawing.Color.White;
-            this.txtEmail.Location = new System.Drawing.Point(205, 266);
+            this.txtEmail.BackColor = System.Drawing.SystemColors.Window;
+            this.txtEmail.ForeColor = System.Drawing.SystemColors.WindowText;
+            this.txtEmail.Location = new System.Drawing.Point(196, 145);
             this.txtEmail.Name = "txtEmail";
             this.txtEmail.Size = new System.Drawing.Size(153, 26);
             this.txtEmail.TabIndex = 3;
@@ -112,9 +117,9 @@
             // 
             // txtTelefono
             // 
-            this.txtTelefono.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(48)))));
-            this.txtTelefono.ForeColor = System.Drawing.Color.White;
-            this.txtTelefono.Location = new System.Drawing.Point(205, 316);
+            this.txtTelefono.BackColor = System.Drawing.SystemColors.Window;
+            this.txtTelefono.ForeColor = System.Drawing.SystemColors.WindowText;
+            this.txtTelefono.Location = new System.Drawing.Point(10, 145);
             this.txtTelefono.Name = "txtTelefono";
             this.txtTelefono.Size = new System.Drawing.Size(153, 26);
             this.txtTelefono.TabIndex = 4;
@@ -125,16 +130,16 @@
             // dtpFechaNacimiento
             // 
             this.dtpFechaNacimiento.Format = System.Windows.Forms.DateTimePickerFormat.Short;
-            this.dtpFechaNacimiento.Location = new System.Drawing.Point(205, 358);
+            this.dtpFechaNacimiento.Location = new System.Drawing.Point(569, 69);
             this.dtpFechaNacimiento.Name = "dtpFechaNacimiento";
             this.dtpFechaNacimiento.Size = new System.Drawing.Size(153, 26);
             this.dtpFechaNacimiento.TabIndex = 5;
             // 
             // txtContactoEmergencia
             // 
-            this.txtContactoEmergencia.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(48)))));
-            this.txtContactoEmergencia.ForeColor = System.Drawing.Color.White;
-            this.txtContactoEmergencia.Location = new System.Drawing.Point(205, 413);
+            this.txtContactoEmergencia.BackColor = System.Drawing.SystemColors.Window;
+            this.txtContactoEmergencia.ForeColor = System.Drawing.SystemColors.WindowText;
+            this.txtContactoEmergencia.Location = new System.Drawing.Point(10, 72);
             this.txtContactoEmergencia.Name = "txtContactoEmergencia";
             this.txtContactoEmergencia.Size = new System.Drawing.Size(153, 26);
             this.txtContactoEmergencia.TabIndex = 6;
@@ -142,9 +147,9 @@
             // 
             // txtTelefonoEmergencia
             // 
-            this.txtTelefonoEmergencia.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(48)))));
-            this.txtTelefonoEmergencia.ForeColor = System.Drawing.Color.White;
-            this.txtTelefonoEmergencia.Location = new System.Drawing.Point(205, 465);
+            this.txtTelefonoEmergencia.BackColor = System.Drawing.SystemColors.Window;
+            this.txtTelefonoEmergencia.ForeColor = System.Drawing.SystemColors.WindowText;
+            this.txtTelefonoEmergencia.Location = new System.Drawing.Point(186, 72);
             this.txtTelefonoEmergencia.Name = "txtTelefonoEmergencia";
             this.txtTelefonoEmergencia.Size = new System.Drawing.Size(153, 26);
             this.txtTelefonoEmergencia.TabIndex = 7;
@@ -155,82 +160,82 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.ForeColor = System.Drawing.Color.White;
-            this.label1.Location = new System.Drawing.Point(12, 86);
+            this.label1.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.label1.Location = new System.Drawing.Point(6, 46);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(59, 20);
+            this.label1.Size = new System.Drawing.Size(63, 20);
             this.label1.TabIndex = 10;
-            this.label1.Text = "Cedula";
+            this.label1.Text = "Cedula:";
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.ForeColor = System.Drawing.Color.White;
-            this.label2.Location = new System.Drawing.Point(12, 182);
+            this.label2.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.label2.Location = new System.Drawing.Point(192, 46);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(65, 20);
+            this.label2.Size = new System.Drawing.Size(69, 20);
             this.label2.TabIndex = 11;
-            this.label2.Text = "Nombre";
+            this.label2.Text = "Nombre:";
             // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.ForeColor = System.Drawing.Color.White;
-            this.label3.Location = new System.Drawing.Point(12, 223);
+            this.label3.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.label3.Location = new System.Drawing.Point(382, 46);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(65, 20);
+            this.label3.Size = new System.Drawing.Size(69, 20);
             this.label3.TabIndex = 12;
-            this.label3.Text = "Apellido";
+            this.label3.Text = "Apellido:";
             // 
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.ForeColor = System.Drawing.Color.White;
-            this.label4.Location = new System.Drawing.Point(12, 272);
+            this.label4.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.label4.Location = new System.Drawing.Point(192, 122);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(48, 20);
+            this.label4.Size = new System.Drawing.Size(52, 20);
             this.label4.TabIndex = 13;
-            this.label4.Text = "Email";
+            this.label4.Text = "Email:";
             // 
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.ForeColor = System.Drawing.Color.White;
-            this.label5.Location = new System.Drawing.Point(12, 322);
+            this.label5.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.label5.Location = new System.Drawing.Point(6, 122);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(71, 20);
+            this.label5.Size = new System.Drawing.Size(75, 20);
             this.label5.TabIndex = 14;
-            this.label5.Text = "Telefono";
+            this.label5.Text = "Telefono:";
             // 
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.ForeColor = System.Drawing.Color.White;
-            this.label6.Location = new System.Drawing.Point(12, 364);
+            this.label6.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.label6.Location = new System.Drawing.Point(565, 46);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(159, 20);
+            this.label6.Size = new System.Drawing.Size(163, 20);
             this.label6.TabIndex = 15;
-            this.label6.Text = "Fecha de Nacimiento";
+            this.label6.Text = "Fecha de Nacimiento:";
             // 
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.ForeColor = System.Drawing.Color.White;
-            this.label7.Location = new System.Drawing.Point(12, 419);
+            this.label7.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.label7.Location = new System.Drawing.Point(6, 49);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(185, 20);
+            this.label7.Size = new System.Drawing.Size(69, 20);
             this.label7.TabIndex = 16;
-            this.label7.Text = "Contacto de Emergencia";
+            this.label7.Text = "Nombre:";
             // 
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.ForeColor = System.Drawing.Color.White;
-            this.label8.Location = new System.Drawing.Point(12, 471);
+            this.label8.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.label8.Location = new System.Drawing.Point(182, 49);
             this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(182, 20);
+            this.label8.Size = new System.Drawing.Size(75, 20);
             this.label8.TabIndex = 17;
-            this.label8.Text = "Telefono de Emergencia";
+            this.label8.Text = "Telefono:";
             // 
             // cmbPlanes
             // 
@@ -243,7 +248,7 @@
             "Pase Semanal",
             "Plan Mensual",
             "Plan Anual"});
-            this.cmbPlanes.Location = new System.Drawing.Point(205, 523);
+            this.cmbPlanes.Location = new System.Drawing.Point(69, 43);
             this.cmbPlanes.Name = "cmbPlanes";
             this.cmbPlanes.Size = new System.Drawing.Size(153, 28);
             this.cmbPlanes.TabIndex = 8;
@@ -252,32 +257,30 @@
             // label9
             // 
             this.label9.AutoSize = true;
-            this.label9.ForeColor = System.Drawing.Color.White;
-            this.label9.Location = new System.Drawing.Point(12, 531);
+            this.label9.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.label9.Location = new System.Drawing.Point(6, 51);
             this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(57, 20);
+            this.label9.Size = new System.Drawing.Size(61, 20);
             this.label9.TabIndex = 18;
-            this.label9.Text = "Planes";
+            this.label9.Text = "Planes:";
             // 
             // btnCancelar
             // 
-            this.btnCancelar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnCancelar.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
-            this.btnCancelar.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
-            this.btnCancelar.Location = new System.Drawing.Point(136, 667);
+            this.btnCancelar.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.btnCancelar.Location = new System.Drawing.Point(415, 484);
             this.btnCancelar.Name = "btnCancelar";
             this.btnCancelar.Size = new System.Drawing.Size(127, 41);
             this.btnCancelar.TabIndex = 19;
             this.btnCancelar.Text = "CANCELAR";
             this.btnCancelar.UseVisualStyleBackColor = true;
-            this.btnCancelar.Visible = false;
             this.btnCancelar.Click += new System.EventHandler(this.btnCancelar_Click);
             // 
             // label11
             // 
             this.label11.AutoSize = true;
-            this.label11.ForeColor = System.Drawing.Color.White;
-            this.label11.Location = new System.Drawing.Point(12, 132);
+            this.label11.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.label11.Location = new System.Drawing.Point(382, 122);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(124, 20);
             this.label11.TabIndex = 22;
@@ -285,9 +288,9 @@
             // 
             // txtRuc
             // 
-            this.txtRuc.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(48)))));
-            this.txtRuc.ForeColor = System.Drawing.Color.White;
-            this.txtRuc.Location = new System.Drawing.Point(205, 126);
+            this.txtRuc.BackColor = System.Drawing.SystemColors.Window;
+            this.txtRuc.ForeColor = System.Drawing.SystemColors.WindowText;
+            this.txtRuc.Location = new System.Drawing.Point(386, 145);
             this.txtRuc.Name = "txtRuc";
             this.txtRuc.Size = new System.Drawing.Size(153, 26);
             this.txtRuc.TabIndex = 23;
@@ -295,42 +298,72 @@
             // label10
             // 
             this.label10.AutoSize = true;
-            this.label10.ForeColor = System.Drawing.Color.White;
-            this.label10.Location = new System.Drawing.Point(97, 21);
+            this.label10.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.label10.Location = new System.Drawing.Point(12, 9);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(187, 20);
             this.label10.TabIndex = 24;
             this.label10.Text = "REGISTRO DE SOCIOS";
             // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.label1);
+            this.groupBox1.Controls.Add(this.txtCedula);
+            this.groupBox1.Controls.Add(this.label2);
+            this.groupBox1.Controls.Add(this.txtNombre);
+            this.groupBox1.Controls.Add(this.txtRuc);
+            this.groupBox1.Controls.Add(this.label3);
+            this.groupBox1.Controls.Add(this.label11);
+            this.groupBox1.Controls.Add(this.txtApellido);
+            this.groupBox1.Controls.Add(this.label6);
+            this.groupBox1.Controls.Add(this.dtpFechaNacimiento);
+            this.groupBox1.Controls.Add(this.label5);
+            this.groupBox1.Controls.Add(this.txtTelefono);
+            this.groupBox1.Controls.Add(this.label4);
+            this.groupBox1.Controls.Add(this.txtEmail);
+            this.groupBox1.Location = new System.Drawing.Point(16, 64);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(733, 188);
+            this.groupBox1.TabIndex = 25;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "DATOS PERSONALES";
+            // 
+            // groupBox2
+            // 
+            this.groupBox2.Controls.Add(this.label7);
+            this.groupBox2.Controls.Add(this.txtContactoEmergencia);
+            this.groupBox2.Controls.Add(this.label8);
+            this.groupBox2.Controls.Add(this.txtTelefonoEmergencia);
+            this.groupBox2.Location = new System.Drawing.Point(16, 258);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Size = new System.Drawing.Size(733, 113);
+            this.groupBox2.TabIndex = 26;
+            this.groupBox2.TabStop = false;
+            this.groupBox2.Text = "CONTACTO DE EMERGENCIA";
+            // 
+            // groupBox3
+            // 
+            this.groupBox3.Controls.Add(this.label9);
+            this.groupBox3.Controls.Add(this.cmbPlanes);
+            this.groupBox3.Location = new System.Drawing.Point(16, 377);
+            this.groupBox3.Name = "groupBox3";
+            this.groupBox3.Size = new System.Drawing.Size(733, 89);
+            this.groupBox3.TabIndex = 26;
+            this.groupBox3.TabStop = false;
+            this.groupBox3.Text = "SUSCRIPCIÓN";
+            // 
             // frmRegistrarSocio
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(30)))), ((int)(((byte)(30)))));
-            this.ClientSize = new System.Drawing.Size(401, 718);
+            this.BackColor = System.Drawing.SystemColors.AppWorkspace;
+            this.ClientSize = new System.Drawing.Size(773, 546);
+            this.Controls.Add(this.groupBox3);
+            this.Controls.Add(this.groupBox2);
+            this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.label10);
-            this.Controls.Add(this.txtRuc);
-            this.Controls.Add(this.label11);
             this.Controls.Add(this.btnCancelar);
-            this.Controls.Add(this.label9);
-            this.Controls.Add(this.cmbPlanes);
-            this.Controls.Add(this.label8);
-            this.Controls.Add(this.label7);
-            this.Controls.Add(this.label6);
-            this.Controls.Add(this.label5);
-            this.Controls.Add(this.label4);
-            this.Controls.Add(this.label3);
-            this.Controls.Add(this.label2);
-            this.Controls.Add(this.label1);
-            this.Controls.Add(this.txtTelefonoEmergencia);
-            this.Controls.Add(this.txtContactoEmergencia);
-            this.Controls.Add(this.dtpFechaNacimiento);
-            this.Controls.Add(this.txtTelefono);
-            this.Controls.Add(this.txtEmail);
             this.Controls.Add(this.btnGuardar);
-            this.Controls.Add(this.txtApellido);
-            this.Controls.Add(this.txtNombre);
-            this.Controls.Add(this.txtCedula);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.Name = "frmRegistrarSocio";
@@ -338,6 +371,12 @@
             this.Text = "frmRegistrarSocio";
             this.Load += new System.EventHandler(this.frmRegistrarSocio_Load);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.NavegacionEnter_KeyDown);
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
+            this.groupBox2.ResumeLayout(false);
+            this.groupBox2.PerformLayout();
+            this.groupBox3.ResumeLayout(false);
+            this.groupBox3.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -368,5 +407,8 @@
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.TextBox txtRuc;
         private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.GroupBox groupBox3;
     }
 }

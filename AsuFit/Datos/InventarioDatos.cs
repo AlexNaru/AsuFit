@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AsuFit.Entidades;
+using System;
 using System.Data;
 using System.Data.SqlClient;
 
@@ -98,16 +99,16 @@ namespace AsuFit.Datos
             }
         }
 
-        public bool GuardarProducto(int id, string codigo, string nombre, string categoria, decimal precio, int stock, int idProveedor, int porcentajeIva)
+        // --- MÉTODO ACTUALIZADO USANDO LA ENTIDAD ---
+        public bool GuardarProducto(Producto obj)
         {
             using (SqlConnection oConexion = Conexion.ObtenerConexion())
             {
                 oConexion.Open();
                 string query = "";
 
-                if (id == 0)
+                if (obj.IdProducto == 0)
                 {
-                    // SOLUCIÓN AL ERROR CRÍTICO: PONEMOS EL COSTO EN 0 AL NACER EL PRODUCTO
                     query = @"INSERT INTO Productos (CodigoBarras, Nombre, IdCategoria, PrecioVenta, PrecioCompra, StockActual, Estado, IdProveedor, PorcentajeIva) 
                       VALUES (@Codigo, @Nombre, (SELECT IdCategoria FROM CategoriasProducto WHERE Descripcion = @Categoria), @Precio, 0, @Stock, 'Activo', @IdProveedor, @PorcentajeIva)";
                 }
@@ -118,18 +119,19 @@ namespace AsuFit.Datos
                       IdCategoria = (SELECT IdCategoria FROM CategoriasProducto WHERE Descripcion = @Categoria), 
                       PrecioVenta = @Precio, StockActual = @Stock,
                       IdProveedor = @IdProveedor, PorcentajeIva = @PorcentajeIva
-                      WHERE IdProducto = @Id";
+                      WHERE IdProducto = @IdProducto";
                 }
 
                 SqlCommand cmd = new SqlCommand(query, oConexion);
-                cmd.Parameters.AddWithValue("@Id", id);
-                cmd.Parameters.AddWithValue("@Codigo", codigo);
-                cmd.Parameters.AddWithValue("@Nombre", nombre);
-                cmd.Parameters.AddWithValue("@Categoria", categoria);
-                cmd.Parameters.AddWithValue("@Precio", precio);
-                cmd.Parameters.AddWithValue("@Stock", stock);
-                cmd.Parameters.AddWithValue("@IdProveedor", idProveedor);
-                cmd.Parameters.AddWithValue("@PorcentajeIva", porcentajeIva);
+                // Extraemos todo directamente del objeto "obj"
+                cmd.Parameters.AddWithValue("@IdProducto", obj.IdProducto);
+                cmd.Parameters.AddWithValue("@Codigo", obj.CodigoBarras);
+                cmd.Parameters.AddWithValue("@Nombre", obj.Nombre);
+                cmd.Parameters.AddWithValue("@Categoria", obj.Categoria);
+                cmd.Parameters.AddWithValue("@Precio", obj.PrecioVenta);
+                cmd.Parameters.AddWithValue("@Stock", obj.StockActual);
+                cmd.Parameters.AddWithValue("@IdProveedor", obj.IdProveedor);
+                cmd.Parameters.AddWithValue("@PorcentajeIva", obj.PorcentajeIva);
 
                 return cmd.ExecuteNonQuery() > 0;
             }

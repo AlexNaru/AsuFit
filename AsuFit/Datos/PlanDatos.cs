@@ -94,7 +94,7 @@ namespace AsuFit.Datos
             return respuesta;
         }
 
-        public bool EliminarPlan(int idPlan, out string mensaje)
+        public bool CambiarEstadoPlan(int idPlan, string nuevoEstado, out string mensaje)
         {
             mensaje = string.Empty;
             bool respuesta = false;
@@ -102,8 +102,10 @@ namespace AsuFit.Datos
             {
                 try
                 {
-                    string query = "UPDATE Planes SET Estado = 'Inactivo' WHERE IdPlan = @IdPlan";
+                    // Ahora la consulta actualiza según el estado que le pasemos
+                    string query = "UPDATE Planes SET Estado = @NuevoEstado WHERE IdPlan = @IdPlan";
                     SqlCommand cmd = new SqlCommand(query, oConexion);
+                    cmd.Parameters.AddWithValue("@NuevoEstado", nuevoEstado);
                     cmd.Parameters.AddWithValue("@IdPlan", idPlan);
 
                     oConexion.Open();

@@ -1,4 +1,5 @@
 ﻿using AsuFit.Datos;
+using AsuFit.Entidades;
 using System;
 using System.Data;
 
@@ -8,9 +9,9 @@ namespace AsuFit.Negocio
     {
         private ArqueoDatos datos = new ArqueoDatos();
 
-        public bool AbrirCaja(int idUsuario, string cajeroNombre, decimal fondoInicial)
+        public bool AbrirCaja(TurnoCaja obj)
         {
-            return datos.AbrirCaja(idUsuario, cajeroNombre, fondoInicial);
+            return datos.AbrirCaja(obj);
         }
 
         public DataTable ObtenerTurnoAbierto(int idUsuario)
@@ -29,9 +30,9 @@ namespace AsuFit.Negocio
             return datos.ListarHistorialArqueos(desde, hasta);
         }
 
-        public bool CerrarCaja(int idTurno, decimal ingresosEfectivo, decimal ingresosTransferencia, decimal gastosEfectivo, decimal montoEsperado, decimal montoContado, decimal diferencia)
+        public bool CerrarCaja(TurnoCaja obj)
         {
-            return datos.CerrarCaja(idTurno, ingresosEfectivo, ingresosTransferencia, gastosEfectivo, montoEsperado, montoContado, diferencia);
+            return datos.CerrarCaja(obj);
         }
     }
 }

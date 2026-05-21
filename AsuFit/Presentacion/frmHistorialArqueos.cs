@@ -11,6 +11,9 @@ namespace AsuFit.Presentacion
         public frmHistorialArqueos()
         {
             InitializeComponent();
+
+            // --- EL CAMBIO CLAVE: Bloqueamos las columnas automáticas ---
+            dgvArqueos.AutoGenerateColumns = false;
         }
 
         private void frmHistorialArqueos_Load(object sender, EventArgs e)
@@ -38,26 +41,11 @@ namespace AsuFit.Presentacion
             {
                 ArqueoNegocio negocio = new ArqueoNegocio();
                 DataTable dt = negocio.ListarHistorialArqueos(dtpDesde.Value, dtpHasta.Value);
+
+                // Pasamos los datos, la grilla buscará los DataPropertyName
                 dgvArqueos.DataSource = dt;
 
-                if (dgvArqueos.Columns.Count > 0)
-                {
-                    // Ocultamos el ID
-                    dgvArqueos.Columns["IdArqueo"].Visible = false;
-
-                    // Emprolijamos el resto de la tabla
-                    dgvArqueos.Columns["FechaHora"].DefaultCellStyle.Format = "dd/MM/yyyy HH:mm";
-                    dgvArqueos.Columns["TotalIngresosSistema"].DefaultCellStyle.Format = "N0";
-                    dgvArqueos.Columns["EfectivoDeclarado"].DefaultCellStyle.Format = "N0";
-                    dgvArqueos.Columns["Diferencia"].DefaultCellStyle.Format = "N0";
-                    dgvArqueos.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-                    // Le cambiamos el título para que se vea más lindo
-                    dgvArqueos.Columns["UsuarioRegistra"].HeaderText = "Cajero";
-                    dgvArqueos.Columns["UsuarioRegistra"].DefaultCellStyle.Format = "N0";
-                }
-
-                ColorearDiferencias();
-                dgvArqueos.ClearSelection();
+                // --- CÓDIGO LIMPIO: Toda la configuración de columnas se eliminó ---
             }
             catch (Exception ex)
             {
@@ -65,30 +53,36 @@ namespace AsuFit.Presentacion
             }
         }
 
-        // --- PINTA LOS NÚMEROS DE COLORES SEGÚN SI SOBRÓ O FALTÓ PLATA ---
+        // Ejecutamos el coloreo aquí para asegurar que las filas ya estén creadas
+        private void dgvArqueos_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
+        {
+            ColorearDiferencias();
+            dgvArqueos.ClearSelection();
+        }
+
         private void ColorearDiferencias()
         {
             foreach (DataGridViewRow fila in dgvArqueos.Rows)
             {
-                if (fila.Cells["Diferencia"].Value != null && fila.Cells["Diferencia"].Value != DBNull.Value)
+                // ACTUALIZADO: Apuntamos al nuevo Name de la columna visual
+                if (fila.Cells["colArqueoDiferencia"].Value != null && fila.Cells["colArqueoDiferencia"].Value != DBNull.Value)
                 {
-                    decimal diferencia = Convert.ToDecimal(fila.Cells["Diferencia"].Value);
+                    decimal diferencia = Convert.ToDecimal(fila.Cells["colArqueoDiferencia"].Value);
 
                     if (diferencia == 0)
                     {
-                        fila.Cells["Diferencia"].Style.ForeColor = Color.Green;
+                        fila.Cells["colArqueoDiferencia"].Style.ForeColor = Color.Green;
                     }
                     else if (diferencia < 0)
                     {
-                        fila.Cells["Diferencia"].Style.ForeColor = Color.Red;
+                        fila.Cells["colArqueoDiferencia"].Style.ForeColor = Color.Red;
                     }
                     else
                     {
-                        fila.Cells["Diferencia"].Style.ForeColor = Color.Goldenrod;
+                        fila.Cells["colArqueoDiferencia"].Style.ForeColor = Color.Goldenrod;
                     }
 
-                    // Ponemos la letra en negrita para que resalte más
-                    fila.Cells["Diferencia"].Style.Font = new Font(dgvArqueos.Font, FontStyle.Bold);
+                    fila.Cells["colArqueoDiferencia"].Style.Font = new Font(dgvArqueos.Font, FontStyle.Bold);
                 }
             }
         }
@@ -101,12 +95,12 @@ namespace AsuFit.Presentacion
                 return;
             }
 
-            string estado = dgvArqueos.CurrentRow.Cells["Estado"].Value.ToString();
-            string idTurno = dgvArqueos.CurrentRow.Cells["IdArqueo"].Value.ToString();
+            // ACTUALIZADO: Leemos usando los nuevos Names
+            string estado = dgvArqueos.CurrentRow.Cells["colArqueoEstado"].Value.ToString();
+            string idTurno = dgvArqueos.CurrentRow.Cells["colArqueoId"].Value.ToString();
 
             if (estado == "Cerrada")
             {
-                // Sincronizamos la ruta exacta hacia la carpeta de Descargas (Downloads)
                 string rutaDescargas = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads");
                 string nombreArchivo = $"Ticket_Arqueo_Turno_{idTurno}.pdf";
                 string rutaCompleta = System.IO.Path.Combine(rutaDescargas, nombreArchivo);

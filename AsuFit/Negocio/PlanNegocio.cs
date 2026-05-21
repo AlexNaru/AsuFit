@@ -46,9 +46,9 @@ namespace AsuFit.Negocio
             return objDatos.EditarPlan(obj, out mensaje);
         }
 
-        public bool EliminarPlan(int idPlan, out string mensaje)
+        public bool CambiarEstadoPlan(int idPlan, string nuevoEstado, out string mensaje)
         {
-            return objDatos.EliminarPlan(idPlan, out mensaje);
+            return objDatos.CambiarEstadoPlan(idPlan, nuevoEstado, out mensaje);
         }
 
         public Plan ObtenerPlanPorNombre(string nombrePlan)

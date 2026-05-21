@@ -29,7 +29,9 @@
         private void InitializeComponent()
         {
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             this.panel1 = new System.Windows.Forms.Panel();
             this.button1 = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
@@ -43,6 +45,16 @@
             this.label4 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
             this.txtBuscarProducto = new System.Windows.Forms.TextBox();
+            this.colCarritoId = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colCarritoCodigo = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colCarritoNombre = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colCarritoRestar = new System.Windows.Forms.DataGridViewButtonColumn();
+            this.colCarritoCantidad = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colCarritoSumar = new System.Windows.Forms.DataGridViewButtonColumn();
+            this.colCarritoPrecio = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colCarritoSubtotal = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colCarritoEliminar = new System.Windows.Forms.DataGridViewButtonColumn();
+            this.colCarritoIva = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvCarrito)).BeginInit();
             this.SuspendLayout();
@@ -119,17 +131,28 @@
             dataGridViewCellStyle1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(200)))), ((int)(((byte)(200)))));
             dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
             dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
             this.dgvCarrito.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             this.dgvCarrito.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(40)))), ((int)(((byte)(48)))));
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle2.ForeColor = System.Drawing.Color.White;
-            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dgvCarrito.DefaultCellStyle = dataGridViewCellStyle2;
+            this.dgvCarrito.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.colCarritoId,
+            this.colCarritoCodigo,
+            this.colCarritoNombre,
+            this.colCarritoRestar,
+            this.colCarritoCantidad,
+            this.colCarritoSumar,
+            this.colCarritoPrecio,
+            this.colCarritoSubtotal,
+            this.colCarritoEliminar,
+            this.colCarritoIva});
+            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle4.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(40)))), ((int)(((byte)(48)))));
+            dataGridViewCellStyle4.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle4.ForeColor = System.Drawing.Color.White;
+            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dgvCarrito.DefaultCellStyle = dataGridViewCellStyle4;
             this.dgvCarrito.EnableHeadersVisualStyles = false;
             this.dgvCarrito.Location = new System.Drawing.Point(15, 16);
             this.dgvCarrito.Name = "dgvCarrito";
@@ -160,10 +183,10 @@
             // 
             // cmbFiltroCategoria
             // 
-            this.cmbFiltroCategoria.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(50)))), ((int)(((byte)(60)))));
+            this.cmbFiltroCategoria.BackColor = System.Drawing.Color.White;
             this.cmbFiltroCategoria.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbFiltroCategoria.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.cmbFiltroCategoria.ForeColor = System.Drawing.Color.White;
+            this.cmbFiltroCategoria.ForeColor = System.Drawing.Color.Black;
             this.cmbFiltroCategoria.FormattingEnabled = true;
             this.cmbFiltroCategoria.Location = new System.Drawing.Point(490, 14);
             this.cmbFiltroCategoria.Name = "cmbFiltroCategoria";
@@ -172,10 +195,10 @@
             // 
             // cmbOrdenar
             // 
-            this.cmbOrdenar.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(50)))), ((int)(((byte)(60)))));
+            this.cmbOrdenar.BackColor = System.Drawing.Color.White;
             this.cmbOrdenar.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbOrdenar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.cmbOrdenar.ForeColor = System.Drawing.Color.White;
+            this.cmbOrdenar.ForeColor = System.Drawing.Color.Black;
             this.cmbOrdenar.FormattingEnabled = true;
             this.cmbOrdenar.Location = new System.Drawing.Point(764, 14);
             this.cmbOrdenar.Name = "cmbOrdenar";
@@ -204,13 +227,109 @@
             // 
             // txtBuscarProducto
             // 
-            this.txtBuscarProducto.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(50)))), ((int)(((byte)(60)))));
-            this.txtBuscarProducto.ForeColor = System.Drawing.Color.White;
+            this.txtBuscarProducto.BackColor = System.Drawing.Color.White;
+            this.txtBuscarProducto.ForeColor = System.Drawing.Color.Black;
             this.txtBuscarProducto.Location = new System.Drawing.Point(13, 16);
             this.txtBuscarProducto.Name = "txtBuscarProducto";
             this.txtBuscarProducto.Size = new System.Drawing.Size(351, 26);
             this.txtBuscarProducto.TabIndex = 12;
             this.txtBuscarProducto.TextChanged += new System.EventHandler(this.txtBuscarProducto_TextChanged);
+            // 
+            // colCarritoId
+            // 
+            this.colCarritoId.HeaderText = "ID Producto";
+            this.colCarritoId.MinimumWidth = 8;
+            this.colCarritoId.Name = "colCarritoId";
+            this.colCarritoId.Visible = false;
+            this.colCarritoId.Width = 150;
+            // 
+            // colCarritoCodigo
+            // 
+            this.colCarritoCodigo.HeaderText = "Código Barras";
+            this.colCarritoCodigo.MinimumWidth = 8;
+            this.colCarritoCodigo.Name = "colCarritoCodigo";
+            this.colCarritoCodigo.Visible = false;
+            this.colCarritoCodigo.Width = 150;
+            // 
+            // colCarritoNombre
+            // 
+            this.colCarritoNombre.FillWeight = 150F;
+            this.colCarritoNombre.HeaderText = "Producto";
+            this.colCarritoNombre.MinimumWidth = 8;
+            this.colCarritoNombre.Name = "colCarritoNombre";
+            this.colCarritoNombre.Width = 150;
+            // 
+            // colCarritoRestar
+            // 
+            this.colCarritoRestar.FillWeight = 25F;
+            this.colCarritoRestar.HeaderText = "-";
+            this.colCarritoRestar.MinimumWidth = 8;
+            this.colCarritoRestar.Name = "colCarritoRestar";
+            this.colCarritoRestar.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.colCarritoRestar.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            this.colCarritoRestar.Text = "-";
+            this.colCarritoRestar.UseColumnTextForButtonValue = true;
+            this.colCarritoRestar.Width = 150;
+            // 
+            // colCarritoCantidad
+            // 
+            this.colCarritoCantidad.FillWeight = 60F;
+            this.colCarritoCantidad.HeaderText = "Cant.";
+            this.colCarritoCantidad.MinimumWidth = 8;
+            this.colCarritoCantidad.Name = "colCarritoCantidad";
+            this.colCarritoCantidad.Width = 150;
+            // 
+            // colCarritoSumar
+            // 
+            this.colCarritoSumar.FillWeight = 25F;
+            this.colCarritoSumar.HeaderText = "+";
+            this.colCarritoSumar.MinimumWidth = 8;
+            this.colCarritoSumar.Name = "colCarritoSumar";
+            this.colCarritoSumar.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.colCarritoSumar.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            this.colCarritoSumar.Text = "+";
+            this.colCarritoSumar.UseColumnTextForButtonValue = true;
+            this.colCarritoSumar.Width = 150;
+            // 
+            // colCarritoPrecio
+            // 
+            dataGridViewCellStyle2.Format = "N0";
+            this.colCarritoPrecio.DefaultCellStyle = dataGridViewCellStyle2;
+            this.colCarritoPrecio.FillWeight = 95F;
+            this.colCarritoPrecio.HeaderText = "Precio U.";
+            this.colCarritoPrecio.MinimumWidth = 8;
+            this.colCarritoPrecio.Name = "colCarritoPrecio";
+            this.colCarritoPrecio.Width = 150;
+            // 
+            // colCarritoSubtotal
+            // 
+            dataGridViewCellStyle3.Format = "N0";
+            this.colCarritoSubtotal.DefaultCellStyle = dataGridViewCellStyle3;
+            this.colCarritoSubtotal.FillWeight = 85F;
+            this.colCarritoSubtotal.HeaderText = "Subtotal";
+            this.colCarritoSubtotal.MinimumWidth = 8;
+            this.colCarritoSubtotal.Name = "colCarritoSubtotal";
+            this.colCarritoSubtotal.Width = 150;
+            // 
+            // colCarritoEliminar
+            // 
+            this.colCarritoEliminar.FillWeight = 30F;
+            this.colCarritoEliminar.HeaderText = "X";
+            this.colCarritoEliminar.MinimumWidth = 8;
+            this.colCarritoEliminar.Name = "colCarritoEliminar";
+            this.colCarritoEliminar.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.colCarritoEliminar.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            this.colCarritoEliminar.Text = "X";
+            this.colCarritoEliminar.UseColumnTextForButtonValue = true;
+            this.colCarritoEliminar.Width = 150;
+            // 
+            // colCarritoIva
+            // 
+            this.colCarritoIva.HeaderText = "% IVA";
+            this.colCarritoIva.MinimumWidth = 8;
+            this.colCarritoIva.Name = "colCarritoIva";
+            this.colCarritoIva.Visible = false;
+            this.colCarritoIva.Width = 150;
             // 
             // frmPuntoVenta
             // 
@@ -253,5 +372,15 @@
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.TextBox txtBuscarProducto;
         private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colCarritoId;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colCarritoCodigo;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colCarritoNombre;
+        private System.Windows.Forms.DataGridViewButtonColumn colCarritoRestar;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colCarritoCantidad;
+        private System.Windows.Forms.DataGridViewButtonColumn colCarritoSumar;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colCarritoPrecio;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colCarritoSubtotal;
+        private System.Windows.Forms.DataGridViewButtonColumn colCarritoEliminar;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colCarritoIva;
     }
 }

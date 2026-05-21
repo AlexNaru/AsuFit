@@ -1,4 +1,5 @@
-﻿using AsuFit.Negocio; // Conectamos con tu capa de negocio ya existente
+﻿using AsuFit.Entidades; // <-- Agregado para poder usar el "molde" Proveedor
+using AsuFit.Negocio;
 using System;
 using System.Data;
 using System.Windows.Forms;
@@ -24,7 +25,6 @@ namespace AsuFit.Presentacion
             CargarResumen();
         }
 
-        // 2. Agrega este método en cualquier parte dentro de la clase
         private void CargarResumen()
         {
             try
@@ -69,22 +69,21 @@ namespace AsuFit.Presentacion
 
             try
             {
-                // 2. Por defecto, un proveedor nuevo entra como "Activo"
-                string estadoTexto = "Activo";
-                string categoria = cmbCategoria.SelectedItem != null ? cmbCategoria.SelectedItem.ToString() : "";
+                // 2. EMPAQUETAMOS LOS DATOS EN LA ENTIDAD
+                Proveedor objProveedor = new Proveedor();
+                objProveedor.IdProveedor = 0; // Es 0 porque es uno nuevo
+                objProveedor.Nombre = txtNombre.Text.Trim();
+                objProveedor.RUC = txtRuc.Text.Trim();
+                objProveedor.Categoria = cmbCategoria.SelectedItem != null ? cmbCategoria.SelectedItem.ToString() : "";
+                objProveedor.Contacto = txtContacto.Text.Trim();
+                objProveedor.Telefono = txtTelefono.Text.Trim();
+                objProveedor.Correo = txtCorreo.Text.Trim();
+                objProveedor.Direccion = txtDireccion.Text.Trim();
+                objProveedor.Ciudad = txtCiudad.Text.Trim();
+                objProveedor.Estado = "Activo"; // Por defecto, un proveedor nuevo entra como "Activo"
 
-                // 3. Enviamos los datos a SQL
-                bool exito = negocioProveedor.InsertarProveedor(
-                    txtNombre.Text,
-                    txtRuc.Text,
-                    categoria,
-                    txtContacto.Text,
-                    txtTelefono.Text,
-                    txtCorreo.Text,
-                    txtDireccion.Text,
-                    txtCiudad.Text,
-                    estadoTexto
-                );
+                // 3. Enviamos el PAQUETE a SQL usando la nueva arquitectura
+                bool exito = negocioProveedor.GuardarProveedor(objProveedor);
 
                 if (exito)
                 {

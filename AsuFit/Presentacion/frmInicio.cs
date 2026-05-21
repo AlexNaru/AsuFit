@@ -14,21 +14,34 @@ namespace AsuFit.Presentacion
 {
     public partial class frmInicio : Form
     {
+        #region 1. VARIABLES GLOBALES Y CONSTRUCTOR
         private InventarioNegocio negocioInventario = new InventarioNegocio();
 
         public frmInicio()
         {
             InitializeComponent();
-        }
 
+            // Bloquear autogeneración para mantener el control visual desde el diseñador
+            dgvVencimientos.AutoGenerateColumns = false;
+            dgvVencidos.AutoGenerateColumns = false;
+            dgvProductosStock.AutoGenerateColumns = false;
+            dgvProductosStockBajo.AutoGenerateColumns = false;
+        }
+        #endregion
+
+        #region 2. INICIALIZACIÓN Y CARGA (Load)
         private void frmInicio_Load(object sender, EventArgs e)
         {
             CargarDashboard();
-            CargarVencimientos();
             CargarTablasInventario();
+            CargarVencimientos();
+
+            // Se lanza al final para no retrasar el renderizado de la UI principal
             EnviarCorreosVencimiento();
         }
+        #endregion
 
+        #region 3. SECCIÓN IZQUIERDA: TARJETAS Y GRÁFICO DE FINANZAS
         private void CargarDashboard()
         {
             DashboardNegocio negocio = new DashboardNegocio();
@@ -44,20 +57,6 @@ namespace AsuFit.Presentacion
             lblUtilidad.Text = (ingresos - egresos).ToString("N0") + " Gs.";
 
             ConfigurarGrafico(ingresos, egresos);
-
-            DataTable dtVencimientos = negocio.ListarVencimientosProximos();
-            dgvVencimientos.DataSource = dtVencimientos;
-
-            if (dgvVencimientos.Columns.Contains("Telefono"))
-            {
-                dgvVencimientos.Columns["Telefono"].Visible = false;
-            }
-
-            if (dgvVencimientos.Columns.Contains("FechaVencimiento"))
-            {
-                dgvVencimientos.Columns["FechaVencimiento"].DefaultCellStyle.Format = "dd-MM-yyyy HH:mm";
-                dgvVencimientos.Columns["FechaVencimiento"].HeaderText = "Vencimiento";
-            }
         }
 
         private void ConfigurarGrafico(decimal ingresos, decimal egresos)
@@ -80,50 +79,132 @@ namespace AsuFit.Presentacion
 
             chartFinanzas.Series.Add(serie);
         }
+        #endregion
+
+        #region 4. SECCIÓN DERECHA SUPERIOR: INVENTARIO Y STOCK
+        private void CargarTablasInventario()
+        {
+            DataTable dtTodos = negocioInventario.ListarProductosBasico();
+            if (dtTodos != null)
+            {
+                dgvProductosStock.DataSource = dtTodos;
+                ConfigurarColumnasBasicas(dgvProductosStock);
+            }
+
+            DataTable dtBajo = negocioInventario.ListarProductosStockBajo();
+            if (dtBajo != null)
+            {
+                dgvProductosStockBajo.DataSource = dtBajo;
+                ConfigurarColumnasBasicas(dgvProductosStockBajo);
+            }
+        }
+
+        private void dgvProductosStock_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
+        {
+            dgvProductosStock.ClearSelection();
+        }
+
+        private void dgvProductosStockBajo_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
+        {
+            dgvProductosStockBajo.ClearSelection();
+        }
+
+        private void dgvProductosStockBajo_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
+        {
+            if (e.RowIndex >= 0)
+            {
+                int stockActual = -1;
+
+                // Captura flexible del stock por nombre o por índice si el binding falla
+                if (dgvProductosStockBajo.Columns.Contains("StockActual") && dgvProductosStockBajo.Rows[e.RowIndex].Cells["StockActual"].Value != null)
+                {
+                    int.TryParse(dgvProductosStockBajo.Rows[e.RowIndex].Cells["StockActual"].Value.ToString(), out stockActual);
+                }
+                else if (dgvProductosStockBajo.Columns.Count > 1 && dgvProductosStockBajo.Rows[e.RowIndex].Cells[1].Value != null)
+                {
+                    int.TryParse(dgvProductosStockBajo.Rows[e.RowIndex].Cells[1].Value.ToString(), out stockActual);
+                }
+
+                // Resaltar nivel de criticidad
+                if (stockActual == 0)
+                {
+                    dgvProductosStockBajo.Rows[e.RowIndex].DefaultCellStyle.BackColor = Color.LightCoral;
+                    dgvProductosStockBajo.Rows[e.RowIndex].DefaultCellStyle.ForeColor = Color.White;
+                }
+                else
+                {
+                    dgvProductosStockBajo.Rows[e.RowIndex].DefaultCellStyle.BackColor = Color.Gold;
+                    dgvProductosStockBajo.Rows[e.RowIndex].DefaultCellStyle.ForeColor = Color.Black;
+                }
+            }
+        }
+        #endregion
+
+        #region 5. SECCIÓN DERECHA INFERIOR: SOCIOS Y VENCIMIENTOS
+        private void CargarVencimientos()
+        {
+            try
+            {
+                DashboardNegocio negocioDash = new DashboardNegocio();
+                DataTable dtVencimientos = negocioDash.ListarVencimientosProximos();
+                dgvVencimientos.DataSource = dtVencimientos;
+
+                SocioNegocio negocioSocio = new SocioNegocio();
+                var listaVencidos = negocioSocio.ListarVencidos();
+                dgvVencidos.DataSource = listaVencidos;
+                lblVencimientos.Text = listaVencidos.Count.ToString();
+
+                dgvVencidos.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+                dgvVencidos.ClearSelection();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error al cargar los vencimientos: " + ex.Message, "Error de Sistema", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
 
         private void dgvVencimientos_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
         {
             dgvVencimientos.ClearSelection();
         }
 
-        private void CargarVencimientos()
+        private void dgvVencidos_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
         {
-            try
+            dgvVencidos.ClearSelection();
+        }
+
+        private void dgvVencimientos_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
+        {
+            if (e.RowIndex >= 0)
             {
-                SocioNegocio negocio = new SocioNegocio();
-                var listaVencidos = negocio.ListarVencidos();
-
-                dgvVencidos.DataSource = listaVencidos;
-                lblVencimientos.Text = listaVencidos.Count.ToString();
-
-                if (dgvVencidos.Columns.Count > 0)
-                {
-                    foreach (DataGridViewColumn col in dgvVencidos.Columns)
-                    {
-                        if (col.Name != "Nombre" && col.Name != "Apellido" && col.Name != "FechaVencimiento")
-                        {
-                            col.Visible = false;
-                        }
-                    }
-
-                    if (dgvVencidos.Columns.Contains("FechaVencimiento"))
-                    {
-                        dgvVencidos.Columns["FechaVencimiento"].DefaultCellStyle.Format = "dd-MM-yyyy HH:mm";
-                        dgvVencidos.Columns["FechaVencimiento"].HeaderText = "Vencimiento";
-                    }
-
-                    dgvVencidos.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-                }
-
-                dgvVencidos.ClearSelection();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Error al cargar los vencimientos: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                dgvVencimientos.Rows[e.RowIndex].DefaultCellStyle.BackColor = Color.Gold;
+                dgvVencimientos.Rows[e.RowIndex].DefaultCellStyle.ForeColor = Color.Black;
             }
         }
 
-        // --- MOTOR DE CORREOS CONECTADO A LA BASE DE DATOS ---
+        private void dgvVencidos_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
+        {
+            if (e.RowIndex >= 0)
+            {
+                dgvVencidos.Rows[e.RowIndex].DefaultCellStyle.BackColor = Color.LightCoral;
+                dgvVencidos.Rows[e.RowIndex].DefaultCellStyle.ForeColor = Color.White;
+            }
+        }
+        #endregion
+
+        #region 6. TAREAS EN SEGUNDO PLANO Y MÉTODOS AUXILIARES
+        private void ConfigurarColumnasBasicas(DataGridView dgv)
+        {
+            if (dgv.Columns.Count > 0)
+            {
+                dgv.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+                dgv.ReadOnly = true;
+                dgv.RowHeadersVisible = false;
+                dgv.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+                dgv.AllowUserToAddRows = false;
+            }
+        }
+
         private void EnviarCorreosVencimiento()
         {
             try
@@ -132,7 +213,6 @@ namespace AsuFit.Presentacion
                 {
                     oConexion.Open();
 
-                    // 1. OBTENEMOS LA CONFIGURACIÓN DESDE SQL
                     string configQuery = "SELECT CorreoEmisor, ContrasenaCorreo, DiasAviso1, DiasAviso2 FROM Configuracion WHERE IdConfiguracion = 1";
                     SqlCommand cmdConfig = new SqlCommand(configQuery, oConexion);
                     SqlDataReader reader = cmdConfig.ExecuteReader();
@@ -149,12 +229,11 @@ namespace AsuFit.Presentacion
                         if (reader["DiasAviso1"] != DBNull.Value) avisoLejano = Convert.ToInt32(reader["DiasAviso1"]);
                         if (reader["DiasAviso2"] != DBNull.Value) avisoCercano = Convert.ToInt32(reader["DiasAviso2"]);
                     }
-                    reader.Close(); // Cerramos el lector para poder ejecutar la siguiente consulta
+                    reader.Close();
 
-                    // Si no hay correo configurado, salimos del método
                     if (string.IsNullOrEmpty(correoGym) || string.IsNullOrEmpty(passGym)) return;
 
-                    // 2. BUSCAMOS SOCIOS (Usando los días dinámicos configurados por el dueño)
+                    // Filtramos socios activos con correo válido y que coincidan con la ventana de aviso configurada
                     string query = $@"
                         SELECT IdSocio, Nombre, Apellido, Email, FechaVencimiento, 
                                DATEDIFF(day, GETDATE(), FechaVencimiento) AS DiasRestantes
@@ -177,7 +256,7 @@ namespace AsuFit.Presentacion
                         smtp.EnableSsl = true;
                         smtp.UseDefaultCredentials = false;
                         smtp.DeliveryMethod = SmtpDeliveryMethod.Network;
-                        smtp.Credentials = new NetworkCredential(correoGym, passGym); // Credenciales desde BD
+                        smtp.Credentials = new NetworkCredential(correoGym, passGym);
 
                         foreach (DataRow row in dtAvisos.Rows)
                         {
@@ -191,7 +270,6 @@ namespace AsuFit.Presentacion
                             correo.From = new MailAddress(correoGym, "AsuFit GYM");
                             correo.To.Add(emailDestino);
 
-                            // Lógica de Asunto Dinámico
                             string diaTexto = "";
                             if (dias == 0) diaTexto = "HOY";
                             else if (dias == avisoCercano) diaTexto = "MAÑANA";
@@ -209,6 +287,7 @@ namespace AsuFit.Presentacion
                             {
                                 smtp.Send(correo);
 
+                                // Actualizar log de auditoría interna de envíos
                                 string updateQuery = "UPDATE Socios SET FechaUltimoAviso = GETDATE() WHERE IdSocio = @IdSocio";
                                 SqlCommand cmdUpdate = new SqlCommand(updateQuery, oConexion);
                                 cmdUpdate.Parameters.AddWithValue("@IdSocio", idSocio);
@@ -216,6 +295,7 @@ namespace AsuFit.Presentacion
                             }
                             catch
                             {
+                                // Continuar con el siguiente en la cola si este falla
                                 continue;
                             }
                         }
@@ -224,89 +304,9 @@ namespace AsuFit.Presentacion
             }
             catch
             {
-                // Try-Catch silencioso
+                // Silenciar bloque para evitar interrupciones durante el despliegue del Dashboard
             }
         }
-
-        private void dgvVencidos_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
-        {
-            dgvVencidos.ClearSelection();
-        }
-
-        private void dgvVencidos_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
-        {
-            if (e.RowIndex >= 0 && dgvVencidos.Columns.Contains("FechaVencimiento"))
-            {
-                var celdaFecha = dgvVencidos.Rows[e.RowIndex].Cells["FechaVencimiento"].Value;
-
-                if (celdaFecha != null && celdaFecha != DBNull.Value)
-                {
-                    DateTime fechaVencimiento = Convert.ToDateTime(celdaFecha);
-
-                    if (fechaVencimiento.Date < DateTime.Now.Date)
-                    {
-                        dgvVencidos.Rows[e.RowIndex].DefaultCellStyle.BackColor = System.Drawing.Color.LightCoral;
-                        dgvVencidos.Rows[e.RowIndex].DefaultCellStyle.ForeColor = System.Drawing.Color.White;
-                    }
-                }
-            }
-        }
-
-        private void dgvVencimientos_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
-        {
-            dgvVencimientos.Rows[e.RowIndex].DefaultCellStyle.BackColor = System.Drawing.Color.Gold;
-            dgvVencimientos.Rows[e.RowIndex].DefaultCellStyle.ForeColor = System.Drawing.Color.Black;
-        }
-
-        private void CargarTablasInventario()
-        {
-            DataTable dtTodos = negocioInventario.ListarProductosBasico();
-            if (dtTodos != null)
-            {
-                dgvProductosStock.DataSource = dtTodos;
-                ConfigurarColumnasBasicas(dgvProductosStock);
-            }
-
-            DataTable dtBajo = negocioInventario.ListarProductosStockBajo();
-            if (dtBajo != null)
-            {
-                dgvProductosStockBajo.DataSource = dtBajo;
-                ConfigurarColumnasBasicas(dgvProductosStockBajo);
-            }
-        }
-
-        private void ConfigurarColumnasBasicas(DataGridView dgv)
-        {
-            if (dgv.Columns.Count > 0)
-            {
-                foreach (DataGridViewColumn col in dgv.Columns)
-                {
-                    if (col.Name != "Nombre" && col.Name != "StockActual")
-                    {
-                        col.Visible = false;
-                    }
-                }
-
-                if (dgv.Columns.Contains("StockActual"))
-                {
-                    dgv.Columns["StockActual"].HeaderText = "Stock";
-                }
-                dgv.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-                dgv.ReadOnly = true;
-                dgv.RowHeadersVisible = false;
-                dgv.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-                dgv.AllowUserToAddRows = false;
-            }
-        }
-
-        private void dgvProductosStock_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
-        {
-            dgvProductosStock.ClearSelection();
-        }
-
-        private void dgvProductosStockBajo_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
-        {
-            dgvProductosStockBajo.ClearSelection();
-        }
+        #endregion
     }
 }

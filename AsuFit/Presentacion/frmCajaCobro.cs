@@ -237,11 +237,32 @@ namespace AsuFit.Presentacion
             // =============================================================
             // LLAMAMOS A NUESTRA NUEVA CAPA DE DATOS (ARQUITECTURA DE 3 CAPAS)
             // =============================================================
-            VentaDatos datosVenta = new VentaDatos();
-            string mensajeError;
-            int? idCajero = cajeroActual?.IdUsuario;
+            Venta objVenta = new Venta();
+            objVenta.Total = totalAPagar;
+            objVenta.MetodoPago = metodoPago;
+            objVenta.TipoComprobante = tipoComprobante;
+            objVenta.IdUsuario = cajeroActual?.IdUsuario;
+            objVenta.IdSocio = idClienteActual;
 
-            int idNuevaVenta = datosVenta.RegistrarVentaCompleta(totalAPagar, metodoPago, tipoComprobante, idCajero, idClienteActual, carritoDetalles, out mensajeError);
+            // Transformamos el DataTable en la Lista de Objetos (Detalles)
+            foreach (DataRow fila in carritoDetalles.Rows)
+            {
+                DetalleVenta item = new DetalleVenta();
+                item.IdProducto = Convert.ToInt32(fila["IdProducto"]);
+                item.Concepto = fila["Concepto"].ToString();
+                item.Cantidad = Convert.ToInt32(fila["Cantidad"]);
+                item.PrecioUnitario = Convert.ToDecimal(fila["PrecioUnitario"]);
+                item.SubTotal = Convert.ToDecimal(fila["SubTotal"]);
+                item.CodigoBarras = fila["CodigoBarras"].ToString();
+
+                objVenta.Detalles.Add(item);
+            }
+
+            // LLAMAMOS A LA NUEVA CAPA DE NEGOCIO
+            VentaNegocio negocioVenta = new VentaNegocio();
+            string mensajeError;
+
+            int idNuevaVenta = negocioVenta.RegistrarVentaCompleta(objVenta, out mensajeError);
 
             if (idNuevaVenta > 0)
             {

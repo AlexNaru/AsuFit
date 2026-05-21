@@ -15,6 +15,9 @@ namespace AsuFit.Presentacion
         {
             InitializeComponent();
             usuarioActual = userLogueado;
+
+            // --- EL CAMBIO CLAVE: Bloqueamos las columnas automáticas ---
+            dgvPlanes.AutoGenerateColumns = false;
         }
 
         private void frmGestionPlanes_Load(object sender, EventArgs e)
@@ -22,10 +25,9 @@ namespace AsuFit.Presentacion
             CargarGrilla();
         }
 
-        // --- NUEVO: EVENTO DEL CHECKBOX ---
         private void chkMostrarInactivos_CheckedChanged(object sender, EventArgs e)
         {
-            CargarGrilla(); // Cada vez que tildas/destildas, se recarga la tabla
+            CargarGrilla();
         }
 
         private void CargarGrilla()
@@ -33,17 +35,17 @@ namespace AsuFit.Presentacion
             try
             {
                 PlanNegocio negocio = new PlanNegocio();
-
-                // --- CAMBIO APLICADO: Filtro por estado ---
                 string estadoFiltro = chkMostrarInactivos.Checked ? "Inactivo" : "Activo";
+
+                // Al asignar el DataSource, los datos se acomodarán solos según el DataPropertyName
                 dgvPlanes.DataSource = negocio.ListarPlanes(estadoFiltro);
 
-                if (dgvPlanes.Columns.Count > 0)
-                {
-                    dgvPlanes.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-                    // Ocultamos el ID para limpiar la vista
-                    dgvPlanes.Columns["IdPlan"].Visible = false;
-                }
+                dgvPlanes.ClearSelection();
+                idPlanSeleccionado = 0;
+
+                // Actualizamos la etiqueta con el total de planes encontrados
+                int cantidad = dgvPlanes.Rows.Count;
+                lblTotal.Text = "Planes encontrados: " + cantidad.ToString();
             }
             catch (Exception ex)
             {
@@ -55,100 +57,66 @@ namespace AsuFit.Presentacion
         {
             if (e.RowIndex >= 0)
             {
-                DataGridViewRow fila = dgvPlanes.Rows[e.RowIndex];
-                idPlanSeleccionado = Convert.ToInt32(fila.Cells["IdPlan"].Value);
-                txtNombrePlan.Text = fila.Cells["NombrePlan"].Value.ToString();
-                txtPrecio.Text = Math.Round(Convert.ToDecimal(fila.Cells["Precio"].Value), 0).ToString();
-                txtDuracionDias.Text = fila.Cells["DuracionDias"].Value.ToString();
+                // Capturamos el ID usando el Name de la columna
+                idPlanSeleccionado = Convert.ToInt32(dgvPlanes.Rows[e.RowIndex].Cells["colPlanId"].Value);
             }
         }
 
-        private void btnGuardar_Click(object sender, EventArgs e)
+        private void btnNuevo_Click(object sender, EventArgs e)
         {
-            try
-            {
-                Plan nuevoPlan = new Plan();
-                nuevoPlan.NombrePlan = txtNombrePlan.Text.Trim();
-                nuevoPlan.Precio = Convert.ToDecimal(txtPrecio.Text.Trim());
-                nuevoPlan.DuracionDias = Convert.ToInt32(txtDuracionDias.Text.Trim());
-
-                PlanNegocio negocio = new PlanNegocio();
-                string mensaje;
-                if (negocio.RegistrarPlan(nuevoPlan, out mensaje))
-                {
-                    GestorAuditoria.Registrar(usuarioActual.NombreCompleto, "Planes", "Nuevo Plan", $"Creó el plan '{nuevoPlan.NombrePlan}' por Gs. {nuevoPlan.Precio:N0}.");
-                    MessageBox.Show("¡Plan guardado con éxito!", "Excelente", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    LimpiarCampos();
-                    CargarGrilla();
-                }
-                else
-                {
-                    MessageBox.Show(mensaje, "No se pudo guardar", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                }
-            }
-            catch (FormatException)
-            {
-                MessageBox.Show("Por favor, ingresá solo números en Precio y Días.", "Error de formato", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Ocurrió un error: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
+            frmRegistrarPlan ventanaRegistro = new frmRegistrarPlan(usuarioActual);
+            ventanaRegistro.ShowDialog();
+            CargarGrilla();
         }
 
         private void btnEditar_Click(object sender, EventArgs e)
         {
-            if (idPlanSeleccionado == 0)
+            if (idPlanSeleccionado > 0)
             {
-                MessageBox.Show("Por favor, seleccioná un plan de la lista con un clic para editarlo.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                return;
+                DataGridViewRow fila = dgvPlanes.CurrentRow;
+
+                // --- CÓDIGO LIMPIO RESTAURADO ---
+                // Como los DataPropertyName ya están correctos, podemos convertir directamente
+                Plan planSeleccionado = new Plan
+                {
+                    IdPlan = idPlanSeleccionado,
+                    NombrePlan = fila.Cells["colPlanNombre"].Value.ToString(),
+                    Precio = Convert.ToDecimal(fila.Cells["colPlanPrecio"].Value),
+                    DuracionDias = Convert.ToInt32(fila.Cells["colPlanDuracion"].Value)
+                };
+
+                frmRegistrarPlan ventanaRegistro = new frmRegistrarPlan(planSeleccionado, usuarioActual);
+                ventanaRegistro.ShowDialog();
+
+                CargarGrilla();
             }
-
-            Plan planActual = new Plan();
-            planActual.IdPlan = idPlanSeleccionado;
-            planActual.NombrePlan = txtNombrePlan.Text.Trim();
-            planActual.Precio = Convert.ToDecimal(txtPrecio.Text.Trim());
-            planActual.DuracionDias = Convert.ToInt32(txtDuracionDias.Text.Trim());
-
-            frmEditarPlan ventanaEdicion = new frmEditarPlan(planActual);
-            if (ventanaEdicion.ShowDialog() == DialogResult.OK)
+            else
             {
-                PlanNegocio negocio = new PlanNegocio();
-                string mensaje;
-
-                if (negocio.EditarPlan(ventanaEdicion.PlanAEditar, out mensaje))
-                {
-                    GestorAuditoria.Registrar(usuarioActual.NombreCompleto, "Planes", "Edición", $"Modificó el plan '{ventanaEdicion.PlanAEditar.NombrePlan}'.");
-                    MessageBox.Show("¡Plan editado con éxito!", "Excelente", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    LimpiarCampos();
-                    CargarGrilla();
-                }
-                else
-                {
-                    MessageBox.Show(mensaje, "Error al guardar", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                }
+                MessageBox.Show("Por favor, seleccioná un plan de la tabla haciendo clic en la fila.", "Atención", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
 
-        private void btnEliminar_Click(object sender, EventArgs e)
+        private void btnEstado_Click(object sender, EventArgs e)
         {
             if (idPlanSeleccionado == 0)
             {
-                MessageBox.Show("Por favor, seleccioná un plan de la lista con un clic para eliminarlo.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("Por favor, seleccioná un plan de la tabla primero.", "Atención", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
-            DialogResult advertencia = MessageBox.Show("¿Estás seguro de que querés eliminar este plan?", "Confirmar baja", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-            if (advertencia == DialogResult.Yes)
+            string nuevoEstado = chkMostrarInactivos.Checked ? "Activo" : "Inactivo";
+
+            DialogResult pregunta = MessageBox.Show($"¿Está seguro que desea cambiar el estado de este plan a {nuevoEstado}?", "Confirmar", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+            if (pregunta == DialogResult.Yes)
             {
                 PlanNegocio negocio = new PlanNegocio();
                 string mensaje;
 
-                if (negocio.EliminarPlan(idPlanSeleccionado, out mensaje))
+                if (negocio.CambiarEstadoPlan(idPlanSeleccionado, nuevoEstado, out mensaje))
                 {
-                    GestorAuditoria.Registrar(usuarioActual.NombreCompleto, "Planes", "Baja", $"Eliminó el plan ID {idPlanSeleccionado}.");
-                    MessageBox.Show("El plan fue eliminado del sistema.", "Listo", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    LimpiarCampos();
+                    GestorAuditoria.Registrar(usuarioActual.NombreCompleto, "Planes", "Cambio de Estado", $"Se cambió el estado del plan ID {idPlanSeleccionado} a {nuevoEstado}.");
+                    MessageBox.Show("El estado del plan fue actualizado.", "Listo", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     CargarGrilla();
                 }
                 else
@@ -158,20 +126,6 @@ namespace AsuFit.Presentacion
             }
         }
 
-        private void btnLimpiar_Click(object sender, EventArgs e)
-        {
-            LimpiarCampos();
-        }
-
-        private void LimpiarCampos()
-        {
-            txtNombrePlan.Clear();
-            txtPrecio.Clear();
-            txtDuracionDias.Clear();
-            idPlanSeleccionado = 0;
-            txtNombrePlan.Focus();
-        }
-
         private void dgvPlanes_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
         {
             dgvPlanes.ClearSelection();
@@ -179,14 +133,8 @@ namespace AsuFit.Presentacion
 
         private void frmGestionPlanes_Click(object sender, EventArgs e)
         {
-            // 1. Desmarcamos la fila
             dgvPlanes.ClearSelection();
             idPlanSeleccionado = 0;
-
-            // 2. Limpiamos los textos (ajustá los nombres a tus TextBoxes)
-            txtNombrePlan.Clear();
-            txtPrecio.Clear();
-            txtDuracionDias.Clear();
         }
     }
 }
