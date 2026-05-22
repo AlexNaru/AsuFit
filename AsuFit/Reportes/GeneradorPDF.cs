@@ -10,9 +10,7 @@ namespace AsuFit.Reportes
 {
     public class GeneradorPDF
     {
-        // ========================================================================
-        // 1. MÉTODO PARA EL TICKET TÉRMICO (Impresoras chicas de 80mm)
-        // ========================================================================
+        #region 1. TICKET TÉRMICO (Impresoras 80mm)
         public void GenerarTicketTermico(DataTable detalles, decimal total, string cliente, string ci, string ruc, string metodoPago, decimal montoRecibido, decimal vuelto, string cajero, string nroTicket)
         {
             Rectangle tamañoPapel = new Rectangle(226f, 800f);
@@ -144,7 +142,7 @@ namespace AsuFit.Reportes
                 }
                 doc.Add(tablaTotales);
 
-                // --- NUEVO: TOTAL EN LETRAS PARA EL TICKET ALINEADO A LA IZQUIERDA ---
+                // TOTAL EN LETRAS PARA EL TICKET
                 string montoEnLetras = ConvertirMontoALetras(total);
                 Paragraph pLetras = new Paragraph($"TOTAL A PAGAR: Gs. ({montoEnLetras} GUARANÍES)", fuenteNegrita);
                 pLetras.Alignment = Element.ALIGN_LEFT;
@@ -190,7 +188,7 @@ namespace AsuFit.Reportes
                 pie.Add($"Atendido por: {cajero}\n\n");
                 doc.Add(pie);
 
-                // --- NUEVO: CÓDIGO QR EN EL TICKET (CENTRADO) ---
+                // CÓDIGO QR EN EL TICKET (CENTRADO)
                 string datosQr = $"Comprobante Nro. {nroTicket} - AsuFit GYM - Total: Gs. {total.ToString("N0")}";
                 BarcodeQRCode qrCode = new BarcodeQRCode(datosQr, 100, 100, null);
                 Image imgQr = qrCode.GetImage();
@@ -210,10 +208,9 @@ namespace AsuFit.Reportes
                 throw new Exception("Hubo un error al generar el PDF del Ticket: " + ex.Message);
             }
         }
+        #endregion
 
-        // ========================================================================
-        // 2. MÉTODO PARA LA FACTURA LEGAL (Hoja A4)
-        // ========================================================================
+        #region 2. FACTURA LEGAL (Formato A4)
         public void GenerarFacturaLegalA4(DataTable detalles, decimal total, string cliente, string ci, string ruc, string correoCliente, string metodoPago, decimal montoRecibido, decimal vuelto, string cajero, string nroFactura)
         {
             Document doc = new Document(PageSize.A4, 40f, 40f, 40f, 40f);
@@ -396,13 +393,11 @@ namespace AsuFit.Reportes
 
                 doc.Add(tablaDetalles);
 
-                // --- NUEVO: CÓDIGO QR TIPO "KUATIA" PARA LA FACTURA ---
+                // CÓDIGO QR TIPO "KUATIA" PARA LA FACTURA
                 string datosQrFac = $"Factura Nro. {nroFactura} - AsuFit GYM - Total: Gs. {total.ToString("N0")} - Cliente: {cliente} - RUC: {ruc}";
                 BarcodeQRCode qrCodeFac = new BarcodeQRCode(datosQrFac, 100, 100, null);
                 Image imgQrFac = qrCodeFac.GetImage();
                 imgQrFac.ScaleAbsolute(90, 90);
-
-                // --- CAMBIO APLICADO: QR CENTRADO EN LA FACTURA ---
                 imgQrFac.Alignment = Element.ALIGN_CENTER;
 
                 doc.Add(new Paragraph("\n"));
@@ -416,76 +411,9 @@ namespace AsuFit.Reportes
                 throw new Exception("Hubo un error al generar la Factura A4: " + ex.Message);
             }
         }
+        #endregion
 
-        // ========================================================================
-        // 3. MÉTODO AUXILIAR: NÚMEROS A LETRAS
-        // ========================================================================
-        private string ConvertirMontoALetras(decimal numero)
-        {
-            if (numero == 0) return "CERO";
-            long entero = Convert.ToInt64(Math.Truncate(numero));
-            return NumeroALetras(entero).Trim().ToUpper();
-        }
-
-        private string NumeroALetras(long value)
-        {
-            string num2Text;
-            if (value == 0) num2Text = "CERO";
-            else if (value == 1) num2Text = "UN";
-            else if (value == 2) num2Text = "DOS";
-            else if (value == 3) num2Text = "TRES";
-            else if (value == 4) num2Text = "CUATRO";
-            else if (value == 5) num2Text = "CINCO";
-            else if (value == 6) num2Text = "SEIS";
-            else if (value == 7) num2Text = "SIETE";
-            else if (value == 8) num2Text = "OCHO";
-            else if (value == 9) num2Text = "NUEVE";
-            else if (value == 10) num2Text = "DIEZ";
-            else if (value == 11) num2Text = "ONCE";
-            else if (value == 12) num2Text = "DOCE";
-            else if (value == 13) num2Text = "TRECE";
-            else if (value == 14) num2Text = "CATORCE";
-            else if (value == 15) num2Text = "QUINCE";
-            else if (value < 20) num2Text = "DIECI" + NumeroALetras(value - 10);
-            else if (value == 20) num2Text = "VEINTE";
-            else if (value < 30) num2Text = "VEINTI" + NumeroALetras(value - 20);
-            else if (value == 30) num2Text = "TREINTA";
-            else if (value == 40) num2Text = "CUARENTA";
-            else if (value == 50) num2Text = "CINCUENTA";
-            else if (value == 60) num2Text = "SESENTA";
-            else if (value == 70) num2Text = "SETENTA";
-            else if (value == 80) num2Text = "OCHENTA";
-            else if (value == 90) num2Text = "NOVENTA";
-            else if (value < 100) num2Text = NumeroALetras((value / 10) * 10) + " Y " + NumeroALetras(value % 10);
-            else if (value == 100) num2Text = "CIEN";
-            else if (value < 200) num2Text = "CIENTO " + NumeroALetras(value - 100);
-            else if ((value == 200) || (value == 300) || (value == 400) || (value == 600) || (value == 800)) num2Text = NumeroALetras(value / 100) + "CIENTOS";
-            else if (value == 500) num2Text = "QUINIENTOS";
-            else if (value == 700) num2Text = "SETECIENTOS";
-            else if (value == 900) num2Text = "NOVECIENTOS";
-            else if (value < 1000) num2Text = NumeroALetras((value / 100) * 100) + " " + NumeroALetras(value % 100);
-            else if (value == 1000) num2Text = "MIL";
-            else if (value < 2000) num2Text = "MIL " + NumeroALetras(value % 1000);
-            else if (value < 1000000)
-            {
-                num2Text = NumeroALetras(value / 1000) + " MIL";
-                if ((value % 1000) > 0) num2Text = num2Text + " " + NumeroALetras(value % 1000);
-            }
-            else if (value == 1000000) num2Text = "UN MILLON";
-            else if (value < 2000000) num2Text = "UN MILLON " + NumeroALetras(value % 1000000);
-            else if (value < 1000000000000)
-            {
-                num2Text = NumeroALetras(value / 1000000) + " MILLONES ";
-                if ((value - (value / 1000000) * 1000000) > 0) num2Text = num2Text + " " + NumeroALetras(value - (value / 1000000) * 1000000);
-            }
-            else num2Text = "NUMERO MUY GRANDE";
-
-            return num2Text.Replace("  ", " ");
-        }
-
-        // ========================================================================
-        // 4. MÉTODO PARA EL TICKET DE CIERRE DE CAJA (ARQUEO)
-        // ========================================================================
+        #region 3. TICKET DE CIERRE DE CAJA (ARQUEO)
         public string GenerarTicketArqueo(int idTurno, string cajero, DateTime fechaApertura, decimal trans, decimal efvo, decimal fondo, decimal gastos, decimal esperado, decimal contado, decimal diferencia)
         {
             Rectangle tamañoPapel = new Rectangle(226f, 800f);
@@ -579,5 +507,71 @@ namespace AsuFit.Reportes
                 throw new Exception("Error al generar el PDF de Arqueo: " + ex.Message);
             }
         }
+        #endregion
+
+        #region 4. UTILIDADES: CONVERSOR DE NÚMEROS A LETRAS
+        private string ConvertirMontoALetras(decimal numero)
+        {
+            if (numero == 0) return "CERO";
+            long entero = Convert.ToInt64(Math.Truncate(numero));
+            return NumeroALetras(entero).Trim().ToUpper();
+        }
+
+        private string NumeroALetras(long value)
+        {
+            string num2Text;
+            if (value == 0) num2Text = "CERO";
+            else if (value == 1) num2Text = "UN";
+            else if (value == 2) num2Text = "DOS";
+            else if (value == 3) num2Text = "TRES";
+            else if (value == 4) num2Text = "CUATRO";
+            else if (value == 5) num2Text = "CINCO";
+            else if (value == 6) num2Text = "SEIS";
+            else if (value == 7) num2Text = "SIETE";
+            else if (value == 8) num2Text = "OCHO";
+            else if (value == 9) num2Text = "NUEVE";
+            else if (value == 10) num2Text = "DIEZ";
+            else if (value == 11) num2Text = "ONCE";
+            else if (value == 12) num2Text = "DOCE";
+            else if (value == 13) num2Text = "TRECE";
+            else if (value == 14) num2Text = "CATORCE";
+            else if (value == 15) num2Text = "QUINCE";
+            else if (value < 20) num2Text = "DIECI" + NumeroALetras(value - 10);
+            else if (value == 20) num2Text = "VEINTE";
+            else if (value < 30) num2Text = "VEINTI" + NumeroALetras(value - 20);
+            else if (value == 30) num2Text = "TREINTA";
+            else if (value == 40) num2Text = "CUARENTA";
+            else if (value == 50) num2Text = "CINCUENTA";
+            else if (value == 60) num2Text = "SESENTA";
+            else if (value == 70) num2Text = "SETENTA";
+            else if (value == 80) num2Text = "OCHENTA";
+            else if (value == 90) num2Text = "NOVENTA";
+            else if (value < 100) num2Text = NumeroALetras((value / 10) * 10) + " Y " + NumeroALetras(value % 10);
+            else if (value == 100) num2Text = "CIEN";
+            else if (value < 200) num2Text = "CIENTO " + NumeroALetras(value - 100);
+            else if ((value == 200) || (value == 300) || (value == 400) || (value == 600) || (value == 800)) num2Text = NumeroALetras(value / 100) + "CIENTOS";
+            else if (value == 500) num2Text = "QUINIENTOS";
+            else if (value == 700) num2Text = "SETECIENTOS";
+            else if (value == 900) num2Text = "NOVECIENTOS";
+            else if (value < 1000) num2Text = NumeroALetras((value / 100) * 100) + " " + NumeroALetras(value % 100);
+            else if (value == 1000) num2Text = "MIL";
+            else if (value < 2000) num2Text = "MIL " + NumeroALetras(value % 1000);
+            else if (value < 1000000)
+            {
+                num2Text = NumeroALetras(value / 1000) + " MIL";
+                if ((value % 1000) > 0) num2Text = num2Text + " " + NumeroALetras(value % 1000);
+            }
+            else if (value == 1000000) num2Text = "UN MILLON";
+            else if (value < 2000000) num2Text = "UN MILLON " + NumeroALetras(value % 1000000);
+            else if (value < 1000000000000)
+            {
+                num2Text = NumeroALetras(value / 1000000) + " MILLONES ";
+                if ((value - (value / 1000000) * 1000000) > 0) num2Text = num2Text + " " + NumeroALetras(value - (value / 1000000) * 1000000);
+            }
+            else num2Text = "NUMERO MUY GRANDE";
+
+            return num2Text.Replace("  ", " ");
+        }
+        #endregion
     }
 }

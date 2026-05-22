@@ -7,6 +7,7 @@ namespace AsuFit.Presentacion
 {
     public partial class frmDashboard : Form
     {
+        #region VARIABLES GLOBALES Y CONSTRUCTOR
         // Variable para recordar cuál es el botón que está seleccionado actualmente
         private Button botonActivo = null;
 
@@ -27,7 +28,9 @@ namespace AsuFit.Presentacion
             AbrirFormularioHijo(new frmInicio());
             ResaltarBoton(btnInicio);
         }
+        #endregion
 
+        #region MÉTODOS DE LA INTERFAZ (UI)
         // --- MÉTODO PARA LOS COLORES DEL MENÚ ---
         private void ResaltarBoton(object btnSender)
         {
@@ -45,7 +48,7 @@ namespace AsuFit.Presentacion
             }
         }
 
-        // --- 👇 EL NUEVO MÉTODO CENTRALIZADO 👇 ---
+        // --- MÉTODO CENTRALIZADO PARA ABRIR VENTANAS ---
         private void AbrirFormularioHijo(Form formularioHijo)
         {
             // 1. Limpiamos el panel central por si ya había otra ventana abierta
@@ -71,10 +74,9 @@ namespace AsuFit.Presentacion
             pnlContenedor.Controls.Add(formularioHijo);
             formularioHijo.Show();
         }
+        #endregion
 
-
-        // --- EVENTOS DE LOS BOTONES ---
-
+        #region EVENTOS: MÓDULO PRINCIPAL Y SOCIOS
         private void btnInicio_Click(object sender, EventArgs e)
         {
             ResaltarBoton(sender);
@@ -91,18 +93,6 @@ namespace AsuFit.Presentacion
         {
             ResaltarBoton(sender);
             AbrirFormularioHijo(new frmGestionSocios(usuarioActual));
-        }
-
-        private void btnRegistrarUsuario_Click(object sender, EventArgs e)
-        {
-            ResaltarBoton(sender);
-            AbrirFormularioHijo(new frmRegistrarUsuario());
-        }
-
-        private void btnGestionUsuarios_Click(object sender, EventArgs e)
-        {
-            ResaltarBoton(sender);
-            AbrirFormularioHijo(new frmGestionUsuarios(usuarioActual));
         }
 
         private void btnRegistroAsistencia_Click(object sender, EventArgs e)
@@ -135,64 +125,99 @@ namespace AsuFit.Presentacion
 
             frm.Show();
         }
+        #endregion
 
+        #region EVENTOS: MÓDULO CAJA Y VENTAS
         private void btnRegistrarCobro_Click(object sender, EventArgs e)
         {
-            AbrirFormularioHijo(new frmRegistrarCobro(usuarioActual));
             ResaltarBoton(sender);
+            AbrirFormularioHijo(new frmRegistrarCobro(usuarioActual));
         }
 
         private void btnInventarioVentas_Click(object sender, EventArgs e)
         {
-            AbrirFormularioHijo(new frmPuntoVenta(usuarioActual));
             ResaltarBoton(sender);
+            AbrirFormularioHijo(new frmPuntoVenta(usuarioActual));
         }
 
-        private void btnGestionGastos_Click(object sender, EventArgs e)
+        private void btnHistorialVentas_Click(object sender, EventArgs e)
         {
-            frmGestionGastos ventanaGastos = new frmGestionGastos();
-            AbrirFormularioHijo(ventanaGastos);
             ResaltarBoton(sender);
+            AbrirFormularioHijo(new frmHistorialTransacciones());
         }
 
         private void btnArqueoCaja_Click(object sender, EventArgs e)
         {
-            AbrirFormularioHijo(new frmArqueoCaja(usuarioActual));
             ResaltarBoton(sender);
+            AbrirFormularioHijo(new frmArqueoCaja(usuarioActual));
+        }
+        #endregion
+
+        #region EVENTOS: MÓDULO INVENTARIO Y GASTOS
+        private void btnGestionProductos_Click(object sender, EventArgs e)
+        {
+            ResaltarBoton(sender);
+            AbrirFormularioHijo(new frmGestionProductos(usuarioActual));
         }
 
-        private void btnGestionPlanes_Click(object sender, EventArgs e)
+        private void btnIngresoMercaderia_Click(object sender, EventArgs e)
         {
-            AbrirFormularioHijo(new frmGestionPlanes(usuarioActual));
             ResaltarBoton(sender);
+            AbrirFormularioHijo(new frmIngresoMercaderia(usuarioActual));
         }
 
         private void btnProveedores_Click(object sender, EventArgs e)
         {
-            AbrirFormularioHijo(new frmProveedores(usuarioActual));
             ResaltarBoton(sender);
+            AbrirFormularioHijo(new frmProveedores(usuarioActual));
         }
 
+        private void btnGestionGastos_Click(object sender, EventArgs e)
+        {
+            ResaltarBoton(sender);
+            AbrirFormularioHijo(new frmGestionGastos());
+        }
+
+        private void btnGestionPlanes_Click(object sender, EventArgs e)
+        {
+            ResaltarBoton(sender);
+            AbrirFormularioHijo(new frmGestionPlanes(usuarioActual));
+        }
+        #endregion
+
+        #region EVENTOS: MÓDULO ADMINISTRACIÓN Y SEGURIDAD
         private void btnReportesEstadísticas_Click(object sender, EventArgs e)
         {
-            AbrirFormularioHijo(new frmReportes());
             ResaltarBoton(sender);
+            AbrirFormularioHijo(new frmReportes());
         }
 
         private void btnRespaldosAuditoría_Click(object sender, EventArgs e)
         {
-            AbrirFormularioHijo(new frmAuditoria());
             ResaltarBoton(sender);
+            AbrirFormularioHijo(new frmAuditoria());
+        }
+
+        private void btnRegistrarUsuario_Click(object sender, EventArgs e)
+        {
+            ResaltarBoton(sender);
+            AbrirFormularioHijo(new frmRegistrarUsuario());
+        }
+
+        private void btnGestionUsuarios_Click(object sender, EventArgs e)
+        {
+            ResaltarBoton(sender);
+            AbrirFormularioHijo(new frmGestionUsuarios(usuarioActual));
         }
 
         private void btnConfiguración_Click(object sender, EventArgs e)
         {
-            AbrirFormularioHijo(new frmConfiguracion(usuarioActual));
             ResaltarBoton(sender);
+            AbrirFormularioHijo(new frmConfiguracion(usuarioActual));
         }
+        #endregion
 
-        // --- EVENTOS DEL SISTEMA Y LOGOUT ---
-
+        #region EVENTOS DEL SISTEMA Y LOGOUT
         private void btnCerrarSesion_Click(object sender, EventArgs e)
         {
             DialogResult resultado = MessageBox.Show("¿Está seguro de que desea cerrar la sesión actual?",
@@ -241,24 +266,6 @@ namespace AsuFit.Presentacion
                 }
             }
         }
-
-        private void btnGestionProductos_Click(object sender, EventArgs e)
-        {
-            AbrirFormularioHijo(new frmGestionProductos(usuarioActual));
-            ResaltarBoton(sender);
-        }
-
-        private void btnIngresoMercaderia_Click(object sender, EventArgs e)
-        {
-            AbrirFormularioHijo(new frmIngresoMercaderia(usuarioActual));
-            ResaltarBoton(sender);
-        }
-
-        // Este es tu botón unificado de Historial (antes llamado btnHistorialVentas)
-        private void btnHistorialVentas_Click(object sender, EventArgs e)
-        {
-            AbrirFormularioHijo(new frmHistorialTransacciones());
-            ResaltarBoton(sender);
-        }
+        #endregion
     }
 }
