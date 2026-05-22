@@ -25,6 +25,9 @@ namespace AsuFit.Presentacion
 
         private void frmDashboard_Load(object sender, EventArgs e)
         {
+            this.Scale(new SizeF(1.6f, 1.6f));
+            this.CenterToScreen(); // <-- ESTA ES LA LÍNEA MÁGICA
+
             AbrirFormularioHijo(new frmInicio());
             ResaltarBoton(btnInicio);
         }
@@ -51,28 +54,37 @@ namespace AsuFit.Presentacion
         // --- MÉTODO CENTRALIZADO PARA ABRIR VENTANAS ---
         private void AbrirFormularioHijo(Form formularioHijo)
         {
-            // 1. Limpiamos el panel central por si ya había otra ventana abierta
-            pnlContenedor.Controls.Clear();
+            // 1. CONGELAR EL DIBUJO (La magia anti-parpadeo)
+            pnlContenedor.SuspendLayout();
 
-            // 2. Quitamos bordes y comportamiento de ventana independiente
+            // 2. Limpiar y LIBERAR MEMORIA (Fundamental para optimizar el sistema)
+            if (pnlContenedor.Controls.Count > 0)
+            {
+                pnlContenedor.Controls[0].Dispose(); // Destruye completamente el form anterior
+                pnlContenedor.Controls.Clear();
+            }
+
+            // 3. Preparar el nuevo formulario
             formularioHijo.TopLevel = false;
             formularioHijo.FormBorderStyle = FormBorderStyle.None;
+            formularioHijo.Anchor = AnchorStyles.None;
 
-            // 3. Calculamos el centro exacto del contenedor gris
+            // 4. Escalar
+            formularioHijo.Scale(new SizeF(1.6f, 1.6f));
+
+            // 5. Calcular el centro y posicionar ANTES de agregarlo a la pantalla
             int x = (pnlContenedor.Width - formularioHijo.Width) / 2;
             int y = (pnlContenedor.Height - formularioHijo.Height) / 2;
 
-            // Evitamos que se corte si algún formulario llega a ser más grande que el panel
-            if (x < 0) x = 0;
-            if (y < 0) y = 0;
+            // Asignación directa con validación rápida de números negativos
+            formularioHijo.Location = new Point(x > 0 ? x : 0, y > 0 ? y : 0);
 
-            // 4. Lo posicionamos en el centro y le quitamos los anclajes para que flote
-            formularioHijo.Location = new Point(x, y);
-            formularioHijo.Anchor = AnchorStyles.None;
-
-            // 5. Lo agregamos al panel gris y lo mostramos
+            // 6. Agregar y Mostrar
             pnlContenedor.Controls.Add(formularioHijo);
             formularioHijo.Show();
+
+            // 7. REANUDAR EL DIBUJO (Muestra todo de golpe, perfectamente acomodado)
+            pnlContenedor.ResumeLayout();
         }
         #endregion
 

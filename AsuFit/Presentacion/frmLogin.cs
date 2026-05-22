@@ -69,6 +69,8 @@ namespace AsuFit.Presentacion
 
         private void frmLogin_Load(object sender, EventArgs e)
         {
+            this.Scale(new SizeF(1.6f, 1.6f));
+            this.CenterToScreen(); // <-- ESTA ES LA LÍNEA MÁGICA
             // Esta es la forma segura de dar foco antes de que la ventana sea visible
             this.ActiveControl = txtUsername;
 
