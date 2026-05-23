@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Data.SqlClient;
+using System.Configuration; // NUEVO: Necesario para leer el App.config / AsuFit.exe.config
 
 namespace AsuFit.Datos
 {
@@ -7,8 +8,8 @@ namespace AsuFit.Datos
     {
         public static SqlConnection ObtenerConexion()
         {
-            // Esta ruta universal (.\SQLEXPRESS) funcionará en tu PC y en la notebook de tu compañero
-            string cadenaConexion = "Data Source=.\\SQLEXPRESS;Initial Catalog=AsuFitDB;Integrated Security=True;";
+            // Ahora va al archivo de configuración externo y busca la conexión llamada "AsuFitConexion"
+            string cadenaConexion = ConfigurationManager.ConnectionStrings["AsuFitConexion"].ConnectionString;
             return new SqlConnection(cadenaConexion);
         }
     }

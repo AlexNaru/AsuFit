@@ -25,7 +25,8 @@ namespace AsuFit.Presentacion
 
         private void frmDashboard_Load(object sender, EventArgs e)
         {
-            this.Scale(new SizeF(1.6f, 1.6f));
+            
+            this.Scale(new SizeF(1.4f, 1.4f));
             this.CenterToScreen(); // <-- ESTA ES LA LÍNEA MÁGICA
 
             AbrirFormularioHijo(new frmInicio());
@@ -39,51 +40,81 @@ namespace AsuFit.Presentacion
         {
             if (btnSender != null)
             {
+                // 1. Si ya había un botón seleccionado antes, lo regresamos a la normalidad
                 if (botonActivo != null)
                 {
-                    botonActivo.BackColor = Color.FromArgb(30, 30, 30);
+                    // EL FIX: Hereda el color exacto del panel lateral para camuflarse de nuevo
+                    botonActivo.BackColor = botonActivo.Parent.BackColor;
                     botonActivo.ForeColor = Color.White;
                 }
 
+                // 2. Pintamos el NUEVO botón que el usuario acaba de clickear
                 botonActivo = (Button)btnSender;
                 botonActivo.BackColor = Color.White;
                 botonActivo.ForeColor = Color.Black;
             }
         }
 
-        // --- MÉTODO CENTRALIZADO PARA ABRIR VENTANAS ---
+        // --- MÉTODO INTELIGENTE PARA PULIR TEXTOS SIN ROMPER PANELES ---
+        private void PulirTextosYGrillas(Control contenedor)
+        {
+            foreach (Control c in contenedor.Controls)
+            {
+                // 1. Agrandar solo textos legibles (TextBox, ComboBox, Labels de datos)
+                // Usamos 10f para lectura cómoda. No tocamos GroupBox ni Panels.
+                if (c is TextBox || c is ComboBox || c is Label)
+                {
+                    c.Font = new Font("Segoe UI", 10f, c.Font.Style);
+                }
+
+                // 2. Tablas bajo control absoluto
+                else if (c is DataGridView dgv)
+                {
+                    // Forzamos un tamaño legible
+                    dgv.DefaultCellStyle.Font = new Font("Segoe UI", 10f, FontStyle.Regular);
+                    dgv.ColumnHeadersDefaultCellStyle.Font = new Font("Segoe UI", 10f, FontStyle.Bold);
+
+                    // Auto-ajuste de altura de filas para que la letra no se corte
+                    dgv.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
+                }
+
+                // 3. Revisar dentro de contenedores
+                if (c.HasChildren)
+                {
+                    PulirTextosYGrillas(c);
+                }
+            }
+        }
+
+        // --- MÉTODO CENTRALIZADO PARA ABRIR VENTANAS (VERSIÓN NATIVA) ---
         private void AbrirFormularioHijo(Form formularioHijo)
         {
-            // 1. CONGELAR EL DIBUJO (La magia anti-parpadeo)
             pnlContenedor.SuspendLayout();
 
-            // 2. Limpiar y LIBERAR MEMORIA (Fundamental para optimizar el sistema)
             if (pnlContenedor.Controls.Count > 0)
             {
-                pnlContenedor.Controls[0].Dispose(); // Destruye completamente el form anterior
+                pnlContenedor.Controls[0].Dispose();
                 pnlContenedor.Controls.Clear();
             }
 
-            // 3. Preparar el nuevo formulario
             formularioHijo.TopLevel = false;
             formularioHijo.FormBorderStyle = FormBorderStyle.None;
             formularioHijo.Anchor = AnchorStyles.None;
 
-            // 4. Escalar
-            formularioHijo.Scale(new SizeF(1.6f, 1.6f));
+            // 1. Escalar el formulario base
+            formularioHijo.Scale(new SizeF(1.4f, 1.4f));
 
-            // 5. Calcular el centro y posicionar ANTES de agregarlo a la pantalla
+            // 2. Pulir los textos y grillas individualmente sin desbordar los paneles
+            PulirTextosYGrillas(formularioHijo);
+
+            // Centrado
             int x = (pnlContenedor.Width - formularioHijo.Width) / 2;
             int y = (pnlContenedor.Height - formularioHijo.Height) / 2;
-
-            // Asignación directa con validación rápida de números negativos
             formularioHijo.Location = new Point(x > 0 ? x : 0, y > 0 ? y : 0);
 
-            // 6. Agregar y Mostrar
             pnlContenedor.Controls.Add(formularioHijo);
             formularioHijo.Show();
 
-            // 7. REANUDAR EL DIBUJO (Muestra todo de golpe, perfectamente acomodado)
             pnlContenedor.ResumeLayout();
         }
         #endregion

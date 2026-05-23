@@ -9,16 +9,19 @@ namespace AsuFit.Datos
         {
             try
             {
-                // Como ya estamos en la capa de Datos, llamamos directo a tu clase Conexion
                 using (SqlConnection oConexion = Conexion.ObtenerConexion())
                 {
-                    string query = "INSERT INTO LogAuditoria (Usuario, Modulo, Accion, Detalle) VALUES (@Usu, @Mod, @Acc, @Det)";
+                    // 1. Agregamos la columna FechaHora y su parámetro @Fec a la consulta
+                    string query = "INSERT INTO LogAuditoria (Usuario, Modulo, Accion, Detalle, FechaHora) VALUES (@Usu, @Mod, @Acc, @Det, @Fec)";
                     SqlCommand cmd = new SqlCommand(query, oConexion);
 
                     cmd.Parameters.AddWithValue("@Usu", usuario);
                     cmd.Parameters.AddWithValue("@Mod", modulo);
                     cmd.Parameters.AddWithValue("@Acc", accion);
                     cmd.Parameters.AddWithValue("@Det", detalle);
+
+                    // 2. LA SOLUCIÓN: C# captura la hora de tu Windows y obliga a Somee a guardarla
+                    cmd.Parameters.AddWithValue("@Fec", DateTime.Now);
 
                     oConexion.Open();
                     cmd.ExecuteNonQuery();

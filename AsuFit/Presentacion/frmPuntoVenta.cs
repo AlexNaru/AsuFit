@@ -200,7 +200,7 @@ namespace AsuFit.Presentacion
                 Label lblNombre = new Label();
                 lblNombre.Text = row["Nombre"].ToString();
                 lblNombre.ForeColor = Color.White;
-                lblNombre.Font = new Font("Segoe UI", 9, FontStyle.Regular);
+                lblNombre.Font = new Font("Segoe UI", 11, FontStyle.Regular);
                 lblNombre.Location = new Point(10, 135);
                 lblNombre.AutoSize = false;
                 lblNombre.Size = new Size(160, 35);
@@ -208,14 +208,14 @@ namespace AsuFit.Presentacion
                 Label lblPrecio = new Label();
                 lblPrecio.Text = "Gs. " + Convert.ToDecimal(row["PrecioVenta"]).ToString("N0");
                 lblPrecio.ForeColor = Color.White;
-                lblPrecio.Font = new Font("Segoe UI", 12, FontStyle.Bold);
+                lblPrecio.Font = new Font("Segoe UI", 14, FontStyle.Bold);
                 lblPrecio.Location = new Point(10, 170);
                 lblPrecio.AutoSize = true;
 
                 Label lblStock = new Label();
                 lblStock.Text = "Stock: " + row["StockActual"].ToString();
                 lblStock.ForeColor = Color.LightGray;
-                lblStock.Font = new Font("Segoe UI", 9, FontStyle.Regular);
+                lblStock.Font = new Font("Segoe UI", 11, FontStyle.Regular);
                 lblStock.Location = new Point(115, 175);
                 lblStock.AutoSize = true;
 
@@ -230,12 +230,15 @@ namespace AsuFit.Presentacion
                 btnAgregar.Cursor = Cursors.Hand;
                 btnAgregar.Tag = row["IdProducto"];
                 btnAgregar.Click += BtnAgregar_Click;
+                btnAgregar.Font = new Font("Segoe UI", 10, FontStyle.Bold); // Letra del botón
 
                 pnlCard.Controls.Add(pic);
                 pnlCard.Controls.Add(lblNombre);
                 pnlCard.Controls.Add(lblPrecio);
                 pnlCard.Controls.Add(lblStock);
                 pnlCard.Controls.Add(btnAgregar);
+
+                pnlCard.Scale(new SizeF(1.4f, 1.4f));
 
                 flpCatalogo.Controls.Add(pnlCard);
             }
