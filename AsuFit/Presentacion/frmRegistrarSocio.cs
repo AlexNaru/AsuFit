@@ -55,6 +55,7 @@ namespace AsuFit.Presentacion
             txtCedula.Focus();
             txtCedula.MaxLength = 7;
             CambiarEstadoBoton(false);
+            txtFechaNacimiento.Text = dtpFechaNacimiento.Value.ToShortDateString();
         }
 
         private void ConfigurarTextosDeAyuda()
@@ -74,15 +75,15 @@ namespace AsuFit.Presentacion
             puedeGuardar = activo;
             if (activo)
             {
-                btnGuardar.ForeColor = Color.White;
+                btnGuardar.ForeColor = Color.Black;
                 btnGuardar.Cursor = Cursors.Hand;
-                btnGuardar.FlatAppearance.BorderColor = Color.White;
+                btnGuardar.FlatAppearance.BorderColor = Color.Black;
             }
             else
             {
-                btnGuardar.ForeColor = Color.Silver;
+                btnGuardar.ForeColor = Color.Black;
                 btnGuardar.Cursor = Cursors.Default;
-                btnGuardar.FlatAppearance.BorderColor = Color.Silver;
+                btnGuardar.FlatAppearance.BorderColor = Color.Black;
             }
         }
         #endregion
@@ -269,5 +270,10 @@ namespace AsuFit.Presentacion
             cmbPlanes.SelectedIndex = -1;
         }
         #endregion
+
+        private void dtpFechaNacimiento_ValueChanged(object sender, EventArgs e)
+        {
+            txtFechaNacimiento.Text = dtpFechaNacimiento.Value.ToShortDateString();
+        }
     }
 }

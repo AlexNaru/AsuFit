@@ -25,12 +25,51 @@ namespace AsuFit.Presentacion
 
         private void frmDashboard_Load(object sender, EventArgs e)
         {
-            
             this.Scale(new SizeF(1.4f, 1.4f));
-            this.CenterToScreen(); // <-- ESTA ES LA LÍNEA MÁGICA
+            this.CenterToScreen();
 
-            AbrirFormularioHijo(new frmInicio());
-            ResaltarBoton(btnInicio);
+            // Agrandamos la letra de los botones del menú lateral
+            AjustarLetraMenu(this);
+
+            // Enlazamos el evento para cuando la ventana termine de cargar
+            this.Shown += (s, ev) =>
+            {
+                // 1. Sale el cartel con el fondo limpio detrás
+                MessageBox.Show($"¡Bienvenido a AsuFit, {usuarioActual.NombreCompleto}!",
+                                "Acceso Concedido", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                // 2. Cuando el usuario le da "Aceptar" al cartel, simulamos el clic en Inicio
+                btnInicio.PerformClick();
+            };
+        }
+
+        // --- MÉTODO GLOBAL PARA ESCUCHAR LA TECLA ESCAPE ---
+        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+        {
+            // Si el usuario presiona Escape
+            if (keyData == Keys.Escape)
+            {
+                // Verificamos si hay algún formulario abierto tapando el fondo
+                if (pnlContenedor.Controls.Count > 0)
+                {
+                    // Lo destruimos y limpiamos el panel para que se vea el fondo del gym
+                    pnlContenedor.Controls[0].Dispose();
+                    pnlContenedor.Controls.Clear();
+
+                    // Regresamos el color del botón activo en el menú lateral a la normalidad
+                    if (botonActivo != null)
+                    {
+                        botonActivo.BackColor = botonActivo.Parent.BackColor;
+                        botonActivo.ForeColor = Color.White;
+                        botonActivo = null; // Reiniciamos la variable
+                    }
+
+                    return true; // Le decimos a Windows que ya procesamos la tecla
+                }
+            }
+
+            // Para cualquier otra tecla, que siga su comportamiento normal
+            return base.ProcessCmdKey(ref msg, keyData);
         }
         #endregion
 
@@ -40,7 +79,7 @@ namespace AsuFit.Presentacion
         {
             if (btnSender != null)
             {
-                // 1. Si ya había un botón seleccionado antes, lo regresamos a la normalidad
+                // 1. Si había un botón seleccionado antes, lo regresamos a la normalidad
                 if (botonActivo != null)
                 {
                     // EL FIX: Hereda el color exacto del panel lateral para camuflarse de nuevo
@@ -50,8 +89,8 @@ namespace AsuFit.Presentacion
 
                 // 2. Pintamos el NUEVO botón que el usuario acaba de clickear
                 botonActivo = (Button)btnSender;
-                botonActivo.BackColor = Color.White;
-                botonActivo.ForeColor = Color.Black;
+                botonActivo.BackColor = Color.FromArgb(35, 39, 47); // Gris resaltado (como las tarjetas)
+                botonActivo.ForeColor = Color.FromArgb(0, 229, 255); // Tu color Cian AsuFit
             }
         }
 
@@ -82,6 +121,24 @@ namespace AsuFit.Presentacion
                 if (c.HasChildren)
                 {
                     PulirTextosYGrillas(c);
+                }
+            }
+        }
+
+        // --- MÉTODO PARA AGRANDAR LA LETRA DEL MENÚ LATERAL ---
+        private void AjustarLetraMenu(Control contenedor)
+        {
+            foreach (Control c in contenedor.Controls)
+            {
+                if (c is Button)
+                {
+                    // Le forzamos un tamaño base de 10f o 11f para que resalte
+                    c.Font = new Font("Segoe UI", 10f, c.Font.Style);
+                }
+                else if (c.HasChildren)
+                {
+                    // Entra al panel oscuro a buscar los botones
+                    AjustarLetraMenu(c);
                 }
             }
         }
