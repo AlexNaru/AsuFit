@@ -17,7 +17,7 @@ namespace AsuFit.Presentacion
         }
         #endregion
 
-        #region 2. INICIALIZACIÓN (Load)
+        #region 2. CICLO DE VIDA DEL FORMULARIO
         private void frmAsistencia_Load(object sender, EventArgs e)
         {
             LimpiarPantalla();
@@ -26,17 +26,22 @@ namespace AsuFit.Presentacion
 
         private void frmAsistencia_Shown(object sender, EventArgs e)
         {
+            // Garantiza que el cursor esté siempre listo para el lector de código de barras o teclado numérico
             txtCedula.Focus();
         }
         #endregion
 
-        #region 3. GESTIÓN DE ESTADOS VISUALES (Panel Central)
+        #region 3. GESTIÓN DE ESTADOS VISUALES (MODO KIOSCO)
+        // Controla la transición de colores y mensajes basados en el estado de la membresía del socio
         private async void MostrarAlerta(Color colorFondo, string mensaje, string nombre, string plan, string vencimiento)
         {
+            // Bloqueo de entrada para evitar múltiples lecturas simultáneas
             txtCedula.Enabled = false;
             txtCedula.Visible = false;
 
             pnlEstado.BackColor = colorFondo;
+
+            // Contraste dinámico: Texto negro sobre fondos claros (Amarillo), Texto blanco sobre oscuros (Rojo/Verde)
             Color colorTexto = (colorFondo == Color.Gold || colorFondo == Color.Yellow) ? Color.Black : Color.White;
 
             lblMensaje.Text = mensaje.ToUpper();
@@ -62,9 +67,9 @@ namespace AsuFit.Presentacion
             lblVencimiento.ForeColor = colorTexto;
             lblVencimiento.Visible = true;
 
-            // Recalcular posiciones (Left) después de modificar el texto para centrado preciso
             CentrarControles();
 
+            // Tiempo de visualización de la alerta (5 segundos) antes de reiniciar el kiosco
             await Task.Delay(5000);
 
             if (this.IsDisposed) return;
@@ -72,12 +77,13 @@ namespace AsuFit.Presentacion
             LimpiarPantalla();
         }
 
+        // Restablece la interfaz al modo de espera (Tema Oscuro Premium)
         private void LimpiarPantalla()
         {
-            pnlEstado.BackColor = Color.FromArgb(240, 240, 240);
+            pnlEstado.BackColor = Color.FromArgb(35, 39, 47); // Gris oscuro resaltado
 
             lblMensaje.Text = "¡BIENVENIDO/A!";
-            lblMensaje.ForeColor = Color.Black;
+            lblMensaje.ForeColor = Color.FromArgb(0, 229, 255); // Cian AsuFit
             lblMensaje.Visible = true;
 
             lblNombre.Text = "";
@@ -87,7 +93,7 @@ namespace AsuFit.Presentacion
             lblTipoPlan.Visible = false;
 
             lblVencimiento.Text = "Ingresá tu número de cédula y presioná ENTER";
-            lblVencimiento.ForeColor = Color.DimGray;
+            lblVencimiento.ForeColor = Color.Silver; // Gris claro para instrucciones
             lblVencimiento.Visible = true;
 
             txtCedula.Clear();
@@ -98,9 +104,9 @@ namespace AsuFit.Presentacion
             txtCedula.Focus();
         }
 
+        // Recalcula dinámicamente el eje X de los controles para mantener una alineación central perfecta
         private void CentrarControles()
         {
-            // Cálculo del centro horizontal respecto al contenedor (pnlEstado)
             lblMensaje.Left = (pnlEstado.Width - lblMensaje.Width) / 2;
             lblNombre.Left = (pnlEstado.Width - lblNombre.Width) / 2;
             lblTipoPlan.Left = (pnlEstado.Width - lblTipoPlan.Width) / 2;
@@ -109,7 +115,8 @@ namespace AsuFit.Presentacion
         }
         #endregion
 
-        #region 4. CAPTURA DE DATOS (TextBox)
+        #region 4. CAPTURA DE DATOS (LECTOR / TECLADO)
+        // Restringe la entrada a caracteres numéricos exclusivamente
         private void txtCedula_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar))
@@ -118,6 +125,7 @@ namespace AsuFit.Presentacion
             }
         }
 
+        // Intercepta la tecla ENTER (generada por teclado o lector de código de barras) para procesar el acceso
         private void txtCedula_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter)
@@ -131,24 +139,28 @@ namespace AsuFit.Presentacion
         }
         #endregion
 
-        #region 5. LÓGICA DE NEGOCIO (Validación de Acceso)
+        #region 5. LÓGICA DE NEGOCIO Y REGLAS DE ACCESO
+        // Evalúa el estado del socio y determina si se permite o deniega la entrada a las instalaciones
         private void ProcesarAcceso(string cedula)
         {
             SocioNegocio negocio = new SocioNegocio();
             Socio socio = negocio.BuscarSocioPorCedula(cedula);
 
+            // Regla 1: El socio no existe en la base de datos
             if (socio == null)
             {
                 MostrarAlerta(Color.DarkOrange, "Socio no encontrado", "", "", "Por favor, pasá por recepción para registrarte.");
                 return;
             }
 
+            // Regla 2: El socio está marcado como inactivo (baja lógica)
             if (socio.Estado != "Activo")
             {
                 MostrarAlerta(Color.DarkRed, "Acceso Denegado", $"{socio.Nombre} {socio.Apellido}", "", "Tu usuario se encuentra inactivo.");
                 return;
             }
 
+            // Regla 3: El socio está activo pero nunca se le asignó un plan o venció hace mucho y se borró
             if (!socio.FechaVencimiento.HasValue)
             {
                 MostrarAlerta(Color.Crimson, "Sin Plan Activo", $"{socio.Nombre} {socio.Apellido}", "", "No registrás membresías vigentes. Pasá por caja.");
@@ -156,12 +168,12 @@ namespace AsuFit.Presentacion
             }
 
             string nombreCompleto = $"{socio.Nombre} {socio.Apellido}";
-
-            // InvariantCulture fuerza la barra '/' en la fecha ignorando la región del sistema operativo
             string fechaVenceTexto = socio.FechaVencimiento.Value.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture);
 
+            // Regla 4: Evaluación de fechas (Acceso Permitido vs Denegado por Vencimiento)
             if (socio.FechaVencimiento.Value.Date >= DateTime.Now.Date)
             {
+                // Registro de la asistencia en el historial
                 Asistencia nuevaAsistencia = new Asistencia();
                 nuevaAsistencia.IdSocio = socio.IdSocio;
 
@@ -171,10 +183,12 @@ namespace AsuFit.Presentacion
                 int diasRestantes = (socio.FechaVencimiento.Value.Date - DateTime.Now.Date).Days;
                 string detalleVencimiento = $"Quedan {diasRestantes} días de plan. Vence el: {fechaVenceTexto}";
 
+                // Alerta preventiva si el plan vence mañana
                 if (diasRestantes == 1)
                 {
                     MostrarAlerta(Color.Gold, "¡Acceso Permitido! (Próximo a vencer)", nombreCompleto, socio.NombrePlan, detalleVencimiento);
                 }
+                // Acceso normal
                 else
                 {
                     MostrarAlerta(Color.ForestGreen, "¡Acceso Permitido!", nombreCompleto, socio.NombrePlan, detalleVencimiento);
@@ -182,12 +196,14 @@ namespace AsuFit.Presentacion
             }
             else
             {
+                // Regla 5: Plan vencido
                 MostrarAlerta(Color.Crimson, "Plan Vencido", nombreCompleto, socio.NombrePlan, $"Tu plan venció el día: {fechaVenceTexto}. Pasá por caja.");
             }
         }
         #endregion
 
-        #region 6. RELOJ (Sección Inferior)
+        #region 6. RELOJ DEL SISTEMA
+        // Mantiene actualizada la visualización de la fecha y hora en tiempo real
         private void timerReloj_Tick(object sender, EventArgs e)
         {
             CultureInfo idioma = new CultureInfo("es-ES");

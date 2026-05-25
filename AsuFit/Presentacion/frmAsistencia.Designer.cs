@@ -31,22 +31,27 @@
             this.components = new System.ComponentModel.Container();
             this.txtCedula = new System.Windows.Forms.TextBox();
             this.pnlEstado = new System.Windows.Forms.Panel();
-            this.lblTitulo = new System.Windows.Forms.Label();
+            this.lblVencimiento = new System.Windows.Forms.Label();
+            this.lblTipoPlan = new System.Windows.Forms.Label();
+            this.lblNombre = new System.Windows.Forms.Label();
+            this.lblMensaje = new System.Windows.Forms.Label();
             this.lblFecha = new System.Windows.Forms.Label();
             this.lblHora = new System.Windows.Forms.Label();
             this.timerReloj = new System.Windows.Forms.Timer(this.components);
-            this.lblMensaje = new System.Windows.Forms.Label();
-            this.lblNombre = new System.Windows.Forms.Label();
-            this.lblTipoPlan = new System.Windows.Forms.Label();
-            this.lblVencimiento = new System.Windows.Forms.Label();
+            this.picLogo = new System.Windows.Forms.PictureBox();
             this.pnlEstado.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.picLogo)).BeginInit();
             this.SuspendLayout();
             // 
             // txtCedula
             // 
-            this.txtCedula.Location = new System.Drawing.Point(363, 262);
+            this.txtCedula.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(25)))), ((int)(((byte)(28)))), ((int)(((byte)(35)))));
+            this.txtCedula.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.txtCedula.ForeColor = System.Drawing.Color.White;
+            this.txtCedula.Location = new System.Drawing.Point(242, 170);
+            this.txtCedula.Margin = new System.Windows.Forms.Padding(2);
             this.txtCedula.Name = "txtCedula";
-            this.txtCedula.Size = new System.Drawing.Size(100, 26);
+            this.txtCedula.Size = new System.Drawing.Size(68, 20);
             this.txtCedula.TabIndex = 0;
             this.txtCedula.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.txtCedula.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtCedula_KeyDown);
@@ -60,95 +65,107 @@
             this.pnlEstado.Controls.Add(this.lblNombre);
             this.pnlEstado.Controls.Add(this.lblMensaje);
             this.pnlEstado.Controls.Add(this.txtCedula);
-            this.pnlEstado.Location = new System.Drawing.Point(12, 99);
+            this.pnlEstado.Location = new System.Drawing.Point(8, 64);
+            this.pnlEstado.Margin = new System.Windows.Forms.Padding(2);
             this.pnlEstado.Name = "pnlEstado";
-            this.pnlEstado.Size = new System.Drawing.Size(812, 324);
+            this.pnlEstado.Size = new System.Drawing.Size(541, 211);
             this.pnlEstado.TabIndex = 3;
             // 
-            // lblTitulo
+            // lblVencimiento
             // 
-            this.lblTitulo.AutoSize = true;
-            this.lblTitulo.Location = new System.Drawing.Point(371, 30);
-            this.lblTitulo.Name = "lblTitulo";
-            this.lblTitulo.Size = new System.Drawing.Size(55, 20);
-            this.lblTitulo.TabIndex = 5;
-            this.lblTitulo.Text = "AsuFit";
+            this.lblVencimiento.AutoSize = true;
+            this.lblVencimiento.Location = new System.Drawing.Point(239, 131);
+            this.lblVencimiento.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.lblVencimiento.Name = "lblVencimiento";
+            this.lblVencimiento.Size = new System.Drawing.Size(74, 13);
+            this.lblVencimiento.TabIndex = 4;
+            this.lblVencimiento.Text = "Vencimiento...";
+            // 
+            // lblTipoPlan
+            // 
+            this.lblTipoPlan.AutoSize = true;
+            this.lblTipoPlan.Location = new System.Drawing.Point(239, 99);
+            this.lblTipoPlan.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.lblTipoPlan.Name = "lblTipoPlan";
+            this.lblTipoPlan.Size = new System.Drawing.Size(75, 13);
+            this.lblTipoPlan.TabIndex = 3;
+            this.lblTipoPlan.Text = "Tipo de plan...";
+            // 
+            // lblNombre
+            // 
+            this.lblNombre.AutoSize = true;
+            this.lblNombre.Location = new System.Drawing.Point(239, 60);
+            this.lblNombre.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.lblNombre.Name = "lblNombre";
+            this.lblNombre.Size = new System.Drawing.Size(53, 13);
+            this.lblNombre.TabIndex = 2;
+            this.lblNombre.Text = "Nombre...";
+            // 
+            // lblMensaje
+            // 
+            this.lblMensaje.AutoSize = true;
+            this.lblMensaje.Location = new System.Drawing.Point(239, 22);
+            this.lblMensaje.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.lblMensaje.Name = "lblMensaje";
+            this.lblMensaje.Size = new System.Drawing.Size(56, 13);
+            this.lblMensaje.TabIndex = 1;
+            this.lblMensaje.Text = "Mensaje...";
             // 
             // lblFecha
             // 
             this.lblFecha.AutoSize = true;
-            this.lblFecha.Location = new System.Drawing.Point(12, 485);
+            this.lblFecha.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(229)))), ((int)(((byte)(255)))));
+            this.lblFecha.Location = new System.Drawing.Point(8, 315);
+            this.lblFecha.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblFecha.Name = "lblFecha";
-            this.lblFecha.Size = new System.Drawing.Size(62, 20);
+            this.lblFecha.Size = new System.Drawing.Size(45, 13);
             this.lblFecha.TabIndex = 4;
-            this.lblFecha.Text = "Fecha: ";
+            this.lblFecha.Text = "FECHA:";
             // 
             // lblHora
             // 
             this.lblHora.AutoSize = true;
-            this.lblHora.Location = new System.Drawing.Point(12, 442);
+            this.lblHora.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(229)))), ((int)(((byte)(255)))));
+            this.lblHora.Location = new System.Drawing.Point(8, 287);
+            this.lblHora.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblHora.Name = "lblHora";
-            this.lblHora.Size = new System.Drawing.Size(48, 20);
+            this.lblHora.Size = new System.Drawing.Size(41, 13);
             this.lblHora.TabIndex = 3;
-            this.lblHora.Text = "Hora:";
+            this.lblHora.Text = "HORA:";
             // 
             // timerReloj
             // 
             this.timerReloj.Enabled = true;
             this.timerReloj.Tick += new System.EventHandler(this.timerReloj_Tick);
             // 
-            // lblMensaje
+            // picLogo
             // 
-            this.lblMensaje.AutoSize = true;
-            this.lblMensaje.Location = new System.Drawing.Point(359, 34);
-            this.lblMensaje.Name = "lblMensaje";
-            this.lblMensaje.Size = new System.Drawing.Size(81, 20);
-            this.lblMensaje.TabIndex = 1;
-            this.lblMensaje.Text = "Mensaje...";
-            // 
-            // lblNombre
-            // 
-            this.lblNombre.AutoSize = true;
-            this.lblNombre.Location = new System.Drawing.Point(359, 93);
-            this.lblNombre.Name = "lblNombre";
-            this.lblNombre.Size = new System.Drawing.Size(77, 20);
-            this.lblNombre.TabIndex = 2;
-            this.lblNombre.Text = "Nombre...";
-            // 
-            // lblTipoPlan
-            // 
-            this.lblTipoPlan.AutoSize = true;
-            this.lblTipoPlan.Location = new System.Drawing.Point(359, 153);
-            this.lblTipoPlan.Name = "lblTipoPlan";
-            this.lblTipoPlan.Size = new System.Drawing.Size(107, 20);
-            this.lblTipoPlan.TabIndex = 3;
-            this.lblTipoPlan.Text = "Tipo de plan...";
-            // 
-            // lblVencimiento
-            // 
-            this.lblVencimiento.AutoSize = true;
-            this.lblVencimiento.Location = new System.Drawing.Point(359, 202);
-            this.lblVencimiento.Name = "lblVencimiento";
-            this.lblVencimiento.Size = new System.Drawing.Size(109, 20);
-            this.lblVencimiento.TabIndex = 4;
-            this.lblVencimiento.Text = "Vencimiento...";
+            this.picLogo.Image = global::AsuFit.Properties.Resources.logo;
+            this.picLogo.Location = new System.Drawing.Point(152, -26);
+            this.picLogo.Name = "picLogo";
+            this.picLogo.Size = new System.Drawing.Size(224, 118);
+            this.picLogo.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.picLogo.TabIndex = 0;
+            this.picLogo.TabStop = false;
             // 
             // frmAsistencia
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.SystemColors.AppWorkspace;
-            this.ClientSize = new System.Drawing.Size(838, 522);
+            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(25)))), ((int)(((byte)(28)))), ((int)(((byte)(35)))));
+            this.ClientSize = new System.Drawing.Size(559, 339);
             this.Controls.Add(this.pnlEstado);
             this.Controls.Add(this.lblFecha);
-            this.Controls.Add(this.lblTitulo);
             this.Controls.Add(this.lblHora);
+            this.Controls.Add(this.picLogo);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "frmAsistencia";
-            this.Text = "frmAsistencia";
+            this.Text = "Asistencia";
             this.Load += new System.EventHandler(this.frmAsistencia_Load);
             this.pnlEstado.ResumeLayout(false);
             this.pnlEstado.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.picLogo)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -161,10 +178,10 @@
         private System.Windows.Forms.Label lblFecha;
         private System.Windows.Forms.Label lblHora;
         private System.Windows.Forms.Timer timerReloj;
-        private System.Windows.Forms.Label lblTitulo;
         private System.Windows.Forms.Label lblTipoPlan;
         private System.Windows.Forms.Label lblNombre;
         private System.Windows.Forms.Label lblMensaje;
         private System.Windows.Forms.Label lblVencimiento;
+        private System.Windows.Forms.PictureBox picLogo;
     }
 }

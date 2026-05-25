@@ -21,7 +21,7 @@ namespace AsuFit.Presentacion
         {
             InitializeComponent();
 
-            // Bloquear autogeneración para mantener el control visual desde el diseñador
+            // Bloquea la autogeneración de columnas para mantener el layout definido en el diseñador
             dgvVencimientos.AutoGenerateColumns = false;
             dgvVencidos.AutoGenerateColumns = false;
             dgvProductosStock.AutoGenerateColumns = false;
@@ -29,19 +29,28 @@ namespace AsuFit.Presentacion
         }
         #endregion
 
-        #region 2. INICIALIZACIÓN Y CARGA (Load)
+        #region 2. EVENTOS DE CICLO DE VIDA (Load)
         private void frmInicio_Load(object sender, EventArgs e)
         {
+            // Aplicación del tema oscuro a controles nativos
+            AplicarTemaGraficoOscuro();
+            AplicarTemaOscuroGrillas(dgvProductosStock);
+            AplicarTemaOscuroGrillas(dgvProductosStockBajo);
+            AplicarTemaOscuroGrillas(dgvVencimientos);
+            AplicarTemaOscuroGrillas(dgvVencidos);
+
+            // Obtención y enlace de datos del dashboard
             CargarDashboard();
             CargarTablasInventario();
             CargarVencimientos();
 
-            // Se lanza al final para no retrasar el renderizado de la UI principal
+            // Ejecución del proceso de mensajería automatizada
             EnviarCorreosVencimiento();
         }
         #endregion
 
-        #region 3. SECCIÓN IZQUIERDA: TARJETAS Y GRÁFICO DE FINANZAS
+        #region 3. MÓDULO DE MÉTRICAS Y FINANZAS
+        // Obtiene los KPI principales y actualiza los indicadores visuales
         private void CargarDashboard()
         {
             DashboardNegocio negocio = new DashboardNegocio();
@@ -59,12 +68,14 @@ namespace AsuFit.Presentacion
             ConfigurarGrafico(ingresos, egresos);
         }
 
+        // Construye y enlaza la serie de datos para el control Chart
         private void ConfigurarGrafico(decimal ingresos, decimal egresos)
         {
             chartFinanzas.Series.Clear();
 
             Series serie = new Series("Balance Mensual");
             serie.ChartType = SeriesChartType.Column;
+            serie["PointWidth"] = "0.7"; // Ajusta el grosor de las columnas
 
             decimal utilidad = ingresos - egresos;
 
@@ -81,7 +92,8 @@ namespace AsuFit.Presentacion
         }
         #endregion
 
-        #region 4. SECCIÓN DERECHA SUPERIOR: INVENTARIO Y STOCK
+        #region 4. MÓDULO DE INVENTARIO
+        // Enlaza las tablas de inventario general y alertas de stock
         private void CargarTablasInventario()
         {
             DataTable dtTodos = negocioInventario.ListarProductosBasico();
@@ -109,13 +121,13 @@ namespace AsuFit.Presentacion
             dgvProductosStockBajo.ClearSelection();
         }
 
+        // Aplica formato condicional según el nivel de existencias (Stock 0 = Crítico, >0 = Advertencia)
         private void dgvProductosStockBajo_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
         {
             if (e.RowIndex >= 0)
             {
                 int stockActual = -1;
 
-                // Captura flexible del stock por nombre o por índice si el binding falla
                 if (dgvProductosStockBajo.Columns.Contains("StockActual") && dgvProductosStockBajo.Rows[e.RowIndex].Cells["StockActual"].Value != null)
                 {
                     int.TryParse(dgvProductosStockBajo.Rows[e.RowIndex].Cells["StockActual"].Value.ToString(), out stockActual);
@@ -125,7 +137,6 @@ namespace AsuFit.Presentacion
                     int.TryParse(dgvProductosStockBajo.Rows[e.RowIndex].Cells[1].Value.ToString(), out stockActual);
                 }
 
-                // Resaltar nivel de criticidad
                 if (stockActual == 0)
                 {
                     dgvProductosStockBajo.Rows[e.RowIndex].DefaultCellStyle.BackColor = Color.LightCoral;
@@ -140,7 +151,8 @@ namespace AsuFit.Presentacion
         }
         #endregion
 
-        #region 5. SECCIÓN DERECHA INFERIOR: SOCIOS Y VENCIMIENTOS
+        #region 5. MÓDULO DE SOCIOS Y VENCIMIENTOS
+        // Enlaza las tablas de notificaciones de membresías
         private void CargarVencimientos()
         {
             try
@@ -173,6 +185,7 @@ namespace AsuFit.Presentacion
             dgvVencidos.ClearSelection();
         }
 
+        // Formato condicional: Alerta visual para membresías por vencer
         private void dgvVencimientos_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
         {
             if (e.RowIndex >= 0)
@@ -182,6 +195,7 @@ namespace AsuFit.Presentacion
             }
         }
 
+        // Formato condicional: Alerta visual para membresías vencidas
         private void dgvVencidos_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
         {
             if (e.RowIndex >= 0)
@@ -192,7 +206,8 @@ namespace AsuFit.Presentacion
         }
         #endregion
 
-        #region 6. TAREAS EN SEGUNDO PLANO Y MÉTODOS AUXILIARES
+        #region 6. UTILIDADES Y PROCESOS AUTOMATIZADOS
+        // Establece las propiedades estándar de solo lectura y autoajuste para los DataGridViews
         private void ConfigurarColumnasBasicas(DataGridView dgv)
         {
             if (dgv.Columns.Count > 0)
@@ -205,6 +220,7 @@ namespace AsuFit.Presentacion
             }
         }
 
+        // Recupera la configuración SMTP y envía notificaciones automáticas a los socios pertinentes
         private void EnviarCorreosVencimiento()
         {
             try
@@ -233,7 +249,6 @@ namespace AsuFit.Presentacion
 
                     if (string.IsNullOrEmpty(correoGym) || string.IsNullOrEmpty(passGym)) return;
 
-                    // Filtramos socios activos con correo válido y que coincidan con la ventana de aviso configurada
                     string query = $@"
                         SELECT IdSocio, Nombre, Apellido, Email, FechaVencimiento, 
                                DATEDIFF(day, GETDATE(), FechaVencimiento) AS DiasRestantes
@@ -286,8 +301,6 @@ namespace AsuFit.Presentacion
                             try
                             {
                                 smtp.Send(correo);
-
-                                // Actualizar log de auditoría interna de envíos
                                 string updateQuery = "UPDATE Socios SET FechaUltimoAviso = GETDATE() WHERE IdSocio = @IdSocio";
                                 SqlCommand cmdUpdate = new SqlCommand(updateQuery, oConexion);
                                 cmdUpdate.Parameters.AddWithValue("@IdSocio", idSocio);
@@ -295,8 +308,7 @@ namespace AsuFit.Presentacion
                             }
                             catch
                             {
-                                // Continuar con el siguiente en la cola si este falla
-                                continue;
+                                continue; // Omite errores de envío individuales
                             }
                         }
                     }
@@ -304,8 +316,59 @@ namespace AsuFit.Presentacion
             }
             catch
             {
-                // Silenciar bloque para evitar interrupciones durante el despliegue del Dashboard
+                // Manejo de excepciones silenciado intencionalmente en capa de presentación
             }
+        }
+        #endregion
+
+        #region 7. ESTILOS VISUALES Y RENDERIZADO
+        // Sobrescribe las propiedades visuales del control Chart para integrarlo al tema oscuro
+        private void AplicarTemaGraficoOscuro()
+        {
+            var grafico = chartFinanzas;
+
+            grafico.BackColor = Color.FromArgb(35, 39, 47);
+            grafico.ChartAreas[0].BackColor = Color.FromArgb(35, 39, 47);
+
+            grafico.ChartAreas[0].AxisX.LabelStyle.ForeColor = Color.White;
+            grafico.ChartAreas[0].AxisY.LabelStyle.ForeColor = Color.White;
+
+            grafico.ChartAreas[0].AxisX.LineColor = Color.Gray;
+            grafico.ChartAreas[0].AxisY.LineColor = Color.Gray;
+            grafico.ChartAreas[0].AxisX.MajorGrid.LineColor = Color.FromArgb(50, 55, 65);
+            grafico.ChartAreas[0].AxisY.MajorGrid.LineColor = Color.FromArgb(50, 55, 65);
+
+            if (grafico.Legends.Count > 0)
+            {
+                grafico.Legends[0].BackColor = Color.FromArgb(35, 39, 47);
+                grafico.Legends[0].ForeColor = Color.White;
+            }
+        }
+
+        // Aplica estilo plano y colores personalizados a las instancias de DataGridView
+        private void AplicarTemaOscuroGrillas(DataGridView dgv)
+        {
+            dgv.BackgroundColor = Color.FromArgb(35, 39, 47);
+            dgv.BorderStyle = BorderStyle.None;
+            dgv.CellBorderStyle = DataGridViewCellBorderStyle.SingleHorizontal;
+            dgv.GridColor = Color.FromArgb(50, 55, 65);
+
+            dgv.EnableHeadersVisualStyles = false;
+            dgv.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.None;
+            dgv.ColumnHeadersDefaultCellStyle.BackColor = Color.FromArgb(25, 28, 35);
+            dgv.ColumnHeadersDefaultCellStyle.ForeColor = Color.White;
+            dgv.ColumnHeadersDefaultCellStyle.Font = new Font("Segoe UI", 10, FontStyle.Bold);
+
+            dgv.DefaultCellStyle.BackColor = Color.FromArgb(35, 39, 47);
+            dgv.DefaultCellStyle.ForeColor = Color.White;
+            dgv.DefaultCellStyle.SelectionBackColor = Color.FromArgb(0, 229, 255);
+            dgv.DefaultCellStyle.SelectionForeColor = Color.Black;
+
+            dgv.RowHeadersVisible = false;
+            dgv.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            dgv.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            dgv.AllowUserToAddRows = false;
+            dgv.ReadOnly = true;
         }
         #endregion
     }

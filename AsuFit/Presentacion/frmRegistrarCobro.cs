@@ -4,7 +4,6 @@ using AsuFit.Negocio;
 using System;
 using System.Data;
 using System.Drawing;
-using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
 namespace AsuFit.Presentacion
@@ -16,60 +15,163 @@ namespace AsuFit.Presentacion
         private int diasPlanSeleccionado = 0;
         private Usuario usuarioActual;
 
-        // Inyección de librería nativa para el placeholder del buscador
-        [DllImport("user32.dll", CharSet = CharSet.Auto)]
-        private static extern Int32 SendMessage(IntPtr hWnd, int msg, int wParam, [MarshalAs(UnmanagedType.LPWStr)] string lParam);
-        private const int EM_SETCUEBANNER = 0x1501;
-
         public frmRegistrarCobro(Usuario userLogueado)
         {
             InitializeComponent();
             usuarioActual = userLogueado;
 
+            // Bloquea la autogeneración de columnas para mantener la estructura del diseñador
             dgvSocios.AutoGenerateColumns = false;
 
-            SendMessage(txtBuscar.Handle, EM_SETCUEBANNER, 1, "Buscar por Cédula, Nombre o Apellido...");
+            // Configura el renderizado manual del ComboBox para integrar el tema oscuro
+            cmbPlanes.DrawMode = DrawMode.OwnerDrawFixed;
+            cmbPlanes.DrawItem += CmbPlanes_DrawItem;
+            cmbPlanes.DropDownClosed += cmbPlanes_DropDownClosed;
+            cmbPlanes.BackColor = Color.FromArgb(35, 39, 47);
+            cmbPlanes.ForeColor = Color.White;
+
+            // Configura el campo de monto como elemento de solo lectura
+            txtMonto.BackColor = Color.FromArgb(35, 39, 47);
+            txtMonto.ForeColor = Color.White;
+            txtMonto.ReadOnly = true;
+            txtMonto.Enter += delegate { this.Focus(); };
+
+            // Aplica la paleta de colores del sistema a la grilla
+            ConfigurarTemaOscuroGrilla(dgvSocios);
 
             CargarGrillaSocios();
-            CargarPlanes();
+
+            // Configura el texto de sugerencia en el buscador
+            AplicarPlaceholder(txtBuscar, "Buscar por Cédula, Nombre o Apellido...");
+
+            // Establece el texto por defecto en el selector de planes
+            if (cmbPlanes.Items.Count > 0) cmbPlanes.SelectedIndex = 0;
+
+            // Libera el foco inicial de los controles
+            this.ActiveControl = null;
         }
         #endregion
 
-        #region 2. INICIALIZACIÓN Y CARGA DE DATOS
+        #region 2. ESTILOS VISUALES Y COMPORTAMIENTO UI
+        // Personaliza el dibujado de los elementos del ComboBox
+        private void CmbPlanes_DrawItem(object sender, DrawItemEventArgs e)
+        {
+            if (e.Index < 0) return;
+            ComboBox combo = sender as ComboBox;
+
+            bool isSelected = (e.State & DrawItemState.Selected) == DrawItemState.Selected;
+            Color bgColor = isSelected ? Color.FromArgb(0, 229, 255) : Color.FromArgb(35, 39, 47);
+            Color txtColor = isSelected ? Color.Black : Color.White;
+
+            e.Graphics.FillRectangle(new SolidBrush(bgColor), e.Bounds);
+            e.Graphics.DrawString(combo.Items[e.Index].ToString(), e.Font, new SolidBrush(txtColor), e.Bounds, StringFormat.GenericDefault);
+        }
+
+        // Gestiona el comportamiento del texto de ayuda interactivo (Placeholder)
+        private void AplicarPlaceholder(TextBox txt, string textoAyuda)
+        {
+            txt.Tag = textoAyuda;
+
+            if (string.IsNullOrWhiteSpace(txt.Text) || txt.Text == textoAyuda)
+            {
+                txt.Text = textoAyuda;
+                txt.ForeColor = Color.Silver;
+            }
+            else
+            {
+                txt.ForeColor = Color.White;
+            }
+
+            txt.Enter += delegate
+            {
+                if (txt.Text == textoAyuda)
+                {
+                    txt.Text = "";
+                    txt.ForeColor = Color.White;
+                }
+            };
+
+            txt.Leave += delegate
+            {
+                if (string.IsNullOrWhiteSpace(txt.Text))
+                {
+                    txt.Text = textoAyuda;
+                    txt.ForeColor = Color.Silver;
+                }
+            };
+        }
+
+        // Aplica el estilo visual premium (Modo Oscuro) al DataGridView
+        private void ConfigurarTemaOscuroGrilla(DataGridView dgv)
+        {
+            dgv.BackgroundColor = Color.FromArgb(25, 28, 35);
+            dgv.BorderStyle = BorderStyle.None;
+            dgv.CellBorderStyle = DataGridViewCellBorderStyle.SingleHorizontal;
+            dgv.GridColor = Color.FromArgb(50, 55, 65);
+
+            dgv.EnableHeadersVisualStyles = false;
+            dgv.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.None;
+            dgv.ColumnHeadersDefaultCellStyle.BackColor = Color.FromArgb(35, 39, 47);
+            dgv.ColumnHeadersDefaultCellStyle.ForeColor = Color.White;
+            dgv.ColumnHeadersDefaultCellStyle.Font = new Font("Segoe UI", 10, FontStyle.Bold);
+
+            dgv.DefaultCellStyle.BackColor = Color.FromArgb(25, 28, 35);
+            dgv.DefaultCellStyle.ForeColor = Color.White;
+            dgv.DefaultCellStyle.SelectionBackColor = Color.FromArgb(0, 229, 255);
+            dgv.DefaultCellStyle.SelectionForeColor = Color.Black;
+
+            dgv.RowHeadersVisible = false;
+            dgv.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            dgv.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            dgv.AllowUserToAddRows = false;
+            dgv.ReadOnly = true;
+            dgv.RowTemplate.Height = 35;
+        }
+        #endregion
+
+        #region 3. BÚSQUEDA Y CARGA DE DATOS
+        // Carga los registros de socios activos desde la base de datos
         private void CargarGrillaSocios()
         {
             SocioNegocio negocio = new SocioNegocio();
             dgvSocios.DataSource = negocio.ListarSocios("Activo");
+
             dgvSocios.ClearSelection();
             idSocioSeleccionado = 0;
         }
 
-        private void CargarPlanes()
-        {
-            PlanNegocio negocio = new PlanNegocio();
-            cmbPlanes.DataSource = negocio.ListarPlanes("Activo");
-            cmbPlanes.DisplayMember = "NombrePlan";
-            cmbPlanes.ValueMember = "IdPlan";
-            cmbPlanes.SelectedIndex = -1;
-        }
-        #endregion
-
-        #region 3. SECCIÓN SUPERIOR: BÚSQUEDA
+        // Filtra los datos en memoria sin requerir consultas adicionales a la BD
         private void txtBuscar_TextChanged(object sender, EventArgs e)
         {
+            string textoBusqueda = txtBuscar.Text;
+            if (textoBusqueda == (string)txtBuscar.Tag) textoBusqueda = "";
+
             if (dgvSocios.DataSource is DataTable dt)
             {
-                dt.DefaultView.RowFilter = $"Cedula LIKE '%{txtBuscar.Text}%' OR Apellido LIKE '%{txtBuscar.Text}%' OR Nombre LIKE '%{txtBuscar.Text}%'";
+                dt.DefaultView.RowFilter = $"Cedula LIKE '%{textoBusqueda}%' OR Apellido LIKE '%{textoBusqueda}%' OR Nombre LIKE '%{textoBusqueda}%'";
             }
         }
         #endregion
 
-        #region 4. SECCIÓN CENTRAL: GRILLA Y SELECCIÓN
+        #region 4. GESTIÓN DE GRILLA Y FORMATO CONDICIONAL
+        // Configura propiedades de la grilla posteriores al enlace de datos
         private void dgvSocios_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
         {
             dgvSocios.ClearSelection();
+
+            // Oculta las columnas de identificadores internos tras la renderización
+            foreach (DataGridViewColumn col in dgvSocios.Columns)
+            {
+                if (col.Name == "colCobroId" ||
+                    col.DataPropertyName == "IdSocio" ||
+                    col.HeaderText.Trim().ToUpper() == "ID")
+                {
+                    col.Visible = false;
+                }
+            }
         }
 
+        // Aplica alertas de color basadas en la fecha de vencimiento de los cobros
         private void dgvSocios_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
         {
             if (e.RowIndex >= 0 && dgvSocios.Columns.Contains("colCobroVencimiento"))
@@ -83,11 +185,13 @@ namespace AsuFit.Presentacion
 
                     if (fechaVencimiento.Date < DateTime.Now.Date)
                     {
+                        // Membresía vencida
                         dgvSocios.Rows[e.RowIndex].DefaultCellStyle.BackColor = Color.LightCoral;
                         dgvSocios.Rows[e.RowIndex].DefaultCellStyle.ForeColor = Color.White;
                     }
                     else if (diferencia.TotalDays >= 0 && diferencia.TotalDays <= 7)
                     {
+                        // Próximo a vencer
                         dgvSocios.Rows[e.RowIndex].DefaultCellStyle.BackColor = Color.Gold;
                         dgvSocios.Rows[e.RowIndex].DefaultCellStyle.ForeColor = Color.Black;
                     }
@@ -95,32 +199,57 @@ namespace AsuFit.Presentacion
             }
         }
 
+        // Captura el identificador único del socio seleccionado
         private void dgvSocios_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex >= 0 && dgvSocios.Columns.Contains("colCobroId"))
             {
                 idSocioSeleccionado = Convert.ToInt32(dgvSocios.Rows[e.RowIndex].Cells["colCobroId"].Value);
             }
-        }
-
-        private void frmRegistrarCobro_Click(object sender, EventArgs e)
-        {
-            // Libera la selección al hacer clic en un área vacía del formulario
-            dgvSocios.ClearSelection();
-            idSocioSeleccionado = 0;
-        }
-        #endregion
-
-        #region 5. SECCIÓN INFERIOR: SELECCIÓN DE PLAN Y COBRO
-        private void cmbPlanes_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (cmbPlanes.SelectedIndex != -1 && cmbPlanes.SelectedItem is Plan planSel)
+            // Captura alternativa para variaciones en el DataGridView
+            else if (e.RowIndex >= 0 && dgvSocios.Columns.Contains("ID"))
             {
-                txtMonto.Text = planSel.Precio.ToString("N0");
-                diasPlanSeleccionado = planSel.DuracionDias;
+                idSocioSeleccionado = Convert.ToInt32(dgvSocios.Rows[e.RowIndex].Cells["ID"].Value);
             }
         }
 
+        // Libera la selección al interactuar con el área libre del formulario
+        private void frmRegistrarCobro_Click(object sender, EventArgs e)
+        {
+            dgvSocios.ClearSelection();
+            idSocioSeleccionado = 0;
+            this.ActiveControl = null;
+        }
+        #endregion
+
+        #region 5. PROCESAMIENTO DE COBRO
+        // Actualiza el monto a cobrar en base al plan seleccionado
+        private void cmbPlanes_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (cmbPlanes.SelectedIndex <= 0)
+            {
+                txtMonto.Clear();
+                diasPlanSeleccionado = 0;
+                return;
+            }
+
+            PlanNegocio negocioPlan = new PlanNegocio();
+            Plan planInfo = negocioPlan.ObtenerPlanPorNombre(cmbPlanes.Text);
+
+            if (planInfo != null)
+            {
+                txtMonto.Text = planInfo.Precio.ToString("N0");
+                diasPlanSeleccionado = planInfo.DuracionDias;
+            }
+        }
+
+        // Libera el foco tras la selección para evitar el resaltado nativo de Windows
+        private void cmbPlanes_DropDownClosed(object sender, EventArgs e)
+        {
+            this.ActiveControl = null;
+        }
+
+        // Integra la solicitud de cobro con el Carrito Global y transfiere al módulo de Caja
         private void btnCobrar_Click(object sender, EventArgs e)
         {
             if (idSocioSeleccionado == 0)
@@ -129,13 +258,13 @@ namespace AsuFit.Presentacion
                 return;
             }
 
-            if (cmbPlanes.SelectedIndex == -1 || string.IsNullOrWhiteSpace(txtMonto.Text))
+            if (cmbPlanes.SelectedIndex <= 0 || string.IsNullOrWhiteSpace(txtMonto.Text))
             {
-                MessageBox.Show("Por favor, seleccione el Plan que desea cobrar.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Por favor, seleccione un Plan válido.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
-            // Prevención de colisiones en el Carrito Global
+            // Verificación de colisiones en el Carrito Global
             if (CarritoGlobal.Detalles.Rows.Count > 0 && CarritoGlobal.IdSocioPagara != null && CarritoGlobal.IdSocioPagara != idSocioSeleccionado)
             {
                 DialogResult respuesta = MessageBox.Show(
@@ -156,10 +285,11 @@ namespace AsuFit.Presentacion
             decimal monto = Convert.ToDecimal(txtMonto.Text.Replace(".", ""));
             string conceptoPlan = "Renovación: " + cmbPlanes.Text;
 
-            // Integración con el Módulo de Caja
+            // Formato estándar de codificación para procesamientos en caja
             string codigoPlanArtificial = $"PLAN-{planInfo.DuracionDias}-{idSocioSeleccionado}-{planInfo.IdPlan}";
             CarritoGlobal.AgregarItem(0, codigoPlanArtificial, conceptoPlan, 1, monto, 10);
 
+            // Gestión de transición de interfaz hacia la Caja
             frmCajaCobro cajaAbierta = Application.OpenForms["frmCajaCobro"] as frmCajaCobro;
             if (cajaAbierta != null)
             {
@@ -173,13 +303,19 @@ namespace AsuFit.Presentacion
                 nuevaCaja.Show();
             }
 
-            // Limpieza post-envío a caja
+            // Restablecimiento del estado actual
             idSocioSeleccionado = 0;
             txtMonto.Clear();
-            cmbPlanes.SelectedIndex = -1;
-            txtBuscar.Clear();
+            cmbPlanes.SelectedIndex = 0;
+            txtBuscar.Text = "";
+            AplicarPlaceholder(txtBuscar, "Buscar por Cédula, Nombre o Apellido...");
             dgvSocios.ClearSelection();
         }
         #endregion
+
+        private void frmRegistrarCobro_Load(object sender, EventArgs e)
+        {
+            // Evento reservado para futuras implementaciones
+        }
     }
 }

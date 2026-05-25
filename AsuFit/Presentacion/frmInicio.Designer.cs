@@ -53,7 +53,9 @@
             this.label4 = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
             this.panel2 = new System.Windows.Forms.Panel();
+            this.label7 = new System.Windows.Forms.Label();
             this.panel3 = new System.Windows.Forms.Panel();
+            this.label9 = new System.Windows.Forms.Label();
             this.panel4 = new System.Windows.Forms.Panel();
             this.panel5 = new System.Windows.Forms.Panel();
             this.panel6 = new System.Windows.Forms.Panel();
@@ -89,33 +91,36 @@
             // lblUtilidad
             // 
             this.lblUtilidad.AutoSize = true;
+            this.lblUtilidad.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblUtilidad.ForeColor = System.Drawing.Color.White;
             this.lblUtilidad.Location = new System.Drawing.Point(9, 34);
             this.lblUtilidad.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblUtilidad.Name = "lblUtilidad";
-            this.lblUtilidad.Size = new System.Drawing.Size(13, 13);
+            this.lblUtilidad.Size = new System.Drawing.Size(14, 13);
             this.lblUtilidad.TabIndex = 1;
             this.lblUtilidad.Text = "0";
             // 
             // lblEgresos
             // 
             this.lblEgresos.AutoSize = true;
+            this.lblEgresos.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblEgresos.ForeColor = System.Drawing.Color.White;
             this.lblEgresos.Location = new System.Drawing.Point(10, 34);
             this.lblEgresos.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblEgresos.Name = "lblEgresos";
-            this.lblEgresos.Size = new System.Drawing.Size(13, 13);
+            this.lblEgresos.Size = new System.Drawing.Size(14, 13);
             this.lblEgresos.TabIndex = 2;
             this.lblEgresos.Text = "0";
             // 
             // lblIngresos
             // 
             this.lblIngresos.AutoSize = true;
+            this.lblIngresos.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblIngresos.ForeColor = System.Drawing.Color.White;
             this.lblIngresos.Location = new System.Drawing.Point(11, 34);
             this.lblIngresos.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblIngresos.Name = "lblIngresos";
-            this.lblIngresos.Size = new System.Drawing.Size(13, 13);
+            this.lblIngresos.Size = new System.Drawing.Size(14, 13);
             this.lblIngresos.TabIndex = 3;
             this.lblIngresos.Text = "0";
             // 
@@ -133,33 +138,36 @@
             // label1
             // 
             this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label1.ForeColor = System.Drawing.Color.White;
             this.label1.Location = new System.Drawing.Point(11, 10);
             this.label1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(47, 13);
+            this.label1.Size = new System.Drawing.Size(55, 13);
             this.label1.TabIndex = 9;
             this.label1.Text = "Ingresos";
             // 
             // label2
             // 
             this.label2.AutoSize = true;
+            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label2.ForeColor = System.Drawing.Color.White;
             this.label2.Location = new System.Drawing.Point(10, 10);
             this.label2.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(45, 13);
+            this.label2.Size = new System.Drawing.Size(52, 13);
             this.label2.TabIndex = 8;
             this.label2.Text = "Egresos";
             // 
             // label3
             // 
             this.label3.AutoSize = true;
+            this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label3.ForeColor = System.Drawing.Color.White;
             this.label3.Location = new System.Drawing.Point(9, 10);
             this.label3.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(42, 13);
+            this.label3.Size = new System.Drawing.Size(50, 13);
             this.label3.TabIndex = 7;
             this.label3.Text = "Utilidad";
             // 
@@ -179,7 +187,7 @@
             this.dgvVencimientos.ReadOnly = true;
             this.dgvVencimientos.RowHeadersVisible = false;
             this.dgvVencimientos.RowHeadersWidth = 62;
-            this.dgvVencimientos.RowTemplate.Height = 28;
+            this.dgvVencimientos.RowTemplate.Height = 35;
             this.dgvVencimientos.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dgvVencimientos.Size = new System.Drawing.Size(299, 98);
             this.dgvVencimientos.TabIndex = 10;
@@ -237,7 +245,7 @@
             this.dgvVencidos.ReadOnly = true;
             this.dgvVencidos.RowHeadersVisible = false;
             this.dgvVencidos.RowHeadersWidth = 62;
-            this.dgvVencidos.RowTemplate.Height = 28;
+            this.dgvVencidos.RowTemplate.Height = 35;
             this.dgvVencidos.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dgvVencidos.Size = new System.Drawing.Size(301, 98);
             this.dgvVencidos.TabIndex = 12;
@@ -293,28 +301,30 @@
             // lblActivos
             // 
             this.lblActivos.AutoSize = true;
+            this.lblActivos.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblActivos.ForeColor = System.Drawing.Color.White;
             this.lblActivos.Location = new System.Drawing.Point(15, 34);
             this.lblActivos.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblActivos.Name = "lblActivos";
-            this.lblActivos.Size = new System.Drawing.Size(13, 13);
+            this.lblActivos.Size = new System.Drawing.Size(14, 13);
             this.lblActivos.TabIndex = 0;
             this.lblActivos.Text = "0";
             // 
             // label4
             // 
             this.label4.AutoSize = true;
+            this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label4.ForeColor = System.Drawing.Color.White;
             this.label4.Location = new System.Drawing.Point(15, 10);
             this.label4.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(95, 13);
+            this.label4.Size = new System.Drawing.Size(113, 13);
             this.label4.TabIndex = 6;
             this.label4.Text = "Asistencias de hoy";
             // 
             // panel1
             // 
-            this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(39)))), ((int)(((byte)(47)))));
             this.panel1.Controls.Add(this.label4);
             this.panel1.Controls.Add(this.lblActivos);
             this.panel1.Location = new System.Drawing.Point(40, 16);
@@ -325,7 +335,8 @@
             // 
             // panel2
             // 
-            this.panel2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(39)))), ((int)(((byte)(47)))));
+            this.panel2.Controls.Add(this.label7);
             this.panel2.Controls.Add(this.label1);
             this.panel2.Controls.Add(this.lblIngresos);
             this.panel2.Location = new System.Drawing.Point(175, 16);
@@ -334,9 +345,23 @@
             this.panel2.Size = new System.Drawing.Size(111, 54);
             this.panel2.TabIndex = 1;
             // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(39)))), ((int)(((byte)(47)))));
+            this.label7.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label7.ForeColor = System.Drawing.Color.Green;
+            this.label7.Location = new System.Drawing.Point(81, 10);
+            this.label7.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(17, 13);
+            this.label7.TabIndex = 10;
+            this.label7.Text = "▲";
+            // 
             // panel3
             // 
-            this.panel3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(39)))), ((int)(((byte)(47)))));
+            this.panel3.Controls.Add(this.label9);
             this.panel3.Controls.Add(this.label2);
             this.panel3.Controls.Add(this.lblEgresos);
             this.panel3.Location = new System.Drawing.Point(295, 16);
@@ -345,9 +370,22 @@
             this.panel3.Size = new System.Drawing.Size(111, 54);
             this.panel3.TabIndex = 2;
             // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(39)))), ((int)(((byte)(47)))));
+            this.label9.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label9.ForeColor = System.Drawing.Color.Red;
+            this.label9.Location = new System.Drawing.Point(80, 10);
+            this.label9.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(17, 13);
+            this.label9.TabIndex = 11;
+            this.label9.Text = "▼";
+            // 
             // panel4
             // 
-            this.panel4.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel4.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(39)))), ((int)(((byte)(47)))));
             this.panel4.Controls.Add(this.label3);
             this.panel4.Controls.Add(this.lblUtilidad);
             this.panel4.Location = new System.Drawing.Point(416, 16);
@@ -359,7 +397,6 @@
             // panel5
             // 
             this.panel5.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(39)))), ((int)(((byte)(47)))));
-            this.panel5.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panel5.Controls.Add(this.dgvVencimientos);
             this.panel5.Controls.Add(this.lblTituloVencimientos);
             this.panel5.Controls.Add(this.lblProximosVencimientos);
@@ -372,7 +409,6 @@
             // panel6
             // 
             this.panel6.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(39)))), ((int)(((byte)(47)))));
-            this.panel6.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panel6.Controls.Add(this.dgvVencidos);
             this.panel6.Controls.Add(this.lbl);
             this.panel6.Controls.Add(this.lblVencimientos);
@@ -424,7 +460,6 @@
             // panel8
             // 
             this.panel8.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(39)))), ((int)(((byte)(47)))));
-            this.panel8.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panel8.Controls.Add(this.dgvProductosStock);
             this.panel8.Controls.Add(this.label6);
             this.panel8.Location = new System.Drawing.Point(539, 16);
@@ -452,7 +487,7 @@
             this.dgvProductosStock.ReadOnly = true;
             this.dgvProductosStock.RowHeadersVisible = false;
             this.dgvProductosStock.RowHeadersWidth = 62;
-            this.dgvProductosStock.RowTemplate.Height = 28;
+            this.dgvProductosStock.RowTemplate.Height = 35;
             this.dgvProductosStock.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dgvProductosStock.Size = new System.Drawing.Size(301, 98);
             this.dgvProductosStock.TabIndex = 12;
@@ -488,7 +523,6 @@
             // panel9
             // 
             this.panel9.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(39)))), ((int)(((byte)(47)))));
-            this.panel9.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panel9.Controls.Add(this.dgvProductosStockBajo);
             this.panel9.Controls.Add(this.label8);
             this.panel9.Location = new System.Drawing.Point(539, 163);
@@ -516,7 +550,7 @@
             this.dgvProductosStockBajo.ReadOnly = true;
             this.dgvProductosStockBajo.RowHeadersVisible = false;
             this.dgvProductosStockBajo.RowHeadersWidth = 62;
-            this.dgvProductosStockBajo.RowTemplate.Height = 28;
+            this.dgvProductosStockBajo.RowTemplate.Height = 35;
             this.dgvProductosStockBajo.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dgvProductosStockBajo.Size = new System.Drawing.Size(301, 98);
             this.dgvProductosStockBajo.TabIndex = 12;
@@ -568,7 +602,7 @@
             this.ForeColor = System.Drawing.Color.White;
             this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "frmInicio";
-            this.Text = "frmInicio";
+            this.Text = "Inicio";
             this.Load += new System.EventHandler(this.frmInicio_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dgvVencimientos)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvVencidos)).EndInit();
@@ -637,5 +671,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn colVencidoVencimiento;
         private System.Windows.Forms.DataGridViewTextBoxColumn colBajoNombre;
         private System.Windows.Forms.DataGridViewTextBoxColumn colBajoActual;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.Label label9;
     }
 }

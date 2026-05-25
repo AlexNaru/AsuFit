@@ -51,13 +51,14 @@
             this.txtRuc = new System.Windows.Forms.TextBox();
             this.label10 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.groupBox3 = new System.Windows.Forms.GroupBox();
-            this.label12 = new System.Windows.Forms.Label();
-            this.label13 = new System.Windows.Forms.Label();
-            this.label14 = new System.Windows.Forms.Label();
             this.dtpFechaNacimiento = new System.Windows.Forms.DateTimePicker();
             this.txtFechaNacimiento = new System.Windows.Forms.MaskedTextBox();
+            this.label12 = new System.Windows.Forms.Label();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.label13 = new System.Windows.Forms.Label();
+            this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.label14 = new System.Windows.Forms.Label();
+            this.label15 = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -69,11 +70,10 @@
             this.txtCedula.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.txtCedula.ForeColor = System.Drawing.Color.White;
             this.txtCedula.Location = new System.Drawing.Point(7, 45);
-            this.txtCedula.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.txtCedula.Margin = new System.Windows.Forms.Padding(2);
             this.txtCedula.Name = "txtCedula";
             this.txtCedula.Size = new System.Drawing.Size(103, 20);
             this.txtCedula.TabIndex = 1;
-            this.txtCedula.TextChanged += new System.EventHandler(this.VerificarCamposObligatorios);
             this.txtCedula.KeyDown += new System.Windows.Forms.KeyEventHandler(this.NavegacionEnter_KeyDown);
             this.txtCedula.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.ValidarNumeros_KeyPress);
             // 
@@ -83,11 +83,10 @@
             this.txtNombre.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.txtNombre.ForeColor = System.Drawing.Color.White;
             this.txtNombre.Location = new System.Drawing.Point(131, 45);
-            this.txtNombre.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.txtNombre.Margin = new System.Windows.Forms.Padding(2);
             this.txtNombre.Name = "txtNombre";
             this.txtNombre.Size = new System.Drawing.Size(103, 20);
             this.txtNombre.TabIndex = 2;
-            this.txtNombre.TextChanged += new System.EventHandler(this.VerificarCamposObligatorios);
             this.txtNombre.KeyDown += new System.Windows.Forms.KeyEventHandler(this.NavegacionEnter_KeyDown);
             // 
             // txtApellido
@@ -96,11 +95,10 @@
             this.txtApellido.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.txtApellido.ForeColor = System.Drawing.Color.White;
             this.txtApellido.Location = new System.Drawing.Point(257, 45);
-            this.txtApellido.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.txtApellido.Margin = new System.Windows.Forms.Padding(2);
             this.txtApellido.Name = "txtApellido";
             this.txtApellido.Size = new System.Drawing.Size(103, 20);
             this.txtApellido.TabIndex = 3;
-            this.txtApellido.TextChanged += new System.EventHandler(this.VerificarCamposObligatorios);
             this.txtApellido.KeyDown += new System.Windows.Forms.KeyEventHandler(this.NavegacionEnter_KeyDown);
             // 
             // btnGuardar
@@ -109,8 +107,8 @@
             this.btnGuardar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnGuardar.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnGuardar.ForeColor = System.Drawing.Color.Black;
-            this.btnGuardar.Location = new System.Drawing.Point(135, 284);
-            this.btnGuardar.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btnGuardar.Location = new System.Drawing.Point(135, 340);
+            this.btnGuardar.Margin = new System.Windows.Forms.Padding(2);
             this.btnGuardar.Name = "btnGuardar";
             this.btnGuardar.Size = new System.Drawing.Size(81, 27);
             this.btnGuardar.TabIndex = 3;
@@ -124,7 +122,7 @@
             this.txtEmail.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.txtEmail.ForeColor = System.Drawing.Color.White;
             this.txtEmail.Location = new System.Drawing.Point(131, 94);
-            this.txtEmail.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.txtEmail.Margin = new System.Windows.Forms.Padding(2);
             this.txtEmail.Name = "txtEmail";
             this.txtEmail.Size = new System.Drawing.Size(103, 20);
             this.txtEmail.TabIndex = 6;
@@ -136,11 +134,10 @@
             this.txtTelefono.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.txtTelefono.ForeColor = System.Drawing.Color.White;
             this.txtTelefono.Location = new System.Drawing.Point(7, 94);
-            this.txtTelefono.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.txtTelefono.Margin = new System.Windows.Forms.Padding(2);
             this.txtTelefono.Name = "txtTelefono";
             this.txtTelefono.Size = new System.Drawing.Size(103, 20);
             this.txtTelefono.TabIndex = 5;
-            this.txtTelefono.TextChanged += new System.EventHandler(this.VerificarCamposObligatorios);
             this.txtTelefono.KeyDown += new System.Windows.Forms.KeyEventHandler(this.NavegacionEnter_KeyDown);
             this.txtTelefono.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.ValidarNumeros_KeyPress);
             // 
@@ -150,7 +147,7 @@
             this.txtContactoEmergencia.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.txtContactoEmergencia.ForeColor = System.Drawing.Color.White;
             this.txtContactoEmergencia.Location = new System.Drawing.Point(7, 47);
-            this.txtContactoEmergencia.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.txtContactoEmergencia.Margin = new System.Windows.Forms.Padding(2);
             this.txtContactoEmergencia.Name = "txtContactoEmergencia";
             this.txtContactoEmergencia.Size = new System.Drawing.Size(103, 20);
             this.txtContactoEmergencia.TabIndex = 0;
@@ -162,11 +159,10 @@
             this.txtTelefonoEmergencia.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.txtTelefonoEmergencia.ForeColor = System.Drawing.Color.White;
             this.txtTelefonoEmergencia.Location = new System.Drawing.Point(124, 47);
-            this.txtTelefonoEmergencia.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.txtTelefonoEmergencia.Margin = new System.Windows.Forms.Padding(2);
             this.txtTelefonoEmergencia.Name = "txtTelefonoEmergencia";
             this.txtTelefonoEmergencia.Size = new System.Drawing.Size(103, 20);
             this.txtTelefonoEmergencia.TabIndex = 1;
-            this.txtTelefonoEmergencia.TextChanged += new System.EventHandler(this.VerificarCamposObligatorios);
             this.txtTelefonoEmergencia.KeyDown += new System.Windows.Forms.KeyEventHandler(this.NavegacionEnter_KeyDown);
             this.txtTelefonoEmergencia.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.ValidarNumeros_KeyPress);
             // 
@@ -266,16 +262,17 @@
             this.cmbPlanes.ForeColor = System.Drawing.Color.White;
             this.cmbPlanes.FormattingEnabled = true;
             this.cmbPlanes.Items.AddRange(new object[] {
+            "--- Seleccionar Plan ---",
             "Pase Diario",
             "Pase Semanal",
             "Plan Mensual",
             "Plan Anual"});
-            this.cmbPlanes.Location = new System.Drawing.Point(46, 28);
-            this.cmbPlanes.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.cmbPlanes.Location = new System.Drawing.Point(8, 48);
+            this.cmbPlanes.Margin = new System.Windows.Forms.Padding(2);
             this.cmbPlanes.Name = "cmbPlanes";
-            this.cmbPlanes.Size = new System.Drawing.Size(103, 21);
+            this.cmbPlanes.Size = new System.Drawing.Size(115, 21);
             this.cmbPlanes.TabIndex = 0;
-            this.cmbPlanes.SelectedIndexChanged += new System.EventHandler(this.VerificarCamposObligatorios);
+            this.cmbPlanes.DropDownClosed += new System.EventHandler(this.cmbPlanes_DropDownClosed);
             // 
             // label9
             // 
@@ -294,8 +291,8 @@
             this.btnCancelar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnCancelar.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             this.btnCancelar.ForeColor = System.Drawing.Color.White;
-            this.btnCancelar.Location = new System.Drawing.Point(277, 284);
-            this.btnCancelar.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btnCancelar.Location = new System.Drawing.Point(277, 340);
+            this.btnCancelar.Margin = new System.Windows.Forms.Padding(2);
             this.btnCancelar.Name = "btnCancelar";
             this.btnCancelar.Size = new System.Drawing.Size(85, 27);
             this.btnCancelar.TabIndex = 4;
@@ -320,7 +317,7 @@
             this.txtRuc.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.txtRuc.ForeColor = System.Drawing.Color.White;
             this.txtRuc.Location = new System.Drawing.Point(257, 94);
-            this.txtRuc.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.txtRuc.Margin = new System.Windows.Forms.Padding(2);
             this.txtRuc.Name = "txtRuc";
             this.txtRuc.Size = new System.Drawing.Size(103, 20);
             this.txtRuc.TabIndex = 7;
@@ -353,74 +350,13 @@
             this.groupBox1.Controls.Add(this.txtTelefono);
             this.groupBox1.Controls.Add(this.label4);
             this.groupBox1.Controls.Add(this.txtEmail);
-            this.groupBox1.Location = new System.Drawing.Point(11, 11);
-            this.groupBox1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.groupBox1.Location = new System.Drawing.Point(11, 51);
+            this.groupBox1.Margin = new System.Windows.Forms.Padding(2);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Padding = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.groupBox1.Padding = new System.Windows.Forms.Padding(2);
             this.groupBox1.Size = new System.Drawing.Size(489, 122);
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
-            // 
-            // groupBox2
-            // 
-            this.groupBox2.Controls.Add(this.label13);
-            this.groupBox2.Controls.Add(this.label7);
-            this.groupBox2.Controls.Add(this.txtContactoEmergencia);
-            this.groupBox2.Controls.Add(this.label8);
-            this.groupBox2.Controls.Add(this.txtTelefonoEmergencia);
-            this.groupBox2.Location = new System.Drawing.Point(11, 137);
-            this.groupBox2.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
-            this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Padding = new System.Windows.Forms.Padding(2, 2, 2, 2);
-            this.groupBox2.Size = new System.Drawing.Size(489, 73);
-            this.groupBox2.TabIndex = 1;
-            this.groupBox2.TabStop = false;
-            // 
-            // groupBox3
-            // 
-            this.groupBox3.Controls.Add(this.label14);
-            this.groupBox3.Controls.Add(this.label9);
-            this.groupBox3.Controls.Add(this.cmbPlanes);
-            this.groupBox3.Location = new System.Drawing.Point(11, 214);
-            this.groupBox3.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
-            this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Padding = new System.Windows.Forms.Padding(2, 2, 2, 2);
-            this.groupBox3.Size = new System.Drawing.Size(489, 58);
-            this.groupBox3.TabIndex = 2;
-            this.groupBox3.TabStop = false;
-            // 
-            // label12
-            // 
-            this.label12.AutoSize = true;
-            this.label12.ForeColor = System.Drawing.Color.White;
-            this.label12.Location = new System.Drawing.Point(4, 0);
-            this.label12.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(119, 13);
-            this.label12.TabIndex = 25;
-            this.label12.Text = "DATOS PERSONALES";
-            // 
-            // label13
-            // 
-            this.label13.AutoSize = true;
-            this.label13.ForeColor = System.Drawing.Color.White;
-            this.label13.Location = new System.Drawing.Point(5, 0);
-            this.label13.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(158, 13);
-            this.label13.TabIndex = 25;
-            this.label13.Text = "CONTACTO DE EMERGENCIA";
-            // 
-            // label14
-            // 
-            this.label14.AutoSize = true;
-            this.label14.ForeColor = System.Drawing.Color.White;
-            this.label14.Location = new System.Drawing.Point(5, 0);
-            this.label14.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(80, 13);
-            this.label14.TabIndex = 25;
-            this.label14.Text = "SUSCRIPCIÓN";
             // 
             // dtpFechaNacimiento
             // 
@@ -443,12 +379,85 @@
             this.txtFechaNacimiento.Size = new System.Drawing.Size(102, 20);
             this.txtFechaNacimiento.TabIndex = 27;
             // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.ForeColor = System.Drawing.Color.White;
+            this.label12.Location = new System.Drawing.Point(4, 0);
+            this.label12.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(119, 13);
+            this.label12.TabIndex = 25;
+            this.label12.Text = "DATOS PERSONALES";
+            // 
+            // groupBox2
+            // 
+            this.groupBox2.Controls.Add(this.label13);
+            this.groupBox2.Controls.Add(this.label7);
+            this.groupBox2.Controls.Add(this.txtContactoEmergencia);
+            this.groupBox2.Controls.Add(this.label8);
+            this.groupBox2.Controls.Add(this.txtTelefonoEmergencia);
+            this.groupBox2.Location = new System.Drawing.Point(11, 177);
+            this.groupBox2.Margin = new System.Windows.Forms.Padding(2);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Padding = new System.Windows.Forms.Padding(2);
+            this.groupBox2.Size = new System.Drawing.Size(489, 73);
+            this.groupBox2.TabIndex = 1;
+            this.groupBox2.TabStop = false;
+            // 
+            // label13
+            // 
+            this.label13.AutoSize = true;
+            this.label13.ForeColor = System.Drawing.Color.White;
+            this.label13.Location = new System.Drawing.Point(5, 0);
+            this.label13.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(158, 13);
+            this.label13.TabIndex = 25;
+            this.label13.Text = "CONTACTO DE EMERGENCIA";
+            // 
+            // groupBox3
+            // 
+            this.groupBox3.Controls.Add(this.label14);
+            this.groupBox3.Controls.Add(this.label9);
+            this.groupBox3.Controls.Add(this.cmbPlanes);
+            this.groupBox3.Location = new System.Drawing.Point(11, 254);
+            this.groupBox3.Margin = new System.Windows.Forms.Padding(2);
+            this.groupBox3.Name = "groupBox3";
+            this.groupBox3.Padding = new System.Windows.Forms.Padding(2);
+            this.groupBox3.Size = new System.Drawing.Size(489, 75);
+            this.groupBox3.TabIndex = 2;
+            this.groupBox3.TabStop = false;
+            // 
+            // label14
+            // 
+            this.label14.AutoSize = true;
+            this.label14.ForeColor = System.Drawing.Color.White;
+            this.label14.Location = new System.Drawing.Point(5, 0);
+            this.label14.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(80, 13);
+            this.label14.TabIndex = 25;
+            this.label14.Text = "SUSCRIPCIÓN";
+            // 
+            // label15
+            // 
+            this.label15.AutoSize = true;
+            this.label15.ForeColor = System.Drawing.Color.White;
+            this.label15.Location = new System.Drawing.Point(8, 9);
+            this.label15.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label15.Name = "label15";
+            this.label15.Size = new System.Drawing.Size(124, 13);
+            this.label15.TabIndex = 25;
+            this.label15.Text = "REGISTRO DE SOCIOS";
+            // 
             // frmRegistrarSocio
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(25)))), ((int)(((byte)(28)))), ((int)(((byte)(35)))));
-            this.ClientSize = new System.Drawing.Size(515, 330);
+            this.ClientSize = new System.Drawing.Size(515, 395);
+            this.Controls.Add(this.label15);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
@@ -457,11 +466,11 @@
             this.Controls.Add(this.btnGuardar);
             this.ForeColor = System.Drawing.Color.White;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
-            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.Margin = new System.Windows.Forms.Padding(2);
             this.MaximizeBox = false;
             this.Name = "frmRegistrarSocio";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "REGISTRO DE SOCIOS";
+            this.Text = "-";
             this.Load += new System.EventHandler(this.frmRegistrarSocio_Load);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.NavegacionEnter_KeyDown);
             this.groupBox1.ResumeLayout(false);
@@ -507,5 +516,6 @@
         private System.Windows.Forms.Label label14;
         private System.Windows.Forms.DateTimePicker dtpFechaNacimiento;
         private System.Windows.Forms.MaskedTextBox txtFechaNacimiento;
+        private System.Windows.Forms.Label label15;
     }
 }
