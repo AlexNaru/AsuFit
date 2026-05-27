@@ -5,8 +5,11 @@ using System.Data.SqlClient;
 
 namespace AsuFit.Datos
 {
+    // Gestiona las operaciones de persistencia para la entidad Productos e Inventario.
     public class InventarioDatos
     {
+        #region CONSULTAS DE INVENTARIO
+        // Recupera el listado de categorías activas.
         public DataTable ListarCategorias()
         {
             DataTable dt = new DataTable();
@@ -23,6 +26,7 @@ namespace AsuFit.Datos
             return dt;
         }
 
+        // Recupera el listado completo de productos con datos de proveedores y categorías.
         public DataTable ListarProductos()
         {
             DataTable dt = new DataTable();
@@ -43,7 +47,10 @@ namespace AsuFit.Datos
             }
             return dt;
         }
+        #endregion
 
+        #region OPERACIONES DE STOCK Y PRODUCTOS
+        // Modifica el estado lógico de un producto.
         public bool CambiarEstado(int idProducto, string nuevoEstado)
         {
             using (SqlConnection oConexion = Conexion.ObtenerConexion())
@@ -57,6 +64,53 @@ namespace AsuFit.Datos
             }
         }
 
+        // Persiste los datos de un producto (Nuevo o Edición).
+        public bool GuardarProducto(Producto obj)
+        {
+            using (SqlConnection oConexion = Conexion.ObtenerConexion())
+            {
+                oConexion.Open();
+                string query = (obj.IdProducto == 0)
+                    ? @"INSERT INTO Productos (CodigoBarras, Nombre, IdCategoria, PrecioVenta, PrecioCompra, StockActual, Estado, IdProveedor, PorcentajeIva) 
+                      VALUES (@Codigo, @Nombre, (SELECT IdCategoria FROM CategoriasProducto WHERE Descripcion = @Categoria), @Precio, 0, @Stock, 'Activo', @IdProveedor, @PorcentajeIva)"
+                    : @"UPDATE Productos SET CodigoBarras = @Codigo, Nombre = @Nombre, 
+                      IdCategoria = (SELECT IdCategoria FROM CategoriasProducto WHERE Descripcion = @Categoria), 
+                      PrecioVenta = @Precio, StockActual = @Stock, IdProveedor = @IdProveedor, PorcentajeIva = @PorcentajeIva
+                      WHERE IdProducto = @IdProducto";
+
+                SqlCommand cmd = new SqlCommand(query, oConexion);
+                cmd.Parameters.AddWithValue("@IdProducto", obj.IdProducto);
+                cmd.Parameters.AddWithValue("@Codigo", obj.CodigoBarras);
+                cmd.Parameters.AddWithValue("@Nombre", obj.Nombre);
+                cmd.Parameters.AddWithValue("@Categoria", obj.Categoria);
+                cmd.Parameters.AddWithValue("@Precio", obj.PrecioVenta);
+                cmd.Parameters.AddWithValue("@Stock", obj.StockActual);
+                cmd.Parameters.AddWithValue("@IdProveedor", obj.IdProveedor);
+                cmd.Parameters.AddWithValue("@PorcentajeIva", obj.PorcentajeIva);
+
+                return cmd.ExecuteNonQuery() > 0;
+            }
+        }
+
+        // Incrementa stock y actualiza el costo promedio de compra.
+        public bool SumarStock(int idProducto, int cantidadAumentar, decimal nuevoPrecioCompra)
+        {
+            using (SqlConnection oConexion = Conexion.ObtenerConexion())
+            {
+                oConexion.Open();
+                string query = "UPDATE Productos SET StockActual = StockActual + @Cantidad, PrecioCompra = @PrecioCompra WHERE IdProducto = @Id";
+                SqlCommand cmd = new SqlCommand(query, oConexion);
+                cmd.Parameters.AddWithValue("@Cantidad", cantidadAumentar);
+                cmd.Parameters.AddWithValue("@PrecioCompra", nuevoPrecioCompra);
+                cmd.Parameters.AddWithValue("@Id", idProducto);
+
+                return cmd.ExecuteNonQuery() > 0;
+            }
+        }
+        #endregion
+
+        #region TRANSACCIONES DE VENTA
+        // Ejecuta el registro de una venta y descuenta el stock de manera transaccional.
         public bool RegistrarVenta(decimal total, DataTable detalleVenta)
         {
             using (SqlConnection oConexion = Conexion.ObtenerConexion())
@@ -98,59 +152,6 @@ namespace AsuFit.Datos
                 }
             }
         }
-
-        // --- MÉTODO ACTUALIZADO USANDO LA ENTIDAD ---
-        public bool GuardarProducto(Producto obj)
-        {
-            using (SqlConnection oConexion = Conexion.ObtenerConexion())
-            {
-                oConexion.Open();
-                string query = "";
-
-                if (obj.IdProducto == 0)
-                {
-                    query = @"INSERT INTO Productos (CodigoBarras, Nombre, IdCategoria, PrecioVenta, PrecioCompra, StockActual, Estado, IdProveedor, PorcentajeIva) 
-                      VALUES (@Codigo, @Nombre, (SELECT IdCategoria FROM CategoriasProducto WHERE Descripcion = @Categoria), @Precio, 0, @Stock, 'Activo', @IdProveedor, @PorcentajeIva)";
-                }
-                else
-                {
-                    query = @"UPDATE Productos SET 
-                      CodigoBarras = @Codigo, Nombre = @Nombre, 
-                      IdCategoria = (SELECT IdCategoria FROM CategoriasProducto WHERE Descripcion = @Categoria), 
-                      PrecioVenta = @Precio, StockActual = @Stock,
-                      IdProveedor = @IdProveedor, PorcentajeIva = @PorcentajeIva
-                      WHERE IdProducto = @IdProducto";
-                }
-
-                SqlCommand cmd = new SqlCommand(query, oConexion);
-                // Extraemos todo directamente del objeto "obj"
-                cmd.Parameters.AddWithValue("@IdProducto", obj.IdProducto);
-                cmd.Parameters.AddWithValue("@Codigo", obj.CodigoBarras);
-                cmd.Parameters.AddWithValue("@Nombre", obj.Nombre);
-                cmd.Parameters.AddWithValue("@Categoria", obj.Categoria);
-                cmd.Parameters.AddWithValue("@Precio", obj.PrecioVenta);
-                cmd.Parameters.AddWithValue("@Stock", obj.StockActual);
-                cmd.Parameters.AddWithValue("@IdProveedor", obj.IdProveedor);
-                cmd.Parameters.AddWithValue("@PorcentajeIva", obj.PorcentajeIva);
-
-                return cmd.ExecuteNonQuery() > 0;
-            }
-        }
-
-        // --- NUEVO: AHORA GUARDA EL STOCK Y EL PRECIO DE COMPRA UNITARIO ---
-        public bool SumarStock(int idProducto, int cantidadAumentar, decimal nuevoPrecioCompra)
-        {
-            using (SqlConnection oConexion = Conexion.ObtenerConexion())
-            {
-                oConexion.Open();
-                string query = "UPDATE Productos SET StockActual = StockActual + @Cantidad, PrecioCompra = @PrecioCompra WHERE IdProducto = @Id";
-                SqlCommand cmd = new SqlCommand(query, oConexion);
-                cmd.Parameters.AddWithValue("@Cantidad", cantidadAumentar);
-                cmd.Parameters.AddWithValue("@PrecioCompra", nuevoPrecioCompra);
-                cmd.Parameters.AddWithValue("@Id", idProducto);
-
-                return cmd.ExecuteNonQuery() > 0;
-            }
-        }
+        #endregion
     }
 }

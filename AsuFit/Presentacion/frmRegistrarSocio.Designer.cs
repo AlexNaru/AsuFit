@@ -52,13 +52,13 @@
             this.label10 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.dtpFechaNacimiento = new System.Windows.Forms.DateTimePicker();
-            this.txtFechaNacimiento = new System.Windows.Forms.MaskedTextBox();
             this.label12 = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.label13 = new System.Windows.Forms.Label();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.label14 = new System.Windows.Forms.Label();
             this.label15 = new System.Windows.Forms.Label();
+            this.txtFechaNacimiento = new System.Windows.Forms.TextBox();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -335,7 +335,6 @@
             // groupBox1
             // 
             this.groupBox1.Controls.Add(this.dtpFechaNacimiento);
-            this.groupBox1.Controls.Add(this.txtFechaNacimiento);
             this.groupBox1.Controls.Add(this.label12);
             this.groupBox1.Controls.Add(this.label1);
             this.groupBox1.Controls.Add(this.txtCedula);
@@ -350,6 +349,7 @@
             this.groupBox1.Controls.Add(this.txtTelefono);
             this.groupBox1.Controls.Add(this.label4);
             this.groupBox1.Controls.Add(this.txtEmail);
+            this.groupBox1.Controls.Add(this.txtFechaNacimiento);
             this.groupBox1.Location = new System.Drawing.Point(11, 51);
             this.groupBox1.Margin = new System.Windows.Forms.Padding(2);
             this.groupBox1.Name = "groupBox1";
@@ -367,17 +367,6 @@
             this.dtpFechaNacimiento.Size = new System.Drawing.Size(15, 20);
             this.dtpFechaNacimiento.TabIndex = 26;
             this.dtpFechaNacimiento.ValueChanged += new System.EventHandler(this.dtpFechaNacimiento_ValueChanged);
-            // 
-            // txtFechaNacimiento
-            // 
-            this.txtFechaNacimiento.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(39)))), ((int)(((byte)(47)))));
-            this.txtFechaNacimiento.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.txtFechaNacimiento.ForeColor = System.Drawing.Color.White;
-            this.txtFechaNacimiento.Location = new System.Drawing.Point(380, 46);
-            this.txtFechaNacimiento.Name = "txtFechaNacimiento";
-            this.txtFechaNacimiento.ReadOnly = true;
-            this.txtFechaNacimiento.Size = new System.Drawing.Size(102, 20);
-            this.txtFechaNacimiento.TabIndex = 27;
             // 
             // label12
             // 
@@ -451,6 +440,17 @@
             this.label15.TabIndex = 25;
             this.label15.Text = "REGISTRO DE SOCIOS";
             // 
+            // txtFechaNacimiento
+            // 
+            this.txtFechaNacimiento.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(39)))), ((int)(((byte)(47)))));
+            this.txtFechaNacimiento.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.txtFechaNacimiento.ForeColor = System.Drawing.Color.White;
+            this.txtFechaNacimiento.Location = new System.Drawing.Point(380, 46);
+            this.txtFechaNacimiento.Name = "txtFechaNacimiento";
+            this.txtFechaNacimiento.ReadOnly = true;
+            this.txtFechaNacimiento.Size = new System.Drawing.Size(102, 20);
+            this.txtFechaNacimiento.TabIndex = 28;
+            // 
             // frmRegistrarSocio
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -515,7 +515,7 @@
         private System.Windows.Forms.Label label13;
         private System.Windows.Forms.Label label14;
         private System.Windows.Forms.DateTimePicker dtpFechaNacimiento;
-        private System.Windows.Forms.MaskedTextBox txtFechaNacimiento;
         private System.Windows.Forms.Label label15;
+        private System.Windows.Forms.TextBox txtFechaNacimiento;
     }
 }

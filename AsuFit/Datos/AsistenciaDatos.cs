@@ -4,8 +4,11 @@ using AsuFit.Entidades;
 
 namespace AsuFit.Datos
 {
+    // Encapsula las operaciones de datos relacionadas con los registros de entrada y salida de socios.
     public class AsistenciaDatos
     {
+        #region REGISTRO DE MARCAJES
+        // Persiste una nueva marca de asistencia vinculada al identificador del socio.
         public bool RegistrarAsistencia(Asistencia obj)
         {
             using (SqlConnection oConexion = Conexion.ObtenerConexion())
@@ -22,5 +25,6 @@ namespace AsuFit.Datos
                 catch (Exception) { throw; }
             }
         }
+        #endregion
     }
 }

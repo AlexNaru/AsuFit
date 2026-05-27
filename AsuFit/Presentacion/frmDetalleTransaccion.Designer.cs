@@ -59,13 +59,14 @@
             this.colCantidad,
             this.colPrecio,
             this.colSubTotal});
-            this.dgvDetalle.Location = new System.Drawing.Point(34, 54);
+            this.dgvDetalle.Location = new System.Drawing.Point(23, 35);
+            this.dgvDetalle.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.dgvDetalle.Name = "dgvDetalle";
             this.dgvDetalle.ReadOnly = true;
             this.dgvDetalle.RowHeadersVisible = false;
             this.dgvDetalle.RowHeadersWidth = 62;
             this.dgvDetalle.RowTemplate.Height = 28;
-            this.dgvDetalle.Size = new System.Drawing.Size(736, 150);
+            this.dgvDetalle.Size = new System.Drawing.Size(491, 98);
             this.dgvDetalle.TabIndex = 0;
             // 
             // colConcepto
@@ -94,7 +95,7 @@
             dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
             dataGridViewCellStyle4.Format = "N0";
             this.colPrecio.DefaultCellStyle = dataGridViewCellStyle4;
-            this.colPrecio.HeaderText = "Precio";
+            this.colPrecio.HeaderText = "Precio (Unitario)";
             this.colPrecio.MinimumWidth = 8;
             this.colPrecio.Name = "colPrecio";
             this.colPrecio.ReadOnly = true;
@@ -112,11 +113,13 @@
             // 
             // frmDetalleTransaccion
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 255);
+            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(25)))), ((int)(((byte)(28)))), ((int)(((byte)(35)))));
+            this.ClientSize = new System.Drawing.Size(533, 166);
             this.Controls.Add(this.dgvDetalle);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "frmDetalleTransaccion";

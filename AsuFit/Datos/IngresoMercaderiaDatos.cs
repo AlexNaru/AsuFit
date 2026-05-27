@@ -4,8 +4,11 @@ using System.Data.SqlClient;
 
 namespace AsuFit.Datos
 {
+    // Gestiona las operaciones de acceso a datos relacionadas con el ingreso y reposición de mercadería.
     public class IngresoMercaderiaDatos
     {
+        #region OPERACIONES TRANSACCIONALES
+        // Registra un ingreso de mercadería ejecutando cabecera, detalle y actualización de stock bajo una transacción.
         public bool RegistrarIngreso(int idProveedor, int idProducto, int cantidad, decimal costoTotal, DateTime fechaIngreso, string observaciones)
         {
             using (SqlConnection cn = Conexion.ObtenerConexion())
@@ -17,14 +20,13 @@ namespace AsuFit.Datos
                     cn.Open();
                     transaccion = cn.BeginTransaction();
 
-                    // Calculamos el Precio de Compra Unitario automáticamente
                     decimal precioCompraUnitario = 0;
                     if (cantidad > 0)
                     {
                         precioCompraUnitario = costoTotal / cantidad;
                     }
 
-                    // 1. CABECERA: Guardamos la "Factura" general y capturamos el ID generado
+                    // 1. Inserción de Cabecera
                     string queryIngreso = @"INSERT INTO IngresosMercaderia (IdProveedor, CostoTotal, FechaIngreso, Observaciones) 
                                             OUTPUT INSERTED.IdIngreso 
                                             VALUES (@IdProveedor, @CostoTotal, @FechaIngreso, @Observaciones)";
@@ -33,18 +35,11 @@ namespace AsuFit.Datos
                     cmdIngreso.Parameters.AddWithValue("@IdProveedor", idProveedor);
                     cmdIngreso.Parameters.AddWithValue("@CostoTotal", costoTotal);
                     cmdIngreso.Parameters.AddWithValue("@FechaIngreso", fechaIngreso);
+                    cmdIngreso.Parameters.AddWithValue("@Observaciones", string.IsNullOrEmpty(observaciones) ? (object)DBNull.Value : observaciones);
 
-                    // Si observaciones viene null, enviamos un DBNull
-                    if (string.IsNullOrEmpty(observaciones))
-                        cmdIngreso.Parameters.AddWithValue("@Observaciones", DBNull.Value);
-                    else
-                        cmdIngreso.Parameters.AddWithValue("@Observaciones", observaciones);
-
-                    // Ejecutamos y guardamos el IdIngreso que SQL nos devuelve
                     int idIngresoGenerado = (int)cmdIngreso.ExecuteScalar();
 
-                    // 2. DETALLE: Guardamos qué producto compramos y lo unimos a la cabecera
-                    // SOLUCIÓN: Quitamos 'Subtotal' porque tu base de datos lo calcula automáticamente
+                    // 2. Inserción de Detalle
                     string queryDetalle = @"INSERT INTO IngresosMercaderiaDetalle (IdIngreso, IdProducto, Cantidad, PrecioCompra) 
                                             VALUES (@IdIngreso, @IdProducto, @Cantidad, @PrecioCompra)";
 
@@ -56,7 +51,7 @@ namespace AsuFit.Datos
 
                     cmdDetalle.ExecuteNonQuery();
 
-                    // 3. ACTUALIZAR PRODUCTO: Sumamos stock y actualizamos su nuevo costo unitario
+                    // 3. Actualización de Inventario y Costos
                     string queryStock = @"UPDATE Productos 
                                           SET StockActual = StockActual + @CantidadIngresada, 
                                               PrecioCompra = @NuevoCosto 
@@ -69,20 +64,19 @@ namespace AsuFit.Datos
 
                     cmdStock.ExecuteNonQuery();
 
-                    // Si todo salió perfecto, confirmamos el guardado en bloque
                     transaccion.Commit();
                     return true;
                 }
                 catch (Exception ex)
                 {
-                    // Si falla cualquier paso, deshacemos todo
                     if (transaccion != null)
                     {
                         transaccion.Rollback();
                     }
-                    throw new Exception("Error al registrar el ingreso: " + ex.Message);
+                    throw new Exception("Error al registrar el ingreso transaccional: " + ex.Message);
                 }
             }
         }
+        #endregion
     }
 }

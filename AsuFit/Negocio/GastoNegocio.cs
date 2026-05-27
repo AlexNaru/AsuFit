@@ -5,20 +5,25 @@ using AsuFit.Entidades;
 
 namespace AsuFit.Negocio
 {
+    // Controla las validaciones de negocio para la administración de gastos operativos.
     public class GastoNegocio
     {
         private GastoDatos objDatos = new GastoDatos();
 
+        #region CONSULTAS
+        // Recupera el listado histórico de gastos registrados.
         public List<Gasto> ListarGastos()
         {
             return objDatos.ListarGastos();
         }
+        #endregion
 
+        #region OPERACIONES Y VALIDACIONES
+        // Verifica las reglas de negocio antes de registrar un nuevo gasto.
         public bool RegistrarGasto(Gasto obj, out string mensaje)
         {
             mensaje = string.Empty;
 
-            // Validaciones de negocio (Aduana)
             if (string.IsNullOrWhiteSpace(obj.Descripcion))
             {
                 mensaje = "La descripción del gasto no puede estar vacía.";
@@ -37,5 +42,6 @@ namespace AsuFit.Negocio
 
             return objDatos.RegistrarGasto(obj, out mensaje);
         }
+        #endregion
     }
 }

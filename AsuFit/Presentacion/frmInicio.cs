@@ -1,12 +1,7 @@
-﻿using AsuFit.Datos;
-using AsuFit.Negocio;
+﻿using AsuFit.Negocio;
 using System;
 using System.Data;
-using System.Data.SqlClient;
 using System.Drawing;
-using System.Globalization;
-using System.Net;
-using System.Net.Mail;
 using System.Windows.Forms;
 using System.Windows.Forms.DataVisualization.Charting;
 
@@ -44,8 +39,9 @@ namespace AsuFit.Presentacion
             CargarTablasInventario();
             CargarVencimientos();
 
-            // Ejecución del proceso de mensajería automatizada
-            EnviarCorreosVencimiento();
+            // Ejecución del proceso de mensajería delegando a la capa de Negocio
+            SocioNegocio negocioSocio = new SocioNegocio();
+            negocioSocio.ProcesarEnvioCorreosVencimiento();
         }
         #endregion
 
@@ -206,7 +202,7 @@ namespace AsuFit.Presentacion
         }
         #endregion
 
-        #region 6. UTILIDADES Y PROCESOS AUTOMATIZADOS
+        #region 6. UTILIDADES Y RENDERIZADO
         // Establece las propiedades estándar de solo lectura y autoajuste para los DataGridViews
         private void ConfigurarColumnasBasicas(DataGridView dgv)
         {
@@ -220,108 +216,6 @@ namespace AsuFit.Presentacion
             }
         }
 
-        // Recupera la configuración SMTP y envía notificaciones automáticas a los socios pertinentes
-        private void EnviarCorreosVencimiento()
-        {
-            try
-            {
-                using (SqlConnection oConexion = Conexion.ObtenerConexion())
-                {
-                    oConexion.Open();
-
-                    string configQuery = "SELECT CorreoEmisor, ContrasenaCorreo, DiasAviso1, DiasAviso2 FROM Configuracion WHERE IdConfiguracion = 1";
-                    SqlCommand cmdConfig = new SqlCommand(configQuery, oConexion);
-                    SqlDataReader reader = cmdConfig.ExecuteReader();
-
-                    string correoGym = "";
-                    string passGym = "";
-                    int avisoLejano = 7;
-                    int avisoCercano = 1;
-
-                    if (reader.Read())
-                    {
-                        correoGym = reader["CorreoEmisor"].ToString();
-                        passGym = reader["ContrasenaCorreo"].ToString();
-                        if (reader["DiasAviso1"] != DBNull.Value) avisoLejano = Convert.ToInt32(reader["DiasAviso1"]);
-                        if (reader["DiasAviso2"] != DBNull.Value) avisoCercano = Convert.ToInt32(reader["DiasAviso2"]);
-                    }
-                    reader.Close();
-
-                    if (string.IsNullOrEmpty(correoGym) || string.IsNullOrEmpty(passGym)) return;
-
-                    string query = $@"
-                        SELECT IdSocio, Nombre, Apellido, Email, FechaVencimiento, 
-                               DATEDIFF(day, GETDATE(), FechaVencimiento) AS DiasRestantes
-                        FROM Socios
-                        WHERE Estado = 'Activo' 
-                        AND Email IS NOT NULL AND Email LIKE '%@%'
-                        AND DATEDIFF(day, GETDATE(), FechaVencimiento) IN (0, {avisoCercano}, {avisoCercano + 1}, {avisoLejano - 1}, {avisoLejano}, {avisoLejano + 1})
-                        AND (FechaUltimoAviso IS NULL OR DATEDIFF(day, FechaUltimoAviso, GETDATE()) >= 4)";
-
-                    SqlCommand cmd = new SqlCommand(query, oConexion);
-                    SqlDataAdapter da = new SqlDataAdapter(cmd);
-                    DataTable dtAvisos = new DataTable();
-
-                    da.Fill(dtAvisos);
-
-                    if (dtAvisos.Rows.Count > 0)
-                    {
-                        SmtpClient smtp = new SmtpClient("smtp.gmail.com");
-                        smtp.Port = 587;
-                        smtp.EnableSsl = true;
-                        smtp.UseDefaultCredentials = false;
-                        smtp.DeliveryMethod = SmtpDeliveryMethod.Network;
-                        smtp.Credentials = new NetworkCredential(correoGym, passGym);
-
-                        foreach (DataRow row in dtAvisos.Rows)
-                        {
-                            string emailDestino = row["Email"].ToString();
-                            string nombre = row["Nombre"].ToString();
-                            int dias = Convert.ToInt32(row["DiasRestantes"]);
-                            int idSocio = Convert.ToInt32(row["IdSocio"]);
-                            DateTime fechaVence = Convert.ToDateTime(row["FechaVencimiento"]);
-
-                            MailMessage correo = new MailMessage();
-                            correo.From = new MailAddress(correoGym, "AsuFit GYM");
-                            correo.To.Add(emailDestino);
-
-                            string diaTexto = "";
-                            if (dias == 0) diaTexto = "HOY";
-                            else if (dias == avisoCercano) diaTexto = "MAÑANA";
-                            else diaTexto = $"en {dias} días";
-
-                            correo.Subject = $"Aviso de Vencimiento AsuFit - Tu plan vence {diaTexto}";
-
-                            CultureInfo idiomaEspanol = new CultureInfo("es-ES");
-                            string fechaNatural = fechaVence.ToString("dddd d 'de' MMMM", idiomaEspanol);
-
-                            correo.Body = $"Hola {nombre},\n\nTe recordamos que tu membresía en AsuFit Gym vence el {fechaNatural}.\n\n¡Te esperamos en la recepción para renovar y seguir entrenando con todo!\n\nSaludos,\nEl equipo de AsuFit Gym";
-                            correo.IsBodyHtml = false;
-
-                            try
-                            {
-                                smtp.Send(correo);
-                                string updateQuery = "UPDATE Socios SET FechaUltimoAviso = GETDATE() WHERE IdSocio = @IdSocio";
-                                SqlCommand cmdUpdate = new SqlCommand(updateQuery, oConexion);
-                                cmdUpdate.Parameters.AddWithValue("@IdSocio", idSocio);
-                                cmdUpdate.ExecuteNonQuery();
-                            }
-                            catch
-                            {
-                                continue; // Omite errores de envío individuales
-                            }
-                        }
-                    }
-                }
-            }
-            catch
-            {
-                // Manejo de excepciones silenciado intencionalmente en capa de presentación
-            }
-        }
-        #endregion
-
-        #region 7. ESTILOS VISUALES Y RENDERIZADO
         // Sobrescribe las propiedades visuales del control Chart para integrarlo al tema oscuro
         private void AplicarTemaGraficoOscuro()
         {

@@ -3,8 +3,10 @@ using System.Collections.Generic;
 
 namespace AsuFit.Entidades
 {
+    // Estructura de cabecera para una transacción de facturación o cobro.
     public class Venta
     {
+        #region PROPIEDADES
         public int IdVenta { get; set; }
         public int? IdSocio { get; set; }
         public DateTime Fecha { get; set; }
@@ -13,7 +15,8 @@ namespace AsuFit.Entidades
         public string TipoComprobante { get; set; }
         public int? IdUsuario { get; set; }
 
-        // ¡LA MAGIA DE OBJETOS! Una venta contiene una lista de sus propios detalles
+        // Colección de productos y/o mensualidades incluidas en la transacción.
         public List<DetalleVenta> Detalles { get; set; } = new List<DetalleVenta>();
+        #endregion
     }
 }

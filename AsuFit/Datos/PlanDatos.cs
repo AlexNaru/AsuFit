@@ -5,8 +5,11 @@ using System.Data.SqlClient;
 
 namespace AsuFit.Datos
 {
+    // Gestiona las operaciones de persistencia para la entidad Planes.
     public class PlanDatos
     {
+        #region LECTURA DE DATOS
+        // Recupera la lista de planes filtrada por estado.
         public List<Plan> ListarPlanes(string estado)
         {
             List<Plan> lista = new List<Plan>();
@@ -14,7 +17,6 @@ namespace AsuFit.Datos
             {
                 try
                 {
-                    // Cambiamos el 'Activo' fijo por el parámetro @Estado
                     string query = "SELECT IdPlan, NombrePlan, Precio, DuracionDias FROM Planes WHERE Estado = @Estado";
                     SqlCommand cmd = new SqlCommand(query, oConexion);
                     cmd.Parameters.AddWithValue("@Estado", estado);
@@ -35,90 +37,12 @@ namespace AsuFit.Datos
                         }
                     }
                 }
-                catch (Exception)
-                {
-                    throw;
-                }
+                catch (Exception) { throw; }
             }
             return lista;
         }
 
-        public bool RegistrarPlan(Plan obj, out string mensaje)
-        {
-            mensaje = string.Empty;
-            bool respuesta = false;
-            using (SqlConnection oConexion = Conexion.ObtenerConexion())
-            {
-                try
-                {
-                    string query = "INSERT INTO Planes (NombrePlan, Precio, DuracionDias) VALUES (@NombrePlan, @Precio, @DuracionDias)";
-                    SqlCommand cmd = new SqlCommand(query, oConexion);
-                    cmd.Parameters.AddWithValue("@NombrePlan", obj.NombrePlan);
-                    cmd.Parameters.AddWithValue("@Precio", obj.Precio);
-                    cmd.Parameters.AddWithValue("@DuracionDias", obj.DuracionDias);
-
-                    oConexion.Open();
-                    respuesta = cmd.ExecuteNonQuery() > 0 ? true : false;
-                }
-                catch (Exception ex)
-                {
-                    mensaje = ex.Message;
-                }
-            }
-            return respuesta;
-        }
-
-        public bool EditarPlan(Plan obj, out string mensaje)
-        {
-            mensaje = string.Empty;
-            bool respuesta = false;
-            using (SqlConnection oConexion = Conexion.ObtenerConexion())
-            {
-                try
-                {
-                    string query = "UPDATE Planes SET NombrePlan = @NombrePlan, Precio = @Precio, DuracionDias = @DuracionDias WHERE IdPlan = @IdPlan";
-                    SqlCommand cmd = new SqlCommand(query, oConexion);
-                    cmd.Parameters.AddWithValue("@NombrePlan", obj.NombrePlan);
-                    cmd.Parameters.AddWithValue("@Precio", obj.Precio);
-                    cmd.Parameters.AddWithValue("@DuracionDias", obj.DuracionDias);
-                    cmd.Parameters.AddWithValue("@IdPlan", obj.IdPlan);
-
-                    oConexion.Open();
-                    respuesta = cmd.ExecuteNonQuery() > 0 ? true : false;
-                }
-                catch (Exception ex)
-                {
-                    mensaje = ex.Message;
-                }
-            }
-            return respuesta;
-        }
-
-        public bool CambiarEstadoPlan(int idPlan, string nuevoEstado, out string mensaje)
-        {
-            mensaje = string.Empty;
-            bool respuesta = false;
-            using (SqlConnection oConexion = Conexion.ObtenerConexion())
-            {
-                try
-                {
-                    // Ahora la consulta actualiza según el estado que le pasemos
-                    string query = "UPDATE Planes SET Estado = @NuevoEstado WHERE IdPlan = @IdPlan";
-                    SqlCommand cmd = new SqlCommand(query, oConexion);
-                    cmd.Parameters.AddWithValue("@NuevoEstado", nuevoEstado);
-                    cmd.Parameters.AddWithValue("@IdPlan", idPlan);
-
-                    oConexion.Open();
-                    respuesta = cmd.ExecuteNonQuery() > 0 ? true : false;
-                }
-                catch (Exception ex)
-                {
-                    mensaje = ex.Message;
-                }
-            }
-            return respuesta;
-        }
-
+        // Busca y retorna un plan específico según su nombre.
         public Plan ObtenerPlanPorNombre(string nombrePlan)
         {
             Plan objPlan = null;
@@ -126,7 +50,6 @@ namespace AsuFit.Datos
             {
                 try
                 {
-                    // Buscamos el plan específico por su nombre
                     string query = "SELECT IdPlan, NombrePlan, Precio, DuracionDias FROM Planes WHERE NombrePlan = @NombrePlan AND Estado = 'Activo'";
                     SqlCommand cmd = new SqlCommand(query, oConexion);
                     cmd.Parameters.AddWithValue("@NombrePlan", nombrePlan);
@@ -135,7 +58,7 @@ namespace AsuFit.Datos
 
                     using (SqlDataReader dr = cmd.ExecuteReader())
                     {
-                        if (dr.Read()) // Si encuentra el plan, armamos el objeto
+                        if (dr.Read())
                         {
                             objPlan = new Plan()
                             {
@@ -152,7 +75,79 @@ namespace AsuFit.Datos
                     System.Windows.Forms.MessageBox.Show("Error Técnico SQL al buscar plan: " + ex.Message);
                 }
             }
-            return objPlan; // Devuelve el plan con sus precios, o 'null' si no lo encontró
+            return objPlan;
         }
+        #endregion
+
+        #region ESCRITURA DE DATOS
+        // Inserta un nuevo registro de plan en la base de datos.
+        public bool RegistrarPlan(Plan obj, out string mensaje)
+        {
+            mensaje = string.Empty;
+            bool respuesta = false;
+            using (SqlConnection oConexion = Conexion.ObtenerConexion())
+            {
+                try
+                {
+                    string query = "INSERT INTO Planes (NombrePlan, Precio, DuracionDias) VALUES (@NombrePlan, @Precio, @DuracionDias)";
+                    SqlCommand cmd = new SqlCommand(query, oConexion);
+                    cmd.Parameters.AddWithValue("@NombrePlan", obj.NombrePlan);
+                    cmd.Parameters.AddWithValue("@Precio", obj.Precio);
+                    cmd.Parameters.AddWithValue("@DuracionDias", obj.DuracionDias);
+
+                    oConexion.Open();
+                    respuesta = cmd.ExecuteNonQuery() > 0;
+                }
+                catch (Exception ex) { mensaje = ex.Message; }
+            }
+            return respuesta;
+        }
+
+        // Actualiza la información de un plan existente.
+        public bool EditarPlan(Plan obj, out string mensaje)
+        {
+            mensaje = string.Empty;
+            bool respuesta = false;
+            using (SqlConnection oConexion = Conexion.ObtenerConexion())
+            {
+                try
+                {
+                    string query = "UPDATE Planes SET NombrePlan = @NombrePlan, Precio = @Precio, DuracionDias = @DuracionDias WHERE IdPlan = @IdPlan";
+                    SqlCommand cmd = new SqlCommand(query, oConexion);
+                    cmd.Parameters.AddWithValue("@NombrePlan", obj.NombrePlan);
+                    cmd.Parameters.AddWithValue("@Precio", obj.Precio);
+                    cmd.Parameters.AddWithValue("@DuracionDias", obj.DuracionDias);
+                    cmd.Parameters.AddWithValue("@IdPlan", obj.IdPlan);
+
+                    oConexion.Open();
+                    respuesta = cmd.ExecuteNonQuery() > 0;
+                }
+                catch (Exception ex) { mensaje = ex.Message; }
+            }
+            return respuesta;
+        }
+
+        // Modifica el estado lógico de un plan (Activo/Inactivo).
+        public bool CambiarEstadoPlan(int idPlan, string nuevoEstado, out string mensaje)
+        {
+            mensaje = string.Empty;
+            bool respuesta = false;
+            using (SqlConnection oConexion = Conexion.ObtenerConexion())
+            {
+                try
+                {
+                    string query = "UPDATE Planes SET Estado = @NuevoEstado WHERE IdPlan = @IdPlan";
+                    SqlCommand cmd = new SqlCommand(query, oConexion);
+                    cmd.Parameters.AddWithValue("@NuevoEstado", nuevoEstado);
+                    cmd.Parameters.AddWithValue("@IdPlan", idPlan);
+
+                    oConexion.Open();
+                    respuesta = cmd.ExecuteNonQuery() > 0;
+                }
+                catch (Exception ex) { mensaje = ex.Message; }
+            }
+            return respuesta;
+        }
+        #endregion
     }
 }

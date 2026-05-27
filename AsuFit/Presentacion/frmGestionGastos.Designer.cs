@@ -28,8 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
             this.dgvGastos = new System.Windows.Forms.DataGridView();
             this.colGastoId = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colGastoDescripcion = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -41,10 +41,10 @@
             this.txtMonto = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
-            this.cmbCategoria = new System.Windows.Forms.ComboBox();
             this.label3 = new System.Windows.Forms.Label();
             this.btnGuardar = new System.Windows.Forms.Button();
             this.label4 = new System.Windows.Forms.Label();
+            this.cmbCategoria = new System.Windows.Forms.ComboBox();
             ((System.ComponentModel.ISupportInitialize)(this.dgvGastos)).BeginInit();
             this.SuspendLayout();
             // 
@@ -60,14 +60,15 @@
             this.colGastoMonto,
             this.colGastoFecha,
             this.colGastoUsuario});
-            this.dgvGastos.Location = new System.Drawing.Point(16, 45);
+            this.dgvGastos.Location = new System.Drawing.Point(11, 29);
+            this.dgvGastos.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.dgvGastos.Name = "dgvGastos";
             this.dgvGastos.ReadOnly = true;
             this.dgvGastos.RowHeadersVisible = false;
             this.dgvGastos.RowHeadersWidth = 62;
             this.dgvGastos.RowTemplate.Height = 28;
             this.dgvGastos.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgvGastos.Size = new System.Drawing.Size(847, 150);
+            this.dgvGastos.Size = new System.Drawing.Size(565, 98);
             this.dgvGastos.TabIndex = 4;
             this.dgvGastos.DataBindingComplete += new System.Windows.Forms.DataGridViewBindingCompleteEventHandler(this.dgvGastos_DataBindingComplete);
             // 
@@ -99,8 +100,8 @@
             // colGastoMonto
             // 
             this.colGastoMonto.DataPropertyName = "Monto";
-            dataGridViewCellStyle1.Format = "N0";
-            this.colGastoMonto.DefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle3.Format = "N0";
+            this.colGastoMonto.DefaultCellStyle = dataGridViewCellStyle3;
             this.colGastoMonto.HeaderText = "Monto";
             this.colGastoMonto.MinimumWidth = 8;
             this.colGastoMonto.Name = "colGastoMonto";
@@ -109,8 +110,8 @@
             // colGastoFecha
             // 
             this.colGastoFecha.DataPropertyName = "FechaGasto";
-            dataGridViewCellStyle2.Format = "dd/MM/yyyy HH:mm";
-            this.colGastoFecha.DefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle4.Format = "dd/MM/yyyy HH:mm";
+            this.colGastoFecha.DefaultCellStyle = dataGridViewCellStyle4;
             this.colGastoFecha.HeaderText = "Fecha";
             this.colGastoFecha.MinimumWidth = 8;
             this.colGastoFecha.Name = "colGastoFecha";
@@ -126,92 +127,119 @@
             // 
             // txtDescripcion
             // 
-            this.txtDescripcion.Location = new System.Drawing.Point(252, 242);
+            this.txtDescripcion.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(39)))), ((int)(((byte)(47)))));
+            this.txtDescripcion.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.txtDescripcion.ForeColor = System.Drawing.Color.White;
+            this.txtDescripcion.Location = new System.Drawing.Point(168, 157);
+            this.txtDescripcion.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.txtDescripcion.Name = "txtDescripcion";
-            this.txtDescripcion.Size = new System.Drawing.Size(100, 26);
+            this.txtDescripcion.Size = new System.Drawing.Size(68, 20);
             this.txtDescripcion.TabIndex = 1;
             // 
             // txtMonto
             // 
-            this.txtMonto.Location = new System.Drawing.Point(484, 242);
+            this.txtMonto.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(39)))), ((int)(((byte)(47)))));
+            this.txtMonto.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.txtMonto.ForeColor = System.Drawing.Color.White;
+            this.txtMonto.Location = new System.Drawing.Point(323, 157);
+            this.txtMonto.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.txtMonto.Name = "txtMonto";
-            this.txtMonto.Size = new System.Drawing.Size(100, 26);
+            this.txtMonto.Size = new System.Drawing.Size(68, 20);
             this.txtMonto.TabIndex = 2;
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(248, 206);
+            this.label1.ForeColor = System.Drawing.Color.White;
+            this.label1.Location = new System.Drawing.Point(165, 142);
+            this.label1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(92, 20);
+            this.label1.Size = new System.Drawing.Size(63, 13);
             this.label1.TabIndex = 3;
             this.label1.Text = "Descripcion";
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(480, 206);
+            this.label2.ForeColor = System.Drawing.Color.White;
+            this.label2.Location = new System.Drawing.Point(320, 142);
+            this.label2.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(54, 20);
+            this.label2.Size = new System.Drawing.Size(37, 13);
             this.label2.TabIndex = 4;
             this.label2.Text = "Monto";
             // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.ForeColor = System.Drawing.Color.White;
+            this.label3.Location = new System.Drawing.Point(8, 142);
+            this.label3.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(57, 13);
+            this.label3.TabIndex = 6;
+            this.label3.Text = "Categorias";
+            // 
+            // btnGuardar
+            // 
+            this.btnGuardar.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(229)))), ((int)(((byte)(255)))));
+            this.btnGuardar.FlatAppearance.BorderSize = 0;
+            this.btnGuardar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnGuardar.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnGuardar.Location = new System.Drawing.Point(495, 154);
+            this.btnGuardar.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btnGuardar.Name = "btnGuardar";
+            this.btnGuardar.Size = new System.Drawing.Size(80, 24);
+            this.btnGuardar.TabIndex = 3;
+            this.btnGuardar.Text = "GUARDAR";
+            this.btnGuardar.UseVisualStyleBackColor = false;
+            this.btnGuardar.Click += new System.EventHandler(this.btnGuardar_Click);
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.ForeColor = System.Drawing.Color.White;
+            this.label4.Location = new System.Drawing.Point(8, 6);
+            this.label4.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(120, 13);
+            this.label4.TabIndex = 8;
+            this.label4.Text = "GESTIÓN DE GASTOS";
+            // 
             // cmbCategoria
             // 
+            this.cmbCategoria.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(39)))), ((int)(((byte)(47)))));
             this.cmbCategoria.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbCategoria.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.cmbCategoria.ForeColor = System.Drawing.Color.White;
             this.cmbCategoria.FormattingEnabled = true;
             this.cmbCategoria.Items.AddRange(new object[] {
             "Servicios (Luz/Agua)",
             "Mantenimiento/Limpieza",
             "Insumos",
             "Otros"});
-            this.cmbCategoria.Location = new System.Drawing.Point(16, 240);
+            this.cmbCategoria.Location = new System.Drawing.Point(11, 157);
+            this.cmbCategoria.Margin = new System.Windows.Forms.Padding(2);
             this.cmbCategoria.Name = "cmbCategoria";
-            this.cmbCategoria.Size = new System.Drawing.Size(121, 28);
-            this.cmbCategoria.TabIndex = 0;
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(12, 207);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(86, 20);
-            this.label3.TabIndex = 6;
-            this.label3.Text = "Categorias";
-            // 
-            // btnGuardar
-            // 
-            this.btnGuardar.Location = new System.Drawing.Point(743, 237);
-            this.btnGuardar.Name = "btnGuardar";
-            this.btnGuardar.Size = new System.Drawing.Size(120, 37);
-            this.btnGuardar.TabIndex = 3;
-            this.btnGuardar.Text = "GUARDAR";
-            this.btnGuardar.UseVisualStyleBackColor = true;
-            this.btnGuardar.Click += new System.EventHandler(this.btnGuardar_Click);
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(12, 9);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(179, 20);
-            this.label4.TabIndex = 8;
-            this.label4.Text = "GESTIÓN DE GASTOS";
+            this.cmbCategoria.Size = new System.Drawing.Size(117, 21);
+            this.cmbCategoria.TabIndex = 9;
             // 
             // frmGestionGastos
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(879, 285);
+            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(39)))), ((int)(((byte)(47)))));
+            this.ClientSize = new System.Drawing.Size(586, 185);
+            this.Controls.Add(this.cmbCategoria);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.btnGuardar);
             this.Controls.Add(this.label3);
-            this.Controls.Add(this.cmbCategoria);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.txtMonto);
             this.Controls.Add(this.txtDescripcion);
             this.Controls.Add(this.dgvGastos);
+            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.Name = "frmGestionGastos";
             this.Text = "frmGestionGastos";
             this.Load += new System.EventHandler(this.frmGestionGastos_Load);
@@ -229,7 +257,6 @@
         private System.Windows.Forms.TextBox txtMonto;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.ComboBox cmbCategoria;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Button btnGuardar;
         private System.Windows.Forms.Label label4;
@@ -239,5 +266,6 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn colGastoMonto;
         private System.Windows.Forms.DataGridViewTextBoxColumn colGastoFecha;
         private System.Windows.Forms.DataGridViewTextBoxColumn colGastoUsuario;
+        private System.Windows.Forms.ComboBox cmbCategoria;
     }
 }

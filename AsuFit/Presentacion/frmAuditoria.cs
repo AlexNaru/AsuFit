@@ -28,10 +28,18 @@ namespace AsuFit.Presentacion
             if (cmbFiltroModulo.Items.Count > 0)
                 cmbFiltroModulo.SelectedIndex = 0;
 
+            // 1. Configuramos los selectores para que por defecto muestren solo el día de hoy
+            dtpDesde.Value = DateTime.Today;
+            dtpHasta.Value = DateTime.Today;
+
+            // 2. Conectamos el evento manualmente para evitar múltiples recargas al abrir la ventana
+            dtpDesde.ValueChanged += new EventHandler(FiltrosFecha_ValueChanged);
+            dtpHasta.ValueChanged += new EventHandler(FiltrosFecha_ValueChanged);
+
             CargarAuditoria();
 
             SendMessage(txtBuscar.Handle, EM_SETCUEBANNER, 1, "Buscar por usuario, acción o detalle...");
-            
+
             // Forzamos el foco a la barra de búsqueda para que la grilla no se auto-seleccione
             txtBuscar.Focus();
         }
@@ -41,9 +49,14 @@ namespace AsuFit.Presentacion
             try
             {
                 AsuFit.Negocio.AuditoriaNegocio negocio = new AsuFit.Negocio.AuditoriaNegocio();
-                dtAuditoria = negocio.ListarAuditoria();
+
+                // Ejecutamos la consulta a la base de datos enviando el rango de fechas exacto
+                dtAuditoria = negocio.ListarAuditoria(dtpDesde.Value, dtpHasta.Value);
 
                 dgvAuditoria.DataSource = dtAuditoria;
+
+                // Aplicamos los filtros locales de texto y módulo si los hubiera
+                AplicarFiltros();
             }
             catch (Exception ex)
             {
@@ -53,6 +66,12 @@ namespace AsuFit.Presentacion
         #endregion
 
         #region 3. SECCIÓN SUPERIOR: FILTROS Y BÚSQUEDA
+        private void FiltrosFecha_ValueChanged(object sender, EventArgs e)
+        {
+            // Si el usuario cambia los días, vamos a la BD a buscar la nueva información
+            CargarAuditoria();
+        }
+
         private void txtBuscar_TextChanged(object sender, EventArgs e)
         {
             AplicarFiltros();

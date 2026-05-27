@@ -4,8 +4,11 @@ using System.Data.SqlClient;
 
 namespace AsuFit.Datos
 {
+    // Encapsula la lógica de consultas complejas para la generación de reportes financieros.
     public class ReportesDatos
     {
+        #region GENERACIÓN DE REPORTES
+        // Obtiene el detalle de ventas realizadas en un rango de fechas.
         public DataTable ObtenerIngresosPorFechas(DateTime desde, DateTime hasta)
         {
             DataTable dt = new DataTable();
@@ -13,7 +16,6 @@ namespace AsuFit.Datos
             {
                 try
                 {
-                    // CÓDIGO LIMPIO: Ya no usamos "AS [Método de Pago]"
                     string query = @"SELECT Fecha, TipoComprobante AS Comprobante, MetodoPago, Total 
                                      FROM Ventas 
                                      WHERE CAST(Fecha AS DATE) BETWEEN @FechaDesde AND @FechaHasta
@@ -31,6 +33,7 @@ namespace AsuFit.Datos
             return dt;
         }
 
+        // Recupera el Top 5 de productos más vendidos en un periodo determinado.
         public DataTable ObtenerTopProductos(DateTime desde, DateTime hasta)
         {
             DataTable dt = new DataTable();
@@ -38,7 +41,6 @@ namespace AsuFit.Datos
             {
                 try
                 {
-                    // CÓDIGO LIMPIO: Ya no usamos "AS [Cantidad Vendida]"
                     string query = @"SELECT TOP 5 
                                         P.Nombre AS Producto, 
                                         SUM(VD.Cantidad) AS CantidadVendida, 
@@ -62,5 +64,6 @@ namespace AsuFit.Datos
             }
             return dt;
         }
+        #endregion
     }
 }

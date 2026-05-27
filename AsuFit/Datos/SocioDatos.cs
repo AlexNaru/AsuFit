@@ -6,20 +6,19 @@ using System.Data.SqlClient;
 
 namespace AsuFit.Datos
 {
+    // Gestiona las operaciones de persistencia para la entidad Socios.
     public class SocioDatos
     {
-        // Método para registrar socio normal
+        #region OPERACIONES DE REGISTRO
+        // Inserta un nuevo registro de socio en la base de datos.
         public bool RegistrarSocio(Socio objSocio)
         {
-            bool respuesta = false;
             using (SqlConnection oConexion = Conexion.ObtenerConexion())
             {
                 try
                 {
-                    string query = @"INSERT INTO Socios 
-                                    (Cedula, Nombre, Apellido, Email, Telefono, FechaNacimiento, NombreContactoEmergencia, TelefonoEmergencia, FechaRegistro, IdPlan, FechaVencimiento, Estado, RUC) 
-                                    VALUES 
-                                    (@Cedula, @Nombre, @Apellido, @Email, @Telefono, @FechaNacimiento, @NombreContactoEmergencia, @TelefonoEmergencia, @FechaRegistro, @IdPlan, @FechaVencimiento, @Estado, @RUC)";
+                    string query = @"INSERT INTO Socios (Cedula, Nombre, Apellido, Email, Telefono, FechaNacimiento, NombreContactoEmergencia, TelefonoEmergencia, FechaRegistro, IdPlan, FechaVencimiento, Estado, RUC) 
+                                    VALUES (@Cedula, @Nombre, @Apellido, @Email, @Telefono, @FechaNacimiento, @NombreContactoEmergencia, @TelefonoEmergencia, @FechaRegistro, @IdPlan, @FechaVencimiento, @Estado, @RUC)";
 
                     SqlCommand cmd = new SqlCommand(query, oConexion);
 
@@ -35,40 +34,28 @@ namespace AsuFit.Datos
                     cmd.Parameters.AddWithValue("@IdPlan", objSocio.IdPlan);
                     cmd.Parameters.AddWithValue("@FechaVencimiento", objSocio.FechaVencimiento);
                     cmd.Parameters.AddWithValue("@Estado", objSocio.Estado);
-
-                    // --- CORRECCIÓN: Faltaba enviar el parámetro del RUC ---
                     cmd.Parameters.AddWithValue("@RUC", objSocio.Ruc ?? (object)DBNull.Value);
 
                     oConexion.Open();
-                    respuesta = cmd.ExecuteNonQuery() > 0 ? true : false;
+                    return cmd.ExecuteNonQuery() > 0;
                 }
-                catch (Exception)
-                {
-                    throw;
-                }
+                catch (Exception) { throw; }
             }
-            return respuesta;
         }
 
-        // Método para registrar socio con el primer pago (Devuelve el ID)
+        // Inserta un socio y devuelve el identificador generado automáticamente.
         public int InsertarSocioYObtenerId(Socio objSocio, out string mensaje)
         {
             mensaje = string.Empty;
-            int idGenerado = 0;
-
             try
             {
                 using (SqlConnection conexion = Conexion.ObtenerConexion())
                 {
-                    // --- CORRECCIÓN: Agregamos el RUC al INSERT ---
-                    string query = @"INSERT INTO Socios 
-                            (Cedula, Nombre, Apellido, Email, Telefono, FechaNacimiento, NombreContactoEmergencia, TelefonoEmergencia, FechaRegistro, IdPlan, FechaVencimiento, Estado, RUC) 
-                            VALUES 
-                            (@Cedula, @Nombre, @Apellido, @Email, @Telefono, @FechaNacimiento, @NombreContactoEmergencia, @TelefonoEmergencia, @FechaRegistro, @IdPlan, @FechaVencimiento, @Estado, @RUC);
+                    string query = @"INSERT INTO Socios (Cedula, Nombre, Apellido, Email, Telefono, FechaNacimiento, NombreContactoEmergencia, TelefonoEmergencia, FechaRegistro, IdPlan, FechaVencimiento, Estado, RUC) 
+                            VALUES (@Cedula, @Nombre, @Apellido, @Email, @Telefono, @FechaNacimiento, @NombreContactoEmergencia, @TelefonoEmergencia, @FechaRegistro, @IdPlan, @FechaVencimiento, @Estado, @RUC);
                             SELECT SCOPE_IDENTITY();";
 
                     SqlCommand cmd = new SqlCommand(query, conexion);
-
                     cmd.Parameters.AddWithValue("@Cedula", objSocio.Cedula);
                     cmd.Parameters.AddWithValue("@Nombre", objSocio.Nombre);
                     cmd.Parameters.AddWithValue("@Apellido", objSocio.Apellido);
@@ -81,106 +68,35 @@ namespace AsuFit.Datos
                     cmd.Parameters.AddWithValue("@IdPlan", objSocio.IdPlan);
                     cmd.Parameters.AddWithValue("@FechaVencimiento", objSocio.FechaVencimiento);
                     cmd.Parameters.AddWithValue("@Estado", objSocio.Estado);
-
-                    // --- CORRECCIÓN: Faltaba enviar el parámetro del RUC ---
                     cmd.Parameters.AddWithValue("@RUC", objSocio.Ruc ?? (object)DBNull.Value);
 
                     conexion.Open();
                     object resultado = cmd.ExecuteScalar();
-
-                    if (resultado != null && int.TryParse(resultado.ToString(), out idGenerado))
-                    {
-                        return idGenerado;
-                    }
-                    else
-                    {
-                        mensaje = "No se pudo obtener el ID del nuevo socio generado por la base de datos.";
-                        return 0;
-                    }
+                    return (resultado != null) ? Convert.ToInt32(resultado) : 0;
                 }
             }
             catch (Exception ex)
             {
-                mensaje = "Error al intentar registrar el socio en la base de datos: " + ex.Message;
+                mensaje = "Error en base de datos: " + ex.Message;
                 return 0;
             }
         }
+        #endregion
 
-        public bool CambiarEstadoSocio(int idSocio, string nuevoEstado)
+        #region OPERACIONES DE EDICIÓN Y ESTADO
+        // Actualiza los datos generales de un socio existente.
+        public bool EditarSocio(Socio obj)
         {
             using (SqlConnection oConexion = Conexion.ObtenerConexion())
             {
                 try
                 {
-                    string query = "UPDATE Socios SET Estado = @Estado WHERE IdSocio = @IdSocio";
-                    SqlCommand cmd = new SqlCommand(query, oConexion);
-
-                    cmd.Parameters.AddWithValue("@Estado", nuevoEstado);
-                    cmd.Parameters.AddWithValue("@IdSocio", idSocio);
-
-                    oConexion.Open();
-                    int filasAfectadas = cmd.ExecuteNonQuery();
-
-                    return filasAfectadas > 0;
-                }
-                catch (Exception ex)
-                {
-                    return false;
-                }
-            }
-        }
-
-        public DataTable ListarSocios(string estado)
-        {
-            DataTable dtSocios = new DataTable();
-            try
-            {
-                using (SqlConnection oConexion = Conexion.ObtenerConexion())
-                {
-                    // --- CORRECCIÓN: Agregamos s.RUC al SELECT para que la grilla lo tenga en memoria ---
-                    string query = @"SELECT s.IdSocio, s.Cedula, s.Nombre, s.Apellido, s.Email, s.RUC, s.Telefono, 
-                                     s.FechaNacimiento, s.NombreContactoEmergencia, s.TelefonoEmergencia, 
-                                     s.FechaRegistro, p.NombrePlan AS TipoPlan, 
-                                     p.Precio, s.IdPlan, s.FechaVencimiento, s.Estado
-                                     FROM Socios s
-                                     INNER JOIN Planes p ON s.IdPlan = p.IdPlan
-                                     WHERE s.Estado = @estado";
-
-                    SqlCommand cmd = new SqlCommand(query, oConexion);
-                    cmd.Parameters.AddWithValue("@estado", estado);
-                    SqlDataAdapter adaptador = new SqlDataAdapter(cmd);
-                    adaptador.Fill(dtSocios);
-                }
-            }
-            catch (Exception ex)
-            {
-                throw;
-            }
-
-            return dtSocios;
-        }
-
-        public bool EditarSocio(Socio obj)
-        {
-            using (System.Data.SqlClient.SqlConnection oConexion = Conexion.ObtenerConexion())
-            {
-                try
-                {
-                    string query = @"UPDATE Socios SET 
-                                    Cedula = @Cedula, 
-                                    Nombre = @Nombre, 
-                                    Apellido = @Apellido, 
-                                    Email = @Email, 
-                                    RUC = @Ruc, 
-                                    Telefono = @Telefono, 
-                                    FechaNacimiento = @FechaNacimiento, 
-                                    NombreContactoEmergencia = @NombreContactoEmergencia, 
-                                    TelefonoEmergencia = @TelefonoEmergencia, 
-                                    IdPlan = @IdPlan 
+                    string query = @"UPDATE Socios SET Cedula = @Cedula, Nombre = @Nombre, Apellido = @Apellido, Email = @Email, 
+                                    RUC = @Ruc, Telefono = @Telefono, FechaNacimiento = @FechaNacimiento, 
+                                    NombreContactoEmergencia = @NombreContactoEmergencia, TelefonoEmergencia = @TelefonoEmergencia, IdPlan = @IdPlan 
                                     WHERE IdSocio = @IdSocio";
 
-                    System.Data.SqlClient.SqlCommand cmd = new System.Data.SqlClient.SqlCommand(query, oConexion);
-
+                    SqlCommand cmd = new SqlCommand(query, oConexion);
                     cmd.Parameters.AddWithValue("@Cedula", obj.Cedula);
                     cmd.Parameters.AddWithValue("@Nombre", obj.Nombre);
                     cmd.Parameters.AddWithValue("@Apellido", obj.Apellido);
@@ -196,38 +112,76 @@ namespace AsuFit.Datos
                     oConexion.Open();
                     return cmd.ExecuteNonQuery() > 0;
                 }
-                catch (Exception ex)
-                {
-                    throw;
-                }
+                catch (Exception) { throw; }
             }
         }
 
+        // Cambia el estado de un socio (Activo/Inactivo).
+        public bool CambiarEstadoSocio(int idSocio, string nuevoEstado)
+        {
+            using (SqlConnection oConexion = Conexion.ObtenerConexion())
+            {
+                try
+                {
+                    string query = "UPDATE Socios SET Estado = @Estado WHERE IdSocio = @IdSocio";
+                    SqlCommand cmd = new SqlCommand(query, oConexion);
+                    cmd.Parameters.AddWithValue("@Estado", nuevoEstado);
+                    cmd.Parameters.AddWithValue("@IdSocio", idSocio);
+
+                    oConexion.Open();
+                    return cmd.ExecuteNonQuery() > 0;
+                }
+                catch (Exception) { return false; }
+            }
+        }
+
+        // Elimina físicamente el registro de un socio de la base de datos.
         public bool EliminarSocio(int idSocio)
         {
-            bool respuesta = false;
+            using (SqlConnection oConexion = Conexion.ObtenerConexion())
+            {
+                try
+                {
+                    SqlCommand cmd = new SqlCommand("DELETE FROM Socios WHERE IdSocio = @IdSocio", oConexion);
+                    cmd.Parameters.AddWithValue("@IdSocio", idSocio);
+                    oConexion.Open();
+                    return cmd.ExecuteNonQuery() > 0;
+                }
+                catch (Exception) { throw; }
+            }
+        }
+        #endregion
+
+        #region CONSULTAS DE SOCIOS
+        // Lista socios según estado actual.
+        public DataTable ListarSocios(string estado)
+        {
+            DataTable dtSocios = new DataTable();
             try
             {
                 using (SqlConnection oConexion = Conexion.ObtenerConexion())
                 {
-                    SqlCommand cmd = new SqlCommand("DELETE FROM Socios WHERE IdSocio = @IdSocio", oConexion);
-                    cmd.Parameters.AddWithValue("@IdSocio", idSocio);
+                    string query = @"SELECT s.IdSocio, s.Cedula, s.Nombre, s.Apellido, s.Email, s.RUC, s.Telefono, 
+                                     s.FechaNacimiento, s.NombreContactoEmergencia, s.TelefonoEmergencia, 
+                                     s.FechaRegistro, p.NombrePlan AS TipoPlan, 
+                                     p.Precio, s.IdPlan, s.FechaVencimiento, s.Estado
+                                     FROM Socios s
+                                     INNER JOIN Planes p ON s.IdPlan = p.IdPlan
+                                     WHERE s.Estado = @estado";
 
-                    oConexion.Open();
-                    int filas = cmd.ExecuteNonQuery();
-                    if (filas > 0) respuesta = true;
+                    SqlCommand cmd = new SqlCommand(query, oConexion);
+                    cmd.Parameters.AddWithValue("@estado", estado);
+                    SqlDataAdapter adaptador = new SqlDataAdapter(cmd);
+                    adaptador.Fill(dtSocios);
                 }
             }
-            catch (Exception ex)
-            {
-                throw;
-            }
-            return respuesta;
+            catch (Exception) { throw; }
+            return dtSocios;
         }
 
+        // Verifica si un número de cédula ya existe en otro registro.
         public bool ExisteCedula(string cedula, int idSocioActual)
         {
-            bool existe = false;
             using (SqlConnection oConexion = Conexion.ObtenerConexion())
             {
                 try
@@ -238,126 +192,95 @@ namespace AsuFit.Datos
                     cmd.Parameters.AddWithValue("@IdSocio", idSocioActual);
 
                     oConexion.Open();
-                    int cantidad = Convert.ToInt32(cmd.ExecuteScalar());
-                    if (cantidad > 0)
-                    {
-                        existe = true;
-                    }
+                    return Convert.ToInt32(cmd.ExecuteScalar()) > 0;
                 }
-                catch (Exception ex)
-                {
-                    throw;
-                }
+                catch (Exception) { throw; }
             }
-            return existe;
         }
 
+        // Busca datos básicos de un socio por documento.
         public Socio BuscarSocioPorCedula(string documento)
         {
             Socio socioEncontrado = null;
-            using (System.Data.SqlClient.SqlConnection oConexion = Conexion.ObtenerConexion())
+            using (SqlConnection oConexion = Conexion.ObtenerConexion())
             {
                 try
                 {
-                    string query = @"
-                        SELECT 
-                            s.IdSocio, s.Nombre, s.Apellido, s.FechaVencimiento, s.Estado, 
-                            s.Email, s.RUC, p.NombrePlan 
-                        FROM Socios s
-                        LEFT JOIN Planes p ON s.IdPlan = p.IdPlan 
-                        WHERE s.Cedula = @Documento OR s.RUC = @Documento";
+                    string query = @"SELECT s.IdSocio, s.Nombre, s.Apellido, s.FechaVencimiento, s.Estado, 
+                                     s.Email, s.RUC, p.NombrePlan 
+                                     FROM Socios s
+                                     LEFT JOIN Planes p ON s.IdPlan = p.IdPlan 
+                                     WHERE s.Cedula = @Documento OR s.RUC = @Documento";
 
-                    System.Data.SqlClient.SqlCommand cmd = new System.Data.SqlClient.SqlCommand(query, oConexion);
+                    SqlCommand cmd = new SqlCommand(query, oConexion);
                     cmd.Parameters.AddWithValue("@Documento", documento);
 
                     oConexion.Open();
-                    using (System.Data.SqlClient.SqlDataReader dr = cmd.ExecuteReader())
+                    using (SqlDataReader dr = cmd.ExecuteReader())
                     {
                         if (dr.Read())
                         {
-                            socioEncontrado = new Socio();
-                            socioEncontrado.IdSocio = Convert.ToInt32(dr["IdSocio"]);
-                            socioEncontrado.Nombre = dr["Nombre"].ToString();
-                            socioEncontrado.Apellido = dr["Apellido"].ToString();
-                            socioEncontrado.FechaVencimiento = dr["FechaVencimiento"] != DBNull.Value ? Convert.ToDateTime(dr["FechaVencimiento"]) : (DateTime?)null;
-                            socioEncontrado.Estado = dr["Estado"].ToString();
-                            socioEncontrado.NombrePlan = dr["NombrePlan"] != DBNull.Value ? dr["NombrePlan"].ToString() : "Plan no asignado";
-                            socioEncontrado.Email = dr["Email"].ToString();
-                            socioEncontrado.Ruc = dr["RUC"].ToString();
+                            socioEncontrado = new Socio()
+                            {
+                                IdSocio = Convert.ToInt32(dr["IdSocio"]),
+                                Nombre = dr["Nombre"].ToString(),
+                                Apellido = dr["Apellido"].ToString(),
+                                FechaVencimiento = dr["FechaVencimiento"] != DBNull.Value ? Convert.ToDateTime(dr["FechaVencimiento"]) : (DateTime?)null,
+                                Estado = dr["Estado"].ToString(),
+                                NombrePlan = dr["NombrePlan"] != DBNull.Value ? dr["NombrePlan"].ToString() : "Plan no asignado",
+                                Email = dr["Email"].ToString(),
+                                Ruc = dr["RUC"].ToString()
+                            };
                         }
                     }
                 }
-                catch (Exception ex)
-                {
-                    throw;
-                }
+                catch (Exception) { throw; }
             }
             return socioEncontrado;
         }
 
+        // Busca un socio utilizando su identificador interno.
         public Socio BuscarSocioPorId(int idSocio)
         {
             Socio socioEncontrado = null;
-            using (System.Data.SqlClient.SqlConnection oConexion = Conexion.ObtenerConexion())
+            using (SqlConnection oConexion = Conexion.ObtenerConexion())
             {
                 try
                 {
-                    string query = @"
-                        SELECT 
-                            s.IdSocio, s.Cedula, s.Nombre, s.Apellido, s.FechaVencimiento, s.Estado, 
-                            s.Email, s.RUC, p.NombrePlan 
-                        FROM Socios s
-                        LEFT JOIN Planes p ON s.IdPlan = p.IdPlan 
-                        WHERE s.IdSocio = @IdSocio";
+                    string query = @"SELECT s.IdSocio, s.Cedula, s.Nombre, s.Apellido, s.FechaVencimiento, s.Estado, 
+                                     s.Email, s.RUC, p.NombrePlan 
+                                     FROM Socios s
+                                     LEFT JOIN Planes p ON s.IdPlan = p.IdPlan 
+                                     WHERE s.IdSocio = @IdSocio";
 
-                    System.Data.SqlClient.SqlCommand cmd = new System.Data.SqlClient.SqlCommand(query, oConexion);
+                    SqlCommand cmd = new SqlCommand(query, oConexion);
                     cmd.Parameters.AddWithValue("@IdSocio", idSocio);
 
                     oConexion.Open();
-                    using (System.Data.SqlClient.SqlDataReader dr = cmd.ExecuteReader())
+                    using (SqlDataReader dr = cmd.ExecuteReader())
                     {
                         if (dr.Read())
                         {
-                            socioEncontrado = new Socio();
-                            socioEncontrado.IdSocio = Convert.ToInt32(dr["IdSocio"]);
-                            socioEncontrado.Cedula = dr["Cedula"].ToString();
-                            socioEncontrado.Nombre = dr["Nombre"].ToString();
-                            socioEncontrado.Apellido = dr["Apellido"].ToString();
-                            socioEncontrado.FechaVencimiento = dr["FechaVencimiento"] != DBNull.Value ? Convert.ToDateTime(dr["FechaVencimiento"]) : (DateTime?)null;
-                            socioEncontrado.Estado = dr["Estado"].ToString();
-                            socioEncontrado.Email = dr["Email"].ToString();
-                            socioEncontrado.Ruc = dr["RUC"].ToString();
+                            socioEncontrado = new Socio()
+                            {
+                                IdSocio = Convert.ToInt32(dr["IdSocio"]),
+                                Cedula = dr["Cedula"].ToString(),
+                                Nombre = dr["Nombre"].ToString(),
+                                Apellido = dr["Apellido"].ToString(),
+                                FechaVencimiento = dr["FechaVencimiento"] != DBNull.Value ? Convert.ToDateTime(dr["FechaVencimiento"]) : (DateTime?)null,
+                                Estado = dr["Estado"].ToString(),
+                                Email = dr["Email"].ToString(),
+                                Ruc = dr["RUC"].ToString()
+                            };
                         }
                     }
                 }
-                catch (Exception ex)
-                {
-                    throw;
-                }
+                catch (Exception) { throw; }
             }
             return socioEncontrado;
         }
 
-        public void RegistrarAsistencia(int idSocio)
-        {
-            using (System.Data.SqlClient.SqlConnection oConexion = Conexion.ObtenerConexion())
-            {
-                try
-                {
-                    string query = "INSERT INTO Asistencias (IdSocio, FechaHora) VALUES (@IdSocio, GETDATE())";
-                    System.Data.SqlClient.SqlCommand cmd = new System.Data.SqlClient.SqlCommand(query, oConexion);
-                    cmd.Parameters.AddWithValue("@IdSocio", idSocio);
-
-                    oConexion.Open();
-                    cmd.ExecuteNonQuery();
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine("Error al guardar historial: " + ex.Message);
-                }
-            }
-        }
-
+        // Lista socios cuyas membresías se encuentran vencidas.
         public List<Socio> ListarVencidos()
         {
             List<Socio> lista = new List<Socio>();
@@ -366,9 +289,9 @@ namespace AsuFit.Datos
                 try
                 {
                     string query = @"SELECT Nombre, Apellido, FechaVencimiento 
-                             FROM Socios 
-                             WHERE FechaVencimiento < GETDATE() AND Estado = 'Activo'
-                             ORDER BY FechaVencimiento DESC";
+                                     FROM Socios 
+                                     WHERE FechaVencimiento < GETDATE() AND Estado = 'Activo'
+                                     ORDER BY FechaVencimiento DESC";
 
                     SqlCommand cmd = new SqlCommand(query, oConexion);
                     oConexion.Open();
@@ -389,34 +312,101 @@ namespace AsuFit.Datos
             }
             return lista;
         }
+        #endregion
 
-        public bool RenovarMembresiaSocio(int idSocio, int diasPlan)
+        #region OPERACIONES ADICIONALES
+        // Registra de forma silenciosa la asistencia física de un socio.
+        public void RegistrarAsistencia(int idSocio)
         {
-            using (System.Data.SqlClient.SqlConnection oConexion = Conexion.ObtenerConexion())
+            using (SqlConnection oConexion = Conexion.ObtenerConexion())
             {
                 try
                 {
-                    string query = @"
-                        UPDATE Socios 
-                        SET Estado = 'Activo', 
-                            FechaVencimiento = CASE 
-                                WHEN FechaVencimiento < GETDATE() THEN DATEADD(day, @Dias, GETDATE()) 
-                                ELSE DATEADD(day, @Dias, FechaVencimiento) 
-                            END 
-                        WHERE IdSocio = @IdSocio";
+                    string query = "INSERT INTO Asistencias (IdSocio, FechaHora) VALUES (@IdSocio, GETDATE())";
+                    SqlCommand cmd = new SqlCommand(query, oConexion);
+                    cmd.Parameters.AddWithValue("@IdSocio", idSocio);
+                    oConexion.Open();
+                    cmd.ExecuteNonQuery();
+                }
+                catch (Exception) { /* Fallo silencioso permitido */ }
+            }
+        }
 
-                    System.Data.SqlClient.SqlCommand cmd = new System.Data.SqlClient.SqlCommand(query, oConexion);
+        // Renueva el vencimiento de un plan.
+        public bool RenovarMembresiaSocio(int idSocio, int diasPlan)
+        {
+            using (SqlConnection oConexion = Conexion.ObtenerConexion())
+            {
+                try
+                {
+                    string query = @"UPDATE Socios SET Estado = 'Activo', 
+                                    FechaVencimiento = CASE 
+                                        WHEN FechaVencimiento < GETDATE() THEN DATEADD(day, @Dias, GETDATE()) 
+                                        ELSE DATEADD(day, @Dias, FechaVencimiento) 
+                                    END 
+                                    WHERE IdSocio = @IdSocio";
+
+                    SqlCommand cmd = new SqlCommand(query, oConexion);
                     cmd.Parameters.AddWithValue("@Dias", diasPlan);
                     cmd.Parameters.AddWithValue("@IdSocio", idSocio);
 
                     oConexion.Open();
                     return cmd.ExecuteNonQuery() > 0;
                 }
-                catch (Exception ex)
-                {
-                    throw;
-                }
+                catch (Exception) { throw; }
             }
         }
+        #endregion
+
+        #region NOTIFICACIONES Y ALERTAS (LECTURA/ESCRITURA)
+        // Recupera la configuración del correo emisor desde la base de datos.
+        public DataTable ObtenerConfiguracionCorreo()
+        {
+            DataTable dt = new DataTable();
+            using (SqlConnection oConexion = Conexion.ObtenerConexion())
+            {
+                string query = "SELECT CorreoEmisor, ContrasenaCorreo, DiasAviso1, DiasAviso2 FROM Configuracion WHERE IdConfiguracion = 1";
+                SqlCommand cmd = new SqlCommand(query, oConexion);
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
+                da.Fill(dt);
+            }
+            return dt;
+        }
+
+        // Obtiene la lista de socios que requieren notificación por vencimiento inminente.
+        public DataTable ObtenerSociosParaAvisoCorreo(int avisoCercano, int avisoLejano)
+        {
+            DataTable dt = new DataTable();
+            using (SqlConnection oConexion = Conexion.ObtenerConexion())
+            {
+                string query = $@"
+                    SELECT IdSocio, Nombre, Apellido, Email, FechaVencimiento, 
+                           DATEDIFF(day, GETDATE(), FechaVencimiento) AS DiasRestantes
+                    FROM Socios
+                    WHERE Estado = 'Activo' 
+                    AND Email IS NOT NULL AND Email LIKE '%@%'
+                    AND DATEDIFF(day, GETDATE(), FechaVencimiento) IN (0, {avisoCercano}, {avisoCercano + 1}, {avisoLejano - 1}, {avisoLejano}, {avisoLejano + 1})
+                    AND (FechaUltimoAviso IS NULL OR DATEDIFF(day, FechaUltimoAviso, GETDATE()) >= 4)";
+
+                SqlCommand cmd = new SqlCommand(query, oConexion);
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
+                da.Fill(dt);
+            }
+            return dt;
+        }
+
+        // Actualiza la fecha de última notificación enviada a un socio.
+        public void RegistrarAvisoEnviado(int idSocio)
+        {
+            using (SqlConnection oConexion = Conexion.ObtenerConexion())
+            {
+                oConexion.Open();
+                string query = "UPDATE Socios SET FechaUltimoAviso = GETDATE() WHERE IdSocio = @IdSocio";
+                SqlCommand cmd = new SqlCommand(query, oConexion);
+                cmd.Parameters.AddWithValue("@IdSocio", idSocio);
+                cmd.ExecuteNonQuery();
+            }
+        }
+        #endregion
     }
 }

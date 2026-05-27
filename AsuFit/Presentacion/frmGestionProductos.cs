@@ -6,7 +6,6 @@ using System.Data;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
-using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows.Forms;
 
@@ -15,10 +14,6 @@ namespace AsuFit.Presentacion
     public partial class frmGestionProductos : Form
     {
         #region 1. VARIABLES GLOBALES Y CONSTRUCTOR
-        [DllImport("user32.dll", CharSet = CharSet.Auto)]
-        private static extern Int32 SendMessage(IntPtr hWnd, int msg, int wParam, [MarshalAs(UnmanagedType.LPWStr)] string lParam);
-        private const int EM_SETCUEBANNER = 0x1501;
-
         private Usuario usuarioActual;
         private InventarioNegocio negocio = new InventarioNegocio();
         private ProveedorNegocio negocioProveedor = new ProveedorNegocio();
@@ -32,15 +27,108 @@ namespace AsuFit.Presentacion
             InitializeComponent();
             usuarioActual = userLogueado;
             dgvProductos.AutoGenerateColumns = false;
+
+            ConfigurarTemaOscuroGrilla(dgvProductos);
         }
         #endregion
 
-        #region 2. INICIALIZACIÓN Y CARGA DE DATOS
+        #region 2. ESTILOS VISUALES Y COMPORTAMIENTO UI
+        // Aplica el estilo visual del sistema a la grilla
+        private void ConfigurarTemaOscuroGrilla(DataGridView dgv)
+        {
+            dgv.BackgroundColor = Color.FromArgb(25, 28, 35);
+            dgv.BorderStyle = BorderStyle.None;
+            dgv.CellBorderStyle = DataGridViewCellBorderStyle.SingleHorizontal;
+            dgv.GridColor = Color.FromArgb(50, 55, 65);
+
+            dgv.EnableHeadersVisualStyles = false;
+            dgv.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.None;
+            dgv.ColumnHeadersDefaultCellStyle.BackColor = Color.FromArgb(35, 39, 47);
+            dgv.ColumnHeadersDefaultCellStyle.ForeColor = Color.White;
+            dgv.ColumnHeadersDefaultCellStyle.Font = new Font("Segoe UI", 10, FontStyle.Bold);
+
+            dgv.DefaultCellStyle.BackColor = Color.FromArgb(25, 28, 35);
+            dgv.DefaultCellStyle.ForeColor = Color.White;
+            dgv.DefaultCellStyle.SelectionBackColor = Color.FromArgb(0, 229, 255);
+            dgv.DefaultCellStyle.SelectionForeColor = Color.Black;
+
+            dgv.RowHeadersVisible = false;
+            dgv.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            dgv.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            dgv.AllowUserToAddRows = false;
+            dgv.ReadOnly = true;
+            dgv.RowTemplate.Height = 35;
+        }
+
+        private void ConfigurarTextosDeAyuda()
+        {
+            AplicarPlaceholder(txtBuscarProducto, "Buscar por código o nombre...");
+            AplicarPlaceholder(txtCodigo, "Ej: 7898000...");
+            AplicarPlaceholder(txtNombre, "Ej: Energizante...");
+            AplicarPlaceholder(txtPrecio, "0");
+            AplicarPlaceholder(txtStock, "0");
+        }
+
+        // Gestiona el comportamiento de las marcas de agua en los TextBox
+        private void AplicarPlaceholder(TextBox txt, string textoAyuda)
+        {
+            txt.Tag = textoAyuda;
+
+            if (string.IsNullOrWhiteSpace(txt.Text) || txt.Text == textoAyuda)
+            {
+                txt.Text = textoAyuda;
+                txt.ForeColor = Color.Silver;
+            }
+            else
+            {
+                txt.ForeColor = Color.White;
+            }
+
+            txt.Enter += delegate
+            {
+                if (txt.Text == textoAyuda)
+                {
+                    txt.Text = "";
+                    txt.ForeColor = Color.White;
+                }
+            };
+
+            txt.Leave += delegate
+            {
+                if (string.IsNullOrWhiteSpace(txt.Text))
+                {
+                    txt.Text = textoAyuda;
+                    txt.ForeColor = Color.Silver;
+                }
+            };
+        }
+
+        // Evita que el placeholder se procese como un valor real al guardar o validar
+        private string ObtenerTextoReal(TextBox txt)
+        {
+            if (txt.Text == (string)txt.Tag) return "";
+            return txt.Text;
+        }
+
+        // Libera el foco del componente para evitar el remanente de color de selección (Azul nativo)
+        private void QuitarFocoCombo_DropDownClosed(object sender, EventArgs e)
+        {
+            this.ActiveControl = null;
+        }
+        #endregion
+
+        #region 3. INICIALIZACIÓN Y CARGA DE DATOS
         private void frmGestionProductos_Load(object sender, EventArgs e)
         {
+            ConfigurarTextosDeAyuda();
             ConfigurarFiltros();
             CargarProveedores();
             CargarGrilla();
+
+            // Vinculación del evento para limpiar el resaltado azul al elegir una opción
+            cmbCategoria.DropDownClosed += QuitarFocoCombo_DropDownClosed;
+            cmbProveedor.DropDownClosed += QuitarFocoCombo_DropDownClosed;
+            if (cmbIva != null) cmbIva.DropDownClosed += QuitarFocoCombo_DropDownClosed;
 
             if (!Directory.Exists(carpetaFotos)) Directory.CreateDirectory(carpetaFotos);
 
@@ -48,8 +136,9 @@ namespace AsuFit.Presentacion
             dgvProductos.CurrentCell = null;
 
             ConfigurarAutocompletado();
-            SendMessage(txtBuscarProducto.Handle, EM_SETCUEBANNER, 1, "Buscar producto...");
-            txtBuscarProducto.Focus();
+
+            // Libera el foco para permitir visualizar los placeholders y colores correctos
+            this.ActiveControl = null;
         }
 
         private void ConfigurarFiltros()
@@ -103,6 +192,7 @@ namespace AsuFit.Presentacion
             txtBuscarProducto.AutoCompleteSource = AutoCompleteSource.CustomSource;
         }
 
+        // Remueve tildes para facilitar la búsqueda en tiempo real
         private string QuitarAcentos(string texto)
         {
             var textoNormalizado = texto.Normalize(NormalizationForm.FormD);
@@ -117,7 +207,7 @@ namespace AsuFit.Presentacion
         }
         #endregion
 
-        #region 3. SECCIÓN DERECHA: BÚSQUEDA Y GRILLA DE PRODUCTOS
+        #region 4. BÚSQUEDA Y GESTIÓN DE GRILLA
         private void CargarGrilla()
         {
             dtProductos = negocio.ListarProductos();
@@ -135,12 +225,6 @@ namespace AsuFit.Presentacion
                 }
 
                 FiltrarDatos();
-
-                dgvProductos.AllowUserToAddRows = false;
-                dgvProductos.RowHeadersVisible = false;
-                dgvProductos.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-                dgvProductos.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-                dgvProductos.ReadOnly = true;
             }
         }
 
@@ -149,7 +233,7 @@ namespace AsuFit.Presentacion
             if (dtProductos == null) return;
 
             string filtroEstado = chkMostrarInactivos.Checked ? "Estado = 'Inactivo'" : "Estado = 'Activo'";
-            string textoBusqueda = QuitarAcentos(txtBuscarProducto.Text.Trim()).ToLower().Replace("'", "''");
+            string textoBusqueda = QuitarAcentos(ObtenerTextoReal(txtBuscarProducto)).ToLower().Replace("'", "''");
             string filtroFinal = filtroEstado;
 
             if (!string.IsNullOrEmpty(textoBusqueda))
@@ -183,11 +267,20 @@ namespace AsuFit.Presentacion
                 DataGridViewRow fila = dgvProductos.Rows[e.RowIndex];
 
                 txtId.Text = fila.Cells["colProductoId"].Value.ToString();
+
                 txtCodigo.Text = fila.Cells["colProductoCodigo"].Value.ToString();
+                txtCodigo.ForeColor = Color.White;
+
                 txtNombre.Text = fila.Cells["colProductoNombre"].Value.ToString();
+                txtNombre.ForeColor = Color.White;
+
                 cmbCategoria.Text = fila.Cells["colProductoCategoria"].Value.ToString();
+
                 txtPrecio.Text = Convert.ToDecimal(fila.Cells["colProductoPrecioVenta"].Value).ToString("N0");
+                txtPrecio.ForeColor = Color.White;
+
                 txtStock.Text = fila.Cells["colProductoStock"].Value.ToString();
+                txtStock.ForeColor = Color.White;
 
                 if (fila.Cells["colProductoProveedor"].Value != DBNull.Value && fila.Cells["colProductoProveedor"].Value != null)
                 {
@@ -223,6 +316,7 @@ namespace AsuFit.Presentacion
             }
         }
 
+        // Aplica formato condicional de alertas de inventario respetando la paleta del sistema
         private void dgvProductos_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
         {
             foreach (DataGridViewRow row in dgvProductos.Rows)
@@ -234,18 +328,18 @@ namespace AsuFit.Presentacion
 
                     if (stockActual == 0)
                     {
-                        row.DefaultCellStyle.BackColor = Color.IndianRed;
+                        row.DefaultCellStyle.BackColor = Color.LightCoral;
                         row.DefaultCellStyle.ForeColor = Color.White;
                     }
                     else if (stockActual <= stockMinimo)
                     {
-                        row.DefaultCellStyle.BackColor = Color.Khaki;
+                        row.DefaultCellStyle.BackColor = Color.Gold;
                         row.DefaultCellStyle.ForeColor = Color.Black;
                     }
                     else
                     {
-                        row.DefaultCellStyle.BackColor = Color.White;
-                        row.DefaultCellStyle.ForeColor = Color.Black;
+                        row.DefaultCellStyle.BackColor = Color.FromArgb(25, 28, 35);
+                        row.DefaultCellStyle.ForeColor = Color.White;
                     }
                 }
             }
@@ -253,10 +347,10 @@ namespace AsuFit.Presentacion
         }
         #endregion
 
-        #region 4. SECCIÓN IZQUIERDA: FORMULARIO Y FOTO
+        #region 5. ACCIONES DEL FORMULARIO (CRUD Y FOTO)
         private void btnSubirFoto_Click(object sender, EventArgs e)
         {
-            if (txtCodigo.Text.Trim() == "")
+            if (string.IsNullOrWhiteSpace(ObtenerTextoReal(txtCodigo)))
             {
                 MessageBox.Show("Por favor, ingrese primero el Código de Barras.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
@@ -285,7 +379,11 @@ namespace AsuFit.Presentacion
 
         private void btnGuardar_Click(object sender, EventArgs e)
         {
-            if (string.IsNullOrWhiteSpace(txtNombre.Text) || string.IsNullOrWhiteSpace(txtPrecio.Text))
+            string nombreReal = ObtenerTextoReal(txtNombre);
+            string precioReal = ObtenerTextoReal(txtPrecio);
+            string stockReal = ObtenerTextoReal(txtStock);
+
+            if (string.IsNullOrWhiteSpace(nombreReal) || string.IsNullOrWhiteSpace(precioReal))
             {
                 MessageBox.Show("El Nombre y el Precio son campos obligatorios.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
@@ -295,11 +393,11 @@ namespace AsuFit.Presentacion
             {
                 Producto objProducto = new Producto();
                 objProducto.IdProducto = string.IsNullOrWhiteSpace(txtId.Text) ? 0 : Convert.ToInt32(txtId.Text);
-                objProducto.CodigoBarras = txtCodigo.Text.Trim();
-                objProducto.Nombre = txtNombre.Text.Trim();
+                objProducto.CodigoBarras = ObtenerTextoReal(txtCodigo);
+                objProducto.Nombre = nombreReal;
                 objProducto.Categoria = cmbCategoria.Text;
-                objProducto.PrecioVenta = Convert.ToDecimal(txtPrecio.Text.Trim());
-                objProducto.StockActual = string.IsNullOrWhiteSpace(txtStock.Text) ? 0 : Convert.ToInt32(txtStock.Text.Trim());
+                objProducto.PrecioVenta = Convert.ToDecimal(precioReal);
+                objProducto.StockActual = string.IsNullOrWhiteSpace(stockReal) ? 0 : Convert.ToInt32(stockReal);
 
                 if (cmbProveedor.SelectedValue != null)
                 {
@@ -326,7 +424,7 @@ namespace AsuFit.Presentacion
 
                     GestorAuditoria.Registrar(usuarioActual.NombreCompleto, "Inventario", accion, detalle);
 
-                    // Guardado físico de la foto en la carpeta local
+                    // Guardado físico de la imagen en el directorio configurado
                     if (!string.IsNullOrEmpty(rutaFotoOrigen))
                     {
                         string rutaDestino = carpetaFotos + objProducto.CodigoBarras + ".jpg";
@@ -356,9 +454,7 @@ namespace AsuFit.Presentacion
                 MessageBox.Show("Error al guardar: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-        #endregion
 
-        #region 5. ACCIONES DE ESTADO Y LIMPIEZA
         private void btnCambiarEstado_Click(object sender, EventArgs e)
         {
             if (txtId.Text == "")
@@ -418,8 +514,12 @@ namespace AsuFit.Presentacion
 
             txtBuscarProducto.Clear();
             dgvProductos.ClearSelection();
+
+            ConfigurarTextosDeAyuda();
+            this.ActiveControl = null;
         }
 
+        // Libera la selección al hacer clic en un área vacía del formulario
         private void frmGestionProductos_Click(object sender, EventArgs e)
         {
             dgvProductos.ClearSelection();

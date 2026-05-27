@@ -3,11 +3,13 @@ using AsuFit.Datos;
 
 namespace AsuFit.Negocio
 {
+    // Administra las reglas de negocio para el abastecimiento y compra de productos.
     public class IngresoMercaderiaNegocio
     {
-        // ACÁ ESTABA EL ERROR: Tiene que instanciar a DATOS, no a NEGOCIO.
         private IngresoMercaderiaDatos datos = new IngresoMercaderiaDatos();
 
+        #region OPERACIONES Y VALIDACIONES
+        // Valida los montos y cantidades antes de procesar el ingreso de mercadería.
         public bool RegistrarIngreso(int idProveedor, int idProducto, int cantidad, decimal costoTotal, DateTime fechaIngreso, string observaciones)
         {
             if (cantidad <= 0)
@@ -22,5 +24,6 @@ namespace AsuFit.Negocio
 
             return datos.RegistrarIngreso(idProveedor, idProducto, cantidad, costoTotal, fechaIngreso, observaciones);
         }
+        #endregion
     }
 }

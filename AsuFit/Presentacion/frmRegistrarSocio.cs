@@ -164,7 +164,7 @@ namespace AsuFit.Presentacion
             txtFechaNacimiento.Text = dtpFechaNacimiento.Value.ToShortDateString();
         }
 
-        // Libera el foco del componente para evitar el remanente de color de selección (Azul nativo)
+        // Libera el foco del componente para evitar el remanente de color de selección
         private void cmbPlanes_DropDownClosed(object sender, EventArgs e)
         {
             this.ActiveControl = null;
@@ -207,13 +207,15 @@ namespace AsuFit.Presentacion
         private void btnGuardar_Click(object sender, EventArgs e)
         {
             // 1. Verificación estricta de campos obligatorios
+            bool faltaPlan = (socioEdicion == null && cmbPlanes.SelectedIndex <= 0);
+
             if (string.IsNullOrWhiteSpace(ObtenerTextoReal(txtCedula)) ||
                 string.IsNullOrWhiteSpace(ObtenerTextoReal(txtNombre)) ||
                 string.IsNullOrWhiteSpace(ObtenerTextoReal(txtApellido)) ||
-                cmbPlanes.SelectedIndex == 0) // Índice 0 = Instrucción de selección
+                faltaPlan)
             {
-                MessageBox.Show("Por favor, completá los campos obligatorios: Cédula, Nombre, Apellido y Plan.",
-                                "Atención", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                string mensaje = socioEdicion == null ? "Cédula, Nombre, Apellido y Plan." : "Cédula, Nombre y Apellido.";
+                MessageBox.Show($"Por favor, completá los campos obligatorios: {mensaje}", "Atención", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
@@ -223,8 +225,7 @@ namespace AsuFit.Presentacion
             // 2. Control de duplicidad de Cédula de Identidad
             if (negocioSocio.ExisteCedula(ObtenerTextoReal(txtCedula), idActual))
             {
-                MessageBox.Show("Este número de cédula ya está registrado con otro socio.",
-                                "Cédula Duplicada", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Este número de cédula ya está registrado con otro socio.", "Cédula Duplicada", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 txtCedula.Focus();
                 return;
             }
@@ -244,18 +245,26 @@ namespace AsuFit.Presentacion
             nuevoSocio.Estado = "Activo";
 
             // 4. Procesamiento de la información del Plan
-            string nombrePlanSeleccionado = cmbPlanes.Text;
             PlanNegocio negocioPlan = new PlanNegocio();
-            Plan planInfo = negocioPlan.ObtenerPlanPorNombre(nombrePlanSeleccionado);
+            Plan planInfo = null;
 
-            if (planInfo == null)
+            if (socioEdicion != null)
             {
-                MessageBox.Show("No se pudo encontrar la información del plan.", "Error interno", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
+                // En modo edición se asume un plan temporal base para cumplir integridad referencial
+                planInfo = negocioPlan.ObtenerPlanPorNombre("Plan Mensual");
+                nuevoSocio.IdPlan = planInfo != null ? planInfo.IdPlan : 1;
             }
-
-            nuevoSocio.IdPlan = planInfo.IdPlan;
-            nuevoSocio.FechaVencimiento = DateTime.Now.AddDays(planInfo.DuracionDias);
+            else
+            {
+                planInfo = negocioPlan.ObtenerPlanPorNombre(cmbPlanes.Text);
+                if (planInfo == null)
+                {
+                    MessageBox.Show("No se pudo encontrar la información del plan seleccionado.", "Error interno", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+                nuevoSocio.IdPlan = planInfo.IdPlan;
+                nuevoSocio.FechaVencimiento = DateTime.Now.AddDays(planInfo.DuracionDias);
+            }
 
             // 5. Ejecución en Base de Datos (Flujo de Edición o Nuevo Ingreso)
             if (socioEdicion != null)
@@ -263,6 +272,9 @@ namespace AsuFit.Presentacion
                 nuevoSocio.IdSocio = socioEdicion.IdSocio;
                 if (negocioSocio.EditarSocio(nuevoSocio))
                 {
+                    // Registro de auditoría por actualización
+                    AsuFit.Datos.GestorAuditoria.Registrar(usuarioActual.NombreCompleto, "Socios", "Edición", $"Se actualizaron los datos del socio: {nuevoSocio.Nombre} {nuevoSocio.Apellido} ({nuevoSocio.Cedula}).");
+
                     MessageBox.Show("Los datos se actualizaron correctamente.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     this.Close();
                 }
@@ -274,6 +286,9 @@ namespace AsuFit.Presentacion
 
                 if (nuevoIdSocio > 0)
                 {
+                    // Registro de auditoría por nuevo ingreso
+                    AsuFit.Datos.GestorAuditoria.Registrar(usuarioActual.NombreCompleto, "Socios", "Registro", $"Se registró al nuevo socio: {nuevoSocio.Nombre} {nuevoSocio.Apellido} ({nuevoSocio.Cedula}).");
+
                     // 6. Vinculación automática y apertura del módulo de Caja (Cobro de inscripción)
                     string codigoPlanArtificial = $"PLAN-{planInfo.DuracionDias}-{nuevoIdSocio}-{planInfo.IdPlan}";
                     CarritoGlobal.AgregarItem(0, codigoPlanArtificial, "Inscripción y " + planInfo.NombrePlan, 1, planInfo.Precio, 10);

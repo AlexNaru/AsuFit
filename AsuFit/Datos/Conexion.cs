@@ -1,16 +1,19 @@
 ﻿using System;
 using System.Data.SqlClient;
-using System.Configuration; // NUEVO: Necesario para leer el App.config / AsuFit.exe.config
+using System.Configuration;
 
 namespace AsuFit.Datos
 {
+    // Capa base de conectividad que proporciona instancias de conexión hacia el motor de base de datos.
     public class Conexion
     {
+        #region CADENA DE CONEXIÓN
+        // Genera y retorna un objeto de conexión inicializado mediante el ConfigurationManager.
         public static SqlConnection ObtenerConexion()
         {
-            // Ahora va al archivo de configuración externo y busca la conexión llamada "AsuFitConexion"
             string cadenaConexion = ConfigurationManager.ConnectionStrings["AsuFitConexion"].ConnectionString;
             return new SqlConnection(cadenaConexion);
         }
+        #endregion
     }
 }

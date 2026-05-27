@@ -5,8 +5,11 @@ using System.Data.SqlClient;
 
 namespace AsuFit.Datos
 {
+    // Gestiona las operaciones de persistencia para la entidad Proveedores.
     public class ProveedorDatos
     {
+        #region OPERACIONES DE DATOS
+        // Recupera la lista de proveedores ordenados alfabéticamente.
         public DataTable Listar()
         {
             DataTable tabla = new DataTable();
@@ -26,27 +29,19 @@ namespace AsuFit.Datos
             return tabla;
         }
 
-        // Unificamos Insertar y Editar en un solo método limpio
+        // Realiza inserción o actualización de un registro de proveedor.
         public bool Guardar(Proveedor obj)
         {
             using (SqlConnection cn = Conexion.ObtenerConexion())
             {
                 try
                 {
-                    string query = "";
-                    if (obj.IdProveedor == 0) // Si es 0, es un proveedor nuevo
-                    {
-                        query = @"INSERT INTO Proveedores (Nombre, RUC, Categoria, Contacto, Telefono, Correo, Direccion, Ciudad, Estado) 
-                                  VALUES (@Nombre, @RUC, @Categoria, @Contacto, @Telefono, @Correo, @Direccion, @Ciudad, @Estado)";
-                    }
-                    else // Si tiene ID, es una edición
-                    {
-                        query = @"UPDATE Proveedores SET 
-                                  Nombre = @Nombre, RUC = @RUC, Categoria = @Categoria, Contacto = @Contacto, 
-                                  Telefono = @Telefono, Correo = @Correo, Direccion = @Direccion, 
-                                  Ciudad = @Ciudad, Estado = @Estado 
-                                  WHERE IdProveedor = @IdProveedor";
-                    }
+                    string query = (obj.IdProveedor == 0)
+                        ? @"INSERT INTO Proveedores (Nombre, RUC, Categoria, Contacto, Telefono, Correo, Direccion, Ciudad, Estado) 
+                            VALUES (@Nombre, @RUC, @Categoria, @Contacto, @Telefono, @Correo, @Direccion, @Ciudad, @Estado)"
+                        : @"UPDATE Proveedores SET Nombre = @Nombre, RUC = @RUC, Categoria = @Categoria, Contacto = @Contacto, 
+                            Telefono = @Telefono, Correo = @Correo, Direccion = @Direccion, Ciudad = @Ciudad, Estado = @Estado 
+                            WHERE IdProveedor = @IdProveedor";
 
                     SqlCommand cmd = new SqlCommand(query, cn);
                     if (obj.IdProveedor > 0) cmd.Parameters.AddWithValue("@IdProveedor", obj.IdProveedor);
@@ -71,6 +66,7 @@ namespace AsuFit.Datos
             }
         }
 
+        // Modifica el estado lógico de un proveedor en el sistema.
         public bool CambiarEstado(int idProveedor, string nuevoEstado)
         {
             using (SqlConnection cn = Conexion.ObtenerConexion())
@@ -83,8 +79,7 @@ namespace AsuFit.Datos
                     cmd.Parameters.AddWithValue("@Estado", nuevoEstado);
 
                     cn.Open();
-                    int filasAfectadas = cmd.ExecuteNonQuery();
-                    return filasAfectadas > 0;
+                    return cmd.ExecuteNonQuery() > 0;
                 }
                 catch (Exception ex)
                 {
@@ -92,5 +87,6 @@ namespace AsuFit.Datos
                 }
             }
         }
+        #endregion
     }
 }
