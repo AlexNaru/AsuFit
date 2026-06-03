@@ -1,6 +1,7 @@
 ﻿using AsuFit.Entidades;
 using AsuFit.Negocio;
 using System;
+using System.Drawing;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
@@ -41,6 +42,7 @@ namespace AsuFit.Presentacion
         #region 2. INICIALIZACIÓN DE PANTALLA
         private void frmRegistrarUsuario_Load(object sender, EventArgs e)
         {
+            ConfigurarTemaOscuro(); // Inyectamos la paleta de colores básica
             CambiarEstadoBoton(false);
         }
 
@@ -64,7 +66,70 @@ namespace AsuFit.Presentacion
         }
         #endregion
 
-        #region 3. CAMPOS DEL FORMULARIO Y NAVEGACIÓN VERTICAL
+        #region 3. ESTILOS VISUALES (TEMA OSCURO BÁSICO)
+        private void ConfigurarTemaOscuro()
+        {
+            // El tamaño de la fuente y la escala ya son controlados por el Dashboard o el form padre.
+            // Aquí solo nos encargamos de que los colores hagan juego con el sistema.
+            this.BackColor = Color.FromArgb(25, 28, 35);
+
+            AplicarTemaOscuroRecursivo(this);
+        }
+
+        private void AplicarTemaOscuroRecursivo(Control contenedor)
+        {
+            foreach (Control c in contenedor.Controls)
+            {
+                if (c is Panel || c is GroupBox)
+                {
+                    c.BackColor = Color.FromArgb(35, 39, 47);
+                    c.ForeColor = Color.White;
+                }
+                else if (c is Label lbl)
+                {
+                    lbl.ForeColor = Color.White;
+                }
+                else if (c is CheckBox chk)
+                {
+                    chk.ForeColor = Color.White;
+                }
+                else if (c is TextBox txt)
+                {
+                    txt.BackColor = Color.FromArgb(50, 55, 65);
+                    txt.ForeColor = Color.White;
+                    txt.BorderStyle = BorderStyle.FixedSingle;
+                }
+                else if (c is ComboBox cmb)
+                {
+                    cmb.BackColor = Color.FromArgb(50, 55, 65);
+                    cmb.ForeColor = Color.White;
+                    cmb.FlatStyle = FlatStyle.Flat;
+                }
+                else if (c is Button btn)
+                {
+                    btn.FlatStyle = FlatStyle.Flat;
+                    btn.FlatAppearance.BorderSize = 0;
+                    btn.Cursor = Cursors.Hand;
+                    btn.Height = 35; // Estándar de botones AsuFit
+
+                    if (btn.Name.Contains("Cancelar"))
+                    {
+                        btn.BackColor = Color.FromArgb(50, 55, 65); // Gris para cancelar
+                        btn.ForeColor = Color.White;
+                    }
+                    else
+                    {
+                        btn.BackColor = Color.FromArgb(0, 229, 255); // Cian AsuFit para Guardar
+                        btn.ForeColor = Color.Black;
+                    }
+                }
+
+                if (c.HasChildren) AplicarTemaOscuroRecursivo(c);
+            }
+        }
+        #endregion
+
+        #region 4. CAMPOS DEL FORMULARIO Y NAVEGACIÓN VERTICAL
         private void VerificarCamposObligatorios(object sender, EventArgs e)
         {
             if (!string.IsNullOrWhiteSpace(txtNombreCompleto.Text) &&
@@ -158,7 +223,7 @@ namespace AsuFit.Presentacion
         }
         #endregion
 
-        #region 4. BOTONES INFERIORES: GUARDAR Y CANCELAR
+        #region 5. BOTONES INFERIORES: GUARDAR Y CANCELAR
         private void btnGuardar_Click(object sender, EventArgs e)
         {
             if (!puedeGuardar)

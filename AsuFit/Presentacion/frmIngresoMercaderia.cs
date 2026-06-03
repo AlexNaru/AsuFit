@@ -5,7 +5,6 @@ using System.Data;
 using System.Drawing;
 using System.Windows.Forms;
 using AsuFit.Negocio;
-using System.Runtime.InteropServices;
 using System.Text;
 using System.Globalization;
 
@@ -14,10 +13,6 @@ namespace AsuFit.Presentacion
     public partial class frmIngresoMercaderia : Form
     {
         #region 1. VARIABLES GLOBALES Y CONSTRUCTOR
-        [DllImport("user32.dll", CharSet = CharSet.Auto)]
-        private static extern Int32 SendMessage(IntPtr hWnd, int msg, int wParam, [MarshalAs(UnmanagedType.LPWStr)] string lParam);
-        private const int EM_SETCUEBANNER = 0x1501;
-
         private InventarioNegocio negocio = new InventarioNegocio();
         private ProveedorNegocio negocioProveedor = new ProveedorNegocio();
         private IngresoMercaderiaNegocio negocioIngreso = new IngresoMercaderiaNegocio();
@@ -35,13 +30,16 @@ namespace AsuFit.Presentacion
         #region 2. INICIALIZACIÓN Y CARGA DE DATOS
         private void frmIngresoMercaderia_Load(object sender, EventArgs e)
         {
+            ConfigurarTemaOscuro();
             CargarProveedores();
             CargarGrilla();
             ConfigurarAutocompletado();
 
-            // Placeholder para la barra de búsqueda
-            SendMessage(txtBuscarProducto.Handle, EM_SETCUEBANNER, 1, "Buscar producto en el catálogo...");
-            txtBuscarProducto.Focus();
+            // FIX: Aplicamos el placeholder interactivo estilo AsuFit
+            AplicarPlaceholder(txtBuscarProducto, "Buscar producto en el catálogo...");
+
+            // Liberamos el foco para que se vea el placeholder
+            this.ActiveControl = null;
         }
 
         private void CargarProveedores()
@@ -84,17 +82,179 @@ namespace AsuFit.Presentacion
         }
         #endregion
 
-        #region 3. SECCIÓN IZQUIERDA: BÚSQUEDA Y SELECCIÓN
+        #region 3. ESTILOS VISUALES (UI)
+        private void ConfigurarTemaOscuro()
+        {
+            float fuenteGlobal = Properties.Settings.Default.TamanoFuente;
+
+            this.BackColor = Color.FromArgb(25, 28, 35);
+
+            AplicarTemaOscuroRecursivo(this, fuenteGlobal);
+            ConfigurarTemaOscuroGrilla(dgvProductos, fuenteGlobal);
+        }
+
+        private void AplicarTemaOscuroRecursivo(Control contenedor, float fuente)
+        {
+            foreach (Control c in contenedor.Controls)
+            {
+                if (c is Panel || c is GroupBox)
+                {
+                    c.BackColor = Color.FromArgb(35, 39, 47);
+                    c.ForeColor = Color.White;
+                }
+                else if (c is Label lbl)
+                {
+                    lbl.ForeColor = Color.White;
+                }
+                else if (c is TextBox txt)
+                {
+                    txt.BackColor = Color.FromArgb(50, 55, 65);
+                    txt.ForeColor = Color.White;
+                    txt.BorderStyle = BorderStyle.FixedSingle;
+                }
+                else if (c is ComboBox cmb)
+                {
+                    cmb.BackColor = Color.FromArgb(50, 55, 65);
+                    cmb.ForeColor = Color.White;
+                    cmb.FlatStyle = FlatStyle.Flat;
+                }
+                else if (c is Button btn)
+                {
+                    btn.Font = new Font("Segoe UI", fuente, FontStyle.Bold);
+                    btn.FlatStyle = FlatStyle.Flat;
+                    btn.FlatAppearance.BorderSize = 0;
+                    btn.Cursor = Cursors.Hand;
+
+                    if (btn.Name.Contains("Cancelar") || btn.Name.Contains("Limpiar"))
+                    {
+                        btn.BackColor = Color.FromArgb(50, 55, 65);
+                        btn.ForeColor = Color.White;
+                    }
+                    else
+                    {
+                        btn.BackColor = Color.FromArgb(0, 229, 255);
+                        btn.ForeColor = Color.Black;
+                    }
+                }
+
+                if (c.HasChildren) AplicarTemaOscuroRecursivo(c, fuente);
+            }
+        }
+
+        private void ConfigurarTemaOscuroGrilla(DataGridView dgv, float fuente)
+        {
+            dgv.BackgroundColor = Color.FromArgb(25, 28, 35);
+            dgv.BorderStyle = BorderStyle.None;
+            dgv.CellBorderStyle = DataGridViewCellBorderStyle.SingleHorizontal;
+            dgv.GridColor = Color.FromArgb(50, 55, 65);
+
+            dgv.EnableHeadersVisualStyles = false;
+            dgv.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.None;
+            dgv.ColumnHeadersDefaultCellStyle.BackColor = Color.FromArgb(35, 39, 47);
+            dgv.ColumnHeadersDefaultCellStyle.ForeColor = Color.White;
+            dgv.ColumnHeadersDefaultCellStyle.Font = new Font("Segoe UI", fuente, FontStyle.Bold);
+
+            dgv.DefaultCellStyle.BackColor = Color.FromArgb(25, 28, 35);
+            dgv.DefaultCellStyle.ForeColor = Color.White;
+            dgv.DefaultCellStyle.SelectionBackColor = Color.FromArgb(0, 229, 255);
+            dgv.DefaultCellStyle.SelectionForeColor = Color.Black;
+
+            dgv.RowHeadersVisible = false;
+            dgv.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            dgv.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            dgv.AllowUserToAddRows = false;
+            dgv.ReadOnly = true;
+            dgv.RowTemplate.Height = 35;
+        }
+
+        // --- MÉTODO INTELIGENTE DE PLACEHOLDER ---
+        private void AplicarPlaceholder(TextBox txt, string textoAyuda)
+        {
+            txt.Tag = textoAyuda;
+
+            if (string.IsNullOrWhiteSpace(txt.Text) || txt.Text == textoAyuda)
+            {
+                txt.Text = textoAyuda;
+                txt.ForeColor = Color.Silver;
+            }
+            else
+            {
+                txt.ForeColor = Color.White;
+            }
+
+            txt.Enter += delegate
+            {
+                if (txt.Text == textoAyuda)
+                {
+                    txt.Text = "";
+                    txt.ForeColor = Color.White;
+                }
+            };
+
+            txt.Leave += delegate
+            {
+                if (string.IsNullOrWhiteSpace(txt.Text))
+                {
+                    txt.Text = textoAyuda;
+                    txt.ForeColor = Color.Silver;
+                }
+            };
+        }
+        #endregion
+
+        #region 4. MÉTODOS AUXILIARES DE FORMULARIO EMERGENTE
+        private void PrepararFormularioComoDashboard(Form frm)
+        {
+            float escalaActual = Properties.Settings.Default.EscalaInterfaz;
+            float fuenteActual = Properties.Settings.Default.TamanoFuente;
+
+            frm.Scale(new SizeF(escalaActual, escalaActual));
+            AjustarFuentesPopup(frm, fuenteActual);
+
+            frm.StartPosition = FormStartPosition.Manual;
+
+            if (this.Parent != null)
+            {
+                Point posicionPanelAbsoluta = this.Parent.PointToScreen(Point.Empty);
+                int x = posicionPanelAbsoluta.X + (this.Parent.Width - frm.Width) / 2;
+                int y = posicionPanelAbsoluta.Y + (this.Parent.Height - frm.Height) / 2;
+
+                frm.Location = new Point(x > 0 ? x : 0, y > 0 ? y : 0);
+            }
+            else
+            {
+                frm.StartPosition = FormStartPosition.CenterParent;
+            }
+        }
+
+        private void AjustarFuentesPopup(Control contenedor, float fuente)
+        {
+            foreach (Control c in contenedor.Controls)
+            {
+                if (c is TextBox || c is ComboBox || c is Label || c is NumericUpDown || c is Button)
+                {
+                    if (c is Button) c.Font = new Font("Segoe UI", fuente, FontStyle.Bold);
+                    else c.Font = new Font("Segoe UI", fuente, c.Font.Style);
+                }
+                if (c.HasChildren) AjustarFuentesPopup(c, fuente);
+            }
+        }
+        #endregion
+
+        #region 5. SECCIÓN IZQUIERDA: BÚSQUEDA Y SELECCIÓN
         private void btnNuevoProveedor_Click(object sender, EventArgs e)
         {
             frmAgregarProveedor frmPopup = new frmAgregarProveedor();
+            PrepararFormularioComoDashboard(frmPopup);
             frmPopup.ShowDialog();
+
             CargarProveedores();
         }
 
         private void btnNuevoProducto_Click(object sender, EventArgs e)
         {
             frmNuevoProducto frmPopup = new frmNuevoProducto(usuarioActual);
+            PrepararFormularioComoDashboard(frmPopup);
             frmPopup.ShowDialog();
 
             CargarGrilla();
@@ -103,6 +263,7 @@ namespace AsuFit.Presentacion
             if (frmPopup.ProductoRecienCreado != "")
             {
                 txtBuscarProducto.Text = frmPopup.ProductoRecienCreado;
+                txtBuscarProducto.ForeColor = Color.White; // Aseguramos color al asignar
             }
         }
 
@@ -110,7 +271,12 @@ namespace AsuFit.Presentacion
         {
             if (dtProductos == null) return;
 
-            string textoLimpio = QuitarAcentos(txtBuscarProducto.Text);
+            string textoBusqueda = txtBuscarProducto.Text;
+
+            // Si el texto es el de ayuda, buscamos en blanco para mostrar todo
+            if (textoBusqueda == "Buscar producto en el catálogo...") textoBusqueda = "";
+
+            string textoLimpio = QuitarAcentos(textoBusqueda).ToLower();
             string filtro = "Estado = 'Activo' AND NombreBusqueda LIKE '%" + textoLimpio + "%'";
             (dgvProductos.DataSource as DataTable).DefaultView.RowFilter = filtro;
         }
@@ -163,13 +329,6 @@ namespace AsuFit.Presentacion
             dgvProductos.ClearSelection();
         }
 
-        private void LimpiarSeleccion_Click(object sender, EventArgs e)
-        {
-            dgvProductos.ClearSelection();
-            txtIdProductoSeleccionado.Clear();
-            btnLimpiar_Click(null, null);
-        }
-
         private void ConfigurarAutocompletado()
         {
             AutoCompleteStringCollection listaSugerencias = new AutoCompleteStringCollection();
@@ -210,7 +369,7 @@ namespace AsuFit.Presentacion
         }
         #endregion
 
-        #region 4. SECCIÓN CENTRAL Y DERECHA: DETALLES, RESUMEN Y CÁLCULOS
+        #region 6. SECCIÓN CENTRAL Y DERECHA: DETALLES, RESUMEN Y CÁLCULOS
         private void ActualizarResumen()
         {
             int cantidad = 0;
@@ -251,7 +410,17 @@ namespace AsuFit.Presentacion
 
         private void txtCantidadIngreso_TextChanged(object sender, EventArgs e) { ActualizarResumen(); }
         private void txtCostoTotal_TextChanged(object sender, EventArgs e) { ActualizarResumen(); }
-        private void cmbProveedores_SelectedIndexChanged(object sender, EventArgs e) { ActualizarResumen(); }
+        private void cmbProveedores_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            ActualizarResumen();
+
+            this.ActiveControl = null;
+        }
+
+        private void cmbProveedores_DropDownClosed(object sender, EventArgs e)
+        {
+            this.ActiveControl = null;
+        }
 
         private void txtCantidadIngreso_KeyPress(object sender, KeyPressEventArgs e)
         {
@@ -264,7 +433,7 @@ namespace AsuFit.Presentacion
         }
         #endregion
 
-        #region 5. ACCIONES INFERIORES: CONFIRMAR Y LIMPIAR
+        #region 7. ACCIONES INFERIORES: CONFIRMAR Y LIMPIAR
         private void btnConfirmarIngreso_Click(object sender, EventArgs e)
         {
             if (txtIdProductoSeleccionado.Text == "")
@@ -305,7 +474,6 @@ namespace AsuFit.Presentacion
         private void btnLimpiar_Click(object sender, EventArgs e)
         {
             txtIdProductoSeleccionado.Clear();
-            txtBuscarProducto.Clear();
             txtCantidadIngreso.Clear();
             txtCostoUnitario.Clear();
             txtCostoTotal.Clear();
@@ -326,11 +494,23 @@ namespace AsuFit.Presentacion
             txtResumenNuevoStock.Clear();
 
             dgvProductos.ClearSelection();
+
+            // Restauramos el buscador a su estado original interactivo
+            txtBuscarProducto.Text = "";
+            txtBuscarProducto.Focus(); // Para forzar el evento Leave y que dibuje el color Silver
+            this.ActiveControl = null;
         }
 
         private void btnCancelar_Click(object sender, EventArgs e)
         {
             this.Close();
+        }
+
+        private void LimpiarSeleccion_Click(object sender, EventArgs e)
+        {
+            dgvProductos.ClearSelection();
+            txtIdProductoSeleccionado.Clear();
+            btnLimpiar_Click(null, null);
         }
         #endregion
     }

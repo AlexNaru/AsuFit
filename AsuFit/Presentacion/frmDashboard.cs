@@ -8,13 +8,8 @@ namespace AsuFit.Presentacion
     public partial class frmDashboard : Form
     {
         #region VARIABLES GLOBALES Y CONSTRUCTOR
-        // Variable para recordar cuál es el botón que está seleccionado actualmente
         private Button botonActivo = null;
-
-        // Variable para guardar los datos del usuario logueado
         private Usuario usuarioActual;
-
-        // Nos dice si cerramos para salir (True) o para loguear de nuevo (False)
         private bool _cerrandoParaLogOut = false;
 
         public frmDashboard(Usuario user)
@@ -25,99 +20,80 @@ namespace AsuFit.Presentacion
 
         private void frmDashboard_Load(object sender, EventArgs e)
         {
-            this.Scale(new SizeF(1.4f, 1.4f));
+            // Aplica la escala global definida en la configuración del usuario
+            float escala = Properties.Settings.Default.EscalaInterfaz;
+            this.Scale(new SizeF(escala, escala));
+
             this.CenterToScreen();
 
-            // Agrandamos la letra de los botones del menú lateral
             AjustarLetraMenu(this);
 
-            // Enlazamos el evento para cuando la ventana termine de cargar
             this.Shown += (s, ev) =>
             {
-                // 1. Sale el cartel con el fondo limpio detrás
                 MessageBox.Show($"¡Bienvenido a AsuFit, {usuarioActual.NombreCompleto}!",
-                                "Acceso Concedido", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                                "Acceso Concedido", MessageBoxButtons.OK, MessageBoxIcon.None);
 
-                // 2. Cuando el usuario le da "Aceptar" al cartel, simulamos el clic en Inicio
                 btnInicio.PerformClick();
             };
         }
 
-        // --- MÉTODO GLOBAL PARA ESCUCHAR LA TECLA ESCAPE ---
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
         {
-            // Si el usuario presiona Escape
             if (keyData == Keys.Escape)
             {
-                // Verificamos si hay algún formulario abierto tapando el fondo
                 if (pnlContenedor.Controls.Count > 0)
                 {
-                    // Lo destruimos y limpiamos el panel para que se vea el fondo del gym
                     pnlContenedor.Controls[0].Dispose();
                     pnlContenedor.Controls.Clear();
 
-                    // Regresamos el color del botón activo en el menú lateral a la normalidad
                     if (botonActivo != null)
                     {
                         botonActivo.BackColor = botonActivo.Parent.BackColor;
                         botonActivo.ForeColor = Color.White;
-                        botonActivo = null; // Reiniciamos la variable
+                        botonActivo = null;
                     }
-
-                    return true; // Le decimos a Windows que ya procesamos la tecla
+                    return true;
                 }
             }
-
-            // Para cualquier otra tecla, que siga su comportamiento normal
             return base.ProcessCmdKey(ref msg, keyData);
         }
         #endregion
 
         #region MÉTODOS DE LA INTERFAZ (UI)
-        // --- MÉTODO PARA LOS COLORES DEL MENÚ ---
         private void ResaltarBoton(object btnSender)
         {
             if (btnSender != null)
             {
-                // 1. Si había un botón seleccionado antes, lo regresamos a la normalidad
                 if (botonActivo != null)
                 {
-                    // EL FIX: Hereda el color exacto del panel lateral para camuflarse de nuevo
                     botonActivo.BackColor = botonActivo.Parent.BackColor;
                     botonActivo.ForeColor = Color.White;
                 }
 
-                // 2. Pintamos el NUEVO botón que el usuario acaba de clickear
                 botonActivo = (Button)btnSender;
-                botonActivo.BackColor = Color.FromArgb(35, 39, 47); // Gris resaltado (como las tarjetas)
-                botonActivo.ForeColor = Color.FromArgb(0, 229, 255); // Tu color Cian AsuFit
+                botonActivo.BackColor = Color.FromArgb(35, 39, 47);
+                botonActivo.ForeColor = Color.FromArgb(0, 229, 255);
             }
         }
 
-        // --- MÉTODO INTELIGENTE PARA PULIR TEXTOS SIN ROMPER PANELES ---
+        // Adapta los textos y grillas utilizando el tamaño de fuente configurado en el sistema
         private void PulirTextosYGrillas(Control contenedor)
         {
+            float fuenteActual = Properties.Settings.Default.TamanoFuente;
+
             foreach (Control c in contenedor.Controls)
             {
-                // 1. Agrandar solo textos legibles (TextBox, ComboBox, Labels de datos)
-                // Usamos 10f para lectura cómoda. No tocamos GroupBox ni Panels.
                 if (c is TextBox || c is ComboBox || c is Label)
                 {
-                    c.Font = new Font("Segoe UI", 10f, c.Font.Style);
+                    c.Font = new Font("Segoe UI", fuenteActual, c.Font.Style);
                 }
-
-                // 2. Tablas bajo control absoluto
                 else if (c is DataGridView dgv)
                 {
-                    // Forzamos un tamaño legible
-                    dgv.DefaultCellStyle.Font = new Font("Segoe UI", 10f, FontStyle.Regular);
-                    dgv.ColumnHeadersDefaultCellStyle.Font = new Font("Segoe UI", 10f, FontStyle.Bold);
-
-                    // Auto-ajuste de altura de filas para que la letra no se corte
+                    dgv.DefaultCellStyle.Font = new Font("Segoe UI", fuenteActual, FontStyle.Regular);
+                    dgv.ColumnHeadersDefaultCellStyle.Font = new Font("Segoe UI", fuenteActual, FontStyle.Bold);
                     dgv.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
                 }
 
-                // 3. Revisar dentro de contenedores
                 if (c.HasChildren)
                 {
                     PulirTextosYGrillas(c);
@@ -125,25 +101,25 @@ namespace AsuFit.Presentacion
             }
         }
 
-        // --- MÉTODO PARA AGRANDAR LA LETRA DEL MENÚ LATERAL ---
+        // Ajusta la fuente del menú lateral según las preferencias del usuario
         private void AjustarLetraMenu(Control contenedor)
         {
+            float fuenteActual = Properties.Settings.Default.TamanoFuente;
+
             foreach (Control c in contenedor.Controls)
             {
                 if (c is Button)
                 {
-                    // Le forzamos un tamaño base de 10f o 11f para que resalte
-                    c.Font = new Font("Segoe UI", 10f, c.Font.Style);
+                    c.Font = new Font("Segoe UI", fuenteActual, c.Font.Style);
                 }
                 else if (c.HasChildren)
                 {
-                    // Entra al panel oscuro a buscar los botones
                     AjustarLetraMenu(c);
                 }
             }
         }
 
-        // --- MÉTODO CENTRALIZADO PARA ABRIR VENTANAS (VERSIÓN NATIVA) ---
+        // Renderiza el formulario hijo aplicando la escala y las fuentes configuradas
         private void AbrirFormularioHijo(Form formularioHijo)
         {
             pnlContenedor.SuspendLayout();
@@ -156,15 +132,14 @@ namespace AsuFit.Presentacion
 
             formularioHijo.TopLevel = false;
             formularioHijo.FormBorderStyle = FormBorderStyle.None;
-            formularioHijo.Anchor = AnchorStyles.None;
+            // ELIMINADO: Anchor = None. Dejamos que quede por defecto (Top-Left) para que no pelee con nuestro centrado.
 
-            // 1. Escalar el formulario base
-            formularioHijo.Scale(new SizeF(1.4f, 1.4f));
+            float escala = Properties.Settings.Default.EscalaInterfaz;
+            formularioHijo.Scale(new SizeF(escala, escala));
 
-            // 2. Pulir los textos y grillas individualmente sin desbordar los paneles
             PulirTextosYGrillas(formularioHijo);
 
-            // Centrado
+            // Centrado inicial
             int x = (pnlContenedor.Width - formularioHijo.Width) / 2;
             int y = (pnlContenedor.Height - formularioHijo.Height) / 2;
             formularioHijo.Location = new Point(x > 0 ? x : 0, y > 0 ? y : 0);
@@ -173,6 +148,57 @@ namespace AsuFit.Presentacion
             formularioHijo.Show();
 
             pnlContenedor.ResumeLayout();
+        }
+
+        // Recibe una orden externa para re-escalar la interfaz en tiempo real
+        public void AplicarNuevaEscala(float nuevaEscala)
+        {
+            float escalaActual = Properties.Settings.Default.EscalaInterfaz;
+
+            if (escalaActual == nuevaEscala) return;
+
+            float factor = nuevaEscala / escalaActual;
+
+            // 1. Pausamos el renderizado visual
+            this.SuspendLayout();
+
+            // 2. Aplicamos el escalado físico general a todo el Dashboard
+            this.Scale(new SizeF(factor, factor));
+
+            // 3. Calculamos el tamaño de letra dinámicamente
+            float nuevaFuente = 8f + ((nuevaEscala - 1.0f) * 5f);
+
+            // 4. Guardamos en la memoria del sistema operativo
+            Properties.Settings.Default.EscalaInterfaz = nuevaEscala;
+            Properties.Settings.Default.TamanoFuente = nuevaFuente;
+            Properties.Settings.Default.Save();
+
+            // 5. Forzamos la actualización de textos y grillas
+            AjustarLetraMenu(this);
+            PulirTextosYGrillas(this);
+
+            // 6. EL FIX MAGISTRAL: Calculamos y asignamos la nueva posición MIENTRAS la pantalla está "congelada"
+            Rectangle areaTrabajo = Screen.FromControl(this).WorkingArea;
+            this.Location = new Point(
+                areaTrabajo.X + (areaTrabajo.Width - this.Width) / 2,
+                areaTrabajo.Y + (areaTrabajo.Height - this.Height) / 2
+            );
+
+            // 7. También centramos el formulario hijo abierto estando congelado
+            if (pnlContenedor.Controls.Count > 0)
+            {
+                Form hijoAbierto = pnlContenedor.Controls[0] as Form;
+                if (hijoAbierto != null)
+                {
+                    int x = (pnlContenedor.Width - hijoAbierto.Width) / 2;
+                    int y = (pnlContenedor.Height - hijoAbierto.Height) / 2;
+                    hijoAbierto.Location = new Point(x > 0 ? x : 0, y > 0 ? y : 0);
+                }
+            }
+
+            // 8. AHORA SÍ: Le decimos a Windows que dibuje todo de un solo golpe (ya posicionado)
+            this.ResumeLayout(true);
+            this.PerformLayout();
         }
         #endregion
 

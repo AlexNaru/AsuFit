@@ -22,5 +22,29 @@ namespace AsuFit.Properties {
                 return defaultInstance;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1.4")]
+        public float EscalaInterfaz {
+            get {
+                return ((float)(this["EscalaInterfaz"]));
+            }
+            set {
+                this["EscalaInterfaz"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("10")]
+        public float TamanoFuente {
+            get {
+                return ((float)(this["TamanoFuente"]));
+            }
+            set {
+                this["TamanoFuente"] = value;
+            }
+        }
     }
 }

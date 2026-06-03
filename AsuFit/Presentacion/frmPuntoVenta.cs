@@ -4,7 +4,6 @@ using AsuFit.Datos;
 using System;
 using System.Data;
 using System.Drawing;
-using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
 namespace AsuFit.Presentacion
@@ -13,17 +12,9 @@ namespace AsuFit.Presentacion
     {
         #region 1. VARIABLES GLOBALES Y CONSTRUCTOR
 
-        // Almacena el usuario que está realizando la venta
         private Usuario usuarioActual;
-        // Capa de negocio para consultar la base de datos
         private InventarioNegocio negocio = new InventarioNegocio();
-        // Tabla en memoria con todos los productos disponibles
         private DataTable dtCatalogo;
-
-        // --- Librería de Windows para poner el "Placeholder" en el buscador ---
-        [DllImport("user32.dll", CharSet = CharSet.Auto)]
-        private static extern Int32 SendMessage(IntPtr hWnd, int msg, int wParam, [MarshalAs(UnmanagedType.LPWStr)] string lParam);
-        private const int EM_SETCUEBANNER = 0x1501;
 
         public frmPuntoVenta(Usuario userLogueDado)
         {
@@ -31,11 +22,8 @@ namespace AsuFit.Presentacion
             usuarioActual = userLogueDado;
             dgvCarrito.AutoGenerateColumns = false;
 
-            // 1. Evitamos parpadeos al dibujar los controles
             this.DoubleBuffered = true;
-            // 2. Iniciamos el formulario invisible para ocultar la carga de tarjetas
             this.Opacity = 0;
-            // 3. Programamos que aparezca de golpe cuando esté listo
             this.Shown += new EventHandler(frmPuntoVenta_Shown);
         }
         #endregion
@@ -44,16 +32,14 @@ namespace AsuFit.Presentacion
 
         private void frmPuntoVenta_Load(object sender, EventArgs e)
         {
-            // Congelamos visualmente el panel de tarjetas para que no se vea cómo se arman
             flpCatalogo.SuspendLayout();
 
+            ConfigurarTemaOscuro();
             ConfigurarCarrito();
             ConfigurarFiltros();
 
-            // Traemos el inventario de la Base de Datos
             dtCatalogo = negocio.ListarProductos();
 
-            // Creamos una columna "invisible" para poder buscar productos sin importar las tildes
             dtCatalogo.Columns.Add("NombreBusqueda", typeof(string));
             foreach (DataRow row in dtCatalogo.Rows)
             {
@@ -63,32 +49,32 @@ namespace AsuFit.Presentacion
 
             ConfigurarAutocompletado();
 
-            // Forzamos la primera carga de tarjetas aplicando los filtros base
+            // FIX CRÍTICO: Generamos todas las tarjetas UNA SOLA VEZ y las dejamos en memoria.
+            GenerarTarjetasIniciales();
+
+            // Aplicamos los filtros iniciales (Solo ocultará o mostrará, sin volver a cargar imágenes)
             AplicarFiltros();
 
-            // Ponemos el texto de guía en la caja de búsqueda
-            SendMessage(txtBuscarProducto.Handle, EM_SETCUEBANNER, 1, "Buscar Bebidas, Snacks o Suplementos...");
+            AplicarPlaceholder(txtBuscarProducto, "Buscar Bebidas, Snacks o Suplementos...");
 
-            // Descongelamos el panel
             flpCatalogo.ResumeLayout(false);
+
+            this.ActiveControl = null;
         }
 
         private void frmPuntoVenta_Shown(object sender, EventArgs e)
         {
-            // Cuando la ventana terminó de procesar todo, la mostramos al 100%
             this.Opacity = 1;
         }
 
         private void ConfigurarCarrito()
         {
-            // Ajustes visuales de la tabla del carrito
             dgvCarrito.AllowUserToAddRows = false;
             dgvCarrito.RowHeadersVisible = false;
             dgvCarrito.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             dgvCarrito.ReadOnly = true;
             dgvCarrito.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
 
-            // Evitamos que los eventos de clic se registren dos veces por error
             dgvCarrito.CellContentClick -= dgvCarrito_CellContentClick;
             dgvCarrito.CellContentDoubleClick -= dgvCarrito_CellContentClick;
             dgvCarrito.CellContentClick += dgvCarrito_CellContentClick;
@@ -97,22 +83,168 @@ namespace AsuFit.Presentacion
 
         private void ConfigurarFiltros()
         {
-            // Si hay categorías cargadas, seleccionamos la primera ("Todas")
+            // FIX: Forzamos el estilo DropDownList para evitar que se puedan editar y se bugueen
+            cmbFiltroCategoria.DropDownStyle = ComboBoxStyle.DropDownList;
+            cmbOrdenar.DropDownStyle = ComboBoxStyle.DropDownList;
+
             if (cmbFiltroCategoria.Items.Count > 0) cmbFiltroCategoria.SelectedIndex = 0;
             if (cmbOrdenar.Items.Count > 0) cmbOrdenar.SelectedIndex = 0;
 
-            // Conectamos el cambio de filtro para que recargue las tarjetas automáticamente
             cmbFiltroCategoria.SelectedIndexChanged += CombosFiltro_SelectedIndexChanged;
             cmbOrdenar.SelectedIndexChanged += CombosFiltro_SelectedIndexChanged;
+
+            cmbFiltroCategoria.DropDownClosed += CombosFiltro_DropDownClosed;
+            cmbOrdenar.DropDownClosed += CombosFiltro_DropDownClosed;
         }
         #endregion
 
-        #region 3. SECCIÓN SUPERIOR: BÚSQUEDA Y FILTROS
+        #region 3. ESTILOS VISUALES (TEMA OSCURO)
+        private void ConfigurarTemaOscuro()
+        {
+            float fuenteActual = Properties.Settings.Default.TamanoFuente;
+
+            this.BackColor = Color.FromArgb(25, 28, 35);
+
+            AplicarTemaOscuroRecursivo(this, fuenteActual);
+            ConfigurarTemaOscuroGrilla(dgvCarrito, fuenteActual);
+
+            if (btnFinalizarVenta != null)
+            {
+                btnFinalizarVenta.BackColor = Color.FromArgb(25, 28, 35);
+                btnFinalizarVenta.ForeColor = Color.White;
+                btnFinalizarVenta.Font = new Font("Segoe UI", fuenteActual, FontStyle.Bold);
+                btnFinalizarVenta.FlatStyle = FlatStyle.Flat;
+                btnFinalizarVenta.FlatAppearance.BorderSize = 1;
+                btnFinalizarVenta.FlatAppearance.BorderColor = Color.FromArgb(0, 229, 255); // Borde Cian
+                btnFinalizarVenta.Cursor = Cursors.Hand;
+            }
+
+            if (btnLimpiarCarrito != null)
+            {
+                btnLimpiarCarrito.BackColor = Color.FromArgb(25, 28, 35);
+                btnLimpiarCarrito.ForeColor = Color.White;
+                btnLimpiarCarrito.Font = new Font("Segoe UI", fuenteActual, FontStyle.Bold);
+                btnLimpiarCarrito.FlatStyle = FlatStyle.Flat;
+                btnLimpiarCarrito.FlatAppearance.BorderSize = 1;
+                btnLimpiarCarrito.FlatAppearance.BorderColor = Color.FromArgb(0, 229, 255); // Borde Cian
+                btnLimpiarCarrito.Cursor = Cursors.Hand;
+            }
+        }
+
+        private void AplicarTemaOscuroRecursivo(Control contenedor, float fuente)
+        {
+            foreach (Control c in contenedor.Controls)
+            {
+                if (c is Panel || c is GroupBox)
+                {
+                    if (c.Name != "flpCatalogo")
+                    {
+                        c.BackColor = Color.FromArgb(35, 39, 47);
+                    }
+                    c.ForeColor = Color.White;
+                }
+                else if (c is Label lbl)
+                {
+                    lbl.ForeColor = Color.White;
+                    lbl.Font = new Font("Segoe UI", fuente, lbl.Font.Style);
+                }
+                else if (c is TextBox txt)
+                {
+                    txt.BackColor = Color.FromArgb(50, 55, 65);
+                    txt.ForeColor = Color.White;
+                    txt.BorderStyle = BorderStyle.FixedSingle;
+                    txt.Font = new Font("Segoe UI", fuente, FontStyle.Regular);
+                }
+                else if (c is ComboBox cmb)
+                {
+                    cmb.BackColor = Color.FromArgb(50, 55, 65);
+                    cmb.ForeColor = Color.White;
+                    cmb.FlatStyle = FlatStyle.Flat;
+                    cmb.Font = new Font("Segoe UI", fuente, FontStyle.Regular);
+                }
+                else if (c is Button btn && btn.Name != "btnFinalizarVenta" && btn.Name != "btnLimpiarCarrito")
+                {
+                    btn.BackColor = Color.FromArgb(50, 55, 65);
+                    btn.ForeColor = Color.White;
+                    btn.Font = new Font("Segoe UI", fuente, FontStyle.Bold);
+                    btn.FlatStyle = FlatStyle.Flat;
+                    btn.FlatAppearance.BorderSize = 0;
+                    btn.Cursor = Cursors.Hand;
+                }
+
+                if (c.HasChildren) AplicarTemaOscuroRecursivo(c, fuente);
+            }
+        }
+
+        private void ConfigurarTemaOscuroGrilla(DataGridView dgv, float fuente)
+        {
+            if (dgv == null) return;
+
+            dgv.BackgroundColor = Color.FromArgb(25, 28, 35);
+            dgv.BorderStyle = BorderStyle.None;
+            dgv.CellBorderStyle = DataGridViewCellBorderStyle.SingleHorizontal;
+            dgv.GridColor = Color.FromArgb(50, 55, 65);
+
+            dgv.EnableHeadersVisualStyles = false;
+            dgv.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.None;
+            dgv.ColumnHeadersDefaultCellStyle.BackColor = Color.FromArgb(35, 39, 47);
+            dgv.ColumnHeadersDefaultCellStyle.ForeColor = Color.White;
+            dgv.ColumnHeadersDefaultCellStyle.Font = new Font("Segoe UI", fuente, FontStyle.Bold);
+            dgv.ColumnHeadersDefaultCellStyle.SelectionBackColor = Color.FromArgb(35, 39, 47);
+            dgv.ColumnHeadersDefaultCellStyle.SelectionForeColor = Color.White;
+
+            dgv.DefaultCellStyle.BackColor = Color.FromArgb(25, 28, 35);
+            dgv.DefaultCellStyle.ForeColor = Color.White;
+            dgv.DefaultCellStyle.Font = new Font("Segoe UI", fuente, FontStyle.Regular);
+            dgv.DefaultCellStyle.SelectionBackColor = Color.FromArgb(0, 229, 255);
+            dgv.DefaultCellStyle.SelectionForeColor = Color.Black;
+
+            dgv.RowHeadersVisible = false;
+            dgv.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            dgv.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            dgv.AllowUserToAddRows = false;
+            dgv.ReadOnly = true;
+            dgv.RowTemplate.Height = 35;
+        }
+
+        private void AplicarPlaceholder(TextBox txt, string textoAyuda)
+        {
+            txt.Tag = textoAyuda;
+
+            if (string.IsNullOrWhiteSpace(txt.Text) || txt.Text == textoAyuda)
+            {
+                txt.Text = textoAyuda;
+                txt.ForeColor = Color.Silver;
+            }
+
+            txt.Enter += delegate
+            {
+                if (txt.Text == textoAyuda)
+                {
+                    txt.Text = "";
+                    txt.ForeColor = Color.White;
+                }
+            };
+
+            txt.Leave += delegate
+            {
+                if (string.IsNullOrWhiteSpace(txt.Text))
+                {
+                    txt.Text = textoAyuda;
+                    txt.ForeColor = Color.Silver;
+                }
+            };
+        }
+        #endregion
+
+        #region 4. SECCIÓN SUPERIOR: BÚSQUEDA Y FILTROS
 
         private void txtBuscarProducto_TextChanged(object sender, EventArgs e)
         {
-            // Busca mientras el usuario va escribiendo
-            AplicarFiltros();
+            if (txtBuscarProducto.Text != "Buscar Bebidas, Snacks o Suplementos...")
+            {
+                AplicarFiltros();
+            }
         }
 
         private void CombosFiltro_SelectedIndexChanged(object sender, EventArgs e)
@@ -120,41 +252,73 @@ namespace AsuFit.Presentacion
             AplicarFiltros();
         }
 
-        // --- MOTOR CENTRAL DE FILTRADO ---
+        private void CombosFiltro_DropDownClosed(object sender, EventArgs e)
+        {
+            // FIX: Usar BeginInvoke evita interrumpir el cierre natural del ComboBox y destraba el control
+            this.BeginInvoke(new Action(() => this.ActiveControl = null));
+        }
+
         private void AplicarFiltros()
         {
-            if (dtCatalogo == null) return;
+            if (dtCatalogo == null || flpCatalogo.Controls.Count == 0) return;
             string filtro = "";
 
-            // 1. Filtro de Texto (Buscador)
-            if (!string.IsNullOrWhiteSpace(txtBuscarProducto.Text))
+            string textoBusqueda = txtBuscarProducto.Text;
+            if (textoBusqueda == "Buscar Bebidas, Snacks o Suplementos...") textoBusqueda = "";
+
+            if (!string.IsNullOrWhiteSpace(textoBusqueda))
             {
-                string textoLimpio = QuitarAcentos(txtBuscarProducto.Text);
+                string textoLimpio = QuitarAcentos(textoBusqueda);
                 filtro = "NombreBusqueda LIKE '%" + textoLimpio + "%'";
             }
 
-            // 2. Filtro de Categoría
-            if (cmbFiltroCategoria.Text != "Todas")
+            if (cmbFiltroCategoria.Text != "Todas" && !string.IsNullOrWhiteSpace(cmbFiltroCategoria.Text))
             {
                 if (filtro.Length > 0) filtro += " AND ";
                 filtro += "Categoria = '" + cmbFiltroCategoria.Text + "'";
             }
 
-            // 3. Filtro de Reglas (Solo productos con stock mayor a cero y activos)
             if (filtro.Length > 0) filtro += " AND ";
             filtro += "StockActual > 0 AND Estado = 'Activo'";
 
-            // 4. Ordenamiento
             string orden = "Nombre ASC";
             if (cmbOrdenar.Text == "Nombre (Z-A)") orden = "Nombre DESC";
             else if (cmbOrdenar.Text == "Precio (Menor a Mayor)") orden = "PrecioVenta ASC";
             else if (cmbOrdenar.Text == "Precio (Mayor a Menor)") orden = "PrecioVenta DESC";
 
-            // Mandamos a dibujar las tarjetas con estos filtros
-            GenerarTarjetas(filtro, orden);
+            // Congelamos visualmente el panel
+            flpCatalogo.SuspendLayout();
+
+            DataView vistaFiltrada = dtCatalogo.DefaultView;
+            vistaFiltrada.RowFilter = filtro;
+            vistaFiltrada.Sort = orden;
+
+            // 1. Ocultamos TODAS las tarjetas primero
+            foreach (Control c in flpCatalogo.Controls)
+            {
+                c.Visible = false;
+            }
+
+            // 2. Mostramos SOLO las que cumplen el filtro y las ordenamos
+            int index = 0;
+            foreach (DataRowView rowView in vistaFiltrada)
+            {
+                string idProd = rowView["IdProducto"].ToString();
+
+                // Buscamos la tarjeta por su nombre único (Ej: "card_5")
+                Control[] cards = flpCatalogo.Controls.Find("card_" + idProd, false);
+                if (cards.Length > 0)
+                {
+                    Control pnl = cards[0];
+                    pnl.Visible = true;
+                    flpCatalogo.Controls.SetChildIndex(pnl, index); // Ordena la tarjeta visualmente
+                    index++;
+                }
+            }
+
+            flpCatalogo.ResumeLayout();
         }
 
-        // Configura el menú desplegable al escribir en el buscador
         private void ConfigurarAutocompletado()
         {
             AutoCompleteStringCollection listaSugerencias = new AutoCompleteStringCollection();
@@ -167,7 +331,6 @@ namespace AsuFit.Presentacion
                 if (!listaSugerencias.Contains(nombreOriginal)) listaSugerencias.Add(nombreOriginal);
                 if (!listaSugerencias.Contains(nombreSinAcento)) listaSugerencias.Add(nombreSinAcento);
 
-                // Agrega palabras sueltas mayores a 2 letras (ej: "Proteina")
                 string[] palabras = nombreSinAcento.Split(' ');
                 foreach (string palabra in palabras)
                 {
@@ -183,7 +346,6 @@ namespace AsuFit.Presentacion
             txtBuscarProducto.AutoCompleteSource = AutoCompleteSource.CustomSource;
         }
 
-        // Utilidad para limpiar textos (Ej: "BCAA's" a "BCAAs")
         private string QuitarAcentos(string texto)
         {
             if (string.IsNullOrEmpty(texto)) return texto;
@@ -199,30 +361,24 @@ namespace AsuFit.Presentacion
         }
         #endregion
 
-        #region 4. SECCIÓN IZQUIERDA: CATÁLOGO DE PRODUCTOS (TARJETAS)
+        #region 5. SECCIÓN IZQUIERDA: CATÁLOGO DE PRODUCTOS (TARJETAS)
 
-        // --- DIBUJA LOS PRODUCTOS EN PANTALLA ---
-        private void GenerarTarjetas(string filtro, string orden)
+        // Este método se ejecuta UNA SOLA VEZ y guarda las tarjetas en memoria
+        private void GenerarTarjetasIniciales()
         {
             flpCatalogo.SuspendLayout();
             flpCatalogo.Controls.Clear();
 
-            // Aplicamos los filtros a la tabla en memoria
-            DataView vistaFiltrada = dtCatalogo.DefaultView;
-            vistaFiltrada.RowFilter = filtro;
-            vistaFiltrada.Sort = orden;
+            float escalaGlobal = Properties.Settings.Default.EscalaInterfaz;
 
-            foreach (DataRowView rowView in vistaFiltrada)
+            foreach (DataRow row in dtCatalogo.Rows)
             {
-                DataRow row = rowView.Row;
-
-                // 1. Armamos el recuadro principal (Tarjeta)
                 Panel pnlCard = new Panel();
+                pnlCard.Name = "card_" + row["IdProducto"].ToString(); // Nombre único para encontrarla rápido
                 pnlCard.Size = new Size(180, 240);
-                pnlCard.BackColor = Color.FromArgb(45, 45, 48); // Gris oscuro premium
+                pnlCard.BackColor = Color.FromArgb(45, 45, 48);
                 pnlCard.Margin = new Padding(10);
 
-                // 2. Colocamos la foto
                 PictureBox pic = new PictureBox();
                 pic.Size = new Size(140, 110);
                 pic.Location = new Point(20, 15);
@@ -240,56 +396,49 @@ namespace AsuFit.Presentacion
                     }
                 }
 
-                // 3. Nombre del producto
                 Label lblNombre = new Label();
                 lblNombre.Text = row["Nombre"].ToString();
                 lblNombre.ForeColor = Color.White;
-                lblNombre.Font = new Font("Segoe UI", 11, FontStyle.Regular);
-                lblNombre.Location = new Point(10, 135);
+                lblNombre.Font = new Font("Segoe UI", 9, FontStyle.Regular);
+                lblNombre.Location = new Point(10, 132);
                 lblNombre.AutoSize = false;
-                lblNombre.Size = new Size(160, 35);
+                lblNombre.Size = new Size(160, 32);
 
-                // 4. Precio
                 Label lblPrecio = new Label();
                 lblPrecio.Text = "Gs. " + Convert.ToDecimal(row["PrecioVenta"]).ToString("N0");
                 lblPrecio.ForeColor = Color.White;
-                lblPrecio.Font = new Font("Segoe UI", 14, FontStyle.Bold);
-                lblPrecio.Location = new Point(10, 170);
+                lblPrecio.Font = new Font("Segoe UI", 12, FontStyle.Bold);
+                lblPrecio.Location = new Point(10, 166);
                 lblPrecio.AutoSize = true;
 
-                // 5. Stock disponible
                 Label lblStock = new Label();
                 lblStock.Text = "Stock: " + row["StockActual"].ToString();
                 lblStock.ForeColor = Color.LightGray;
-                lblStock.Font = new Font("Segoe UI", 11, FontStyle.Regular);
-                lblStock.Location = new Point(115, 175);
+                lblStock.Font = new Font("Segoe UI", 9, FontStyle.Regular);
+                lblStock.Location = new Point(115, 171);
                 lblStock.AutoSize = true;
 
-                // 6. Botón de agregar
                 Button btnAgregar = new Button();
                 btnAgregar.Text = "AGREGAR AL CARRITO";
-                btnAgregar.BackColor = Color.FromArgb(0, 229, 255); // Color Cian AsuFit
-                btnAgregar.ForeColor = Color.FromArgb(25, 28, 35); // Texto Oscuro
+                btnAgregar.BackColor = Color.FromArgb(0, 229, 255);
+                btnAgregar.ForeColor = Color.Black;
                 btnAgregar.FlatStyle = FlatStyle.Flat;
                 btnAgregar.FlatAppearance.BorderSize = 0;
-                btnAgregar.Location = new Point(10, 200);
-                btnAgregar.Size = new Size(160, 30);
+                btnAgregar.Location = new Point(10, 198);
+                btnAgregar.Size = new Size(160, 28);
                 btnAgregar.Cursor = Cursors.Hand;
-                btnAgregar.Tag = row["IdProducto"]; // Guardamos el ID secreto en el botón
+                btnAgregar.Tag = row["IdProducto"];
                 btnAgregar.Click += BtnAgregar_Click;
-                btnAgregar.Font = new Font("Segoe UI", 10, FontStyle.Bold);
+                btnAgregar.Font = new Font("Segoe UI", 8, FontStyle.Bold);
 
-                // Unimos todas las piezas a la tarjeta
                 pnlCard.Controls.Add(pic);
                 pnlCard.Controls.Add(lblNombre);
                 pnlCard.Controls.Add(lblPrecio);
                 pnlCard.Controls.Add(lblStock);
                 pnlCard.Controls.Add(btnAgregar);
 
-                // Escalamos la tarjeta (como pediste en tu diseño)
-                pnlCard.Scale(new SizeF(1.4f, 1.4f));
+                pnlCard.Scale(new SizeF(escalaGlobal, escalaGlobal));
 
-                // Metemos la tarjeta terminada en el panel gigante
                 flpCatalogo.Controls.Add(pnlCard);
             }
 
@@ -298,11 +447,9 @@ namespace AsuFit.Presentacion
 
         private void BtnAgregar_Click(object sender, EventArgs e)
         {
-            // Extraemos el ID del producto desde el botón que fue clickeado
             Button btnClick = (Button)sender;
             int idProducto = Convert.ToInt32(btnClick.Tag);
 
-            // Buscamos los datos del producto en el catálogo en memoria
             DataRow[] filaProducto = dtCatalogo.Select("IdProducto = " + idProducto);
 
             if (filaProducto.Length > 0)
@@ -314,7 +461,6 @@ namespace AsuFit.Presentacion
 
                 bool existeEnCarrito = false;
 
-                // Revisamos si el producto ya está en el carrito para solo sumarle +1
                 foreach (DataGridViewRow row in dgvCarrito.Rows)
                 {
                     if (Convert.ToInt32(row.Cells["colCarritoId"].Value) == idProducto)
@@ -327,7 +473,6 @@ namespace AsuFit.Presentacion
                     }
                 }
 
-                // Si no existía, creamos una nueva fila
                 if (!existeEnCarrito)
                 {
                     int rowIndex = dgvCarrito.Rows.Add();
@@ -347,9 +492,8 @@ namespace AsuFit.Presentacion
         }
         #endregion
 
-        #region 5. SECCIÓN DERECHA: CARRITO DE COMPRAS Y TABLA
+        #region 6. SECCIÓN DERECHA: CARRITO DE COMPRAS Y TABLA
 
-        // --- MANEJO DE LOS BOTONCITOS +, - Y X DENTRO DE LA TABLA ---
         private void dgvCarrito_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex >= 0)
@@ -377,7 +521,6 @@ namespace AsuFit.Presentacion
                     }
                     else
                     {
-                        // Si era 1 y le resta, lo elimina del carrito
                         dgvCarrito.Rows.RemoveAt(e.RowIndex);
                         ActualizarTotal();
                     }
@@ -401,16 +544,14 @@ namespace AsuFit.Presentacion
             lblTotalPagar.Text = "Gs. " + totalPagar.ToString("N0");
         }
 
-        // Quita la selección azul fea que aparece al hacer clic en una celda
         private void dgvCarrito_SelectionChanged(object sender, EventArgs e)
         {
             dgvCarrito.ClearSelection();
         }
         #endregion
 
-        #region 6. ACCIONES FINALES: LIMPIAR Y VENDER
+        #region 7. ACCIONES FINALES: LIMPIAR Y VENDER
 
-        // Vacía la tabla visual del carrito
         public void LimpiarGrillaVisual()
         {
             dgvCarrito.Rows.Clear();
@@ -421,7 +562,6 @@ namespace AsuFit.Presentacion
         {
             LimpiarGrillaVisual();
 
-            // Limpia los datos de la memoria global
             for (int i = CarritoGlobal.Detalles.Rows.Count - 1; i >= 0; i--)
             {
                 if (Convert.ToInt32(CarritoGlobal.Detalles.Rows[i]["IdProducto"]) > 0)
@@ -430,7 +570,6 @@ namespace AsuFit.Presentacion
                 }
             }
 
-            // Si la caja de cobro estaba abierta, le avisa que se limpió el carrito
             frmCajaCobro cajaAbierta = Application.OpenForms["frmCajaCobro"] as frmCajaCobro;
             if (cajaAbierta != null) cajaAbierta.ActualizarPantallaDesdeCarrito();
         }
@@ -445,7 +584,6 @@ namespace AsuFit.Presentacion
 
             try
             {
-                // Limpiamos el carrito global viejo antes de mandar la nueva tanda
                 for (int i = CarritoGlobal.Detalles.Rows.Count - 1; i >= 0; i--)
                 {
                     if (Convert.ToInt32(CarritoGlobal.Detalles.Rows[i]["IdProducto"]) > 0)
@@ -454,7 +592,6 @@ namespace AsuFit.Presentacion
                     }
                 }
 
-                // Transferimos todo lo de la grilla visual al carrito global (memoria)
                 foreach (DataGridViewRow row in dgvCarrito.Rows)
                 {
                     int idProd = Convert.ToInt32(row.Cells["colCarritoId"].Value);
@@ -467,7 +604,6 @@ namespace AsuFit.Presentacion
                     CarritoGlobal.AgregarItem(idProd, codigoDeBarras, concepto, cant, precio, iva);
                 }
 
-                // Abrimos la ventana de cobro (o la traemos al frente si ya estaba abierta)
                 frmCajaCobro cajaAbierta = Application.OpenForms["frmCajaCobro"] as frmCajaCobro;
 
                 if (cajaAbierta != null)

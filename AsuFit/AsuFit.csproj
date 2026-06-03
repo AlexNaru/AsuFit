@@ -61,6 +61,7 @@
     <Compile Include="Datos\AsistenciaDatos.cs" />
     <Compile Include="Datos\AuditoriaDatos.cs" />
     <Compile Include="Datos\Conexion.cs" />
+    <Compile Include="Datos\ConfiguracionDatos.cs" />
     <Compile Include="Datos\DashboardDatos.cs" />
     <Compile Include="Datos\GastoDatos.cs" />
     <Compile Include="Datos\GestorAuditoria.cs" />
@@ -75,6 +76,7 @@
     <Compile Include="Entidades\Asistencia.cs" />
     <Compile Include="Entidades\AuditoriaLog.cs" />
     <Compile Include="Entidades\CarritoGlobal.cs" />
+    <Compile Include="Entidades\Configuracion.cs" />
     <Compile Include="Entidades\DetalleVenta.cs" />
     <Compile Include="Entidades\Gasto.cs" />
     <Compile Include="Entidades\Pago.cs" />
@@ -89,6 +91,7 @@
     <Compile Include="Negocio\ArqueoNegocio.cs" />
     <Compile Include="Negocio\AsistenciaNegocio.cs" />
     <Compile Include="Negocio\AuditoriaNegocio.cs" />
+    <Compile Include="Negocio\ConfiguracionNegocio.cs" />
     <Compile Include="Negocio\DashboardNegocio.cs" />
     <Compile Include="Negocio\GastoNegocio.cs" />
     <Compile Include="Negocio\IngresoMercaderiaNegocio.cs" />

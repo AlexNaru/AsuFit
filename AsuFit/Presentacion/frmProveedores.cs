@@ -3,7 +3,7 @@ using AsuFit.Entidades;
 using AsuFit.Negocio;
 using System;
 using System.Data;
-using System.Runtime.InteropServices;
+using System.Drawing;
 using System.Windows.Forms;
 
 namespace AsuFit.Presentacion
@@ -11,10 +11,6 @@ namespace AsuFit.Presentacion
     public partial class frmProveedores : Form
     {
         #region 1. VARIABLES GLOBALES Y CONSTRUCTOR
-        [DllImport("user32.dll", CharSet = CharSet.Auto)]
-        private static extern Int32 SendMessage(IntPtr hWnd, int msg, int wParam, [MarshalAs(UnmanagedType.LPWStr)] string lParam);
-        private const int EM_SETCUEBANNER = 0x1501;
-
         private DataTable dtProveedores;
         private ProveedorNegocio negocio = new ProveedorNegocio();
         private Usuario usuarioActual;
@@ -30,15 +26,14 @@ namespace AsuFit.Presentacion
         #region 2. INICIALIZACIÓN Y CARGA DE DATOS
         private void frmProveedores_Load(object sender, EventArgs e)
         {
-            ConfigurarBuscador();
+            ConfigurarTemaOscuro();
             CargarGrilla();
-            txtBuscarProveedor.Focus();
-        }
 
-        private void ConfigurarBuscador()
-        {
-            txtBuscarProveedor.ForeColor = System.Drawing.Color.Black;
-            SendMessage(txtBuscarProveedor.Handle, EM_SETCUEBANNER, 1, "Buscar por Nombre o RUC...");
+            // FIX: Aplicamos el placeholder interactivo estilo AsuFit
+            AplicarPlaceholder(txtBuscarProveedor, "Buscar por Nombre o RUC...");
+
+            // Liberamos el foco para que se vea el placeholder
+            this.ActiveControl = null;
         }
 
         private void CargarGrilla()
@@ -58,7 +53,134 @@ namespace AsuFit.Presentacion
         }
         #endregion
 
-        #region 3. SECCIÓN IZQUIERDA: CATÁLOGO Y BÚSQUEDA
+        #region 3. ESTILOS VISUALES (UI)
+        private void ConfigurarTemaOscuro()
+        {
+            float fuenteGlobal = Properties.Settings.Default.TamanoFuente;
+
+            this.BackColor = Color.FromArgb(25, 28, 35);
+
+            AplicarTemaOscuroRecursivo(this, fuenteGlobal);
+            ConfigurarTemaOscuroGrilla(dgvProveedores, fuenteGlobal);
+        }
+
+        private void AplicarTemaOscuroRecursivo(Control contenedor, float fuente)
+        {
+            foreach (Control c in contenedor.Controls)
+            {
+                if (c is Panel || c is GroupBox)
+                {
+                    c.BackColor = Color.FromArgb(35, 39, 47);
+                    c.ForeColor = Color.White;
+                }
+                else if (c is Label lbl)
+                {
+                    lbl.ForeColor = Color.White;
+                }
+                else if (c is CheckBox chk)
+                {
+                    chk.ForeColor = Color.White;
+                }
+                else if (c is TextBox txt)
+                {
+                    txt.BackColor = Color.FromArgb(50, 55, 65);
+                    txt.ForeColor = Color.White;
+                    txt.BorderStyle = BorderStyle.FixedSingle;
+                }
+                else if (c is ComboBox cmb)
+                {
+                    cmb.BackColor = Color.FromArgb(50, 55, 65);
+                    cmb.ForeColor = Color.White;
+                    cmb.FlatStyle = FlatStyle.Flat;
+                }
+                else if (c is Button btn)
+                {
+                    btn.Font = new Font("Segoe UI", fuente, FontStyle.Bold);
+                    btn.FlatStyle = FlatStyle.Flat;
+                    btn.FlatAppearance.BorderSize = 0;
+                    btn.Cursor = Cursors.Hand;
+
+                    if (btn.Name.Contains("Limpiar") || btn.Name.Contains("Cancelar"))
+                    {
+                        btn.BackColor = Color.FromArgb(50, 55, 65);
+                        btn.ForeColor = Color.White;
+                    }
+                    else
+                    {
+                        btn.BackColor = Color.FromArgb(0, 229, 255);
+                        btn.ForeColor = Color.Black;
+                    }
+                }
+
+                if (c.HasChildren) AplicarTemaOscuroRecursivo(c, fuente);
+            }
+        }
+
+        private void ConfigurarTemaOscuroGrilla(DataGridView dgv, float fuente)
+        {
+            dgv.BackgroundColor = Color.FromArgb(25, 28, 35);
+            dgv.BorderStyle = BorderStyle.None;
+            dgv.CellBorderStyle = DataGridViewCellBorderStyle.SingleHorizontal;
+            dgv.GridColor = Color.FromArgb(50, 55, 65);
+
+            dgv.EnableHeadersVisualStyles = false;
+            dgv.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.None;
+            dgv.ColumnHeadersDefaultCellStyle.BackColor = Color.FromArgb(35, 39, 47);
+            dgv.ColumnHeadersDefaultCellStyle.ForeColor = Color.White;
+            dgv.ColumnHeadersDefaultCellStyle.Font = new Font("Segoe UI", fuente, FontStyle.Bold);
+
+            dgv.ColumnHeadersDefaultCellStyle.SelectionBackColor = Color.FromArgb(35, 39, 47);
+            dgv.ColumnHeadersDefaultCellStyle.SelectionForeColor = Color.White;
+
+            dgv.DefaultCellStyle.BackColor = Color.FromArgb(25, 28, 35);
+            dgv.DefaultCellStyle.ForeColor = Color.White;
+            dgv.DefaultCellStyle.SelectionBackColor = Color.FromArgb(0, 229, 255);
+            dgv.DefaultCellStyle.SelectionForeColor = Color.Black;
+
+            dgv.RowHeadersVisible = false;
+            dgv.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            dgv.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            dgv.AllowUserToAddRows = false;
+            dgv.ReadOnly = true;
+            dgv.RowTemplate.Height = 35;
+        }
+
+        // --- MÉTODO INTELIGENTE DE PLACEHOLDER ---
+        private void AplicarPlaceholder(TextBox txt, string textoAyuda)
+        {
+            txt.Tag = textoAyuda;
+
+            if (string.IsNullOrWhiteSpace(txt.Text) || txt.Text == textoAyuda)
+            {
+                txt.Text = textoAyuda;
+                txt.ForeColor = Color.Silver;
+            }
+            else
+            {
+                txt.ForeColor = Color.White;
+            }
+
+            txt.Enter += delegate
+            {
+                if (txt.Text == textoAyuda)
+                {
+                    txt.Text = "";
+                    txt.ForeColor = Color.White;
+                }
+            };
+
+            txt.Leave += delegate
+            {
+                if (string.IsNullOrWhiteSpace(txt.Text))
+                {
+                    txt.Text = textoAyuda;
+                    txt.ForeColor = Color.Silver;
+                }
+            };
+        }
+        #endregion
+
+        #region 4. SECCIÓN IZQUIERDA: CATÁLOGO Y BÚSQUEDA
         private void FiltrarDatos()
         {
             if (dtProveedores == null) return;
@@ -118,7 +240,7 @@ namespace AsuFit.Presentacion
         }
         #endregion
 
-        #region 4. SECCIÓN DERECHA SUPERIOR: DETALLES DEL PROVEEDOR Y ACCIONES
+        #region 5. SECCIÓN DERECHA SUPERIOR: DETALLES DEL PROVEEDOR Y ACCIONES
         private void btnNuevo_Click(object sender, EventArgs e)
         {
             LimpiarFormulario();
@@ -205,16 +327,30 @@ namespace AsuFit.Presentacion
             chkActivo.Checked = true;
 
             dgvProveedores.ClearSelection();
-            txtNombre.Focus();
+
+            txtBuscarProveedor.Text = "";
+            txtBuscarProveedor.Focus();
+            this.ActiveControl = null;
         }
 
         private void LimpiarSeleccion_Click(object sender, EventArgs e)
         {
             LimpiarFormulario();
         }
+
+        // --- EVENTOS PARA QUITAR EL AZUL DEL COMBOBOX ---
+        private void cmbCategoria_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            this.ActiveControl = null;
+        }
+
+        private void cmbCategoria_DropDownClosed(object sender, EventArgs e)
+        {
+            this.ActiveControl = null;
+        }
         #endregion
 
-        #region 5. SECCIÓN DERECHA INFERIOR: RESUMEN
+        #region 6. SECCIÓN DERECHA INFERIOR: RESUMEN
         private void ActualizarResumen()
         {
             if (dtProveedores == null) return;

@@ -216,9 +216,13 @@ namespace AsuFit.Presentacion
         #endregion
 
         #region 6. MÉTODOS AUXILIARES DE FORMULARIO EMERGENTE
+        // Configura la escala, fuente y posición del formulario emergente DENTRO DE LA ESCALA ACTUAL
         private void PrepararFormularioComoDashboard(Form frm)
         {
-            frm.Scale(new SizeF(1.4f, 1.4f));
+            float escalaActual = Properties.Settings.Default.EscalaInterfaz;
+
+            // Aplica la escala elegida por el usuario
+            frm.Scale(new SizeF(escalaActual, escalaActual));
             AjustarFuentes(frm);
 
             frm.StartPosition = FormStartPosition.Manual;
@@ -237,13 +241,16 @@ namespace AsuFit.Presentacion
             }
         }
 
+        // Ajusta recursivamente el tamaño de fuente utilizando la configuración de usuario
         private void AjustarFuentes(Control contenedor)
         {
+            float fuenteActual = Properties.Settings.Default.TamanoFuente;
+
             foreach (Control c in contenedor.Controls)
             {
                 if (c is TextBox || c is ComboBox || c is Label || c is DataGridView)
                 {
-                    c.Font = new Font("Segoe UI", 10f, c.Font.Style);
+                    c.Font = new Font("Segoe UI", fuenteActual, c.Font.Style);
                 }
                 else if (c.HasChildren)
                 {

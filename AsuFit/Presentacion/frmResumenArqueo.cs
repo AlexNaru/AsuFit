@@ -1,8 +1,8 @@
 ﻿using AsuFit.Reportes;
+using AsuFit.Negocio;
+using AsuFit.Entidades;
 using System;
-using System.Data.SqlClient;
-using System.Net;
-using System.Net.Mail;
+using System.Drawing;
 using System.Windows.Forms;
 
 namespace AsuFit.Presentacion
@@ -10,21 +10,21 @@ namespace AsuFit.Presentacion
     public partial class frmResumenArqueo : Form
     {
         private int idTurnoActual;
-        private DateTime aperturaActual; // Variable para enviar al PDF
+        private DateTime aperturaActual;
+        private decimal diferenciaActual;
 
-        // 1. CONSTRUCTOR ACTUALIZADO
+        // 1. CONSTRUCTOR ACTUALIZADO (A prueba de fallos)
         public frmResumenArqueo(int idTurno, string cajero, DateTime apertura, decimal trans, decimal efvo, decimal fondo, decimal gastos, decimal esperado, decimal contado, decimal diferencia)
         {
             InitializeComponent();
             idTurnoActual = idTurno;
             aperturaActual = apertura;
+            diferenciaActual = diferencia;
 
-            // Rellenamos las fechas y el cajero
             lblCajeroEncargado.Text = $"Cajero encargado: {cajero}";
             lblDatosApertura.Text = $"Apertura: {apertura.ToString("dd MMM yyyy, hh:mm tt")}";
             lblDatosCierre.Text = $"Cierre: {DateTime.Now.ToString("dd MMM yyyy, hh:mm tt")}";
 
-            // Rellenamos agregando "Gs. "
             lblResumenTransferencia.Text = "Gs. " + trans.ToString("N0");
             lblResumenEfectivo.Text = "Gs. " + efvo.ToString("N0");
             lblResumenTotalIngresos.Text = "Gs. " + (trans + efvo).ToString("N0");
@@ -36,17 +36,94 @@ namespace AsuFit.Presentacion
             lblResumenContado.Text = "Gs. " + contado.ToString("N0");
             lblResumenDiferencia.Text = "Gs. " + diferencia.ToString("N0");
 
-            // Si falta plata, pintamos de rojo. Si sobra o cuadra perfecto a 0, de verde.
-            if (diferencia < 0)
+            // Llamamos a las configuraciones de interfaz directamente desde el constructor
+            ConfigurarTemaYEscala();
+            CentrarFormulario();
+        }
+
+        #region ESTILOS VISUALES Y ESCALADO
+        private void ConfigurarTemaYEscala()
+        {
+            // BLOQUEO DE REDIMENSIONAMIENTO Y PANTALLA COMPLETA
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
+            this.FormBorderStyle = FormBorderStyle.FixedSingle;
+
+            float escalaActual = Properties.Settings.Default.EscalaInterfaz;
+            float fuenteActual = Properties.Settings.Default.TamanoFuente;
+
+            this.Scale(new SizeF(escalaActual, escalaActual));
+            AjustarFuentesRecursivo(this, fuenteActual);
+
+            this.BackColor = Color.FromArgb(25, 28, 35);
+            AplicarTemaOscuroRecursivo(this);
+
+            if (diferenciaActual < 0) lblResumenDiferencia.ForeColor = Color.LightCoral;
+            else lblResumenDiferencia.ForeColor = Color.MediumSeaGreen;
+
+            if (btnAceptarEnviar != null)
             {
-                lblResumenDiferencia.ForeColor = System.Drawing.Color.Red;
-            }
-            else
-            {
-                lblResumenDiferencia.ForeColor = System.Drawing.Color.MediumSeaGreen;
+                btnAceptarEnviar.BackColor = Color.FromArgb(0, 229, 255);
+                btnAceptarEnviar.ForeColor = Color.Black;
+                btnAceptarEnviar.FlatStyle = FlatStyle.Flat;
+                btnAceptarEnviar.FlatAppearance.BorderSize = 0;
             }
         }
 
+        private void AplicarTemaOscuroRecursivo(Control contenedor)
+        {
+            foreach (Control c in contenedor.Controls)
+            {
+                if (c is Panel || c is GroupBox)
+                {
+                    c.BackColor = Color.FromArgb(35, 39, 47);
+                    c.ForeColor = Color.White;
+                }
+                else if (c is Label lbl && lbl.Name != "lblResumenDiferencia")
+                {
+                    lbl.ForeColor = Color.White;
+                    lbl.BackColor = Color.Transparent;
+                }
+
+                if (c.HasChildren) AplicarTemaOscuroRecursivo(c);
+            }
+        }
+
+        private void AjustarFuentesRecursivo(Control contenedor, float fuente)
+        {
+            foreach (Control c in contenedor.Controls)
+            {
+                if (c is Label || c is Button)
+                {
+                    c.Font = new Font("Segoe UI", fuente, c.Font.Style);
+                }
+                if (c.HasChildren) AjustarFuentesRecursivo(c, fuente);
+            }
+        }
+
+        private void CentrarFormulario()
+        {
+            Form padre = Application.OpenForms["frmDashboard"];
+            if (padre != null)
+            {
+                Control[] controles = padre.Controls.Find("pnlContenedor", true);
+                if (controles.Length > 0)
+                {
+                    Control contenedor = controles[0];
+                    Point posicionAbsoluta = contenedor.PointToScreen(Point.Empty);
+
+                    this.StartPosition = FormStartPosition.Manual;
+                    int x = posicionAbsoluta.X + (contenedor.Width - this.Width) / 2;
+                    int y = posicionAbsoluta.Y + (contenedor.Height - this.Height) / 2;
+                    this.Location = new Point(x > 0 ? x : 0, y > 0 ? y : 0);
+                    return;
+                }
+            }
+            this.CenterToScreen();
+        }
+        #endregion
+
+        // 3. ACCIONES Y REPORTES
         private void btnAceptarEnviar_Click(object sender, EventArgs e)
         {
             try
@@ -59,7 +136,7 @@ namespace AsuFit.Presentacion
                 decimal contado = Convert.ToDecimal(lblResumenContado.Text.Replace("Gs. ", "").Replace(".", ""));
                 decimal diferencia = Convert.ToDecimal(lblResumenDiferencia.Text.Replace("Gs. ", "").Replace(".", ""));
 
-                // Generamos el PDF pasando también la fecha de apertura
+                // La capa de reportes hace el PDF
                 GeneradorPDF generador = new GeneradorPDF();
                 string rutaPDFGenerado = generador.GenerarTicketArqueo(
                     idTurnoActual,
@@ -68,7 +145,7 @@ namespace AsuFit.Presentacion
                     trans, efvo, fondo, gastos, esperado, contado, diferencia
                 );
 
-                // Enviar por correo corporativo
+                // Llamada completamente limpia
                 EnviarCorreoArqueo(rutaPDFGenerado);
 
                 MessageBox.Show("¡El turno se ha cerrado completamente y el reporte fue guardado y enviado!", "Cierre Exitoso", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -84,62 +161,39 @@ namespace AsuFit.Presentacion
             }
         }
 
+        // --- SOLUCIÓN ARQUITECTÓNICA ---
         private void EnviarCorreoArqueo(string rutaArchivoAdjunto)
         {
-            string miCorreo = "";
-            string miContrasenaApp = "";
-            string nombreGym = "AsuFit GYM";
-
-            // LEER DESDE LA BASE DE DATOS
-            using (SqlConnection oConexion = AsuFit.Datos.Conexion.ObtenerConexion())
+            try
             {
-                string query = "SELECT CorreoEmisor, ContrasenaCorreo, NombreGimnasio FROM Configuracion WHERE IdConfiguracion = 1";
-                SqlCommand cmd = new SqlCommand(query, oConexion);
-                oConexion.Open();
-                using (SqlDataReader reader = cmd.ExecuteReader())
-                {
-                    if (reader.Read())
-                    {
-                        miCorreo = reader["CorreoEmisor"].ToString();
-                        miContrasenaApp = reader["ContrasenaCorreo"].ToString();
-                        nombreGym = reader["NombreGimnasio"].ToString();
-                    }
-                }
+                // 1. Instanciamos la capa de Negocio
+                ConfiguracionNegocio negocioConfig = new ConfiguracionNegocio();
+
+                // 2. Le pedimos a Negocio que nos traiga la configuración de la BD
+                Configuracion config = negocioConfig.ObtenerConfiguracion();
+
+                // Si no hay correo configurado, simplemente no enviamos nada
+                if (string.IsNullOrWhiteSpace(config.CorreoEmisor)) return;
+
+                // 3. Preparamos el diseño del correo (Esto sí es tarea de la capa de Presentación)
+                string asunto = $"Cierre de Caja N° {idTurnoActual} - {config.NombreGimnasio}";
+                string cuerpoHtml = $@"
+                <div style='font-family: Arial; color: #333; padding: 20px; border: 1px solid #eaeaea;'>
+                    <h2 style='color: #2E86C1;'>Reporte de Cierre de Caja</h2>
+                    <p>Se ha registrado un nuevo cierre de turno. Adjuntamos el reporte detallado en PDF.</p>
+                    <p><strong>Cajero:</strong> {lblCajeroEncargado.Text.Replace("Cajero encargado: ", "")}</p>
+                    <p><strong>Diferencia declarada:</strong> {lblResumenDiferencia.Text}</p>
+                    <hr>
+                    <p style='font-size: 12px;'>Sistema de Gestión AsuFit</p>
+                </div>";
+
+                // 4. Le ordenamos a la capa de Negocio que envíe el correo (Delegamos la responsabilidad)
+                negocioConfig.EnviarCorreoConAdjunto(config.CorreoEmisor, asunto, cuerpoHtml, rutaArchivoAdjunto);
             }
-
-            if (string.IsNullOrWhiteSpace(miCorreo) || string.IsNullOrWhiteSpace(miContrasenaApp)) return;
-
-            MailMessage correo = new MailMessage();
-            correo.From = new MailAddress(miCorreo, nombreGym);
-            correo.To.Add(miCorreo); // Se auto-envía al correo del gimnasio
-            correo.Subject = $"Cierre de Caja N° {idTurnoActual} - {nombreGym}";
-
-            string cuerpoHtml = $@"
-            <div style='font-family: Arial; color: #333; padding: 20px; border: 1px solid #eaeaea;'>
-                <h2 style='color: #2E86C1;'>Reporte de Cierre de Caja</h2>
-                <p>Se ha registrado un nuevo cierre de turno. Adjuntamos el reporte detallado en PDF.</p>
-                <p><strong>Cajero:</strong> {lblCajeroEncargado.Text.Replace("Cajero encargado: ", "")}</p>
-                <p><strong>Diferencia declarada:</strong> {lblResumenDiferencia.Text}</p>
-                <hr>
-                <p style='font-size: 12px;'>Sistema de Gestión AsuFit</p>
-            </div>";
-
-            correo.Body = cuerpoHtml;
-            correo.IsBodyHtml = true;
-
-            if (System.IO.File.Exists(rutaArchivoAdjunto))
+            catch (Exception ex)
             {
-                correo.Attachments.Add(new Attachment(rutaArchivoAdjunto));
+                throw new Exception("No se pudo enviar el correo: " + ex.Message);
             }
-
-            SmtpClient smtp = new SmtpClient("smtp.gmail.com");
-            smtp.Port = 587;
-            smtp.EnableSsl = true;
-            smtp.UseDefaultCredentials = false;
-            smtp.DeliveryMethod = SmtpDeliveryMethod.Network;
-            smtp.Credentials = new NetworkCredential(miCorreo, miContrasenaApp);
-
-            smtp.Send(correo);
         }
     }
 }

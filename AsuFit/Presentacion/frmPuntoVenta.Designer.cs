@@ -28,12 +28,12 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle9 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle12 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle10 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle11 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.button1 = new System.Windows.Forms.Button();
+            this.btnLimpiarCarrito = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.btnFinalizarVenta = new System.Windows.Forms.Button();
             this.lblTotalPagar = new System.Windows.Forms.Label();
@@ -62,30 +62,30 @@
             // panel1
             // 
             this.panel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(40)))), ((int)(((byte)(48)))));
-            this.panel1.Controls.Add(this.button1);
+            this.panel1.Controls.Add(this.btnLimpiarCarrito);
             this.panel1.Controls.Add(this.label1);
             this.panel1.Controls.Add(this.btnFinalizarVenta);
             this.panel1.Controls.Add(this.lblTotalPagar);
             this.panel1.Controls.Add(this.dgvCarrito);
             this.panel1.Location = new System.Drawing.Point(632, 42);
-            this.panel1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.panel1.Margin = new System.Windows.Forms.Padding(2);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(325, 513);
             this.panel1.TabIndex = 4;
             // 
-            // button1
+            // btnLimpiarCarrito
             // 
-            this.button1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(25)))), ((int)(((byte)(28)))), ((int)(((byte)(35)))));
-            this.button1.FlatAppearance.BorderSize = 0;
-            this.button1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button1.Location = new System.Drawing.Point(102, 424);
-            this.button1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(117, 23);
-            this.button1.TabIndex = 2;
-            this.button1.Text = "LIMPIAR CARRITO";
-            this.button1.UseVisualStyleBackColor = false;
-            this.button1.Click += new System.EventHandler(this.btnLimpiarCarrito_Click);
+            this.btnLimpiarCarrito.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(25)))), ((int)(((byte)(28)))), ((int)(((byte)(35)))));
+            this.btnLimpiarCarrito.FlatAppearance.BorderSize = 0;
+            this.btnLimpiarCarrito.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnLimpiarCarrito.Location = new System.Drawing.Point(102, 424);
+            this.btnLimpiarCarrito.Margin = new System.Windows.Forms.Padding(2);
+            this.btnLimpiarCarrito.Name = "btnLimpiarCarrito";
+            this.btnLimpiarCarrito.Size = new System.Drawing.Size(117, 23);
+            this.btnLimpiarCarrito.TabIndex = 2;
+            this.btnLimpiarCarrito.Text = "LIMPIAR CARRITO";
+            this.btnLimpiarCarrito.UseVisualStyleBackColor = false;
+            this.btnLimpiarCarrito.Click += new System.EventHandler(this.btnLimpiarCarrito_Click);
             // 
             // label1
             // 
@@ -105,7 +105,7 @@
             this.btnFinalizarVenta.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnFinalizarVenta.ForeColor = System.Drawing.Color.Black;
             this.btnFinalizarVenta.Location = new System.Drawing.Point(102, 460);
-            this.btnFinalizarVenta.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btnFinalizarVenta.Margin = new System.Windows.Forms.Padding(2);
             this.btnFinalizarVenta.Name = "btnFinalizarVenta";
             this.btnFinalizarVenta.Size = new System.Drawing.Size(117, 23);
             this.btnFinalizarVenta.TabIndex = 1;
@@ -130,14 +130,14 @@
             this.dgvCarrito.AllowUserToResizeRows = false;
             this.dgvCarrito.BackgroundColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(39)))), ((int)(((byte)(47)))));
             this.dgvCarrito.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.SingleHorizontal;
-            dataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle9.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(24)))), ((int)(((byte)(30)))));
-            dataGridViewCellStyle9.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle9.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(200)))), ((int)(((byte)(200)))));
-            dataGridViewCellStyle9.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle9.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle9.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dgvCarrito.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle9;
+            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle5.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(24)))), ((int)(((byte)(30)))));
+            dataGridViewCellStyle5.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle5.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(200)))), ((int)(((byte)(200)))));
+            dataGridViewCellStyle5.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle5.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dgvCarrito.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle5;
             this.dgvCarrito.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvCarrito.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.colCarritoId,
@@ -150,18 +150,18 @@
             this.colCarritoSubtotal,
             this.colCarritoEliminar,
             this.colCarritoIva});
-            dataGridViewCellStyle12.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle12.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(40)))), ((int)(((byte)(48)))));
-            dataGridViewCellStyle12.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle12.ForeColor = System.Drawing.Color.White;
-            dataGridViewCellStyle12.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle12.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle12.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dgvCarrito.DefaultCellStyle = dataGridViewCellStyle12;
+            dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle8.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(40)))), ((int)(((byte)(48)))));
+            dataGridViewCellStyle8.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle8.ForeColor = System.Drawing.Color.White;
+            dataGridViewCellStyle8.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle8.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle8.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dgvCarrito.DefaultCellStyle = dataGridViewCellStyle8;
             this.dgvCarrito.EnableHeadersVisualStyles = false;
             this.dgvCarrito.GridColor = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(55)))), ((int)(((byte)(65)))));
             this.dgvCarrito.Location = new System.Drawing.Point(10, 10);
-            this.dgvCarrito.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.dgvCarrito.Margin = new System.Windows.Forms.Padding(2);
             this.dgvCarrito.Name = "dgvCarrito";
             this.dgvCarrito.RowHeadersWidth = 62;
             this.dgvCarrito.RowTemplate.Height = 28;
@@ -228,8 +228,8 @@
             // 
             // colCarritoPrecio
             // 
-            dataGridViewCellStyle10.Format = "N0";
-            this.colCarritoPrecio.DefaultCellStyle = dataGridViewCellStyle10;
+            dataGridViewCellStyle6.Format = "N0";
+            this.colCarritoPrecio.DefaultCellStyle = dataGridViewCellStyle6;
             this.colCarritoPrecio.FillWeight = 95F;
             this.colCarritoPrecio.HeaderText = "Precio U.";
             this.colCarritoPrecio.MinimumWidth = 8;
@@ -238,8 +238,8 @@
             // 
             // colCarritoSubtotal
             // 
-            dataGridViewCellStyle11.Format = "N0";
-            this.colCarritoSubtotal.DefaultCellStyle = dataGridViewCellStyle11;
+            dataGridViewCellStyle7.Format = "N0";
+            this.colCarritoSubtotal.DefaultCellStyle = dataGridViewCellStyle7;
             this.colCarritoSubtotal.FillWeight = 85F;
             this.colCarritoSubtotal.HeaderText = "Subtotal";
             this.colCarritoSubtotal.MinimumWidth = 8;
@@ -285,7 +285,7 @@
             this.flpCatalogo.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(39)))), ((int)(((byte)(47)))));
             this.flpCatalogo.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.flpCatalogo.Location = new System.Drawing.Point(9, 42);
-            this.flpCatalogo.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.flpCatalogo.Margin = new System.Windows.Forms.Padding(2);
             this.flpCatalogo.Name = "flpCatalogo";
             this.flpCatalogo.Size = new System.Drawing.Size(620, 514);
             this.flpCatalogo.TabIndex = 3;
@@ -302,8 +302,8 @@
             "Suplementos",
             "Bebidas",
             "Snacks"});
-            this.cmbFiltroCategoria.Location = new System.Drawing.Point(327, 9);
-            this.cmbFiltroCategoria.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.cmbFiltroCategoria.Location = new System.Drawing.Point(313, 9);
+            this.cmbFiltroCategoria.Margin = new System.Windows.Forms.Padding(2);
             this.cmbFiltroCategoria.Name = "cmbFiltroCategoria";
             this.cmbFiltroCategoria.Size = new System.Drawing.Size(82, 21);
             this.cmbFiltroCategoria.TabIndex = 1;
@@ -322,7 +322,7 @@
             "Precio (Menor a Mayor)",
             "Precio (Mayor a Menor)"});
             this.cmbOrdenar.Location = new System.Drawing.Point(509, 9);
-            this.cmbOrdenar.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.cmbOrdenar.Margin = new System.Windows.Forms.Padding(2);
             this.cmbOrdenar.Name = "cmbOrdenar";
             this.cmbOrdenar.Size = new System.Drawing.Size(120, 21);
             this.cmbOrdenar.TabIndex = 2;
@@ -332,7 +332,7 @@
             // 
             this.label4.AutoSize = true;
             this.label4.ForeColor = System.Drawing.Color.White;
-            this.label4.Location = new System.Drawing.Point(271, 11);
+            this.label4.Location = new System.Drawing.Point(248, 11);
             this.label4.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(52, 13);
@@ -343,7 +343,7 @@
             // 
             this.label6.AutoSize = true;
             this.label6.ForeColor = System.Drawing.Color.White;
-            this.label6.Location = new System.Drawing.Point(443, 11);
+            this.label6.Location = new System.Drawing.Point(429, 11);
             this.label6.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(63, 13);
@@ -355,9 +355,9 @@
             this.txtBuscarProducto.BackColor = System.Drawing.Color.White;
             this.txtBuscarProducto.ForeColor = System.Drawing.Color.Black;
             this.txtBuscarProducto.Location = new System.Drawing.Point(9, 10);
-            this.txtBuscarProducto.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.txtBuscarProducto.Margin = new System.Windows.Forms.Padding(2);
             this.txtBuscarProducto.Name = "txtBuscarProducto";
-            this.txtBuscarProducto.Size = new System.Drawing.Size(235, 20);
+            this.txtBuscarProducto.Size = new System.Drawing.Size(214, 20);
             this.txtBuscarProducto.TabIndex = 0;
             this.txtBuscarProducto.TextChanged += new System.EventHandler(this.txtBuscarProducto_TextChanged);
             // 
@@ -377,7 +377,7 @@
             this.Controls.Add(this.label5);
             this.Controls.Add(this.panel1);
             this.ForeColor = System.Drawing.Color.White;
-            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "frmPuntoVenta";
             this.Text = "frmPuntoVenta";
             this.Load += new System.EventHandler(this.frmPuntoVenta_Load);
@@ -402,7 +402,7 @@
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.TextBox txtBuscarProducto;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button btnLimpiarCarrito;
         private System.Windows.Forms.DataGridViewTextBoxColumn colCarritoId;
         private System.Windows.Forms.DataGridViewTextBoxColumn colCarritoCodigo;
         private System.Windows.Forms.DataGridViewTextBoxColumn colCarritoNombre;

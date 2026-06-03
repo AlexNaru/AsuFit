@@ -251,7 +251,7 @@
             this.btnNuevo.Location = new System.Drawing.Point(546, 232);
             this.btnNuevo.Margin = new System.Windows.Forms.Padding(2);
             this.btnNuevo.Name = "btnNuevo";
-            this.btnNuevo.Size = new System.Drawing.Size(73, 32);
+            this.btnNuevo.Size = new System.Drawing.Size(73, 20);
             this.btnNuevo.TabIndex = 3;
             this.btnNuevo.Text = "NUEVO";
             this.btnNuevo.UseVisualStyleBackColor = false;
@@ -267,7 +267,7 @@
             this.btnEditar.Location = new System.Drawing.Point(638, 232);
             this.btnEditar.Margin = new System.Windows.Forms.Padding(2);
             this.btnEditar.Name = "btnEditar";
-            this.btnEditar.Size = new System.Drawing.Size(64, 32);
+            this.btnEditar.Size = new System.Drawing.Size(64, 20);
             this.btnEditar.TabIndex = 4;
             this.btnEditar.Text = "EDITAR";
             this.btnEditar.UseVisualStyleBackColor = false;
@@ -307,7 +307,7 @@
             this.btnEstado.Location = new System.Drawing.Point(720, 232);
             this.btnEstado.Margin = new System.Windows.Forms.Padding(2);
             this.btnEstado.Name = "btnEstado";
-            this.btnEstado.Size = new System.Drawing.Size(137, 32);
+            this.btnEstado.Size = new System.Drawing.Size(137, 20);
             this.btnEstado.TabIndex = 5;
             this.btnEstado.Text = "CAMBIAR ESTADO";
             this.btnEstado.UseVisualStyleBackColor = false;

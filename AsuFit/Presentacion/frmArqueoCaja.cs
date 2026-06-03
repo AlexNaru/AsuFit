@@ -24,12 +24,109 @@ namespace AsuFit.Presentacion
         #region 2. INICIALIZACIÓN
         private void frmArqueoCaja_Load(object sender, EventArgs e)
         {
+            ConfigurarTemaOscuro();
             lblCajeroActual.Text = "Cajero: " + usuarioActual.NombreCompleto;
             RevisarEstadoDeCaja();
         }
         #endregion
 
-        #region 3. SECCIÓN SUPERIOR Y CENTRAL: ESTADO DE CAJA Y RESUMEN
+        #region 3. ESTILOS VISUALES (UI)
+        private void ConfigurarTemaOscuro()
+        {
+            // Leemos la fuente dinámica de la configuración
+            float fuenteGlobal = Properties.Settings.Default.TamanoFuente;
+
+            // Fondo general del formulario
+            this.BackColor = Color.FromArgb(25, 28, 35);
+
+            // Recorremos los controles para pintar el panel central y los textos
+            foreach (Control c in this.Controls)
+            {
+                if (c is Panel || c is GroupBox)
+                {
+                    c.BackColor = Color.FromArgb(35, 39, 47); // Gris panel elevado
+                    c.ForeColor = Color.White;
+
+                    foreach (Control subC in c.Controls)
+                    {
+                        if (subC is Label lbl)
+                        {
+                            lbl.ForeColor = Color.White;
+                        }
+                    }
+                }
+                else if (c is Label lbl)
+                {
+                    lbl.ForeColor = Color.White;
+                }
+            }
+
+            // Estilos estáticos de los valores monetarios para que resalten
+            lblFondoInicial.ForeColor = Color.LightGray;
+            lblIngresosEfectivo.ForeColor = Color.MediumSeaGreen;
+            lblIngresosTransferencia.ForeColor = Color.MediumSeaGreen;
+            lblTotalIngresos.ForeColor = Color.MediumSeaGreen;
+            lblGastos.ForeColor = Color.IndianRed;
+            lblTotalEsperado.ForeColor = Color.FromArgb(0, 229, 255); // Cian AsuFit
+            lblTotalEsperado.Font = new Font(lblTotalEsperado.Font, FontStyle.Bold);
+
+            // Estilo base del botón de Historial
+            btnHistorial.FlatStyle = FlatStyle.Flat;
+            btnHistorial.FlatAppearance.BorderColor = Color.FromArgb(0, 229, 255);
+            btnHistorial.FlatAppearance.BorderSize = 1;
+            btnHistorial.BackColor = Color.FromArgb(35, 39, 47);
+            btnHistorial.ForeColor = Color.White;
+
+            // FIX: Usamos la fuente global dinámica
+            btnHistorial.Font = new Font("Segoe UI", fuenteGlobal, FontStyle.Bold);
+            btnHistorial.Cursor = Cursors.Hand;
+        }
+
+        // Modifica dinámicamente los botones principales según el estado
+        private void ActualizarEstiloBotonesCaja(bool cajaAbierta)
+        {
+            // Leemos la fuente dinámica de la configuración
+            float fuenteGlobal = Properties.Settings.Default.TamanoFuente;
+
+            btnAbrirCaja.FlatStyle = FlatStyle.Flat;
+            btnCerrarCaja.FlatStyle = FlatStyle.Flat;
+
+            // FIX: Usamos la fuente global dinámica
+            btnAbrirCaja.Font = new Font("Segoe UI", fuenteGlobal, FontStyle.Bold);
+            btnCerrarCaja.Font = new Font("Segoe UI", fuenteGlobal, FontStyle.Bold);
+
+            if (cajaAbierta)
+            {
+                // Botón Abrir apagado
+                btnAbrirCaja.BackColor = Color.FromArgb(50, 55, 65);
+                btnAbrirCaja.ForeColor = Color.Gray;
+                btnAbrirCaja.FlatAppearance.BorderSize = 0;
+                btnAbrirCaja.Cursor = Cursors.Default;
+
+                // Botón Cerrar encendido en Rojo/Coral
+                btnCerrarCaja.BackColor = Color.IndianRed;
+                btnCerrarCaja.ForeColor = Color.White;
+                btnCerrarCaja.FlatAppearance.BorderSize = 0;
+                btnCerrarCaja.Cursor = Cursors.Hand;
+            }
+            else
+            {
+                // Botón Abrir encendido en Cian
+                btnAbrirCaja.BackColor = Color.FromArgb(0, 229, 255);
+                btnAbrirCaja.ForeColor = Color.Black;
+                btnAbrirCaja.FlatAppearance.BorderSize = 0;
+                btnAbrirCaja.Cursor = Cursors.Hand;
+
+                // Botón Cerrar apagado
+                btnCerrarCaja.BackColor = Color.FromArgb(50, 55, 65);
+                btnCerrarCaja.ForeColor = Color.Gray;
+                btnCerrarCaja.FlatAppearance.BorderSize = 0;
+                btnCerrarCaja.Cursor = Cursors.Default;
+            }
+        }
+        #endregion
+
+        #region 4. SECCIÓN SUPERIOR Y CENTRAL: ESTADO DE CAJA Y RESUMEN
         private void RevisarEstadoDeCaja()
         {
             ArqueoNegocio negocio = new ArqueoNegocio();
@@ -47,6 +144,7 @@ namespace AsuFit.Presentacion
 
                 btnAbrirCaja.Enabled = false;
                 btnCerrarCaja.Enabled = true;
+                ActualizarEstiloBotonesCaja(true);
 
                 lblFondoInicial.Text = "Gs. " + fondoInicial.ToString("N0");
 
@@ -76,6 +174,7 @@ namespace AsuFit.Presentacion
 
                 btnAbrirCaja.Enabled = true;
                 btnCerrarCaja.Enabled = false;
+                ActualizarEstiloBotonesCaja(false);
 
                 lblFondoInicial.Text = "Gs. 0";
                 lblIngresosEfectivo.Text = "Gs. 0";
@@ -87,7 +186,7 @@ namespace AsuFit.Presentacion
         }
         #endregion
 
-        #region 4. SECCIÓN INFERIOR: ACCIONES DE CAJA
+        #region 5. SECCIÓN INFERIOR: ACCIONES DE CAJA
         private void btnAbrirCaja_Click(object sender, EventArgs e)
         {
             frmAbrirCaja frm = new frmAbrirCaja(usuarioActual);

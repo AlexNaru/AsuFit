@@ -28,8 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
             this.label1 = new System.Windows.Forms.Label();
             this.lblTotalRecaudado = new System.Windows.Forms.Label();
             this.lblCantidadVentas = new System.Windows.Forms.Label();
@@ -144,8 +144,8 @@
             // colHistorialFecha
             // 
             this.colHistorialFecha.DataPropertyName = "Fecha";
-            dataGridViewCellStyle1.Format = "dd/MM/yyyy HH:mm";
-            this.colHistorialFecha.DefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle3.Format = "dd/MM/yyyy HH:mm";
+            this.colHistorialFecha.DefaultCellStyle = dataGridViewCellStyle3;
             this.colHistorialFecha.FillWeight = 120F;
             this.colHistorialFecha.HeaderText = "Fecha";
             this.colHistorialFecha.MinimumWidth = 8;
@@ -182,8 +182,8 @@
             // colHistorialTotal
             // 
             this.colHistorialTotal.DataPropertyName = "Total Cobrado";
-            dataGridViewCellStyle2.Format = "N0";
-            this.colHistorialTotal.DefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle4.Format = "N0";
+            this.colHistorialTotal.DefaultCellStyle = dataGridViewCellStyle4;
             this.colHistorialTotal.FillWeight = 80F;
             this.colHistorialTotal.HeaderText = "Total Cobrado";
             this.colHistorialTotal.MinimumWidth = 8;
@@ -218,7 +218,7 @@
             "Solo Productos",
             "Solo Mensualidades",
             "Mixtos"});
-            this.cmbFiltroTipo.Location = new System.Drawing.Point(334, 62);
+            this.cmbFiltroTipo.Location = new System.Drawing.Point(339, 69);
             this.cmbFiltroTipo.Margin = new System.Windows.Forms.Padding(2);
             this.cmbFiltroTipo.Name = "cmbFiltroTipo";
             this.cmbFiltroTipo.Size = new System.Drawing.Size(103, 21);
@@ -229,7 +229,7 @@
             // 
             this.label6.AutoSize = true;
             this.label6.ForeColor = System.Drawing.Color.White;
-            this.label6.Location = new System.Drawing.Point(296, 64);
+            this.label6.Location = new System.Drawing.Point(296, 73);
             this.label6.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(31, 13);
@@ -240,7 +240,7 @@
             // 
             this.txtBuscar.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(39)))), ((int)(((byte)(47)))));
             this.txtBuscar.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.txtBuscar.Location = new System.Drawing.Point(12, 61);
+            this.txtBuscar.Location = new System.Drawing.Point(12, 70);
             this.txtBuscar.Name = "txtBuscar";
             this.txtBuscar.Size = new System.Drawing.Size(269, 20);
             this.txtBuscar.TabIndex = 24;
@@ -249,7 +249,7 @@
             // dtpDesde
             // 
             this.dtpDesde.Format = System.Windows.Forms.DateTimePickerFormat.Short;
-            this.dtpDesde.Location = new System.Drawing.Point(141, 30);
+            this.dtpDesde.Location = new System.Drawing.Point(141, 35);
             this.dtpDesde.Margin = new System.Windows.Forms.Padding(2);
             this.dtpDesde.Name = "dtpDesde";
             this.dtpDesde.Size = new System.Drawing.Size(15, 20);
@@ -260,7 +260,7 @@
             this.txtDesde.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(39)))), ((int)(((byte)(47)))));
             this.txtDesde.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.txtDesde.ForeColor = System.Drawing.Color.White;
-            this.txtDesde.Location = new System.Drawing.Point(54, 30);
+            this.txtDesde.Location = new System.Drawing.Point(54, 35);
             this.txtDesde.Name = "txtDesde";
             this.txtDesde.ReadOnly = true;
             this.txtDesde.Size = new System.Drawing.Size(102, 20);
@@ -269,7 +269,7 @@
             // dtpHasta
             // 
             this.dtpHasta.Format = System.Windows.Forms.DateTimePickerFormat.Short;
-            this.dtpHasta.Location = new System.Drawing.Point(426, 30);
+            this.dtpHasta.Location = new System.Drawing.Point(426, 35);
             this.dtpHasta.Margin = new System.Windows.Forms.Padding(2);
             this.dtpHasta.Name = "dtpHasta";
             this.dtpHasta.Size = new System.Drawing.Size(15, 20);
@@ -280,7 +280,7 @@
             this.txtHasta.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(39)))), ((int)(((byte)(47)))));
             this.txtHasta.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.txtHasta.ForeColor = System.Drawing.Color.White;
-            this.txtHasta.Location = new System.Drawing.Point(339, 30);
+            this.txtHasta.Location = new System.Drawing.Point(339, 35);
             this.txtHasta.Name = "txtHasta";
             this.txtHasta.ReadOnly = true;
             this.txtHasta.Size = new System.Drawing.Size(102, 20);

@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             this.label4 = new System.Windows.Forms.Label();
             this.dgvPlanes = new System.Windows.Forms.DataGridView();
             this.colPlanId = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -47,9 +48,10 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(68, 304);
+            this.label4.Location = new System.Drawing.Point(45, 198);
+            this.label4.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(0, 20);
+            this.label4.Size = new System.Drawing.Size(0, 13);
             this.label4.TabIndex = 3;
             // 
             // dgvPlanes
@@ -59,20 +61,29 @@
             this.dgvPlanes.AllowUserToResizeColumns = false;
             this.dgvPlanes.AllowUserToResizeRows = false;
             this.dgvPlanes.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(39)))), ((int)(((byte)(47)))));
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dgvPlanes.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             this.dgvPlanes.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvPlanes.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.colPlanId,
             this.colPlanNombre,
             this.colPlanPrecio,
             this.colPlanDuracion});
-            this.dgvPlanes.Location = new System.Drawing.Point(17, 98);
+            this.dgvPlanes.Location = new System.Drawing.Point(11, 64);
+            this.dgvPlanes.Margin = new System.Windows.Forms.Padding(2);
             this.dgvPlanes.Name = "dgvPlanes";
             this.dgvPlanes.ReadOnly = true;
             this.dgvPlanes.RowHeadersVisible = false;
             this.dgvPlanes.RowHeadersWidth = 62;
             this.dgvPlanes.RowTemplate.Height = 28;
             this.dgvPlanes.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgvPlanes.Size = new System.Drawing.Size(685, 212);
+            this.dgvPlanes.Size = new System.Drawing.Size(457, 138);
             this.dgvPlanes.TabIndex = 9;
             this.dgvPlanes.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvPlanes_CellClick);
             this.dgvPlanes.DataBindingComplete += new System.Windows.Forms.DataGridViewBindingCompleteEventHandler(this.dgvPlanes_DataBindingComplete);
@@ -97,8 +108,8 @@
             // colPlanPrecio
             // 
             this.colPlanPrecio.DataPropertyName = "Precio";
-            dataGridViewCellStyle1.Format = "N0";
-            this.colPlanPrecio.DefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle2.Format = "N0";
+            this.colPlanPrecio.DefaultCellStyle = dataGridViewCellStyle2;
             this.colPlanPrecio.HeaderText = "Precio";
             this.colPlanPrecio.MinimumWidth = 8;
             this.colPlanPrecio.Name = "colPlanPrecio";
@@ -114,9 +125,11 @@
             // 
             // btnEditar
             // 
-            this.btnEditar.Location = new System.Drawing.Point(291, 339);
+            this.btnEditar.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnEditar.Location = new System.Drawing.Point(182, 219);
+            this.btnEditar.Margin = new System.Windows.Forms.Padding(2);
             this.btnEditar.Name = "btnEditar";
-            this.btnEditar.Size = new System.Drawing.Size(126, 41);
+            this.btnEditar.Size = new System.Drawing.Size(84, 20);
             this.btnEditar.TabIndex = 2;
             this.btnEditar.Text = "EDITAR";
             this.btnEditar.UseVisualStyleBackColor = true;
@@ -124,9 +137,11 @@
             // 
             // btnEstado
             // 
-            this.btnEstado.Location = new System.Drawing.Point(518, 339);
+            this.btnEstado.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnEstado.Location = new System.Drawing.Point(332, 220);
+            this.btnEstado.Margin = new System.Windows.Forms.Padding(2);
             this.btnEstado.Name = "btnEstado";
-            this.btnEstado.Size = new System.Drawing.Size(184, 41);
+            this.btnEstado.Size = new System.Drawing.Size(136, 20);
             this.btnEstado.TabIndex = 3;
             this.btnEstado.Text = "CAMBIAR ESTADO";
             this.btnEstado.UseVisualStyleBackColor = true;
@@ -135,9 +150,10 @@
             // chkMostrarInactivos
             // 
             this.chkMostrarInactivos.AutoSize = true;
-            this.chkMostrarInactivos.Location = new System.Drawing.Point(418, 55);
+            this.chkMostrarInactivos.Location = new System.Drawing.Point(279, 36);
+            this.chkMostrarInactivos.Margin = new System.Windows.Forms.Padding(2);
             this.chkMostrarInactivos.Name = "chkMostrarInactivos";
-            this.chkMostrarInactivos.Size = new System.Drawing.Size(284, 24);
+            this.chkMostrarInactivos.Size = new System.Drawing.Size(194, 17);
             this.chkMostrarInactivos.TabIndex = 0;
             this.chkMostrarInactivos.Text = "Mostrar planes eliminados/inactivos";
             this.chkMostrarInactivos.UseVisualStyleBackColor = true;
@@ -146,17 +162,20 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(13, 9);
+            this.label1.Location = new System.Drawing.Point(9, 6);
+            this.label1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(175, 20);
+            this.label1.Size = new System.Drawing.Size(118, 13);
             this.label1.TabIndex = 13;
             this.label1.Text = "GESTIÓN DE PLANES";
             // 
             // btnNuevo
             // 
-            this.btnNuevo.Location = new System.Drawing.Point(17, 339);
+            this.btnNuevo.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnNuevo.Location = new System.Drawing.Point(11, 220);
+            this.btnNuevo.Margin = new System.Windows.Forms.Padding(2);
             this.btnNuevo.Name = "btnNuevo";
-            this.btnNuevo.Size = new System.Drawing.Size(126, 41);
+            this.btnNuevo.Size = new System.Drawing.Size(84, 20);
             this.btnNuevo.TabIndex = 1;
             this.btnNuevo.Text = "NUEVO";
             this.btnNuevo.UseVisualStyleBackColor = true;
@@ -165,17 +184,18 @@
             // lblTotal
             // 
             this.lblTotal.AutoSize = true;
-            this.lblTotal.Location = new System.Drawing.Point(13, 56);
+            this.lblTotal.Location = new System.Drawing.Point(9, 36);
+            this.lblTotal.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblTotal.Name = "lblTotal";
-            this.lblTotal.Size = new System.Drawing.Size(154, 20);
+            this.lblTotal.Size = new System.Drawing.Size(104, 13);
             this.lblTotal.TabIndex = 15;
             this.lblTotal.Text = "Planes encontrados:";
             // 
             // frmGestionPlanes
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(721, 395);
+            this.ClientSize = new System.Drawing.Size(481, 253);
             this.Controls.Add(this.lblTotal);
             this.Controls.Add(this.btnNuevo);
             this.Controls.Add(this.label1);
@@ -184,6 +204,7 @@
             this.Controls.Add(this.btnEditar);
             this.Controls.Add(this.dgvPlanes);
             this.Controls.Add(this.label4);
+            this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "frmGestionPlanes";
             this.Text = "frmGestionPlanes";
             this.Load += new System.EventHandler(this.frmGestionPlanes_Load);

@@ -1,6 +1,7 @@
 ﻿using System;
+using System.Drawing;
 using System.Windows.Forms;
-using AsuFit.Negocio;      // <-- Ahora llamamos a Negocio
+using AsuFit.Negocio;
 using AsuFit.Entidades;
 
 namespace AsuFit.Presentacion
@@ -16,24 +17,121 @@ namespace AsuFit.Presentacion
             usuarioActual = user;
         }
 
-        // 2. EVENTO: frmAbrirCaja_Load
+        // 2. EVENTOS DEL FORMULARIO
         private void frmAbrirCaja_Load(object sender, EventArgs e)
         {
+            ConfigurarTemaYEscala();
+            CentrarFormulario();
+
             txtCajero.ReadOnly = true;
             if (usuarioActual != null)
             {
                 txtCajero.Text = usuarioActual.NombreCompleto;
             }
+
+            txtCajero.SelectionStart = txtCajero.Text.Length;
+            txtCajero.SelectionLength = 0;
+
+            this.ActiveControl = txtMontoInicial;
         }
 
-        // 3. EVENTO: btnCancelar_Click
+        #region ESTILOS VISUALES Y ESCALADO
+        private void ConfigurarTemaYEscala()
+        {
+            // BLOQUEO DE REDIMENSIONAMIENTO Y PANTALLA COMPLETA
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
+            this.FormBorderStyle = FormBorderStyle.FixedSingle;
+
+            float escalaActual = Properties.Settings.Default.EscalaInterfaz;
+            float fuenteActual = Properties.Settings.Default.TamanoFuente;
+
+            this.Scale(new SizeF(escalaActual, escalaActual));
+            AjustarFuentesRecursivo(this, fuenteActual);
+
+            this.BackColor = Color.FromArgb(25, 28, 35);
+            AplicarTemaOscuroRecursivo(this);
+
+            if (btnEmpezar != null)
+            {
+                btnEmpezar.BackColor = Color.FromArgb(0, 229, 255);
+                btnEmpezar.ForeColor = Color.Black;
+                btnEmpezar.FlatStyle = FlatStyle.Flat;
+                btnEmpezar.FlatAppearance.BorderSize = 0;
+            }
+
+            if (btnCancelar != null)
+            {
+                btnCancelar.BackColor = Color.FromArgb(50, 55, 65);
+                btnCancelar.ForeColor = Color.White;
+                btnCancelar.FlatStyle = FlatStyle.Flat;
+                btnCancelar.FlatAppearance.BorderSize = 0;
+            }
+        }
+
+        private void AplicarTemaOscuroRecursivo(Control contenedor)
+        {
+            foreach (Control c in contenedor.Controls)
+            {
+                if (c is Panel || c is GroupBox)
+                {
+                    c.BackColor = Color.FromArgb(35, 39, 47);
+                    c.ForeColor = Color.White;
+                }
+                else if (c is Label lbl) lbl.ForeColor = Color.White;
+                else if (c is TextBox txt)
+                {
+                    txt.BackColor = Color.FromArgb(50, 55, 65);
+                    txt.ForeColor = Color.White;
+                    txt.BorderStyle = BorderStyle.FixedSingle;
+                }
+
+                if (c.HasChildren) AplicarTemaOscuroRecursivo(c);
+            }
+        }
+
+        private void AjustarFuentesRecursivo(Control contenedor, float fuente)
+        {
+            foreach (Control c in contenedor.Controls)
+            {
+                if (c is TextBox || c is ComboBox || c is Label || c is Button)
+                {
+                    c.Font = new Font("Segoe UI", fuente, c.Font.Style);
+                }
+                if (c.HasChildren) AjustarFuentesRecursivo(c, fuente);
+            }
+        }
+
+        // Calcula el centro exacto basándose ÚNICAMENTE en el panel derecho del Dashboard
+        private void CentrarFormulario()
+        {
+            Form padre = Application.OpenForms["frmDashboard"];
+            if (padre != null)
+            {
+                Control[] controles = padre.Controls.Find("pnlContenedor", true);
+                if (controles.Length > 0)
+                {
+                    Control contenedor = controles[0];
+                    Point posicionAbsoluta = contenedor.PointToScreen(Point.Empty);
+
+                    this.StartPosition = FormStartPosition.Manual;
+                    int x = posicionAbsoluta.X + (contenedor.Width - this.Width) / 2;
+                    int y = posicionAbsoluta.Y + (contenedor.Height - this.Height) / 2;
+                    this.Location = new Point(x > 0 ? x : 0, y > 0 ? y : 0);
+                    return;
+                }
+            }
+            this.CenterToScreen(); // Respaldo por si no encuentra el Dashboard
+        }
+        #endregion
+
+        // 3. ACCIONES
         private void btnCancelar_Click(object sender, EventArgs e)
         {
             this.DialogResult = DialogResult.Cancel;
             this.Close();
         }
 
-        // 4. EVENTO: btnEmpezar_Click
         private void btnEmpezar_Click(object sender, EventArgs e)
         {
             if (string.IsNullOrWhiteSpace(txtMontoInicial.Text))
@@ -50,7 +148,6 @@ namespace AsuFit.Presentacion
 
             try
             {
-                // --- AQUÍ ESTÁ LA MAGIA DE LAS 3 CAPAS ---
                 TurnoCaja nuevoTurno = new TurnoCaja();
                 nuevoTurno.IdUsuario = usuarioActual.IdUsuario;
                 nuevoTurno.CajeroNombre = usuarioActual.NombreCompleto;
@@ -61,8 +158,6 @@ namespace AsuFit.Presentacion
 
                 if (exito)
                 {
-                    // Opcional: GestorAuditoria.Registrar(usuarioActual.NombreCompleto, "Caja", "Apertura de Turno", $"Fondo inicial: Gs. {fondoInicial:N0}");
-
                     MessageBox.Show("¡Turno iniciado con éxito! La caja ya está abierta.", "Caja Abierta", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     this.DialogResult = DialogResult.OK;
                     this.Close();
@@ -74,13 +169,9 @@ namespace AsuFit.Presentacion
             }
         }
 
-        // 5. EVENTO: txtMontoInicial_KeyPress
         private void txtMontoInicial_KeyPress(object sender, KeyPressEventArgs e)
         {
-            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar))
-            {
-                e.Handled = true;
-            }
+            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar)) e.Handled = true;
         }
     }
 }
