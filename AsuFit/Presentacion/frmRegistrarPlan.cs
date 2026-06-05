@@ -2,17 +2,18 @@
 using AsuFit.Entidades;
 using AsuFit.Negocio;
 using System;
+using System.Drawing;
 using System.Windows.Forms;
 
 namespace AsuFit.Presentacion
 {
     public partial class frmRegistrarPlan : Form
     {
-        // Esta variable guardará el plan si estamos en modo "Editar"
+        #region 1. VARIABLES GLOBALES Y CONSTRUCTORES
         private Plan planAEditar = null;
         private Usuario usuarioActual;
 
-        // 1. CONSTRUCTOR PARA MODO "NUEVO"
+        // Constructor utilizado para Alta de nuevos planes
         public frmRegistrarPlan(Usuario user)
         {
             InitializeComponent();
@@ -20,7 +21,7 @@ namespace AsuFit.Presentacion
             this.Text = "Nuevo Plan";
         }
 
-        // 2. CONSTRUCTOR PARA MODO "EDITAR"
+        // Constructor sobrecargado utilizado para Edición de planes existentes
         public frmRegistrarPlan(Plan planCargado, Usuario user)
         {
             InitializeComponent();
@@ -28,10 +29,14 @@ namespace AsuFit.Presentacion
             usuarioActual = user;
             this.Text = "Editar Plan";
         }
+        #endregion
 
+        #region 2. INICIALIZACIÓN Y CARGA DE DATOS
         private void frmRegistrarPlan_Load(object sender, EventArgs e)
         {
-            // Si hay un plan cargado, rellenamos los TextBoxes
+            ConfigurarTemaOscuro();
+
+            // Despliegue de datos en caso de recibir una entidad existente
             if (planAEditar != null)
             {
                 txtNombrePlan.Text = planAEditar.NombrePlan;
@@ -39,15 +44,69 @@ namespace AsuFit.Presentacion
                 txtDuracionDias.Text = planAEditar.DuracionDias.ToString();
             }
         }
+        #endregion
 
+        #region 3. ESTILOS VISUALES (TEMA OSCURO)
+        private void ConfigurarTemaOscuro()
+        {
+            float fuenteGlobal = Properties.Settings.Default.TamanoFuente;
+
+            // Fondo general del formulario popup
+            this.BackColor = Color.FromArgb(25, 28, 35);
+
+            AplicarTemaOscuroRecursivo(this, fuenteGlobal);
+        }
+
+        private void AplicarTemaOscuroRecursivo(Control contenedor, float fuente)
+        {
+            foreach (Control c in contenedor.Controls)
+            {
+                if (c is Label lbl)
+                {
+                    lbl.ForeColor = Color.White;
+                    lbl.Font = new Font("Segoe UI", fuente, lbl.Font.Style);
+                }
+                else if (c is TextBox txt)
+                {
+                    txt.BackColor = Color.FromArgb(50, 55, 65);
+                    txt.ForeColor = Color.White;
+                    txt.BorderStyle = BorderStyle.FixedSingle;
+                    txt.Font = new Font("Segoe UI", fuente, FontStyle.Regular);
+                }
+                else if (c is Button btn)
+                {
+                    btn.Font = new Font("Segoe UI", fuente, FontStyle.Bold);
+                    btn.FlatStyle = FlatStyle.Flat;
+                    btn.FlatAppearance.BorderSize = 0;
+                    btn.Cursor = Cursors.Hand;
+
+                    // El botón secundario hereda color gris, el principal el color corporativo Cian
+                    if (btn.Name.Contains("Cancelar"))
+                    {
+                        btn.BackColor = Color.FromArgb(50, 55, 65);
+                        btn.ForeColor = Color.White;
+                    }
+                    else
+                    {
+                        btn.BackColor = Color.FromArgb(0, 229, 255);
+                        btn.ForeColor = Color.Black;
+                    }
+                }
+
+                // Recursividad en caso de usar paneles o groupboxes
+                if (c.HasChildren) AplicarTemaOscuroRecursivo(c, fuente);
+            }
+        }
+        #endregion
+
+        #region 4. ACCIONES DEL FORMULARIO (CRUD)
         private void btnGuardar_Click(object sender, EventArgs e)
         {
-            // Validación básica para evitar que dejen campos vacíos
             if (string.IsNullOrWhiteSpace(txtNombrePlan.Text) ||
                 string.IsNullOrWhiteSpace(txtPrecio.Text) ||
                 string.IsNullOrWhiteSpace(txtDuracionDias.Text))
             {
-                MessageBox.Show("Por favor, complete todos los campos.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Por favor, complete todos los campos.", "Aviso de Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
@@ -57,9 +116,9 @@ namespace AsuFit.Presentacion
                 string mensaje = "";
                 bool exito = false;
 
-                // MODO NUEVO
                 if (planAEditar == null)
                 {
+                    // Operación: ALTA
                     Plan nuevoPlan = new Plan
                     {
                         NombrePlan = txtNombrePlan.Text.Trim(),
@@ -72,13 +131,13 @@ namespace AsuFit.Presentacion
                     if (exito)
                     {
                         GestorAuditoria.Registrar(usuarioActual.NombreCompleto, "Planes", "Nuevo Plan", $"Creó el plan '{nuevoPlan.NombrePlan}' por Gs. {nuevoPlan.Precio:N0}.");
-                        MessageBox.Show("¡Plan guardado con éxito!", "Excelente", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                        this.Close(); // Cerramos la ventanita
+                        MessageBox.Show("¡Plan guardado con éxito!", "Operación Exitosa", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        this.Close();
                     }
                 }
-                // MODO EDITAR
                 else
                 {
+                    // Operación: MODIFICACIÓN
                     planAEditar.NombrePlan = txtNombrePlan.Text.Trim();
                     planAEditar.Precio = Convert.ToDecimal(txtPrecio.Text.Trim());
                     planAEditar.DuracionDias = Convert.ToInt32(txtDuracionDias.Text.Trim());
@@ -88,32 +147,31 @@ namespace AsuFit.Presentacion
                     if (exito)
                     {
                         GestorAuditoria.Registrar(usuarioActual.NombreCompleto, "Planes", "Edición", $"Modificó el plan '{planAEditar.NombrePlan}'.");
-                        MessageBox.Show("¡Plan editado con éxito!", "Excelente", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                        this.Close(); // Cerramos la ventanita
+                        MessageBox.Show("¡Plan editado con éxito!", "Operación Exitosa", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        this.Close();
                     }
                 }
 
-                // Si ocurrió un error en la base de datos (Ej: Nombre duplicado)
+                // Retorno de reglas de negocio fallidas (ej. Nombre duplicado)
                 if (!exito)
                 {
-                    MessageBox.Show(mensaje, "No se pudo guardar", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MessageBox.Show(mensaje, "Conflicto de Regla de Negocio", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
             }
             catch (FormatException)
             {
-                MessageBox.Show("Por favor, ingresá solo números en Precio y Duración.", "Error de formato", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Los campos 'Precio' y 'Duración' admiten únicamente valores numéricos enteros.", "Error de Formato", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Ocurrió un error: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Ocurrió un error inesperado en el sistema: " + ex.Message, "Excepción Crítica", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
         private void btnCancelar_Click(object sender, EventArgs e)
         {
-            // Simplemente cierra la ventana emergente sin guardar ningún cambio, 
-            // sin importar si el usuario estaba creando un plan nuevo o editando uno.
             this.Close();
         }
+        #endregion
     }
 }

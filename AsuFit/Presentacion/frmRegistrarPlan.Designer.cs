@@ -41,66 +41,74 @@
             // 
             // txtPrecio
             // 
-            this.txtPrecio.Location = new System.Drawing.Point(36, 166);
+            this.txtPrecio.Location = new System.Drawing.Point(24, 108);
+            this.txtPrecio.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.txtPrecio.Name = "txtPrecio";
-            this.txtPrecio.Size = new System.Drawing.Size(167, 26);
+            this.txtPrecio.Size = new System.Drawing.Size(113, 20);
             this.txtPrecio.TabIndex = 1;
             // 
             // txtDuracionDias
             // 
-            this.txtDuracionDias.Location = new System.Drawing.Point(36, 240);
+            this.txtDuracionDias.Location = new System.Drawing.Point(24, 156);
+            this.txtDuracionDias.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.txtDuracionDias.Name = "txtDuracionDias";
-            this.txtDuracionDias.Size = new System.Drawing.Size(167, 26);
+            this.txtDuracionDias.Size = new System.Drawing.Size(113, 20);
             this.txtDuracionDias.TabIndex = 2;
             // 
             // txtNombrePlan
             // 
-            this.txtNombrePlan.Location = new System.Drawing.Point(36, 92);
+            this.txtNombrePlan.Location = new System.Drawing.Point(24, 60);
+            this.txtNombrePlan.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.txtNombrePlan.Name = "txtNombrePlan";
-            this.txtNombrePlan.Size = new System.Drawing.Size(167, 26);
+            this.txtNombrePlan.Size = new System.Drawing.Size(113, 20);
             this.txtNombrePlan.TabIndex = 0;
             // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(32, 217);
+            this.label3.Location = new System.Drawing.Point(21, 141);
+            this.label3.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(123, 20);
+            this.label3.Size = new System.Drawing.Size(85, 13);
             this.label3.TabIndex = 9;
             this.label3.Text = "Duración (Días):";
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(32, 143);
+            this.label2.Location = new System.Drawing.Point(21, 93);
+            this.label2.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(96, 20);
+            this.label2.Size = new System.Drawing.Size(65, 13);
             this.label2.TabIndex = 8;
             this.label2.Text = "Precio (Gs.):";
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(32, 69);
+            this.label1.Location = new System.Drawing.Point(21, 45);
+            this.label1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(129, 20);
+            this.label1.Size = new System.Drawing.Size(88, 13);
             this.label1.TabIndex = 7;
             this.label1.Text = "Nombre del Plan:";
             // 
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(12, 9);
+            this.label4.Location = new System.Drawing.Point(8, 6);
+            this.label4.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(222, 20);
+            this.label4.Size = new System.Drawing.Size(152, 13);
             this.label4.TabIndex = 13;
             this.label4.Text = "REGISTRAR / EDITAR PLAN";
             // 
             // btnGuardar
             // 
-            this.btnGuardar.Location = new System.Drawing.Point(59, 300);
+            this.btnGuardar.Location = new System.Drawing.Point(39, 195);
+            this.btnGuardar.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.btnGuardar.Name = "btnGuardar";
-            this.btnGuardar.Size = new System.Drawing.Size(123, 41);
+            this.btnGuardar.Size = new System.Drawing.Size(82, 27);
             this.btnGuardar.TabIndex = 3;
             this.btnGuardar.Text = "GUARDAR";
             this.btnGuardar.UseVisualStyleBackColor = true;
@@ -108,9 +116,10 @@
             // 
             // btnCancelar
             // 
-            this.btnCancelar.Location = new System.Drawing.Point(59, 364);
+            this.btnCancelar.Location = new System.Drawing.Point(39, 237);
+            this.btnCancelar.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.btnCancelar.Name = "btnCancelar";
-            this.btnCancelar.Size = new System.Drawing.Size(123, 41);
+            this.btnCancelar.Size = new System.Drawing.Size(82, 27);
             this.btnCancelar.TabIndex = 4;
             this.btnCancelar.Text = "CANCELAR";
             this.btnCancelar.UseVisualStyleBackColor = true;
@@ -118,9 +127,9 @@
             // 
             // frmRegistrarPlan
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(252, 421);
+            this.ClientSize = new System.Drawing.Size(168, 274);
             this.Controls.Add(this.btnCancelar);
             this.Controls.Add(this.btnGuardar);
             this.Controls.Add(this.label4);
@@ -130,6 +139,8 @@
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
+            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.MaximizeBox = false;
             this.Name = "frmRegistrarPlan";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "frmRegistrarPlan";

@@ -103,6 +103,7 @@
             this.dtpHasta.Name = "dtpHasta";
             this.dtpHasta.Size = new System.Drawing.Size(15, 20);
             this.dtpHasta.TabIndex = 33;
+            this.dtpHasta.ValueChanged += new System.EventHandler(this.dtpHasta_ValueChanged);
             // 
             // txtHasta
             // 
@@ -123,6 +124,7 @@
             this.dtpDesde.Name = "dtpDesde";
             this.dtpDesde.Size = new System.Drawing.Size(15, 20);
             this.dtpDesde.TabIndex = 31;
+            this.dtpDesde.ValueChanged += new System.EventHandler(this.dtpDesde_ValueChanged);
             // 
             // txtDesde
             // 
@@ -239,7 +241,7 @@
             this.tabTopProductos.Margin = new System.Windows.Forms.Padding(2);
             this.tabTopProductos.Name = "tabTopProductos";
             this.tabTopProductos.Padding = new System.Windows.Forms.Padding(2);
-            this.tabTopProductos.Size = new System.Drawing.Size(401, 213);
+            this.tabTopProductos.Size = new System.Drawing.Size(401, 236);
             this.tabTopProductos.TabIndex = 1;
             this.tabTopProductos.Text = "Top 5 Productos Más Vendidos";
             this.tabTopProductos.UseVisualStyleBackColor = true;
@@ -252,6 +254,7 @@
             this.dtpHastaTop.Name = "dtpHastaTop";
             this.dtpHastaTop.Size = new System.Drawing.Size(15, 20);
             this.dtpHastaTop.TabIndex = 35;
+            this.dtpHastaTop.ValueChanged += new System.EventHandler(this.dtpHastaTop_ValueChanged);
             // 
             // txtHastaTop
             // 
@@ -272,6 +275,7 @@
             this.dtpDesdeTop.Name = "dtpDesdeTop";
             this.dtpDesdeTop.Size = new System.Drawing.Size(15, 20);
             this.dtpDesdeTop.TabIndex = 33;
+            this.dtpDesdeTop.ValueChanged += new System.EventHandler(this.dtpDesdeTop_ValueChanged);
             // 
             // txtDesdeTop
             // 

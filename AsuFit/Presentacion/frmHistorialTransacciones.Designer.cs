@@ -28,8 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             this.label1 = new System.Windows.Forms.Label();
             this.lblTotalRecaudado = new System.Windows.Forms.Label();
             this.lblCantidadVentas = new System.Windows.Forms.Label();
@@ -144,8 +144,8 @@
             // colHistorialFecha
             // 
             this.colHistorialFecha.DataPropertyName = "Fecha";
-            dataGridViewCellStyle3.Format = "dd/MM/yyyy HH:mm";
-            this.colHistorialFecha.DefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle1.Format = "dd/MM/yyyy HH:mm";
+            this.colHistorialFecha.DefaultCellStyle = dataGridViewCellStyle1;
             this.colHistorialFecha.FillWeight = 120F;
             this.colHistorialFecha.HeaderText = "Fecha";
             this.colHistorialFecha.MinimumWidth = 8;
@@ -182,8 +182,8 @@
             // colHistorialTotal
             // 
             this.colHistorialTotal.DataPropertyName = "Total Cobrado";
-            dataGridViewCellStyle4.Format = "N0";
-            this.colHistorialTotal.DefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle2.Format = "N0";
+            this.colHistorialTotal.DefaultCellStyle = dataGridViewCellStyle2;
             this.colHistorialTotal.FillWeight = 80F;
             this.colHistorialTotal.HeaderText = "Total Cobrado";
             this.colHistorialTotal.MinimumWidth = 8;
@@ -254,6 +254,7 @@
             this.dtpDesde.Name = "dtpDesde";
             this.dtpDesde.Size = new System.Drawing.Size(15, 20);
             this.dtpDesde.TabIndex = 29;
+            this.dtpDesde.ValueChanged += new System.EventHandler(this.dtpDesde_ValueChanged);
             // 
             // txtDesde
             // 
@@ -274,6 +275,7 @@
             this.dtpHasta.Name = "dtpHasta";
             this.dtpHasta.Size = new System.Drawing.Size(15, 20);
             this.dtpHasta.TabIndex = 31;
+            this.dtpHasta.ValueChanged += new System.EventHandler(this.dtpHasta_ValueChanged);
             // 
             // txtHasta
             // 

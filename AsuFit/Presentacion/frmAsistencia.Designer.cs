@@ -65,7 +65,7 @@
             this.pnlEstado.Controls.Add(this.lblNombre);
             this.pnlEstado.Controls.Add(this.lblMensaje);
             this.pnlEstado.Controls.Add(this.txtCedula);
-            this.pnlEstado.Location = new System.Drawing.Point(8, 64);
+            this.pnlEstado.Location = new System.Drawing.Point(8, 88);
             this.pnlEstado.Margin = new System.Windows.Forms.Padding(2);
             this.pnlEstado.Name = "pnlEstado";
             this.pnlEstado.Size = new System.Drawing.Size(541, 211);
@@ -115,7 +115,7 @@
             // 
             this.lblFecha.AutoSize = true;
             this.lblFecha.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(229)))), ((int)(((byte)(255)))));
-            this.lblFecha.Location = new System.Drawing.Point(8, 315);
+            this.lblFecha.Location = new System.Drawing.Point(8, 337);
             this.lblFecha.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblFecha.Name = "lblFecha";
             this.lblFecha.Size = new System.Drawing.Size(45, 13);
@@ -126,7 +126,7 @@
             // 
             this.lblHora.AutoSize = true;
             this.lblHora.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(229)))), ((int)(((byte)(255)))));
-            this.lblHora.Location = new System.Drawing.Point(8, 287);
+            this.lblHora.Location = new System.Drawing.Point(8, 309);
             this.lblHora.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblHora.Name = "lblHora";
             this.lblHora.Size = new System.Drawing.Size(41, 13);
@@ -141,9 +141,9 @@
             // picLogo
             // 
             this.picLogo.Image = global::AsuFit.Properties.Resources.logo;
-            this.picLogo.Location = new System.Drawing.Point(152, -26);
+            this.picLogo.Location = new System.Drawing.Point(115, -44);
             this.picLogo.Name = "picLogo";
-            this.picLogo.Size = new System.Drawing.Size(224, 118);
+            this.picLogo.Size = new System.Drawing.Size(308, 184);
             this.picLogo.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.picLogo.TabIndex = 0;
             this.picLogo.TabStop = false;
@@ -153,13 +153,14 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(25)))), ((int)(((byte)(28)))), ((int)(((byte)(35)))));
-            this.ClientSize = new System.Drawing.Size(559, 339);
+            this.ClientSize = new System.Drawing.Size(559, 359);
             this.Controls.Add(this.pnlEstado);
             this.Controls.Add(this.lblFecha);
             this.Controls.Add(this.lblHora);
             this.Controls.Add(this.picLogo);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Margin = new System.Windows.Forms.Padding(2);
+            this.MaximizeBox = false;
             this.Name = "frmAsistencia";
             this.Text = "Asistencia";
             this.Load += new System.EventHandler(this.frmAsistencia_Load);

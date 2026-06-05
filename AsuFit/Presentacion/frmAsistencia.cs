@@ -20,9 +20,45 @@ namespace AsuFit.Presentacion
         #region 2. CICLO DE VIDA DEL FORMULARIO
         private void frmAsistencia_Load(object sender, EventArgs e)
         {
+            AplicarEscalaKiosco();
             LimpiarPantalla();
             timerReloj.Start();
         }
+
+        #region ESCALADO ESPECIAL (MODO KIOSCO)
+        private void AplicarEscalaKiosco()
+        {
+            // Factor de aumento: 1.5f significa 50% más grande. 
+            // Si en tu TV de 50" lo sigues viendo pequeño, súbelo a 2.0f (el doble) o 2.5f.
+            float factorEscala = 1.5f;
+
+            // 1. Escala el tamaño y la posición de todos los controles físicos
+            this.Scale(new SizeF(factorEscala, factorEscala));
+
+            // 2. Protege el Logo y escala las letras de forma recursiva
+            AjustarFuentesEImagen(this, factorEscala);
+        }
+
+        private void AjustarFuentesEImagen(Control contenedor, float factor)
+        {
+            foreach (Control c in contenedor.Controls)
+            {
+                // Aumenta la tipografía de forma proporcional
+                if (c.Font != null)
+                {
+                    c.Font = new Font(c.Font.FontFamily, c.Font.Size * factor, c.Font.Style);
+                }
+
+                // PROTECCIÓN DE LA IMAGEN: Evita que el logo se rompa o se corte
+                if (c is PictureBox pic)
+                {
+                    pic.SizeMode = PictureBoxSizeMode.Zoom;
+                }
+
+                if (c.HasChildren) AjustarFuentesEImagen(c, factor);
+            }
+        }
+        #endregion
 
         private void frmAsistencia_Shown(object sender, EventArgs e)
         {
