@@ -132,7 +132,6 @@ namespace AsuFit.Presentacion
 
             formularioHijo.TopLevel = false;
             formularioHijo.FormBorderStyle = FormBorderStyle.None;
-            // ELIMINADO: Anchor = None. Dejamos que quede por defecto (Top-Left) para que no pelee con nuestro centrado.
 
             float escala = Properties.Settings.Default.EscalaInterfaz;
             formularioHijo.Scale(new SizeF(escala, escala));
@@ -202,23 +201,11 @@ namespace AsuFit.Presentacion
         }
         #endregion
 
-        #region EVENTOS: MÓDULO PRINCIPAL Y SOCIOS
+        #region EVENTOS: INICIO Y MÓDULO 1 (SOCIOS Y ACCESOS)
         private void btnInicio_Click(object sender, EventArgs e)
         {
             ResaltarBoton(sender);
             AbrirFormularioHijo(new frmInicio());
-        }
-
-        private void btnRegistrarSocio_Click(object sender, EventArgs e)
-        {
-            ResaltarBoton(sender);
-            AbrirFormularioHijo(new frmRegistrarSocio(usuarioActual));
-        }
-
-        private void btnGestionSocios_Click(object sender, EventArgs e)
-        {
-            ResaltarBoton(sender);
-            AbrirFormularioHijo(new frmGestionSocios(usuarioActual));
         }
 
         private void btnRegistroAsistencia_Click(object sender, EventArgs e)
@@ -251,35 +238,33 @@ namespace AsuFit.Presentacion
 
             frm.Show();
         }
-        #endregion
 
-        #region EVENTOS: MÓDULO CAJA Y VENTAS
-        private void btnRegistrarCobro_Click(object sender, EventArgs e)
+        private void btnRegistrarSocio_Click(object sender, EventArgs e)
         {
             ResaltarBoton(sender);
-            AbrirFormularioHijo(new frmRegistrarCobro(usuarioActual));
+            AbrirFormularioHijo(new frmRegistrarSocio(usuarioActual));
         }
 
+        private void btnGestionSocios_Click(object sender, EventArgs e)
+        {
+            ResaltarBoton(sender);
+            AbrirFormularioHijo(new frmGestionSocios(usuarioActual));
+        }
+
+        private void btnGestionPlanes_Click(object sender, EventArgs e)
+        {
+            ResaltarBoton(sender);
+            AbrirFormularioHijo(new frmGestionPlanes(usuarioActual));
+        }
+        #endregion
+
+        #region EVENTOS: MÓDULO 2 (COMERCIAL E INVENTARIO)
         private void btnInventarioVentas_Click(object sender, EventArgs e)
         {
             ResaltarBoton(sender);
             AbrirFormularioHijo(new frmPuntoVenta(usuarioActual));
         }
 
-        private void btnHistorialVentas_Click(object sender, EventArgs e)
-        {
-            ResaltarBoton(sender);
-            AbrirFormularioHijo(new frmHistorialTransacciones());
-        }
-
-        private void btnArqueoCaja_Click(object sender, EventArgs e)
-        {
-            ResaltarBoton(sender);
-            AbrirFormularioHijo(new frmArqueoCaja(usuarioActual));
-        }
-        #endregion
-
-        #region EVENTOS: MÓDULO INVENTARIO Y GASTOS
         private void btnGestionProductos_Click(object sender, EventArgs e)
         {
             ResaltarBoton(sender);
@@ -297,6 +282,20 @@ namespace AsuFit.Presentacion
             ResaltarBoton(sender);
             AbrirFormularioHijo(new frmProveedores(usuarioActual));
         }
+        #endregion
+
+        #region EVENTOS: MÓDULO 3 (CAJA Y FINANZAS)
+        private void btnRegistrarCobro_Click(object sender, EventArgs e)
+        {
+            ResaltarBoton(sender);
+            AbrirFormularioHijo(new frmRegistrarCobro(usuarioActual));
+        }
+
+        private void btnHistorialTransacciones_Click(object sender, EventArgs e)
+        {
+            ResaltarBoton(sender);
+            AbrirFormularioHijo(new frmHistorialTransacciones());
+        }
 
         private void btnGestionGastos_Click(object sender, EventArgs e)
         {
@@ -304,26 +303,20 @@ namespace AsuFit.Presentacion
             AbrirFormularioHijo(new frmGestionGastos());
         }
 
-        private void btnGestionPlanes_Click(object sender, EventArgs e)
+        private void btnArqueoCaja_Click(object sender, EventArgs e)
         {
             ResaltarBoton(sender);
-            AbrirFormularioHijo(new frmGestionPlanes(usuarioActual));
+            AbrirFormularioHijo(new frmArqueoCaja(usuarioActual));
         }
-        #endregion
 
-        #region EVENTOS: MÓDULO ADMINISTRACIÓN Y SEGURIDAD
         private void btnReportesEstadísticas_Click(object sender, EventArgs e)
         {
             ResaltarBoton(sender);
             AbrirFormularioHijo(new frmReportes());
         }
+        #endregion
 
-        private void btnRespaldosAuditoría_Click(object sender, EventArgs e)
-        {
-            ResaltarBoton(sender);
-            AbrirFormularioHijo(new frmAuditoria());
-        }
-
+        #region EVENTOS: MÓDULO 4 (SEGURIDAD Y ADMINISTRACIÓN)
         private void btnRegistrarUsuario_Click(object sender, EventArgs e)
         {
             ResaltarBoton(sender);
@@ -334,6 +327,12 @@ namespace AsuFit.Presentacion
         {
             ResaltarBoton(sender);
             AbrirFormularioHijo(new frmGestionUsuarios(usuarioActual));
+        }
+
+        private void btnAuditoría_Click(object sender, EventArgs e)
+        {
+            ResaltarBoton(sender);
+            AbrirFormularioHijo(new frmAuditoria());
         }
 
         private void btnConfiguración_Click(object sender, EventArgs e)

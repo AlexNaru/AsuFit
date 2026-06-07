@@ -327,7 +327,7 @@
             this.panel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(39)))), ((int)(((byte)(47)))));
             this.panel1.Controls.Add(this.label4);
             this.panel1.Controls.Add(this.lblActivos);
-            this.panel1.Location = new System.Drawing.Point(40, 16);
+            this.panel1.Location = new System.Drawing.Point(1, 2);
             this.panel1.Margin = new System.Windows.Forms.Padding(2);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(124, 54);
@@ -339,7 +339,7 @@
             this.panel2.Controls.Add(this.label7);
             this.panel2.Controls.Add(this.label1);
             this.panel2.Controls.Add(this.lblIngresos);
-            this.panel2.Location = new System.Drawing.Point(175, 16);
+            this.panel2.Location = new System.Drawing.Point(136, 2);
             this.panel2.Margin = new System.Windows.Forms.Padding(2);
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(111, 54);
@@ -364,7 +364,7 @@
             this.panel3.Controls.Add(this.label9);
             this.panel3.Controls.Add(this.label2);
             this.panel3.Controls.Add(this.lblEgresos);
-            this.panel3.Location = new System.Drawing.Point(295, 16);
+            this.panel3.Location = new System.Drawing.Point(256, 2);
             this.panel3.Margin = new System.Windows.Forms.Padding(2);
             this.panel3.Name = "panel3";
             this.panel3.Size = new System.Drawing.Size(111, 54);
@@ -388,7 +388,7 @@
             this.panel4.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(39)))), ((int)(((byte)(47)))));
             this.panel4.Controls.Add(this.label3);
             this.panel4.Controls.Add(this.lblUtilidad);
-            this.panel4.Location = new System.Drawing.Point(416, 16);
+            this.panel4.Location = new System.Drawing.Point(377, 2);
             this.panel4.Margin = new System.Windows.Forms.Padding(2);
             this.panel4.Name = "panel4";
             this.panel4.Size = new System.Drawing.Size(111, 54);
@@ -400,7 +400,7 @@
             this.panel5.Controls.Add(this.dgvVencimientos);
             this.panel5.Controls.Add(this.lblTituloVencimientos);
             this.panel5.Controls.Add(this.lblProximosVencimientos);
-            this.panel5.Location = new System.Drawing.Point(537, 316);
+            this.panel5.Location = new System.Drawing.Point(498, 302);
             this.panel5.Margin = new System.Windows.Forms.Padding(2);
             this.panel5.Name = "panel5";
             this.panel5.Size = new System.Drawing.Size(327, 137);
@@ -412,7 +412,7 @@
             this.panel6.Controls.Add(this.dgvVencidos);
             this.panel6.Controls.Add(this.lbl);
             this.panel6.Controls.Add(this.lblVencimientos);
-            this.panel6.Location = new System.Drawing.Point(537, 467);
+            this.panel6.Location = new System.Drawing.Point(498, 453);
             this.panel6.Margin = new System.Windows.Forms.Padding(2);
             this.panel6.Name = "panel6";
             this.panel6.Size = new System.Drawing.Size(327, 137);
@@ -423,10 +423,10 @@
             this.panel7.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(39)))), ((int)(((byte)(47)))));
             this.panel7.Controls.Add(this.label5);
             this.panel7.Controls.Add(this.chartFinanzas);
-            this.panel7.Location = new System.Drawing.Point(40, 94);
+            this.panel7.Location = new System.Drawing.Point(40, 149);
             this.panel7.Margin = new System.Windows.Forms.Padding(2);
             this.panel7.Name = "panel7";
-            this.panel7.Size = new System.Drawing.Size(413, 288);
+            this.panel7.Size = new System.Drawing.Size(413, 290);
             this.panel7.TabIndex = 4;
             // 
             // label5
@@ -446,7 +446,7 @@
             legend1.Enabled = false;
             legend1.Name = "Legend1";
             this.chartFinanzas.Legends.Add(legend1);
-            this.chartFinanzas.Location = new System.Drawing.Point(18, 38);
+            this.chartFinanzas.Location = new System.Drawing.Point(21, 38);
             this.chartFinanzas.Margin = new System.Windows.Forms.Padding(2);
             this.chartFinanzas.Name = "chartFinanzas";
             series1.ChartArea = "ChartArea1";
@@ -462,7 +462,7 @@
             this.panel8.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(39)))), ((int)(((byte)(47)))));
             this.panel8.Controls.Add(this.dgvProductosStock);
             this.panel8.Controls.Add(this.label6);
-            this.panel8.Location = new System.Drawing.Point(539, 16);
+            this.panel8.Location = new System.Drawing.Point(500, 2);
             this.panel8.Margin = new System.Windows.Forms.Padding(2);
             this.panel8.Name = "panel8";
             this.panel8.Size = new System.Drawing.Size(327, 137);
@@ -525,7 +525,7 @@
             this.panel9.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(39)))), ((int)(((byte)(47)))));
             this.panel9.Controls.Add(this.dgvProductosStockBajo);
             this.panel9.Controls.Add(this.label8);
-            this.panel9.Location = new System.Drawing.Point(539, 163);
+            this.panel9.Location = new System.Drawing.Point(500, 149);
             this.panel9.Margin = new System.Windows.Forms.Padding(2);
             this.panel9.Name = "panel9";
             this.panel9.Size = new System.Drawing.Size(327, 137);
@@ -588,8 +588,9 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScroll = true;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(25)))), ((int)(((byte)(28)))), ((int)(((byte)(35)))));
-            this.ClientSize = new System.Drawing.Size(966, 612);
+            this.ClientSize = new System.Drawing.Size(828, 594);
             this.Controls.Add(this.panel9);
             this.Controls.Add(this.panel8);
             this.Controls.Add(this.panel7);

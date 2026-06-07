@@ -28,10 +28,10 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle13 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle16 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle14 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle15 = new System.Windows.Forms.DataGridViewCellStyle();
             this.panel1 = new System.Windows.Forms.Panel();
             this.btnLimpiarCarrito = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
@@ -67,10 +67,10 @@
             this.panel1.Controls.Add(this.btnFinalizarVenta);
             this.panel1.Controls.Add(this.lblTotalPagar);
             this.panel1.Controls.Add(this.dgvCarrito);
-            this.panel1.Location = new System.Drawing.Point(632, 42);
+            this.panel1.Location = new System.Drawing.Point(625, 34);
             this.panel1.Margin = new System.Windows.Forms.Padding(2);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(325, 513);
+            this.panel1.Size = new System.Drawing.Size(325, 514);
             this.panel1.TabIndex = 4;
             // 
             // btnLimpiarCarrito
@@ -130,14 +130,14 @@
             this.dgvCarrito.AllowUserToResizeRows = false;
             this.dgvCarrito.BackgroundColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(39)))), ((int)(((byte)(47)))));
             this.dgvCarrito.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.SingleHorizontal;
-            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle5.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(24)))), ((int)(((byte)(30)))));
-            dataGridViewCellStyle5.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle5.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(200)))), ((int)(((byte)(200)))));
-            dataGridViewCellStyle5.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle5.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dgvCarrito.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle5;
+            dataGridViewCellStyle13.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle13.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(24)))), ((int)(((byte)(30)))));
+            dataGridViewCellStyle13.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle13.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(200)))), ((int)(((byte)(200)))));
+            dataGridViewCellStyle13.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle13.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle13.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dgvCarrito.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle13;
             this.dgvCarrito.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvCarrito.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.colCarritoId,
@@ -150,14 +150,14 @@
             this.colCarritoSubtotal,
             this.colCarritoEliminar,
             this.colCarritoIva});
-            dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle8.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(40)))), ((int)(((byte)(48)))));
-            dataGridViewCellStyle8.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle8.ForeColor = System.Drawing.Color.White;
-            dataGridViewCellStyle8.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle8.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle8.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dgvCarrito.DefaultCellStyle = dataGridViewCellStyle8;
+            dataGridViewCellStyle16.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle16.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(40)))), ((int)(((byte)(48)))));
+            dataGridViewCellStyle16.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle16.ForeColor = System.Drawing.Color.White;
+            dataGridViewCellStyle16.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle16.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle16.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dgvCarrito.DefaultCellStyle = dataGridViewCellStyle16;
             this.dgvCarrito.EnableHeadersVisualStyles = false;
             this.dgvCarrito.GridColor = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(55)))), ((int)(((byte)(65)))));
             this.dgvCarrito.Location = new System.Drawing.Point(10, 10);
@@ -228,8 +228,8 @@
             // 
             // colCarritoPrecio
             // 
-            dataGridViewCellStyle6.Format = "N0";
-            this.colCarritoPrecio.DefaultCellStyle = dataGridViewCellStyle6;
+            dataGridViewCellStyle14.Format = "N0";
+            this.colCarritoPrecio.DefaultCellStyle = dataGridViewCellStyle14;
             this.colCarritoPrecio.FillWeight = 95F;
             this.colCarritoPrecio.HeaderText = "Precio U.";
             this.colCarritoPrecio.MinimumWidth = 8;
@@ -238,8 +238,8 @@
             // 
             // colCarritoSubtotal
             // 
-            dataGridViewCellStyle7.Format = "N0";
-            this.colCarritoSubtotal.DefaultCellStyle = dataGridViewCellStyle7;
+            dataGridViewCellStyle15.Format = "N0";
+            this.colCarritoSubtotal.DefaultCellStyle = dataGridViewCellStyle15;
             this.colCarritoSubtotal.FillWeight = 85F;
             this.colCarritoSubtotal.HeaderText = "Subtotal";
             this.colCarritoSubtotal.MinimumWidth = 8;
@@ -270,7 +270,7 @@
             // 
             this.label5.AutoSize = true;
             this.label5.ForeColor = System.Drawing.Color.White;
-            this.label5.Location = new System.Drawing.Point(739, 11);
+            this.label5.Location = new System.Drawing.Point(732, 3);
             this.label5.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(118, 13);
@@ -279,12 +279,10 @@
             // 
             // flpCatalogo
             // 
-            this.flpCatalogo.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left)));
             this.flpCatalogo.AutoScroll = true;
             this.flpCatalogo.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(39)))), ((int)(((byte)(47)))));
             this.flpCatalogo.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.flpCatalogo.Location = new System.Drawing.Point(9, 42);
+            this.flpCatalogo.Location = new System.Drawing.Point(2, 34);
             this.flpCatalogo.Margin = new System.Windows.Forms.Padding(2);
             this.flpCatalogo.Name = "flpCatalogo";
             this.flpCatalogo.Size = new System.Drawing.Size(620, 514);
@@ -302,7 +300,7 @@
             "Suplementos",
             "Bebidas",
             "Snacks"});
-            this.cmbFiltroCategoria.Location = new System.Drawing.Point(313, 9);
+            this.cmbFiltroCategoria.Location = new System.Drawing.Point(306, 1);
             this.cmbFiltroCategoria.Margin = new System.Windows.Forms.Padding(2);
             this.cmbFiltroCategoria.Name = "cmbFiltroCategoria";
             this.cmbFiltroCategoria.Size = new System.Drawing.Size(82, 21);
@@ -321,7 +319,7 @@
             "Nombre (Z-A)",
             "Precio (Menor a Mayor)",
             "Precio (Mayor a Menor)"});
-            this.cmbOrdenar.Location = new System.Drawing.Point(509, 9);
+            this.cmbOrdenar.Location = new System.Drawing.Point(502, 1);
             this.cmbOrdenar.Margin = new System.Windows.Forms.Padding(2);
             this.cmbOrdenar.Name = "cmbOrdenar";
             this.cmbOrdenar.Size = new System.Drawing.Size(120, 21);
@@ -332,7 +330,7 @@
             // 
             this.label4.AutoSize = true;
             this.label4.ForeColor = System.Drawing.Color.White;
-            this.label4.Location = new System.Drawing.Point(248, 11);
+            this.label4.Location = new System.Drawing.Point(241, 3);
             this.label4.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(52, 13);
@@ -343,7 +341,7 @@
             // 
             this.label6.AutoSize = true;
             this.label6.ForeColor = System.Drawing.Color.White;
-            this.label6.Location = new System.Drawing.Point(429, 11);
+            this.label6.Location = new System.Drawing.Point(422, 3);
             this.label6.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(63, 13);
@@ -354,7 +352,7 @@
             // 
             this.txtBuscarProducto.BackColor = System.Drawing.Color.White;
             this.txtBuscarProducto.ForeColor = System.Drawing.Color.Black;
-            this.txtBuscarProducto.Location = new System.Drawing.Point(9, 10);
+            this.txtBuscarProducto.Location = new System.Drawing.Point(2, 2);
             this.txtBuscarProducto.Margin = new System.Windows.Forms.Padding(2);
             this.txtBuscarProducto.Name = "txtBuscarProducto";
             this.txtBuscarProducto.Size = new System.Drawing.Size(214, 20);
@@ -367,7 +365,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoScroll = true;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(25)))), ((int)(((byte)(28)))), ((int)(((byte)(35)))));
-            this.ClientSize = new System.Drawing.Size(966, 568);
+            this.ClientSize = new System.Drawing.Size(952, 552);
             this.Controls.Add(this.txtBuscarProducto);
             this.Controls.Add(this.label6);
             this.Controls.Add(this.label4);
