@@ -77,6 +77,35 @@ namespace AsuFit.Datos
             }
             return dt;
         }
+
+        // Obtiene los contadores reales para las notificaciones de la barra superior.
+        public void ObtenerContadoresNotificaciones(out int porVencer, out int vencidos, out int stockBajo, out int sinStock)
+        {
+            porVencer = 0; vencidos = 0; stockBajo = 0; sinStock = 0;
+            try
+            {
+                using (SqlConnection oConexion = Conexion.ObtenerConexion())
+                {
+                    oConexion.Open();
+
+                    string q1 = "SELECT COUNT(*) FROM Socios WHERE Estado = 'Activo' AND FechaVencimiento >= CAST(GETDATE() AS DATE) AND FechaVencimiento <= DATEADD(day, 5, CAST(GETDATE() AS DATE))";
+                    using (var cmd = new SqlCommand(q1, oConexion)) { porVencer = Convert.ToInt32(cmd.ExecuteScalar()); }
+
+                    string q2 = "SELECT COUNT(*) FROM Socios WHERE Estado = 'Activo' AND FechaVencimiento < CAST(GETDATE() AS DATE)";
+                    using (var cmd = new SqlCommand(q2, oConexion)) { vencidos = Convert.ToInt32(cmd.ExecuteScalar()); }
+
+                    string q3 = "SELECT COUNT(*) FROM Productos WHERE Estado = 'Activo' AND StockActual <= StockMinimo AND StockActual > 0";
+                    using (var cmd = new SqlCommand(q3, oConexion)) { stockBajo = Convert.ToInt32(cmd.ExecuteScalar()); }
+
+                    string q4 = "SELECT COUNT(*) FROM Productos WHERE Estado = 'Activo' AND StockActual <= 0";
+                    using (var cmd = new SqlCommand(q4, oConexion)) { sinStock = Convert.ToInt32(cmd.ExecuteScalar()); }
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
         #endregion
     }
 }

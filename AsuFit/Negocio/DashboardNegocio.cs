@@ -20,6 +20,12 @@ namespace AsuFit.Negocio
         {
             return objDatos.ListarVencimientosProximos();
         }
+
+        // Llama a la capa de datos para obtener los números de las notificaciones
+        public void ObtenerContadoresNotificaciones(out int porVencer, out int vencidos, out int stockBajo, out int sinStock)
+        {
+            objDatos.ObtenerContadoresNotificaciones(out porVencer, out vencidos, out stockBajo, out sinStock);
+        }
         #endregion
     }
 }

@@ -28,10 +28,9 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmDashboard));
             this.pnlSidebar = new System.Windows.Forms.Panel();
-            this.btnCerrarSesion = new System.Windows.Forms.Button();
-            this.btnConfiguración = new System.Windows.Forms.Button();
             this.btnAuditoría = new System.Windows.Forms.Button();
             this.btnGestionUsuarios = new System.Windows.Forms.Button();
             this.btnRegistrarUsuario = new System.Windows.Forms.Button();
@@ -53,16 +52,26 @@
             this.btnRegistroAsistencia = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.btnInicio = new System.Windows.Forms.Button();
+            this.btnCerrarSesion = new System.Windows.Forms.Button();
+            this.btnConfiguración = new System.Windows.Forms.Button();
             this.pnlContenedor = new System.Windows.Forms.Panel();
+            this.label5 = new System.Windows.Forms.Label();
+            this.pnlBarraSuperior = new System.Windows.Forms.Panel();
+            this.lblFechaHora = new System.Windows.Forms.Label();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.btnNotificaciones = new System.Windows.Forms.Button();
+            this.btnUsuario = new System.Windows.Forms.Button();
+            this.timerReloj = new System.Windows.Forms.Timer(this.components);
             this.pnlSidebar.SuspendLayout();
+            this.pnlContenedor.SuspendLayout();
+            this.pnlBarraSuperior.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
             // pnlSidebar
             // 
             this.pnlSidebar.AutoScroll = true;
             this.pnlSidebar.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(20)))), ((int)(((byte)(20)))));
-            this.pnlSidebar.Controls.Add(this.btnCerrarSesion);
-            this.pnlSidebar.Controls.Add(this.btnConfiguración);
             this.pnlSidebar.Controls.Add(this.btnAuditoría);
             this.pnlSidebar.Controls.Add(this.btnGestionUsuarios);
             this.pnlSidebar.Controls.Add(this.btnRegistrarUsuario);
@@ -85,46 +94,16 @@
             this.pnlSidebar.Controls.Add(this.label1);
             this.pnlSidebar.Controls.Add(this.btnInicio);
             this.pnlSidebar.Dock = System.Windows.Forms.DockStyle.Left;
-            this.pnlSidebar.Location = new System.Drawing.Point(0, 0);
+            this.pnlSidebar.Location = new System.Drawing.Point(0, 30);
             this.pnlSidebar.Margin = new System.Windows.Forms.Padding(2);
             this.pnlSidebar.Name = "pnlSidebar";
-            this.pnlSidebar.Size = new System.Drawing.Size(208, 616);
+            this.pnlSidebar.Size = new System.Drawing.Size(208, 586);
             this.pnlSidebar.TabIndex = 0;
-            // 
-            // btnCerrarSesion
-            // 
-            this.btnCerrarSesion.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.btnCerrarSesion.FlatAppearance.BorderSize = 0;
-            this.btnCerrarSesion.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnCerrarSesion.ForeColor = System.Drawing.Color.White;
-            this.btnCerrarSesion.Location = new System.Drawing.Point(0, 590);
-            this.btnCerrarSesion.Margin = new System.Windows.Forms.Padding(2);
-            this.btnCerrarSesion.Name = "btnCerrarSesion";
-            this.btnCerrarSesion.Size = new System.Drawing.Size(208, 26);
-            this.btnCerrarSesion.TabIndex = 18;
-            this.btnCerrarSesion.Text = "🏃 Cerrar Sesión";
-            this.btnCerrarSesion.UseVisualStyleBackColor = true;
-            this.btnCerrarSesion.Click += new System.EventHandler(this.btnCerrarSesion_Click);
-            // 
-            // btnConfiguración
-            // 
-            this.btnConfiguración.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(20)))), ((int)(((byte)(20)))));
-            this.btnConfiguración.Dock = System.Windows.Forms.DockStyle.Top;
-            this.btnConfiguración.FlatAppearance.BorderSize = 0;
-            this.btnConfiguración.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnConfiguración.ForeColor = System.Drawing.Color.White;
-            this.btnConfiguración.Location = new System.Drawing.Point(0, 562);
-            this.btnConfiguración.Margin = new System.Windows.Forms.Padding(0);
-            this.btnConfiguración.Name = "btnConfiguración";
-            this.btnConfiguración.Size = new System.Drawing.Size(208, 26);
-            this.btnConfiguración.TabIndex = 17;
-            this.btnConfiguración.Text = "⚙️ Configuración";
-            this.btnConfiguración.UseVisualStyleBackColor = false;
-            this.btnConfiguración.Click += new System.EventHandler(this.btnConfiguración_Click);
             // 
             // btnAuditoría
             // 
             this.btnAuditoría.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(20)))), ((int)(((byte)(20)))));
+            this.btnAuditoría.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnAuditoría.Dock = System.Windows.Forms.DockStyle.Top;
             this.btnAuditoría.FlatAppearance.BorderSize = 0;
             this.btnAuditoría.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
@@ -140,6 +119,7 @@
             // 
             // btnGestionUsuarios
             // 
+            this.btnGestionUsuarios.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnGestionUsuarios.Dock = System.Windows.Forms.DockStyle.Top;
             this.btnGestionUsuarios.FlatAppearance.BorderSize = 0;
             this.btnGestionUsuarios.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
@@ -155,6 +135,7 @@
             // 
             // btnRegistrarUsuario
             // 
+            this.btnRegistrarUsuario.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnRegistrarUsuario.Dock = System.Windows.Forms.DockStyle.Top;
             this.btnRegistrarUsuario.FlatAppearance.BorderSize = 0;
             this.btnRegistrarUsuario.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
@@ -177,12 +158,13 @@
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(208, 30);
             this.label4.TabIndex = 22;
-            this.label4.Text = "SEGURIDAD Y ADMINISTRACIÓN";
+            this.label4.Text = "SEGURIDAD Y CONTROL";
             this.label4.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // btnReportesEstadísticas
             // 
             this.btnReportesEstadísticas.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(20)))), ((int)(((byte)(20)))));
+            this.btnReportesEstadísticas.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnReportesEstadísticas.Dock = System.Windows.Forms.DockStyle.Top;
             this.btnReportesEstadísticas.FlatAppearance.BorderSize = 0;
             this.btnReportesEstadísticas.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
@@ -199,6 +181,7 @@
             // btnArqueoCaja
             // 
             this.btnArqueoCaja.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(20)))), ((int)(((byte)(20)))));
+            this.btnArqueoCaja.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnArqueoCaja.Dock = System.Windows.Forms.DockStyle.Top;
             this.btnArqueoCaja.FlatAppearance.BorderSize = 0;
             this.btnArqueoCaja.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
@@ -215,6 +198,7 @@
             // btnGestionGastos
             // 
             this.btnGestionGastos.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(20)))), ((int)(((byte)(20)))));
+            this.btnGestionGastos.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnGestionGastos.Dock = System.Windows.Forms.DockStyle.Top;
             this.btnGestionGastos.FlatAppearance.BorderSize = 0;
             this.btnGestionGastos.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
@@ -231,6 +215,7 @@
             // btnHistorialTransacciones
             // 
             this.btnHistorialTransacciones.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(20)))), ((int)(((byte)(20)))));
+            this.btnHistorialTransacciones.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnHistorialTransacciones.Dock = System.Windows.Forms.DockStyle.Top;
             this.btnHistorialTransacciones.FlatAppearance.BorderSize = 0;
             this.btnHistorialTransacciones.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
@@ -247,6 +232,7 @@
             // btnRegistrarCobro
             // 
             this.btnRegistrarCobro.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(20)))), ((int)(((byte)(20)))));
+            this.btnRegistrarCobro.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnRegistrarCobro.Dock = System.Windows.Forms.DockStyle.Top;
             this.btnRegistrarCobro.FlatAppearance.BorderSize = 0;
             this.btnRegistrarCobro.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
@@ -275,6 +261,7 @@
             // btnProveedores
             // 
             this.btnProveedores.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(20)))), ((int)(((byte)(20)))));
+            this.btnProveedores.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnProveedores.Dock = System.Windows.Forms.DockStyle.Top;
             this.btnProveedores.FlatAppearance.BorderSize = 0;
             this.btnProveedores.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
@@ -291,6 +278,7 @@
             // btnIngresoMercaderia
             // 
             this.btnIngresoMercaderia.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(20)))), ((int)(((byte)(20)))));
+            this.btnIngresoMercaderia.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnIngresoMercaderia.Dock = System.Windows.Forms.DockStyle.Top;
             this.btnIngresoMercaderia.FlatAppearance.BorderSize = 0;
             this.btnIngresoMercaderia.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
@@ -307,6 +295,7 @@
             // btnGestionProductos
             // 
             this.btnGestionProductos.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(20)))), ((int)(((byte)(20)))));
+            this.btnGestionProductos.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnGestionProductos.Dock = System.Windows.Forms.DockStyle.Top;
             this.btnGestionProductos.FlatAppearance.BorderSize = 0;
             this.btnGestionProductos.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
@@ -323,6 +312,7 @@
             // btnInventarioVentas
             // 
             this.btnInventarioVentas.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(20)))), ((int)(((byte)(20)))));
+            this.btnInventarioVentas.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnInventarioVentas.Dock = System.Windows.Forms.DockStyle.Top;
             this.btnInventarioVentas.FlatAppearance.BorderSize = 0;
             this.btnInventarioVentas.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
@@ -351,6 +341,7 @@
             // btnGestionPlanes
             // 
             this.btnGestionPlanes.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(20)))), ((int)(((byte)(20)))));
+            this.btnGestionPlanes.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnGestionPlanes.Dock = System.Windows.Forms.DockStyle.Top;
             this.btnGestionPlanes.FlatAppearance.BorderSize = 0;
             this.btnGestionPlanes.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
@@ -366,6 +357,7 @@
             // 
             // btnGestionSocios
             // 
+            this.btnGestionSocios.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnGestionSocios.Dock = System.Windows.Forms.DockStyle.Top;
             this.btnGestionSocios.FlatAppearance.BorderSize = 0;
             this.btnGestionSocios.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
@@ -381,6 +373,7 @@
             // 
             // btnRegistrarSocio
             // 
+            this.btnRegistrarSocio.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnRegistrarSocio.Dock = System.Windows.Forms.DockStyle.Top;
             this.btnRegistrarSocio.FlatAppearance.BorderSize = 0;
             this.btnRegistrarSocio.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
@@ -398,6 +391,7 @@
             // btnRegistroAsistencia
             // 
             this.btnRegistroAsistencia.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(20)))), ((int)(((byte)(20)))));
+            this.btnRegistroAsistencia.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnRegistroAsistencia.Dock = System.Windows.Forms.DockStyle.Top;
             this.btnRegistroAsistencia.FlatAppearance.BorderSize = 0;
             this.btnRegistroAsistencia.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
@@ -425,6 +419,7 @@
             // 
             // btnInicio
             // 
+            this.btnInicio.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnInicio.Dock = System.Windows.Forms.DockStyle.Top;
             this.btnInicio.FlatAppearance.BorderSize = 0;
             this.btnInicio.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
@@ -438,18 +433,138 @@
             this.btnInicio.UseVisualStyleBackColor = true;
             this.btnInicio.Click += new System.EventHandler(this.btnInicio_Click);
             // 
+            // btnCerrarSesion
+            // 
+            this.btnCerrarSesion.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnCerrarSesion.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(20)))), ((int)(((byte)(20)))));
+            this.btnCerrarSesion.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnCerrarSesion.FlatAppearance.BorderSize = 0;
+            this.btnCerrarSesion.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnCerrarSesion.ForeColor = System.Drawing.Color.White;
+            this.btnCerrarSesion.Location = new System.Drawing.Point(1082, 2);
+            this.btnCerrarSesion.Margin = new System.Windows.Forms.Padding(2);
+            this.btnCerrarSesion.Name = "btnCerrarSesion";
+            this.btnCerrarSesion.Size = new System.Drawing.Size(101, 30);
+            this.btnCerrarSesion.TabIndex = 18;
+            this.btnCerrarSesion.Text = "🚪 Cerrar Sesión";
+            this.btnCerrarSesion.UseVisualStyleBackColor = false;
+            this.btnCerrarSesion.Click += new System.EventHandler(this.btnCerrarSesion_Click);
+            // 
+            // btnConfiguración
+            // 
+            this.btnConfiguración.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnConfiguración.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(20)))), ((int)(((byte)(20)))));
+            this.btnConfiguración.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnConfiguración.FlatAppearance.BorderSize = 0;
+            this.btnConfiguración.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnConfiguración.ForeColor = System.Drawing.Color.White;
+            this.btnConfiguración.Location = new System.Drawing.Point(974, 2);
+            this.btnConfiguración.Margin = new System.Windows.Forms.Padding(0);
+            this.btnConfiguración.Name = "btnConfiguración";
+            this.btnConfiguración.Size = new System.Drawing.Size(104, 30);
+            this.btnConfiguración.TabIndex = 17;
+            this.btnConfiguración.Text = "⚙️ Configuración";
+            this.btnConfiguración.UseVisualStyleBackColor = false;
+            this.btnConfiguración.Click += new System.EventHandler(this.btnConfiguración_Click);
+            // 
             // pnlContenedor
             // 
             this.pnlContenedor.AutoScroll = true;
             this.pnlContenedor.BackColor = System.Drawing.Color.Transparent;
             this.pnlContenedor.BackgroundImage = global::AsuFit.Properties.Resources.fondo_pantalla_2;
             this.pnlContenedor.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.pnlContenedor.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.pnlContenedor.Location = new System.Drawing.Point(208, 0);
+            this.pnlContenedor.Controls.Add(this.label5);
+            this.pnlContenedor.Location = new System.Drawing.Point(208, 30);
             this.pnlContenedor.Margin = new System.Windows.Forms.Padding(2);
             this.pnlContenedor.Name = "pnlContenedor";
-            this.pnlContenedor.Size = new System.Drawing.Size(977, 616);
+            this.pnlContenedor.Size = new System.Drawing.Size(977, 586);
             this.pnlContenedor.TabIndex = 0;
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(246, 209);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(35, 13);
+            this.label5.TabIndex = 0;
+            this.label5.Text = "label5";
+            // 
+            // pnlBarraSuperior
+            // 
+            this.pnlBarraSuperior.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(20)))), ((int)(((byte)(20)))));
+            this.pnlBarraSuperior.Controls.Add(this.lblFechaHora);
+            this.pnlBarraSuperior.Controls.Add(this.pictureBox1);
+            this.pnlBarraSuperior.Controls.Add(this.btnNotificaciones);
+            this.pnlBarraSuperior.Controls.Add(this.btnUsuario);
+            this.pnlBarraSuperior.Controls.Add(this.btnConfiguración);
+            this.pnlBarraSuperior.Controls.Add(this.btnCerrarSesion);
+            this.pnlBarraSuperior.Dock = System.Windows.Forms.DockStyle.Top;
+            this.pnlBarraSuperior.Location = new System.Drawing.Point(0, 0);
+            this.pnlBarraSuperior.Name = "pnlBarraSuperior";
+            this.pnlBarraSuperior.Size = new System.Drawing.Size(1185, 30);
+            this.pnlBarraSuperior.TabIndex = 2;
+            // 
+            // lblFechaHora
+            // 
+            this.lblFechaHora.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.lblFechaHora.AutoSize = true;
+            this.lblFechaHora.ForeColor = System.Drawing.Color.White;
+            this.lblFechaHora.Location = new System.Drawing.Point(382, 11);
+            this.lblFechaHora.Name = "lblFechaHora";
+            this.lblFechaHora.Padding = new System.Windows.Forms.Padding(20, 0, 0, 0);
+            this.lblFechaHora.Size = new System.Drawing.Size(80, 13);
+            this.lblFechaHora.TabIndex = 22;
+            this.lblFechaHora.Text = "FechaHora";
+            // 
+            // pictureBox1
+            // 
+            this.pictureBox1.Image = global::AsuFit.Properties.Resources.logo;
+            this.pictureBox1.Location = new System.Drawing.Point(-20, -13);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(130, 60);
+            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBox1.TabIndex = 21;
+            this.pictureBox1.TabStop = false;
+            // 
+            // btnNotificaciones
+            // 
+            this.btnNotificaciones.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnNotificaciones.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(20)))), ((int)(((byte)(20)))));
+            this.btnNotificaciones.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnNotificaciones.FlatAppearance.BorderSize = 0;
+            this.btnNotificaciones.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnNotificaciones.ForeColor = System.Drawing.Color.White;
+            this.btnNotificaciones.Location = new System.Drawing.Point(715, 2);
+            this.btnNotificaciones.Margin = new System.Windows.Forms.Padding(0);
+            this.btnNotificaciones.Name = "btnNotificaciones";
+            this.btnNotificaciones.Size = new System.Drawing.Size(133, 30);
+            this.btnNotificaciones.TabIndex = 20;
+            this.btnNotificaciones.Text = "🔔 Notificaciones";
+            this.btnNotificaciones.UseVisualStyleBackColor = false;
+            this.btnNotificaciones.Click += new System.EventHandler(this.btnNotificaciones_Click);
+            // 
+            // btnUsuario
+            // 
+            this.btnUsuario.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnUsuario.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(20)))), ((int)(((byte)(20)))));
+            this.btnUsuario.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnUsuario.FlatAppearance.BorderSize = 0;
+            this.btnUsuario.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnUsuario.ForeColor = System.Drawing.Color.White;
+            this.btnUsuario.Location = new System.Drawing.Point(857, 2);
+            this.btnUsuario.Margin = new System.Windows.Forms.Padding(0);
+            this.btnUsuario.Name = "btnUsuario";
+            this.btnUsuario.Size = new System.Drawing.Size(117, 30);
+            this.btnUsuario.TabIndex = 19;
+            this.btnUsuario.Text = "👤 Usuario";
+            this.btnUsuario.UseVisualStyleBackColor = false;
+            this.btnUsuario.Click += new System.EventHandler(this.btnUsuario_Click);
+            // 
+            // timerReloj
+            // 
+            this.timerReloj.Enabled = true;
+            this.timerReloj.Interval = 1000;
+            this.timerReloj.Tick += new System.EventHandler(this.timerReloj_Tick);
             // 
             // frmDashboard
             // 
@@ -460,6 +575,7 @@
             this.ClientSize = new System.Drawing.Size(1185, 616);
             this.Controls.Add(this.pnlContenedor);
             this.Controls.Add(this.pnlSidebar);
+            this.Controls.Add(this.pnlBarraSuperior);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(2);
@@ -471,6 +587,11 @@
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frmDashboard_FormClosing);
             this.Load += new System.EventHandler(this.frmDashboard_Load);
             this.pnlSidebar.ResumeLayout(false);
+            this.pnlContenedor.ResumeLayout(false);
+            this.pnlContenedor.PerformLayout();
+            this.pnlBarraSuperior.ResumeLayout(false);
+            this.pnlBarraSuperior.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -502,5 +623,12 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Panel pnlBarraSuperior;
+        private System.Windows.Forms.Button btnNotificaciones;
+        private System.Windows.Forms.Button btnUsuario;
+        private System.Windows.Forms.PictureBox pictureBox1;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Label lblFechaHora;
+        private System.Windows.Forms.Timer timerReloj;
     }
 }

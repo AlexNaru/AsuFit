@@ -52,12 +52,18 @@
             this.label12 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.picMostrarConfirmPass = new System.Windows.Forms.PictureBox();
+            this.picMostrarPass = new System.Windows.Forms.PictureBox();
             this.label11 = new System.Windows.Forms.Label();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.picMostrarRespuesta = new System.Windows.Forms.PictureBox();
             this.label13 = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.picMostrarConfirmPass)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.picMostrarPass)).BeginInit();
             this.groupBox3.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.picMostrarRespuesta)).BeginInit();
             this.SuspendLayout();
             // 
             // txtNombreCompleto
@@ -76,17 +82,17 @@
             this.txtEmail.Margin = new System.Windows.Forms.Padding(2);
             this.txtEmail.Name = "txtEmail";
             this.txtEmail.Size = new System.Drawing.Size(103, 20);
-            this.txtEmail.TabIndex = 6;
+            this.txtEmail.TabIndex = 1;
             this.txtEmail.KeyDown += new System.Windows.Forms.KeyEventHandler(this.NavegacionEnter_KeyDown);
             // 
             // txtPassword
             // 
-            this.txtPassword.Location = new System.Drawing.Point(175, 51);
+            this.txtPassword.Location = new System.Drawing.Point(7, 105);
             this.txtPassword.Margin = new System.Windows.Forms.Padding(2);
             this.txtPassword.Name = "txtPassword";
-            this.txtPassword.PasswordChar = '*';
             this.txtPassword.Size = new System.Drawing.Size(103, 20);
-            this.txtPassword.TabIndex = 2;
+            this.txtPassword.TabIndex = 3;
+            this.txtPassword.UseSystemPasswordChar = true;
             this.txtPassword.TextChanged += new System.EventHandler(this.VerificarCamposObligatorios);
             this.txtPassword.KeyDown += new System.Windows.Forms.KeyEventHandler(this.NavegacionEnter_KeyDown);
             // 
@@ -96,7 +102,7 @@
             this.txtUsername.Margin = new System.Windows.Forms.Padding(2);
             this.txtUsername.Name = "txtUsername";
             this.txtUsername.Size = new System.Drawing.Size(103, 20);
-            this.txtUsername.TabIndex = 1;
+            this.txtUsername.TabIndex = 0;
             this.txtUsername.TextChanged += new System.EventHandler(this.VerificarCamposObligatorios);
             this.txtUsername.KeyDown += new System.Windows.Forms.KeyEventHandler(this.NavegacionEnter_KeyDown);
             // 
@@ -105,9 +111,9 @@
             this.txtRespuesta.Location = new System.Drawing.Point(9, 84);
             this.txtRespuesta.Margin = new System.Windows.Forms.Padding(2);
             this.txtRespuesta.Name = "txtRespuesta";
-            this.txtRespuesta.PasswordChar = '*';
-            this.txtRespuesta.Size = new System.Drawing.Size(103, 20);
-            this.txtRespuesta.TabIndex = 8;
+            this.txtRespuesta.Size = new System.Drawing.Size(101, 20);
+            this.txtRespuesta.TabIndex = 0;
+            this.txtRespuesta.UseSystemPasswordChar = true;
             this.txtRespuesta.TextChanged += new System.EventHandler(this.VerificarCamposObligatorios);
             this.txtRespuesta.KeyDown += new System.Windows.Forms.KeyEventHandler(this.NavegacionEnter_KeyDown);
             // 
@@ -118,11 +124,11 @@
             this.cmbRol.Items.AddRange(new object[] {
             "Administrador",
             "Recepcionista"});
-            this.cmbRol.Location = new System.Drawing.Point(175, 105);
+            this.cmbRol.Location = new System.Drawing.Point(175, 50);
             this.cmbRol.Margin = new System.Windows.Forms.Padding(2);
             this.cmbRol.Name = "cmbRol";
             this.cmbRol.Size = new System.Drawing.Size(103, 21);
-            this.cmbRol.TabIndex = 4;
+            this.cmbRol.TabIndex = 1;
             this.cmbRol.SelectedIndexChanged += new System.EventHandler(this.VerificarCamposObligatorios);
             this.cmbRol.SelectionChangeCommitted += new System.EventHandler(this.cmbRol_SelectionChangeCommitted);
             this.cmbRol.KeyDown += new System.Windows.Forms.KeyEventHandler(this.cmbRol_KeyDown);
@@ -164,7 +170,7 @@
             // 
             this.label4.AutoSize = true;
             this.label4.ForeColor = System.Drawing.Color.White;
-            this.label4.Location = new System.Drawing.Point(172, 36);
+            this.label4.Location = new System.Drawing.Point(4, 90);
             this.label4.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(61, 13);
@@ -175,7 +181,7 @@
             // 
             this.label5.AutoSize = true;
             this.label5.ForeColor = System.Drawing.Color.White;
-            this.label5.Location = new System.Drawing.Point(172, 90);
+            this.label5.Location = new System.Drawing.Point(172, 36);
             this.label5.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(23, 13);
@@ -221,11 +227,11 @@
             this.btnGuardar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnGuardar.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnGuardar.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
-            this.btnGuardar.Location = new System.Drawing.Point(317, 421);
+            this.btnGuardar.Location = new System.Drawing.Point(288, 414);
             this.btnGuardar.Margin = new System.Windows.Forms.Padding(2);
             this.btnGuardar.Name = "btnGuardar";
-            this.btnGuardar.Size = new System.Drawing.Size(100, 21);
-            this.btnGuardar.TabIndex = 9;
+            this.btnGuardar.Size = new System.Drawing.Size(129, 28);
+            this.btnGuardar.TabIndex = 0;
             this.btnGuardar.Text = "GUARDAR";
             this.btnGuardar.UseVisualStyleBackColor = false;
             this.btnGuardar.Click += new System.EventHandler(this.btnGuardar_Click);
@@ -234,7 +240,7 @@
             // 
             this.label7.AutoSize = true;
             this.label7.ForeColor = System.Drawing.Color.White;
-            this.label7.Location = new System.Drawing.Point(6, 90);
+            this.label7.Location = new System.Drawing.Point(172, 90);
             this.label7.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(107, 13);
@@ -243,12 +249,12 @@
             // 
             // txtConfirmarPassword
             // 
-            this.txtConfirmarPassword.Location = new System.Drawing.Point(7, 105);
+            this.txtConfirmarPassword.Location = new System.Drawing.Point(175, 105);
             this.txtConfirmarPassword.Margin = new System.Windows.Forms.Padding(2);
             this.txtConfirmarPassword.Name = "txtConfirmarPassword";
-            this.txtConfirmarPassword.PasswordChar = '*';
             this.txtConfirmarPassword.Size = new System.Drawing.Size(103, 20);
-            this.txtConfirmarPassword.TabIndex = 3;
+            this.txtConfirmarPassword.TabIndex = 4;
+            this.txtConfirmarPassword.UseSystemPasswordChar = true;
             this.txtConfirmarPassword.TextChanged += new System.EventHandler(this.VerificarCamposObligatorios);
             this.txtConfirmarPassword.KeyDown += new System.Windows.Forms.KeyEventHandler(this.NavegacionEnter_KeyDown);
             // 
@@ -271,7 +277,7 @@
             this.chkActivo.Margin = new System.Windows.Forms.Padding(2);
             this.chkActivo.Name = "chkActivo";
             this.chkActivo.Size = new System.Drawing.Size(56, 17);
-            this.chkActivo.TabIndex = 5;
+            this.chkActivo.TabIndex = 2;
             this.chkActivo.Text = "Activo";
             this.chkActivo.UseVisualStyleBackColor = true;
             this.chkActivo.KeyDown += new System.Windows.Forms.KeyEventHandler(this.NavegacionEnter_KeyDown);
@@ -282,10 +288,10 @@
             this.btnCancelar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnCancelar.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnCancelar.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
-            this.btnCancelar.Location = new System.Drawing.Point(176, 421);
+            this.btnCancelar.Location = new System.Drawing.Point(136, 414);
             this.btnCancelar.Margin = new System.Windows.Forms.Padding(2);
             this.btnCancelar.Name = "btnCancelar";
-            this.btnCancelar.Size = new System.Drawing.Size(104, 21);
+            this.btnCancelar.Size = new System.Drawing.Size(129, 28);
             this.btnCancelar.TabIndex = 10;
             this.btnCancelar.Text = "CANCELAR";
             this.btnCancelar.UseVisualStyleBackColor = false;
@@ -331,6 +337,8 @@
             // 
             // groupBox2
             // 
+            this.groupBox2.Controls.Add(this.picMostrarConfirmPass);
+            this.groupBox2.Controls.Add(this.picMostrarPass);
             this.groupBox2.Controls.Add(this.label11);
             this.groupBox2.Controls.Add(this.label3);
             this.groupBox2.Controls.Add(this.txtUsername);
@@ -350,6 +358,34 @@
             this.groupBox2.TabIndex = 26;
             this.groupBox2.TabStop = false;
             // 
+            // picMostrarConfirmPass
+            // 
+            this.picMostrarConfirmPass.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(39)))), ((int)(((byte)(47)))));
+            this.picMostrarConfirmPass.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.picMostrarConfirmPass.Image = global::AsuFit.Properties.Resources.ojo_cerrado;
+            this.picMostrarConfirmPass.Location = new System.Drawing.Point(284, 105);
+            this.picMostrarConfirmPass.Name = "picMostrarConfirmPass";
+            this.picMostrarConfirmPass.Size = new System.Drawing.Size(26, 20);
+            this.picMostrarConfirmPass.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.picMostrarConfirmPass.TabIndex = 29;
+            this.picMostrarConfirmPass.TabStop = false;
+            this.picMostrarConfirmPass.Click += new System.EventHandler(this.picMostrarConfirmPass_Click);
+            this.picMostrarConfirmPass.DoubleClick += new System.EventHandler(this.picMostrarConfirmPass_DoubleClick);
+            // 
+            // picMostrarPass
+            // 
+            this.picMostrarPass.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(39)))), ((int)(((byte)(47)))));
+            this.picMostrarPass.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.picMostrarPass.Image = global::AsuFit.Properties.Resources.ojo_cerrado;
+            this.picMostrarPass.Location = new System.Drawing.Point(115, 105);
+            this.picMostrarPass.Name = "picMostrarPass";
+            this.picMostrarPass.Size = new System.Drawing.Size(26, 20);
+            this.picMostrarPass.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.picMostrarPass.TabIndex = 28;
+            this.picMostrarPass.TabStop = false;
+            this.picMostrarPass.Click += new System.EventHandler(this.picMostrarPass_Click);
+            this.picMostrarPass.DoubleClick += new System.EventHandler(this.picMostrarPass_DoubleClick);
+            // 
             // label11
             // 
             this.label11.AutoSize = true;
@@ -363,6 +399,7 @@
             // 
             // groupBox3
             // 
+            this.groupBox3.Controls.Add(this.picMostrarRespuesta);
             this.groupBox3.Controls.Add(this.label13);
             this.groupBox3.Controls.Add(this.label8);
             this.groupBox3.Controls.Add(this.lblPreguntaSeguridad);
@@ -375,6 +412,20 @@
             this.groupBox3.Size = new System.Drawing.Size(403, 116);
             this.groupBox3.TabIndex = 27;
             this.groupBox3.TabStop = false;
+            // 
+            // picMostrarRespuesta
+            // 
+            this.picMostrarRespuesta.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(39)))), ((int)(((byte)(47)))));
+            this.picMostrarRespuesta.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.picMostrarRespuesta.Image = global::AsuFit.Properties.Resources.ojo_cerrado;
+            this.picMostrarRespuesta.Location = new System.Drawing.Point(115, 84);
+            this.picMostrarRespuesta.Name = "picMostrarRespuesta";
+            this.picMostrarRespuesta.Size = new System.Drawing.Size(26, 20);
+            this.picMostrarRespuesta.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.picMostrarRespuesta.TabIndex = 30;
+            this.picMostrarRespuesta.TabStop = false;
+            this.picMostrarRespuesta.Click += new System.EventHandler(this.picMostrarRespuesta_Click);
+            this.picMostrarRespuesta.DoubleClick += new System.EventHandler(this.picMostrarRespuesta_DoubleClick);
             // 
             // label13
             // 
@@ -392,7 +443,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(30)))), ((int)(((byte)(30)))));
-            this.ClientSize = new System.Drawing.Size(459, 464);
+            this.ClientSize = new System.Drawing.Size(434, 458);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
@@ -400,6 +451,7 @@
             this.Controls.Add(this.btnCancelar);
             this.Controls.Add(this.btnGuardar);
             this.Margin = new System.Windows.Forms.Padding(2);
+            this.MaximizeBox = false;
             this.Name = "frmRegistrarUsuario";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "frmRegistrarUsuario";
@@ -411,8 +463,11 @@
             this.groupBox1.PerformLayout();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.picMostrarConfirmPass)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.picMostrarPass)).EndInit();
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.picMostrarRespuesta)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -447,5 +502,8 @@
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.Label label13;
+        private System.Windows.Forms.PictureBox picMostrarConfirmPass;
+        private System.Windows.Forms.PictureBox picMostrarPass;
+        private System.Windows.Forms.PictureBox picMostrarRespuesta;
     }
 }

@@ -9,7 +9,7 @@ namespace AsuFit.Datos
     public class UsuarioDatos
     {
         #region AUTENTICACIÓN Y SEGURIDAD
-        // Valida las credenciales de acceso de un usuario.
+        // Valida las credenciales de acceso de un usuario y descarga TODOS sus datos.
         public Usuario ValidarLogin(string username, string password)
         {
             Usuario objetoUsuario = null;
@@ -17,7 +17,8 @@ namespace AsuFit.Datos
             {
                 using (SqlConnection oConexion = Conexion.ObtenerConexion())
                 {
-                    string query = "SELECT IdUsuario, NombreCompleto, Rol FROM Usuarios WHERE Username = @user AND Password = @pass AND Estado = 'Activo'";
+                    // 1. SOLUCIÓN: Agregamos Email, Estado, Pregunta y Respuesta a la consulta SQL
+                    string query = "SELECT IdUsuario, NombreCompleto, Rol, Email, Estado, PreguntaSeguridad, RespuestaSeguridad FROM Usuarios WHERE Username = @user AND Password = @pass AND Estado = 'Activo'";
                     SqlCommand cmd = new SqlCommand(query, oConexion);
                     cmd.Parameters.AddWithValue("@user", username);
                     cmd.Parameters.AddWithValue("@pass", password);
@@ -31,7 +32,14 @@ namespace AsuFit.Datos
                             {
                                 IdUsuario = Convert.ToInt32(dr["IdUsuario"]),
                                 NombreCompleto = dr["NombreCompleto"].ToString(),
-                                Rol = dr["Rol"].ToString()
+                                Username = username,
+                                Rol = dr["Rol"].ToString(),
+
+                                // 2. SOLUCIÓN: Rescatamos los valores de la base de datos (y verificamos que no sean nulos)
+                                Email = dr["Email"] != DBNull.Value ? dr["Email"].ToString() : "",
+                                Estado = dr["Estado"].ToString(),
+                                PreguntaSeguridad = dr["PreguntaSeguridad"] != DBNull.Value ? dr["PreguntaSeguridad"].ToString() : "",
+                                RespuestaSeguridad = dr["RespuestaSeguridad"] != DBNull.Value ? dr["RespuestaSeguridad"].ToString() : ""
                             };
                         }
                     }
@@ -154,13 +162,22 @@ namespace AsuFit.Datos
             {
                 try
                 {
-                    string query = @"UPDATE Usuarios SET NombreCompleto = @Nombre, Username = @User, Rol = @Rol, Estado = @Estado, 
-                             Email = @Email, PreguntaSeguridad = @Pregunta, RespuestaSeguridad = @Respuesta WHERE IdUsuario = @Id";
+                    string query = @"UPDATE Usuarios SET
+                                     NombreCompleto = @Nombre,
+                                     Username = @User,
+                                     Password = @Pass,
+                                     Rol = @Rol,
+                                     Estado = @Estado,
+                                     Email = @Email,
+                                     PreguntaSeguridad = @Pregunta,
+                                     RespuestaSeguridad = @Respuesta
+                                     WHERE IdUsuario = @Id";
 
                     SqlCommand cmd = new SqlCommand(query, oConexion);
                     cmd.Parameters.AddWithValue("@Id", obj.IdUsuario);
                     cmd.Parameters.AddWithValue("@Nombre", obj.NombreCompleto);
                     cmd.Parameters.AddWithValue("@User", obj.Username);
+                    cmd.Parameters.AddWithValue("@Pass", obj.Password);
                     cmd.Parameters.AddWithValue("@Rol", obj.Rol);
                     cmd.Parameters.AddWithValue("@Estado", obj.Estado);
                     cmd.Parameters.AddWithValue("@Email", obj.Email ?? (object)DBNull.Value);

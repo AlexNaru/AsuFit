@@ -44,6 +44,11 @@ namespace AsuFit.Presentacion
         {
             ConfigurarTemaOscuro(); // Inyectamos la paleta de colores básica
             CambiarEstadoBoton(false);
+
+            // Aseguramos que al cargar, las contraseñas estén ocultas por defecto
+            txtPassword.UseSystemPasswordChar = true;
+            txtConfirmarPassword.UseSystemPasswordChar = true;
+            txtRespuesta.UseSystemPasswordChar = true;
         }
 
         private void frmRegistrarUsuario_Shown(object sender, EventArgs e)
@@ -295,6 +300,7 @@ namespace AsuFit.Presentacion
             {
                 usuarioAEditar.NombreCompleto = txtNombreCompleto.Text.Trim();
                 usuarioAEditar.Username = txtUsername.Text.Trim();
+                usuarioAEditar.Password = txtPassword.Text.Trim();
                 usuarioAEditar.Rol = cmbRol.Text;
                 usuarioAEditar.Email = txtEmail.Text.Trim();
                 usuarioAEditar.RespuestaSeguridad = txtRespuesta.Text.Trim();
@@ -318,6 +324,45 @@ namespace AsuFit.Presentacion
         private void btnCancelar_Click(object sender, EventArgs e)
         {
             this.Close();
+        }
+        #endregion
+
+        #region 6. MOSTRAR / OCULTAR CONTRASEÑAS Y RESPUESTA
+        // Método maestro que hace la magia para cualquier caja y cualquier ojito
+        private void AlternarVisibilidad(TextBox cajaTexto, PictureBox ojito)
+        {
+            cajaTexto.UseSystemPasswordChar = !cajaTexto.UseSystemPasswordChar;
+            ojito.Image = cajaTexto.UseSystemPasswordChar ? Properties.Resources.ojo_cerrado : Properties.Resources.ojo_abierto;
+        }
+
+        // --- 1. CONTRASEÑA PRINCIPAL ---
+        private void picMostrarPass_Click(object sender, EventArgs e)
+        {
+            AlternarVisibilidad(txtPassword, picMostrarPass);
+        }
+        private void picMostrarPass_DoubleClick(object sender, EventArgs e)
+        {
+            AlternarVisibilidad(txtPassword, picMostrarPass); // Soluciona el clic rápido
+        }
+
+        // --- 2. CONFIRMAR CONTRASEÑA ---
+        private void picMostrarConfirmPass_Click(object sender, EventArgs e)
+        {
+            AlternarVisibilidad(txtConfirmarPassword, picMostrarConfirmPass);
+        }
+        private void picMostrarConfirmPass_DoubleClick(object sender, EventArgs e)
+        {
+            AlternarVisibilidad(txtConfirmarPassword, picMostrarConfirmPass);
+        }
+
+        // --- 3. RESPUESTA DE SEGURIDAD ---
+        private void picMostrarRespuesta_Click(object sender, EventArgs e)
+        {
+            AlternarVisibilidad(txtRespuesta, picMostrarRespuesta);
+        }
+        private void picMostrarRespuesta_DoubleClick(object sender, EventArgs e)
+        {
+            AlternarVisibilidad(txtRespuesta, picMostrarRespuesta);
         }
         #endregion
     }

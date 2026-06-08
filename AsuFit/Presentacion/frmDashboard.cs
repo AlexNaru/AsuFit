@@ -7,34 +7,75 @@ namespace AsuFit.Presentacion
 {
     public partial class frmDashboard : Form
     {
-        #region VARIABLES GLOBALES Y CONSTRUCTOR
+        #region 1. VARIABLES GLOBALES Y CONSTRUCTOR
         private Button botonActivo = null;
         private Usuario usuarioActual;
         private bool _cerrandoParaLogOut = false;
+
+        private ContextMenuStrip menuDropdownUsuario;
+        private ContextMenuStrip menuDropdownNotificaciones;
 
         public frmDashboard(Usuario user)
         {
             InitializeComponent();
             usuarioActual = user;
         }
+        #endregion
 
+        #region 2. EVENTOS PRINCIPALES DEL FORMULARIO (LOAD Y CIERRE)
         private void frmDashboard_Load(object sender, EventArgs e)
         {
-            // Aplica la escala global definida en la configuración del usuario
             float escala = Properties.Settings.Default.EscalaInterfaz;
             this.Scale(new SizeF(escala, escala));
+            AjustarLetraMenu(this);
+
+            // 1. Mostramos el ROL, forzamos letra blanca y agregamos el ÍCONO 👤
+            btnUsuario.ForeColor = Color.White;
+            // Hace que el reloj tome la fuente dinámica del sistema y le suma 2 puntos para que destaque en negrita
+            lblFechaHora.Font = new Font("Segoe UI", Properties.Settings.Default.TamanoFuente + 2f, FontStyle.Bold);
+            btnUsuario.Text = $"👤 {usuarioActual.NombreCompleto}";
+
+            if (lblFechaHora != null)
+            {
+                lblFechaHora.Font = new Font("Segoe UI", Properties.Settings.Default.TamanoFuente, FontStyle.Regular);
+            }
+
+            btnNotificaciones.ForeColor = Color.White;
+
+            // 2. Construir los menús invisibles con datos de la BD
+            GenerarMenusDesplegables();
+
+            // 3. Forzar la primera actualización del reloj para que arranque al instante
+            timerReloj_Tick(null, null);
+            if (timerReloj != null) timerReloj.Start();
 
             this.CenterToScreen();
-
-            AjustarLetraMenu(this);
 
             this.Shown += (s, ev) =>
             {
                 MessageBox.Show($"¡Bienvenido a AsuFit, {usuarioActual.NombreCompleto}!",
-                                "Acceso Concedido", MessageBoxButtons.OK, MessageBoxIcon.None);
-
+                                "Acceso Concedido", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 btnInicio.PerformClick();
             };
+        }
+
+        private void frmDashboard_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (!_cerrandoParaLogOut)
+            {
+                DialogResult resultado = MessageBox.Show("¿Está seguro de que desea salir del sistema AsuFit?",
+                    "Confirmar Salida", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+
+                if (resultado == DialogResult.Yes)
+                {
+                    AsuFit.Datos.GestorAuditoria.Registrar(usuarioActual.NombreCompleto, "Seguridad", "Cierre de Sistema", "Cierre desde la X.");
+                    Application.ExitThread();
+                }
+                else
+                {
+                    e.Cancel = true;
+                }
+            }
         }
 
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
@@ -59,7 +100,128 @@ namespace AsuFit.Presentacion
         }
         #endregion
 
-        #region MÉTODOS DE LA INTERFAZ (UI)
+        #region 3. LÓGICA DE BARRA SUPERIOR, BD Y MENÚS DESPLEGABLES
+
+        // Evento que actualiza la fecha y hora en tiempo real
+        private void timerReloj_Tick(object sender, EventArgs e)
+        {
+            // Obtenemos la fecha en español
+            string fecha = DateTime.Now.ToString("dddd dd/MM/yyyy", new System.Globalization.CultureInfo("es-ES"));
+
+            // Capitalizamos la primera letra
+            if (!string.IsNullOrEmpty(fecha))
+                fecha = char.ToUpper(fecha[0]) + fecha.Substring(1);
+
+            // Obtenemos la hora con segundos incluidos
+            string hora = DateTime.Now.ToString("HH:mm:ss");
+
+            // Imprimimos todo en el Label con sus respectivos íconos
+            if (lblFechaHora != null)
+                lblFechaHora.Text = $"📅 {fecha}   |   🕒 {hora}";
+        }
+
+        private void ConsultarNotificacionesBD(out int porVencer, out int vencidos, out int stockBajo, out int sinStock)
+        {
+            porVencer = 0; vencidos = 0; stockBajo = 0; sinStock = 0;
+            try
+            {
+                AsuFit.Negocio.DashboardNegocio negocio = new AsuFit.Negocio.DashboardNegocio();
+
+                // Le pedimos los datos
+                negocio.ObtenerContadoresNotificaciones(out porVencer, out vencidos, out stockBajo, out sinStock);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error al cargar Notificaciones: " + ex.Message, "Alerta", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void GenerarMenusDesplegables()
+        {
+            TemaOscuroRenderer temaOscuro = new TemaOscuroRenderer();
+
+            // --- MENÚ DE USUARIO ---
+            menuDropdownUsuario = new ContextMenuStrip();
+            menuDropdownUsuario.Cursor = Cursors.Hand;
+            menuDropdownUsuario.Renderer = temaOscuro;
+            menuDropdownUsuario.ShowImageMargin = false;
+
+            string correoMostrar = string.IsNullOrWhiteSpace(usuarioActual.Email) ? "Correo no registrado" : usuarioActual.Email;
+
+            menuDropdownUsuario.Items.Add(CrearItemMenu($"👤 Nombre: {usuarioActual.NombreCompleto}"));
+            menuDropdownUsuario.Items.Add(CrearItemMenu($"📧 Correo: {correoMostrar}"));
+            menuDropdownUsuario.Items.Add(CrearItemMenu($"🆔 Username: {usuarioActual.Username}"));
+            menuDropdownUsuario.Items.Add(CrearItemMenu($"🛡️ Rol: {usuarioActual.Rol}"));
+            menuDropdownUsuario.Items.Add(new ToolStripSeparator());
+
+            ToolStripMenuItem btnCambiarPass = CrearItemMenu("🔑 Cambiar Contraseña / Perfil");
+            btnCambiarPass.Click += (s, e) => {
+
+                frmRegistrarUsuario frmEdicion = new frmRegistrarUsuario(usuarioActual);
+                float escalaActual = Properties.Settings.Default.EscalaInterfaz;
+                frmEdicion.Scale(new SizeF(escalaActual, escalaActual));
+                frmEdicion.StartPosition = FormStartPosition.CenterParent;
+                frmEdicion.ShowDialog();
+
+                // Actualizamos por si el usuario cambió su propio nombre completo
+                btnUsuario.Text = $"👤 {usuarioActual.NombreCompleto}";
+            };
+            menuDropdownUsuario.Items.Add(btnCambiarPass);
+
+
+            // --- MENÚ DE NOTIFICACIONES ---
+            menuDropdownNotificaciones = new ContextMenuStrip();
+            menuDropdownNotificaciones.Cursor = Cursors.Hand;
+            menuDropdownNotificaciones.Renderer = temaOscuro;
+            menuDropdownNotificaciones.ShowImageMargin = false;
+
+            ConsultarNotificacionesBD(out int sociosPorVencer, out int sociosVencidos, out int prodStockBajo, out int prodSinStock);
+
+            int totalAlertas = sociosPorVencer + sociosVencidos + prodStockBajo + prodSinStock;
+
+            // Agregamos el ÍCONO 🔔 al texto del botón
+            btnNotificaciones.Text = $"🔔 Notificaciones ({totalAlertas})";
+            btnNotificaciones.Top = btnUsuario.Top;
+
+            ToolStripMenuItem itemSociosVencer = CrearItemMenu($"🟡 Socios por vencer: {sociosPorVencer}");
+            itemSociosVencer.Click += (s, e) => { btnGestionSocios.PerformClick(); };
+
+            ToolStripMenuItem itemSociosVencidos = CrearItemMenu($"🔴 Socios vencidos: {sociosVencidos}");
+            itemSociosVencidos.Click += (s, e) => { btnGestionSocios.PerformClick(); };
+
+            ToolStripMenuItem itemProdBajo = CrearItemMenu($"🟠 Productos con stock bajo: {prodStockBajo}");
+            itemProdBajo.Click += (s, e) => { btnGestionProductos.PerformClick(); };
+
+            ToolStripMenuItem itemProdAgotados = CrearItemMenu($"🔴 Productos sin stock: {prodSinStock}");
+            itemProdAgotados.Click += (s, e) => { btnGestionProductos.PerformClick(); };
+
+            menuDropdownNotificaciones.Items.Add(itemSociosVencer);
+            menuDropdownNotificaciones.Items.Add(itemSociosVencidos);
+            menuDropdownNotificaciones.Items.Add(new ToolStripSeparator());
+            menuDropdownNotificaciones.Items.Add(itemProdBajo);
+            menuDropdownNotificaciones.Items.Add(itemProdAgotados);
+        }
+
+        private ToolStripMenuItem CrearItemMenu(string texto)
+        {
+            ToolStripMenuItem item = new ToolStripMenuItem(texto);
+            item.ForeColor = Color.White;
+            return item;
+        }
+
+        private void btnUsuario_Click(object sender, EventArgs e)
+        {
+            menuDropdownUsuario.Show(btnUsuario, new Point(0, btnUsuario.Height));
+        }
+
+        private void btnNotificaciones_Click(object sender, EventArgs e)
+        {
+            GenerarMenusDesplegables();
+            menuDropdownNotificaciones.Show(btnNotificaciones, new Point(0, btnNotificaciones.Height));
+        }
+        #endregion
+
+        #region 4. MÉTODOS DE LA INTERFAZ (UI Y ESCALADO)
         private void ResaltarBoton(object btnSender)
         {
             if (btnSender != null)
@@ -76,7 +238,6 @@ namespace AsuFit.Presentacion
             }
         }
 
-        // Adapta los textos y grillas utilizando el tamaño de fuente configurado en el sistema
         private void PulirTextosYGrillas(Control contenedor)
         {
             float fuenteActual = Properties.Settings.Default.TamanoFuente;
@@ -101,7 +262,6 @@ namespace AsuFit.Presentacion
             }
         }
 
-        // Ajusta la fuente del menú lateral según las preferencias del usuario
         private void AjustarLetraMenu(Control contenedor)
         {
             float fuenteActual = Properties.Settings.Default.TamanoFuente;
@@ -119,7 +279,6 @@ namespace AsuFit.Presentacion
             }
         }
 
-        // Renderiza el formulario hijo aplicando la escala y las fuentes configuradas
         private void AbrirFormularioHijo(Form formularioHijo)
         {
             pnlContenedor.SuspendLayout();
@@ -138,7 +297,6 @@ namespace AsuFit.Presentacion
 
             PulirTextosYGrillas(formularioHijo);
 
-            // Centrado inicial
             int x = (pnlContenedor.Width - formularioHijo.Width) / 2;
             int y = (pnlContenedor.Height - formularioHijo.Height) / 2;
             formularioHijo.Location = new Point(x > 0 ? x : 0, y > 0 ? y : 0);
@@ -149,7 +307,6 @@ namespace AsuFit.Presentacion
             pnlContenedor.ResumeLayout();
         }
 
-        // Recibe una orden externa para re-escalar la interfaz en tiempo real
         public void AplicarNuevaEscala(float nuevaEscala)
         {
             float escalaActual = Properties.Settings.Default.EscalaInterfaz;
@@ -158,32 +315,24 @@ namespace AsuFit.Presentacion
 
             float factor = nuevaEscala / escalaActual;
 
-            // 1. Pausamos el renderizado visual
             this.SuspendLayout();
-
-            // 2. Aplicamos el escalado físico general a todo el Dashboard
             this.Scale(new SizeF(factor, factor));
 
-            // 3. Calculamos el tamaño de letra dinámicamente
             float nuevaFuente = 8f + ((nuevaEscala - 1.0f) * 5f);
 
-            // 4. Guardamos en la memoria del sistema operativo
             Properties.Settings.Default.EscalaInterfaz = nuevaEscala;
             Properties.Settings.Default.TamanoFuente = nuevaFuente;
             Properties.Settings.Default.Save();
 
-            // 5. Forzamos la actualización de textos y grillas
             AjustarLetraMenu(this);
             PulirTextosYGrillas(this);
 
-            // 6. EL FIX MAGISTRAL: Calculamos y asignamos la nueva posición MIENTRAS la pantalla está "congelada"
             Rectangle areaTrabajo = Screen.FromControl(this).WorkingArea;
             this.Location = new Point(
                 areaTrabajo.X + (areaTrabajo.Width - this.Width) / 2,
                 areaTrabajo.Y + (areaTrabajo.Height - this.Height) / 2
             );
 
-            // 7. También centramos el formulario hijo abierto estando congelado
             if (pnlContenedor.Controls.Count > 0)
             {
                 Form hijoAbierto = pnlContenedor.Controls[0] as Form;
@@ -195,13 +344,12 @@ namespace AsuFit.Presentacion
                 }
             }
 
-            // 8. AHORA SÍ: Le decimos a Windows que dibuje todo de un solo golpe (ya posicionado)
             this.ResumeLayout(true);
             this.PerformLayout();
         }
         #endregion
 
-        #region EVENTOS: INICIO Y MÓDULO 1 (SOCIOS Y ACCESOS)
+        #region 5. EVENTOS DEL MENÚ LATERAL (MÓDULOS DEL SISTEMA)
         private void btnInicio_Click(object sender, EventArgs e)
         {
             ResaltarBoton(sender);
@@ -256,9 +404,7 @@ namespace AsuFit.Presentacion
             ResaltarBoton(sender);
             AbrirFormularioHijo(new frmGestionPlanes(usuarioActual));
         }
-        #endregion
 
-        #region EVENTOS: MÓDULO 2 (COMERCIAL E INVENTARIO)
         private void btnInventarioVentas_Click(object sender, EventArgs e)
         {
             ResaltarBoton(sender);
@@ -282,9 +428,7 @@ namespace AsuFit.Presentacion
             ResaltarBoton(sender);
             AbrirFormularioHijo(new frmProveedores(usuarioActual));
         }
-        #endregion
 
-        #region EVENTOS: MÓDULO 3 (CAJA Y FINANZAS)
         private void btnRegistrarCobro_Click(object sender, EventArgs e)
         {
             ResaltarBoton(sender);
@@ -314,9 +458,7 @@ namespace AsuFit.Presentacion
             ResaltarBoton(sender);
             AbrirFormularioHijo(new frmReportes());
         }
-        #endregion
 
-        #region EVENTOS: MÓDULO 4 (SEGURIDAD Y ADMINISTRACIÓN)
         private void btnRegistrarUsuario_Click(object sender, EventArgs e)
         {
             ResaltarBoton(sender);
@@ -340,9 +482,7 @@ namespace AsuFit.Presentacion
             ResaltarBoton(sender);
             AbrirFormularioHijo(new frmConfiguracion(usuarioActual));
         }
-        #endregion
 
-        #region EVENTOS DEL SISTEMA Y LOGOUT
         private void btnCerrarSesion_Click(object sender, EventArgs e)
         {
             DialogResult resultado = MessageBox.Show("¿Está seguro de que desea cerrar la sesión actual?",
@@ -350,7 +490,7 @@ namespace AsuFit.Presentacion
 
             if (resultado == DialogResult.Yes)
             {
-                AsuFit.Datos.GestorAuditoria.Registrar(usuarioActual.NombreCompleto, "Seguridad", "Cierre de Sesión", "El usuario cerró sesión normalmente.");
+                AsuFit.Datos.GestorAuditoria.Registrar(usuarioActual.NombreCompleto, "Seguridad", "Cierre de Sesión", "Cierre normal.");
 
                 Form ventanaAsistencia = null;
                 foreach (Form formulario in Application.OpenForms)
@@ -361,10 +501,7 @@ namespace AsuFit.Presentacion
                         break;
                     }
                 }
-                if (ventanaAsistencia != null)
-                {
-                    ventanaAsistencia.Close();
-                }
+                if (ventanaAsistencia != null) ventanaAsistencia.Close();
 
                 _cerrandoParaLogOut = true;
                 this.Close();
@@ -372,25 +509,27 @@ namespace AsuFit.Presentacion
                 login.Show();
             }
         }
-
-        private void frmDashboard_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            if (!_cerrandoParaLogOut)
-            {
-                DialogResult resultado = MessageBox.Show("¿Está seguro de que desea salir del sistema AsuFit? Se perderán los cambios no guardados.",
-                    "Confirmar Salida", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
-
-                if (resultado == DialogResult.Yes)
-                {
-                    AsuFit.Datos.GestorAuditoria.Registrar(usuarioActual.NombreCompleto, "Seguridad", "Cierre de Sistema", "El usuario cerró la aplicación usando la 'X' o Alt+F4.");
-                    Application.ExitThread();
-                }
-                else
-                {
-                    e.Cancel = true;
-                }
-            }
-        }
         #endregion
     }
+
+    #region 6. CLASES ESPECIALES PARA EL TEMA OSCURO DE LOS MENÚS
+    public class TemaOscuroRenderer : ToolStripProfessionalRenderer
+    {
+        public TemaOscuroRenderer() : base(new TemaOscuroColorTable()) { }
+        protected override void OnRenderToolStripBorder(ToolStripRenderEventArgs e) { }
+    }
+
+    public class TemaOscuroColorTable : ProfessionalColorTable
+    {
+        public override Color ToolStripDropDownBackground => Color.FromArgb(25, 27, 33);
+        public override Color ImageMarginGradientBegin => Color.FromArgb(25, 27, 33);
+        public override Color ImageMarginGradientMiddle => Color.FromArgb(25, 27, 33);
+        public override Color ImageMarginGradientEnd => Color.FromArgb(25, 27, 33);
+        public override Color MenuItemSelected => Color.FromArgb(50, 55, 65);
+        public override Color MenuItemSelectedGradientBegin => Color.FromArgb(50, 55, 65);
+        public override Color MenuItemSelectedGradientEnd => Color.FromArgb(50, 55, 65);
+        public override Color MenuItemBorder => Color.Transparent;
+        public override Color MenuBorder => Color.FromArgb(20, 22, 27);
+    }
+    #endregion
 }
