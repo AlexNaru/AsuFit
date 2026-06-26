@@ -272,6 +272,8 @@
             // chkActivo
             // 
             this.chkActivo.AutoSize = true;
+            this.chkActivo.Checked = true;
+            this.chkActivo.CheckState = System.Windows.Forms.CheckState.Checked;
             this.chkActivo.ForeColor = System.Drawing.Color.White;
             this.chkActivo.Location = new System.Drawing.Point(344, 53);
             this.chkActivo.Margin = new System.Windows.Forms.Padding(2);

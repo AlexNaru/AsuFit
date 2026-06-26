@@ -53,12 +53,12 @@
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.dtpFechaNacimiento = new System.Windows.Forms.DateTimePicker();
             this.label12 = new System.Windows.Forms.Label();
+            this.txtFechaNacimiento = new System.Windows.Forms.TextBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.label13 = new System.Windows.Forms.Label();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.label14 = new System.Windows.Forms.Label();
             this.label15 = new System.Windows.Forms.Label();
-            this.txtFechaNacimiento = new System.Windows.Forms.TextBox();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -73,9 +73,8 @@
             this.txtCedula.Margin = new System.Windows.Forms.Padding(2);
             this.txtCedula.Name = "txtCedula";
             this.txtCedula.Size = new System.Drawing.Size(103, 20);
-            this.txtCedula.TabIndex = 1;
+            this.txtCedula.TabIndex = 0;
             this.txtCedula.KeyDown += new System.Windows.Forms.KeyEventHandler(this.NavegacionEnter_KeyDown);
-            this.txtCedula.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.ValidarNumeros_KeyPress);
             // 
             // txtNombre
             // 
@@ -86,7 +85,7 @@
             this.txtNombre.Margin = new System.Windows.Forms.Padding(2);
             this.txtNombre.Name = "txtNombre";
             this.txtNombre.Size = new System.Drawing.Size(103, 20);
-            this.txtNombre.TabIndex = 2;
+            this.txtNombre.TabIndex = 1;
             this.txtNombre.KeyDown += new System.Windows.Forms.KeyEventHandler(this.NavegacionEnter_KeyDown);
             // 
             // txtApellido
@@ -98,7 +97,7 @@
             this.txtApellido.Margin = new System.Windows.Forms.Padding(2);
             this.txtApellido.Name = "txtApellido";
             this.txtApellido.Size = new System.Drawing.Size(103, 20);
-            this.txtApellido.TabIndex = 3;
+            this.txtApellido.TabIndex = 2;
             this.txtApellido.KeyDown += new System.Windows.Forms.KeyEventHandler(this.NavegacionEnter_KeyDown);
             // 
             // btnGuardar
@@ -127,6 +126,7 @@
             this.txtEmail.Size = new System.Drawing.Size(103, 20);
             this.txtEmail.TabIndex = 6;
             this.txtEmail.KeyDown += new System.Windows.Forms.KeyEventHandler(this.NavegacionEnter_KeyDown);
+            this.txtEmail.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtEmail_KeyPress);
             // 
             // txtTelefono
             // 
@@ -139,7 +139,6 @@
             this.txtTelefono.Size = new System.Drawing.Size(103, 20);
             this.txtTelefono.TabIndex = 5;
             this.txtTelefono.KeyDown += new System.Windows.Forms.KeyEventHandler(this.NavegacionEnter_KeyDown);
-            this.txtTelefono.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.ValidarNumeros_KeyPress);
             // 
             // txtContactoEmergencia
             // 
@@ -164,7 +163,6 @@
             this.txtTelefonoEmergencia.Size = new System.Drawing.Size(103, 20);
             this.txtTelefonoEmergencia.TabIndex = 1;
             this.txtTelefonoEmergencia.KeyDown += new System.Windows.Forms.KeyEventHandler(this.NavegacionEnter_KeyDown);
-            this.txtTelefonoEmergencia.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.ValidarNumeros_KeyPress);
             // 
             // label1
             // 
@@ -365,7 +363,7 @@
             this.dtpFechaNacimiento.Margin = new System.Windows.Forms.Padding(2);
             this.dtpFechaNacimiento.Name = "dtpFechaNacimiento";
             this.dtpFechaNacimiento.Size = new System.Drawing.Size(15, 20);
-            this.dtpFechaNacimiento.TabIndex = 26;
+            this.dtpFechaNacimiento.TabIndex = 3;
             this.dtpFechaNacimiento.ValueChanged += new System.EventHandler(this.dtpFechaNacimiento_ValueChanged);
             // 
             // label12
@@ -378,6 +376,17 @@
             this.label12.Size = new System.Drawing.Size(119, 13);
             this.label12.TabIndex = 25;
             this.label12.Text = "DATOS PERSONALES";
+            // 
+            // txtFechaNacimiento
+            // 
+            this.txtFechaNacimiento.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(39)))), ((int)(((byte)(47)))));
+            this.txtFechaNacimiento.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.txtFechaNacimiento.ForeColor = System.Drawing.Color.White;
+            this.txtFechaNacimiento.Location = new System.Drawing.Point(380, 46);
+            this.txtFechaNacimiento.Name = "txtFechaNacimiento";
+            this.txtFechaNacimiento.ReadOnly = true;
+            this.txtFechaNacimiento.Size = new System.Drawing.Size(102, 20);
+            this.txtFechaNacimiento.TabIndex = 4;
             // 
             // groupBox2
             // 
@@ -439,17 +448,6 @@
             this.label15.Size = new System.Drawing.Size(124, 13);
             this.label15.TabIndex = 25;
             this.label15.Text = "REGISTRO DE SOCIOS";
-            // 
-            // txtFechaNacimiento
-            // 
-            this.txtFechaNacimiento.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(39)))), ((int)(((byte)(47)))));
-            this.txtFechaNacimiento.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.txtFechaNacimiento.ForeColor = System.Drawing.Color.White;
-            this.txtFechaNacimiento.Location = new System.Drawing.Point(380, 46);
-            this.txtFechaNacimiento.Name = "txtFechaNacimiento";
-            this.txtFechaNacimiento.ReadOnly = true;
-            this.txtFechaNacimiento.Size = new System.Drawing.Size(102, 20);
-            this.txtFechaNacimiento.TabIndex = 28;
             // 
             // frmRegistrarSocio
             // 

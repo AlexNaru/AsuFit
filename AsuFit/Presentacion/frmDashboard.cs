@@ -51,6 +51,42 @@ namespace AsuFit.Presentacion
 
             this.CenterToScreen();
 
+            // =====================================================================
+            // 4. RESTRICCIÓN DE ACCESOS POR ROLES (RBAC)
+            // =====================================================================
+            if (usuarioActual.Rol == "Recepcionista")
+            {
+                // GESTIÓN DE SOCIOS Y ACCESOS
+                btnGestionPlanes.Visible = false; // No puede alterar precios de cuotas
+
+                // COMERCIAL E INVENTARIO
+                btnGestionProductos.Visible = false; // No altera el catálogo
+                btnIngresoMercaderia.Visible = false; // No registra compras a proveedores
+                btnProveedores.Visible = false; // No ve datos de proveedores
+
+                // CAJA Y FINANZAS
+                btnHistorialTransacciones.Visible = false; // No ve el historial de otros días
+                btnGestionGastos.Visible = false; // No ve gastos de luz, alquiler, etc.
+                btnReportesEstadísticas.Visible = false; // No ve las ganancias totales
+
+                // SEGURIDAD Y CONTROL (No pueden crear ni auditar usuarios)
+                btnRegistrarUsuario.Visible = false;
+                btnGestionUsuarios.Visible = false;
+                btnAuditoría.Visible = false;
+
+                // Ocultar título del módulo 4 (Seguridad)
+                Control[] lblMod4 = this.Controls.Find("lblModulo4", true);
+                if (lblMod4.Length > 0) lblMod4[0].Visible = false;
+
+                // BARRA SUPERIOR (Configuración general del gimnasio)
+                Control[] btnConfig = this.Controls.Find("btnConfiguración", true);
+                if (btnConfig.Length > 0) btnConfig[0].Visible = false;
+
+                Control[] btnConfigSinTilde = this.Controls.Find("btnConfiguracion", true);
+                if (btnConfigSinTilde.Length > 0) btnConfigSinTilde[0].Visible = false;
+            }
+            // =====================================================================
+
             this.Shown += (s, ev) =>
             {
                 MessageBox.Show($"¡Bienvenido a AsuFit, {usuarioActual.NombreCompleto}!",
@@ -161,6 +197,13 @@ namespace AsuFit.Presentacion
                 float escalaActual = Properties.Settings.Default.EscalaInterfaz;
                 frmEdicion.Scale(new SizeF(escalaActual, escalaActual));
                 frmEdicion.StartPosition = FormStartPosition.CenterParent;
+
+                // --- NUEVO CANDADO DE SEGURIDAD ---
+                if (usuarioActual.Rol != "Administrador")
+                {
+                    frmEdicion.BloquearPermisosParaEmpleado();
+                }
+
                 frmEdicion.ShowDialog();
 
                 // Actualizamos por si el usuario cambió su propio nombre completo

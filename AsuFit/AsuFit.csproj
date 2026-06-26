@@ -99,6 +99,7 @@
     <Compile Include="Negocio\PlanNegocio.cs" />
     <Compile Include="Negocio\ProveedorNegocio.cs" />
     <Compile Include="Negocio\ReportesNegocio.cs" />
+    <Compile Include="Negocio\SeguridadHelper.cs" />
     <Compile Include="Negocio\VentaNegocio.cs" />
     <Compile Include="Presentacion\frmAbrirCaja.cs">
       <SubType>Form</SubType>

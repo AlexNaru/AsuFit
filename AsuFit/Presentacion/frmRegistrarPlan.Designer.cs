@@ -28,45 +28,21 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.txtPrecio = new System.Windows.Forms.MaskedTextBox();
-            this.txtDuracionDias = new System.Windows.Forms.MaskedTextBox();
-            this.txtNombrePlan = new System.Windows.Forms.MaskedTextBox();
             this.label3 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.btnGuardar = new System.Windows.Forms.Button();
             this.btnCancelar = new System.Windows.Forms.Button();
+            this.txtDuracionDias = new System.Windows.Forms.TextBox();
+            this.txtPrecio = new System.Windows.Forms.TextBox();
+            this.txtNombrePlan = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
-            // 
-            // txtPrecio
-            // 
-            this.txtPrecio.Location = new System.Drawing.Point(24, 108);
-            this.txtPrecio.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
-            this.txtPrecio.Name = "txtPrecio";
-            this.txtPrecio.Size = new System.Drawing.Size(113, 20);
-            this.txtPrecio.TabIndex = 1;
-            // 
-            // txtDuracionDias
-            // 
-            this.txtDuracionDias.Location = new System.Drawing.Point(24, 156);
-            this.txtDuracionDias.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
-            this.txtDuracionDias.Name = "txtDuracionDias";
-            this.txtDuracionDias.Size = new System.Drawing.Size(113, 20);
-            this.txtDuracionDias.TabIndex = 2;
-            // 
-            // txtNombrePlan
-            // 
-            this.txtNombrePlan.Location = new System.Drawing.Point(24, 60);
-            this.txtNombrePlan.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
-            this.txtNombrePlan.Name = "txtNombrePlan";
-            this.txtNombrePlan.Size = new System.Drawing.Size(113, 20);
-            this.txtNombrePlan.TabIndex = 0;
             // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(21, 141);
+            this.label3.Location = new System.Drawing.Point(8, 137);
             this.label3.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(85, 13);
@@ -76,7 +52,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(21, 93);
+            this.label2.Location = new System.Drawing.Point(8, 89);
             this.label2.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(65, 13);
@@ -86,7 +62,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(21, 45);
+            this.label1.Location = new System.Drawing.Point(8, 41);
             this.label1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(88, 13);
@@ -105,8 +81,8 @@
             // 
             // btnGuardar
             // 
-            this.btnGuardar.Location = new System.Drawing.Point(39, 195);
-            this.btnGuardar.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btnGuardar.Location = new System.Drawing.Point(26, 191);
+            this.btnGuardar.Margin = new System.Windows.Forms.Padding(2);
             this.btnGuardar.Name = "btnGuardar";
             this.btnGuardar.Size = new System.Drawing.Size(82, 27);
             this.btnGuardar.TabIndex = 3;
@@ -116,8 +92,8 @@
             // 
             // btnCancelar
             // 
-            this.btnCancelar.Location = new System.Drawing.Point(39, 237);
-            this.btnCancelar.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btnCancelar.Location = new System.Drawing.Point(26, 233);
+            this.btnCancelar.Margin = new System.Windows.Forms.Padding(2);
             this.btnCancelar.Name = "btnCancelar";
             this.btnCancelar.Size = new System.Drawing.Size(82, 27);
             this.btnCancelar.TabIndex = 4;
@@ -125,41 +101,63 @@
             this.btnCancelar.UseVisualStyleBackColor = true;
             this.btnCancelar.Click += new System.EventHandler(this.btnCancelar_Click);
             // 
+            // txtDuracionDias
+            // 
+            this.txtDuracionDias.Location = new System.Drawing.Point(11, 153);
+            this.txtDuracionDias.Name = "txtDuracionDias";
+            this.txtDuracionDias.ShortcutsEnabled = false;
+            this.txtDuracionDias.Size = new System.Drawing.Size(113, 20);
+            this.txtDuracionDias.TabIndex = 2;
+            // 
+            // txtPrecio
+            // 
+            this.txtPrecio.Location = new System.Drawing.Point(11, 105);
+            this.txtPrecio.Name = "txtPrecio";
+            this.txtPrecio.ShortcutsEnabled = false;
+            this.txtPrecio.Size = new System.Drawing.Size(113, 20);
+            this.txtPrecio.TabIndex = 1;
+            // 
+            // txtNombrePlan
+            // 
+            this.txtNombrePlan.Location = new System.Drawing.Point(11, 57);
+            this.txtNombrePlan.Name = "txtNombrePlan";
+            this.txtNombrePlan.ShortcutsEnabled = false;
+            this.txtNombrePlan.Size = new System.Drawing.Size(113, 20);
+            this.txtNombrePlan.TabIndex = 0;
+            // 
             // frmRegistrarPlan
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(168, 274);
+            this.ClientSize = new System.Drawing.Size(168, 268);
+            this.Controls.Add(this.txtNombrePlan);
+            this.Controls.Add(this.txtPrecio);
+            this.Controls.Add(this.txtDuracionDias);
             this.Controls.Add(this.btnCancelar);
             this.Controls.Add(this.btnGuardar);
             this.Controls.Add(this.label4);
-            this.Controls.Add(this.txtPrecio);
-            this.Controls.Add(this.txtDuracionDias);
-            this.Controls.Add(this.txtNombrePlan);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
-            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.Margin = new System.Windows.Forms.Padding(2);
             this.MaximizeBox = false;
             this.Name = "frmRegistrarPlan";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "frmRegistrarPlan";
-            this.Load += new System.EventHandler(this.frmRegistrarPlan_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 
         }
 
         #endregion
-
-        private System.Windows.Forms.MaskedTextBox txtPrecio;
-        private System.Windows.Forms.MaskedTextBox txtDuracionDias;
-        private System.Windows.Forms.MaskedTextBox txtNombrePlan;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Button btnGuardar;
         private System.Windows.Forms.Button btnCancelar;
+        private System.Windows.Forms.TextBox txtDuracionDias;
+        private System.Windows.Forms.TextBox txtPrecio;
+        private System.Windows.Forms.TextBox txtNombrePlan;
     }
 }

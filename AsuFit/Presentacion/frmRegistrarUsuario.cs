@@ -13,6 +13,7 @@ namespace AsuFit.Presentacion
         private Usuario usuarioAEditar = null;
         private bool puedeGuardar = false;
 
+        // Inicializa el formulario en contexto de inserción de un nuevo registro para el flujo principal.
         public frmRegistrarUsuario()
         {
             InitializeComponent();
@@ -20,6 +21,7 @@ namespace AsuFit.Presentacion
             lblPreguntaSeguridad.Text = "¿Palabra o numero de seguridad?";
         }
 
+        // Inicializa el formulario en modo de diálogo modal, exponiendo controles de cancelación.
         public frmRegistrarUsuario(bool esVentanaEmergente)
         {
             InitializeComponent();
@@ -27,6 +29,7 @@ namespace AsuFit.Presentacion
             lblPreguntaSeguridad.Text = "¿Palabra o numero de seguridad?";
         }
 
+        // Inicializa el formulario en contexto de modificación, adaptando la interfaz para la edición de una entidad existente.
         public frmRegistrarUsuario(Usuario usuarioAEditar)
         {
             InitializeComponent();
@@ -39,23 +42,23 @@ namespace AsuFit.Presentacion
         }
         #endregion
 
-        #region 2. INICIALIZACIÓN DE PANTALLA
+        #region 2. CICLO DE VIDA DEL FORMULARIO Y CARGA DE DATOS
+        // Orquesta la configuración geométrica, inyección de paletas cromáticas y suscripción de eventos de seguridad al renderizar la vista.
         private void frmRegistrarUsuario_Load(object sender, EventArgs e)
         {
-            ConfigurarTemaOscuro(); // Inyectamos la paleta de colores básica
+            ConfigurarTemaOscuro();
+            ConfigurarComportamientoComboBox();
+            SuscribirFiltrosDeSeguridad();
             CambiarEstadoBoton(false);
-
-            // Aseguramos que al cargar, las contraseñas estén ocultas por defecto
-            txtPassword.UseSystemPasswordChar = true;
-            txtConfirmarPassword.UseSystemPasswordChar = true;
-            txtRespuesta.UseSystemPasswordChar = true;
         }
 
+        // Intercepta la finalización del renderizado para forzar el foco inicial en el primer control de entrada.
         private void frmRegistrarUsuario_Shown(object sender, EventArgs e)
         {
             txtNombreCompleto.Focus();
         }
 
+        // Vuelca la estructura de la entidad en memoria hacia los controles correspondientes, omitiendo datos sensibles por seguridad.
         private void CargarDatosEnPantalla()
         {
             if (usuarioAEditar != null)
@@ -64,23 +67,99 @@ namespace AsuFit.Presentacion
                 txtUsername.Text = usuarioAEditar.Username;
                 cmbRol.Text = usuarioAEditar.Rol;
                 txtEmail.Text = usuarioAEditar.Email;
-                txtRespuesta.Text = usuarioAEditar.RespuestaSeguridad;
+
+                // Se omite la carga de la respuesta de seguridad para forzar la reescritura de la credencial encriptada.
+                txtRespuesta.Text = "";
 
                 chkActivo.Checked = (usuarioAEditar.Estado == "Activo");
             }
         }
         #endregion
 
-        #region 3. ESTILOS VISUALES (TEMA OSCURO BÁSICO)
+        #region 3. GESTIÓN DE SEGURIDAD Y RESTRICCIONES DE ENTRADA
+        // Suscribe programáticamente todos los controles a sus respectivos filtros de sanitización e intercepción de inyecciones.
+        private void SuscribirFiltrosDeSeguridad()
+        {
+            txtNombreCompleto.KeyPress += txtAlfabetico_KeyPress;
+            txtUsername.KeyPress += txtUsername_KeyPress;
+            txtPassword.KeyPress += txtSinEspacios_KeyPress;
+            txtConfirmarPassword.KeyPress += txtSinEspacios_KeyPress;
+            txtRespuesta.KeyPress += txtAntiInyeccion_KeyPress;
+
+            // FIX: Instanciamos un menú contextual en blanco para anular el clic derecho nativo de Windows
+            ContextMenuStrip menuVacio = new ContextMenuStrip();
+
+            foreach (Control grp in this.Controls)
+            {
+                if (grp is GroupBox)
+                {
+                    foreach (Control txt in grp.Controls)
+                    {
+                        if (txt is TextBox textBox)
+                        {
+                            textBox.KeyDown += BloquearPegado_KeyDown;
+                            textBox.ContextMenuStrip = menuVacio; // Bloquea la opción de "Pegar" con el mouse
+                        }
+                    }
+                }
+            }
+        }
+
+        // Invalida la ejecución de combinaciones de teclado orientadas a la inserción forzada de datos provenientes del portapapeles.
+        private void BloquearPegado_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Control && e.KeyCode == Keys.V || e.Shift && e.KeyCode == Keys.Insert)
+            {
+                e.SuppressKeyPress = true;
+            }
+        }
+
+        // Aplica exclusión a caracteres no pertenecientes al alfabeto, permitiendo separadores de espacio convencionales.
+        private void txtAlfabetico_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (!char.IsControl(e.KeyChar) && !char.IsLetter(e.KeyChar) && !char.IsWhiteSpace(e.KeyChar))
+            {
+                e.Handled = true;
+            }
+        }
+
+        // Limita el ingreso exclusivamente a combinaciones alfanuméricas y caracteres separadores técnicos aprobados.
+        private void txtUsername_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (!char.IsControl(e.KeyChar) && !char.IsLetterOrDigit(e.KeyChar) && e.KeyChar != '-' && e.KeyChar != '_')
+            {
+                e.Handled = true;
+            }
+        }
+
+        // Rechaza el ingreso de caracteres de espacio en blanco para prevenir credenciales inválidas.
+        private void txtSinEspacios_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (char.IsWhiteSpace(e.KeyChar))
+            {
+                e.Handled = true;
+            }
+        }
+
+        // Neutraliza caracteres reservados de T-SQL para mitigar vulnerabilidades de inyección en campos de texto libre.
+        private void txtAntiInyeccion_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar == '\'' || e.KeyChar == '"' || e.KeyChar == ';')
+            {
+                e.Handled = true;
+            }
+        }
+        #endregion
+
+        #region 4. ESTILOS VISUALES Y RENDERIZADO
+        // Despacha la configuración de la paleta corporativa sobre el contenedor raíz.
         private void ConfigurarTemaOscuro()
         {
-            // El tamaño de la fuente y la escala ya son controlados por el Dashboard o el form padre.
-            // Aquí solo nos encargamos de que los colores hagan juego con el sistema.
             this.BackColor = Color.FromArgb(25, 28, 35);
-
             AplicarTemaOscuroRecursivo(this);
         }
 
+        // Itera recursivamente sobre el árbol de controles inyectando las propiedades cromáticas y tipográficas del diseño.
         private void AplicarTemaOscuroRecursivo(Control contenedor)
         {
             foreach (Control c in contenedor.Controls)
@@ -115,16 +194,16 @@ namespace AsuFit.Presentacion
                     btn.FlatStyle = FlatStyle.Flat;
                     btn.FlatAppearance.BorderSize = 0;
                     btn.Cursor = Cursors.Hand;
-                    btn.Height = 35; // Estándar de botones AsuFit
+                    btn.Height = 35;
 
                     if (btn.Name.Contains("Cancelar"))
                     {
-                        btn.BackColor = Color.FromArgb(50, 55, 65); // Gris para cancelar
+                        btn.BackColor = Color.FromArgb(50, 55, 65);
                         btn.ForeColor = Color.White;
                     }
                     else
                     {
-                        btn.BackColor = Color.FromArgb(0, 229, 255); // Cian AsuFit para Guardar
+                        btn.BackColor = Color.FromArgb(0, 229, 255);
                         btn.ForeColor = Color.Black;
                     }
                 }
@@ -132,9 +211,17 @@ namespace AsuFit.Presentacion
                 if (c.HasChildren) AplicarTemaOscuroRecursivo(c);
             }
         }
+
+        // Fuerza la inmutabilidad de la estructura del selector de roles y retira enfoques residuales.
+        private void ConfigurarComportamientoComboBox()
+        {
+            cmbRol.DropDownStyle = ComboBoxStyle.DropDownList;
+            cmbRol.DropDownClosed += (s, e) => this.BeginInvoke(new Action(() => this.ActiveControl = null));
+        }
         #endregion
 
-        #region 4. CAMPOS DEL FORMULARIO Y NAVEGACIÓN VERTICAL
+        #region 5. NAVEGACIÓN Y FOCO
+        // Evalúa de forma concurrente la integridad de la estructura de datos obligatoria para habilitar transacciones.
         private void VerificarCamposObligatorios(object sender, EventArgs e)
         {
             if (!string.IsNullOrWhiteSpace(txtNombreCompleto.Text) &&
@@ -153,6 +240,7 @@ namespace AsuFit.Presentacion
             }
         }
 
+        // Intercepta la pulsación de retorno del carro (Enter) para validar sintaxis antes de transferir el foco al control adyacente.
         private void NavegacionEnter_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter)
@@ -207,11 +295,13 @@ namespace AsuFit.Presentacion
             }
         }
 
+        // Transfiere el foco al selector de estado tras definir la designación de rol.
         private void cmbRol_SelectionChangeCommitted(object sender, EventArgs e)
         {
             chkActivo.Focus();
         }
 
+        // Mantiene la continuidad de la navegación direccional desde controles tipo ComboBox.
         private void cmbRol_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter)
@@ -221,6 +311,7 @@ namespace AsuFit.Presentacion
             }
         }
 
+        // Muta la disponibilidad interactiva de confirmación basándose en el cumplimiento de las restricciones formales.
         private void CambiarEstadoBoton(bool activo)
         {
             puedeGuardar = activo;
@@ -228,7 +319,8 @@ namespace AsuFit.Presentacion
         }
         #endregion
 
-        #region 5. BOTONES INFERIORES: GUARDAR Y CANCELAR
+        #region 6. LÓGICA DE VALIDACIÓN Y PERSISTENCIA
+        // Orquesta las validaciones de negocio, evalúa unicidad, hashea credenciales y delega la operación DML a la capa de Negocio.
         private void btnGuardar_Click(object sender, EventArgs e)
         {
             if (!puedeGuardar)
@@ -270,10 +362,11 @@ namespace AsuFit.Presentacion
                 Usuario nuevo = new Usuario();
                 nuevo.NombreCompleto = txtNombreCompleto.Text.Trim();
                 nuevo.Username = txtUsername.Text.Trim();
-                nuevo.Password = txtPassword.Text.Trim();
+                nuevo.Password = AsuFit.Negocio.SeguridadHelper.HashearContrasena(txtPassword.Text.Trim());
                 nuevo.Rol = cmbRol.Text;
                 nuevo.Email = txtEmail.Text.Trim();
-                nuevo.RespuestaSeguridad = txtRespuesta.Text.Trim();
+
+                nuevo.RespuestaSeguridad = AsuFit.Negocio.SeguridadHelper.HashearContrasena(txtRespuesta.Text.Trim());
                 nuevo.PreguntaSeguridad = lblPreguntaSeguridad.Text;
                 nuevo.Estado = chkActivo.Checked ? "Activo" : "Inactivo";
 
@@ -300,10 +393,12 @@ namespace AsuFit.Presentacion
             {
                 usuarioAEditar.NombreCompleto = txtNombreCompleto.Text.Trim();
                 usuarioAEditar.Username = txtUsername.Text.Trim();
-                usuarioAEditar.Password = txtPassword.Text.Trim();
+                usuarioAEditar.Password = AsuFit.Negocio.SeguridadHelper.HashearContrasena(txtPassword.Text.Trim());
                 usuarioAEditar.Rol = cmbRol.Text;
                 usuarioAEditar.Email = txtEmail.Text.Trim();
-                usuarioAEditar.RespuestaSeguridad = txtRespuesta.Text.Trim();
+
+                usuarioAEditar.RespuestaSeguridad = AsuFit.Negocio.SeguridadHelper.HashearContrasena(txtRespuesta.Text.Trim());
+                usuarioAEditar.PreguntaSeguridad = lblPreguntaSeguridad.Text;
                 usuarioAEditar.Estado = chkActivo.Checked ? "Activo" : "Inactivo";
 
                 exito = negocio.EditarUsuario(usuarioAEditar, out mensajeError);
@@ -321,48 +416,58 @@ namespace AsuFit.Presentacion
             }
         }
 
+        // Finaliza el ciclo de vida del diálogo liberando recursos instanciados sin persistir cambios.
         private void btnCancelar_Click(object sender, EventArgs e)
         {
             this.Close();
         }
         #endregion
 
-        #region 6. MOSTRAR / OCULTAR CONTRASEÑAS Y RESPUESTA
-        // Método maestro que hace la magia para cualquier caja y cualquier ojito
+        #region 7. INTERACCIÓN DE CONTROLES VISUALES
+        // Modifica el estado del enmascaramiento criptográfico a nivel visual e intercambia la representación icónica asociada.
         private void AlternarVisibilidad(TextBox cajaTexto, PictureBox ojito)
         {
             cajaTexto.UseSystemPasswordChar = !cajaTexto.UseSystemPasswordChar;
             ojito.Image = cajaTexto.UseSystemPasswordChar ? Properties.Resources.ojo_cerrado : Properties.Resources.ojo_abierto;
         }
 
-        // --- 1. CONTRASEÑA PRINCIPAL ---
         private void picMostrarPass_Click(object sender, EventArgs e)
         {
             AlternarVisibilidad(txtPassword, picMostrarPass);
         }
+
         private void picMostrarPass_DoubleClick(object sender, EventArgs e)
         {
-            AlternarVisibilidad(txtPassword, picMostrarPass); // Soluciona el clic rápido
+            AlternarVisibilidad(txtPassword, picMostrarPass);
         }
 
-        // --- 2. CONFIRMAR CONTRASEÑA ---
         private void picMostrarConfirmPass_Click(object sender, EventArgs e)
         {
             AlternarVisibilidad(txtConfirmarPassword, picMostrarConfirmPass);
         }
+
         private void picMostrarConfirmPass_DoubleClick(object sender, EventArgs e)
         {
             AlternarVisibilidad(txtConfirmarPassword, picMostrarConfirmPass);
         }
 
-        // --- 3. RESPUESTA DE SEGURIDAD ---
         private void picMostrarRespuesta_Click(object sender, EventArgs e)
         {
             AlternarVisibilidad(txtRespuesta, picMostrarRespuesta);
         }
+
         private void picMostrarRespuesta_DoubleClick(object sender, EventArgs e)
         {
             AlternarVisibilidad(txtRespuesta, picMostrarRespuesta);
+        }
+        #endregion
+
+        #region 8. GESTIÓN DE PERMISOS DE USUARIO
+        // Impide la elevación de privilegios no autorizada y la autodesactivación de la cuenta en sesión mediante bloqueos de UI.
+        public void BloquearPermisosParaEmpleado()
+        {
+            cmbRol.Enabled = false;
+            chkActivo.Enabled = false;
         }
         #endregion
     }

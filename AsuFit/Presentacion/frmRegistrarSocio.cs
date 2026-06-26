@@ -2,6 +2,7 @@
 using AsuFit.Negocio;
 using System;
 using System.Drawing;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
 namespace AsuFit.Presentacion
@@ -12,25 +13,28 @@ namespace AsuFit.Presentacion
         private Socio socioEdicion = null;
         private Usuario usuarioActual;
 
+        // Inicializa el formulario en contexto de inserción de un nuevo registro.
         public frmRegistrarSocio(Usuario userLogueado)
         {
             InitializeComponent();
             usuarioActual = userLogueado;
+
+            // FIX ARQUITECTÓNICO: Garantiza el enlace absoluto del evento Load programáticamente
+            this.Load += new EventHandler(frmRegistrarSocio_Load);
         }
 
+        // Inicializa el formulario en contexto de modificación, bloqueando campos inmutables y centrando controles de acción.
         public frmRegistrarSocio(Socio socioParaEditar, Usuario userLogueado)
         {
             InitializeComponent();
             this.socioEdicion = socioParaEditar;
             usuarioActual = userLogueado;
 
-            // Bloquea la edición del tipo de plan durante la actualización de datos
             cmbPlanes.Enabled = false;
 
             btnGuardar.Text = "ACTUALIZAR DATOS";
             btnGuardar.Size = new Size(145, 30);
 
-            // Centrado dinámico de los botones de acción principal
             int separacion = 15;
             int anchoTotal = btnGuardar.Width + separacion + btnCancelar.Width;
             int posX = (this.ClientSize.Width - anchoTotal) / 2;
@@ -38,38 +42,54 @@ namespace AsuFit.Presentacion
             btnGuardar.Location = new Point(posX, btnGuardar.Location.Y);
             btnCancelar.Location = new Point(posX + btnGuardar.Width + separacion, btnCancelar.Location.Y);
 
+            // FIX ARQUITECTÓNICO: Garantiza el enlace absoluto del evento Load programáticamente
+            this.Load += new EventHandler(frmRegistrarSocio_Load);
+
             CargarDatosEnPantalla();
         }
         #endregion
 
         #region 2. INICIALIZACIÓN Y SISTEMA DE PLACEHOLDERS
+        // Orquesta la configuración geométrica, límites lógicos de entrada y directrices de UI al renderizar la vista.
         private void frmRegistrarSocio_Load(object sender, EventArgs e)
         {
-            ConfigurarTextosDeAyuda();
+            txtCedula.MaxLength = 8;
+            txtRuc.MaxLength = 15;
+            txtTelefono.MaxLength = 20;
+            txtTelefonoEmergencia.MaxLength = 20;
 
-            txtCedula.MaxLength = 7;
+            dtpFechaNacimiento.MaxDate = DateTime.Now.AddYears(-14);
+            dtpFechaNacimiento.MinDate = DateTime.Now.AddYears(-100);
+
+            if (socioEdicion == null)
+            {
+                dtpFechaNacimiento.Value = dtpFechaNacimiento.MaxDate;
+            }
+
             txtFechaNacimiento.Text = dtpFechaNacimiento.Value.ToShortDateString();
 
-            // Fuerza la selección de la instrucción predeterminada
+            ConfigurarTextosDeAyuda();
+            SuscribirFiltrosDeSeguridad();
+
             cmbPlanes.SelectedIndex = 0;
 
-            // Elimina el foco inicial para permitir la correcta visualización de los placeholders
-            this.ActiveControl = null;
+            this.ActiveControl = txtCedula;
         }
 
+        // Centraliza la asignación de descriptores visuales interactivos para los campos de captura de datos.
         private void ConfigurarTextosDeAyuda()
         {
-            AplicarPlaceholder(txtCedula, "Ej: 4588999");
-            AplicarPlaceholder(txtRuc, "Ej: 4588999-5");
-            AplicarPlaceholder(txtNombre, "Ej: Carlos Miguel");
-            AplicarPlaceholder(txtApellido, "Ej: Benítez Rojas");
+            AplicarPlaceholder(txtCedula, "Ej: 5123456");
+            AplicarPlaceholder(txtRuc, "Ej: 5123456-7");
+            AplicarPlaceholder(txtNombre, "Ej: Juan");
+            AplicarPlaceholder(txtApellido, "Ej: Perez");
             AplicarPlaceholder(txtEmail, "ejemplo@correo.com");
             AplicarPlaceholder(txtTelefono, "09XX XXX XXX");
-            AplicarPlaceholder(txtContactoEmergencia, "Ej: Laura Rojas");
+            AplicarPlaceholder(txtContactoEmergencia, "Ej: Juana Perez");
             AplicarPlaceholder(txtTelefonoEmergencia, "09XX XXX XXX");
         }
 
-        // Gestiona el comportamiento visual de los textos de sugerencia
+        // Gestiona la mutación de estado visual, colorimetría y posicionamiento del cursor simulando un atributo nativo.
         private void AplicarPlaceholder(TextBox txt, string textoAyuda)
         {
             txt.Tag = textoAyuda;
@@ -84,16 +104,28 @@ namespace AsuFit.Presentacion
                 txt.ForeColor = Color.White;
             }
 
-            txt.Enter += delegate
+            txt.Enter += (s, e) =>
             {
                 if (txt.Text == textoAyuda)
+                {
+                    this.BeginInvoke((MethodInvoker)delegate ()
+                    {
+                        txt.SelectionStart = 0;
+                        txt.SelectionLength = 0;
+                    });
+                }
+            };
+
+            txt.KeyDown += (s, e) =>
+            {
+                if (txt.Text == textoAyuda && e.KeyCode != Keys.Tab && e.KeyCode != Keys.Enter)
                 {
                     txt.Text = "";
                     txt.ForeColor = Color.White;
                 }
             };
 
-            txt.Leave += delegate
+            txt.Leave += (s, e) =>
             {
                 if (string.IsNullOrWhiteSpace(txt.Text))
                 {
@@ -103,74 +135,14 @@ namespace AsuFit.Presentacion
             };
         }
 
-        // Filtra el contenido para evitar el envío de placeholders a la Base de Datos
+        // Discrimina cadenas enlazadas al metadato del control para retornar valores absolutos listos para persistencia.
         private string ObtenerTextoReal(TextBox txt)
         {
             if (txt.Text == (string)txt.Tag) return "";
-            return txt.Text;
-        }
-        #endregion
-
-        #region 3. EVENTOS DE INTERFAZ Y VALIDACIONES
-        // Restringe el ingreso de caracteres permitiendo únicamente valores numéricos
-        private void ValidarNumeros_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar))
-            {
-                e.Handled = true;
-            }
+            return txt.Text.Trim();
         }
 
-        // Facilita la navegación del usuario entre campos utilizando la tecla Enter
-        private void NavegacionEnter_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.Enter)
-            {
-                e.SuppressKeyPress = true;
-                TextBox txtActivo = sender as TextBox;
-
-                // Validación de campos vacíos antes de ceder el foco
-                if (txtActivo != null && string.IsNullOrWhiteSpace(ObtenerTextoReal(txtActivo)))
-                {
-                    if (txtActivo.Name != "txtEmail" && txtActivo.Name != "txtContactoEmergencia" &&
-                        txtActivo.Name != "txtTelefonoEmergencia" && txtActivo.Name != "txtRuc")
-                    {
-                        MessageBox.Show("Este campo no puede estar vacío.", "Campo requerido", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                        return;
-                    }
-                }
-
-                // Transferencia de foco al control desplegable al finalizar la sección de texto
-                if (txtActivo != null && txtActivo.Name == "txtTelefonoEmergencia")
-                {
-                    cmbPlanes.Focus();
-                    cmbPlanes.DroppedDown = true;
-                    return;
-                }
-
-                this.SelectNextControl((Control)sender, true, true, true, true);
-            }
-        }
-
-        // Mueve el foco de atención al botón de guardado tras la selección de plan
-        private void cmbPlanes_SelectionChangeCommitted(object sender, EventArgs e)
-        {
-            btnGuardar.Focus();
-        }
-
-        // Sincroniza la visualización de la caja de texto con el valor del calendario subyacente
-        private void dtpFechaNacimiento_ValueChanged(object sender, EventArgs e)
-        {
-            txtFechaNacimiento.Text = dtpFechaNacimiento.Value.ToShortDateString();
-        }
-
-        // Libera el foco del componente para evitar el remanente de color de selección
-        private void cmbPlanes_DropDownClosed(object sender, EventArgs e)
-        {
-            this.ActiveControl = null;
-        }
-
-        // Carga los datos de un socio existente en modo edición
+        // Vuelca la estructura de la entidad en memoria hacia los controles correspondientes, aplicando contraste de edición.
         private void CargarDatosEnPantalla()
         {
             txtCedula.Text = socioEdicion.Cedula;
@@ -203,11 +175,156 @@ namespace AsuFit.Presentacion
         }
         #endregion
 
-        #region 4. ACCIONES DE GUARDADO Y LIMPIEZA
+        #region 3. RESTRICCIONES FÍSICAS DE TECLADO Y SEGURIDAD
+        // Suscribe programáticamente todos los controles a sus filtros de sanitización y bloqueos físicos
+        private void SuscribirFiltrosDeSeguridad()
+        {
+            txtCedula.KeyPress += txtSoloNumeros_KeyPress;
+            txtTelefono.KeyPress += txtTelefono_KeyPress;
+            txtTelefonoEmergencia.KeyPress += txtTelefono_KeyPress;
+
+            txtNombre.KeyPress += txtAlfabetico_KeyPress;
+            txtApellido.KeyPress += txtAlfabetico_KeyPress;
+            txtContactoEmergencia.KeyPress += txtAlfabetico_KeyPress;
+
+            txtRuc.KeyPress += txtRuc_KeyPress;
+            txtEmail.KeyPress += txtEmail_KeyPress; // Blindaje estricto de sintaxis de correo
+
+            // Anulación del menú contextual nativo de Windows (Mitiga pegado por clic derecho)
+            ContextMenuStrip menuVacio = new ContextMenuStrip();
+
+            foreach (Control contenedor in this.Controls)
+            {
+                AsignarBloqueosRecursivo(contenedor, menuVacio);
+            }
+        }
+
+        // Inspecciona la jerarquía de la vista capturando TextBoxes en cualquier nivel de anidamiento
+        private void AsignarBloqueosRecursivo(Control contenedor, ContextMenuStrip menuVacio)
+        {
+            if (contenedor is TextBox txt)
+            {
+                txt.KeyDown += BloquearPegado_KeyDown;
+                txt.ContextMenuStrip = menuVacio; // Neutraliza el clic derecho
+            }
+
+            foreach (Control hijo in contenedor.Controls)
+            {
+                AsignarBloqueosRecursivo(hijo, menuVacio);
+            }
+        }
+
+        // Invalida combinaciones de teclado orientadas a la inserción masiva desde el portapapeles
+        private void BloquearPegado_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Control && e.KeyCode == Keys.V || e.Shift && e.KeyCode == Keys.Insert)
+            {
+                e.SuppressKeyPress = true;
+            }
+        }
+
+        // Limita el ingreso de datos exclusivamente a secuencias numéricas y retroceso
+        private void txtSoloNumeros_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar))
+            {
+                e.Handled = true;
+            }
+        }
+
+        // Aplica exclusión a caracteres no pertenecientes al alfabeto, permitiendo separadores de espacio
+        private void txtAlfabetico_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (!char.IsControl(e.KeyChar) && !char.IsLetter(e.KeyChar) && !char.IsWhiteSpace(e.KeyChar))
+            {
+                e.Handled = true;
+            }
+        }
+
+        // Autoriza la digitación de formatos telefónicos que requieran el uso del prefijo internacional (+)
+        private void txtTelefono_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar) && !char.IsWhiteSpace(e.KeyChar) && e.KeyChar != '+')
+            {
+                e.Handled = true;
+            }
+        }
+
+        // Permite estructuras conformadas por dígitos y el guion delimitador estándar tributario
+        private void txtRuc_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar) && e.KeyChar != '-')
+            {
+                e.Handled = true;
+            }
+        }
+
+        // Filtra caracteres ilegales en tiempo real según especificaciones de formato RFC 5322
+        private void txtEmail_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (!char.IsControl(e.KeyChar) && !char.IsLetterOrDigit(e.KeyChar) &&
+                e.KeyChar != '@' && e.KeyChar != '.' && e.KeyChar != '-' && e.KeyChar != '_')
+            {
+                e.Handled = true;
+            }
+        }
+        #endregion
+
+        #region 4. EVENTOS DE INTERFAZ Y NAVEGACIÓN
+        // Intercepta la pulsación de retorno del carro (Enter) para validar obligatoriedad antes de transferir el foco al control adyacente.
+        private void NavegacionEnter_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                e.SuppressKeyPress = true;
+                TextBox txtActivo = sender as TextBox;
+
+                if (txtActivo != null && string.IsNullOrWhiteSpace(ObtenerTextoReal(txtActivo)))
+                {
+                    if (txtActivo.Name != "txtEmail" && txtActivo.Name != "txtContactoEmergencia" &&
+                        txtActivo.Name != "txtTelefonoEmergencia" && txtActivo.Name != "txtRuc")
+                    {
+                        MessageBox.Show("Este campo no puede estar vacío.", "Campo requerido", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        return;
+                    }
+                }
+
+                if (txtActivo != null && txtActivo.Name == "txtTelefonoEmergencia")
+                {
+                    cmbPlanes.Focus();
+                    cmbPlanes.DroppedDown = true;
+                    return;
+                }
+
+                this.SelectNextControl((Control)sender, true, true, true, true);
+            }
+        }
+
+        // Ejecuta el traslado de la atención de entrada hacia el control de transacción principal.
+        private void cmbPlanes_SelectionChangeCommitted(object sender, EventArgs e)
+        {
+            btnGuardar.Focus();
+        }
+
+        // Extrapola el valor DateTime interno hacia el componente visual de exposición textual.
+        private void dtpFechaNacimiento_ValueChanged(object sender, EventArgs e)
+        {
+            txtFechaNacimiento.Text = dtpFechaNacimiento.Value.ToShortDateString();
+        }
+
+        // Revoca el foco residual post-despliegue mitigando anomalías visuales en el renderizado de selección.
+        private void cmbPlanes_DropDownClosed(object sender, EventArgs e)
+        {
+            this.ActiveControl = null;
+        }
+        #endregion
+
+        #region 5. LÓGICA TRANSACCIONAL, VALIDACIÓN Y AUDITORÍA
+        // Efectúa comprobaciones paramétricas, evalúa unicidad, ejecuta el procedimiento almacenado y despacha al módulo de facturación.
         private void btnGuardar_Click(object sender, EventArgs e)
         {
-            // 1. Verificación estricta de campos obligatorios
             bool faltaPlan = (socioEdicion == null && cmbPlanes.SelectedIndex <= 0);
+            string emailEntrada = ObtenerTextoReal(txtEmail);
 
             if (string.IsNullOrWhiteSpace(ObtenerTextoReal(txtCedula)) ||
                 string.IsNullOrWhiteSpace(ObtenerTextoReal(txtNombre)) ||
@@ -219,10 +336,16 @@ namespace AsuFit.Presentacion
                 return;
             }
 
+            if (!string.IsNullOrWhiteSpace(emailEntrada) && !EsEmailValido(emailEntrada))
+            {
+                MessageBox.Show("El formato del correo electrónico no es válido. Ejemplo correcto: correo@gmail.com", "Sintaxis Incorrecta", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                txtEmail.Focus();
+                return;
+            }
+
             SocioNegocio negocioSocio = new SocioNegocio();
             int idActual = socioEdicion != null ? socioEdicion.IdSocio : 0;
 
-            // 2. Control de duplicidad de Cédula de Identidad
             if (negocioSocio.ExisteCedula(ObtenerTextoReal(txtCedula), idActual))
             {
                 MessageBox.Show("Este número de cédula ya está registrado con otro socio.", "Cédula Duplicada", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -230,13 +353,12 @@ namespace AsuFit.Presentacion
                 return;
             }
 
-            // 3. Mapeo de valores a la entidad Socio
             Socio nuevoSocio = new Socio();
             nuevoSocio.Cedula = ObtenerTextoReal(txtCedula);
             nuevoSocio.Nombre = ObtenerTextoReal(txtNombre);
             nuevoSocio.Apellido = ObtenerTextoReal(txtApellido);
-            nuevoSocio.Email = string.IsNullOrWhiteSpace(ObtenerTextoReal(txtEmail)) ? "No especificado" : ObtenerTextoReal(txtEmail);
-            nuevoSocio.Ruc = string.IsNullOrWhiteSpace(ObtenerTextoReal(txtRuc)) ? "" : ObtenerTextoReal(txtRuc);
+            nuevoSocio.Email = string.IsNullOrWhiteSpace(emailEntrada) ? "No especificado" : emailEntrada;
+            nuevoSocio.Ruc = ObtenerTextoReal(txtRuc);
             nuevoSocio.Telefono = ObtenerTextoReal(txtTelefono);
             nuevoSocio.FechaNacimiento = dtpFechaNacimiento.Value;
             nuevoSocio.NombreContactoEmergencia = ObtenerTextoReal(txtContactoEmergencia);
@@ -244,13 +366,11 @@ namespace AsuFit.Presentacion
             nuevoSocio.FechaRegistro = DateTime.Now;
             nuevoSocio.Estado = "Activo";
 
-            // 4. Procesamiento de la información del Plan
             PlanNegocio negocioPlan = new PlanNegocio();
             Plan planInfo = null;
 
             if (socioEdicion != null)
             {
-                // En modo edición se asume un plan temporal base para cumplir integridad referencial
                 planInfo = negocioPlan.ObtenerPlanPorNombre("Plan Mensual");
                 nuevoSocio.IdPlan = planInfo != null ? planInfo.IdPlan : 1;
             }
@@ -266,15 +386,12 @@ namespace AsuFit.Presentacion
                 nuevoSocio.FechaVencimiento = DateTime.Now.AddDays(planInfo.DuracionDias);
             }
 
-            // 5. Ejecución en Base de Datos (Flujo de Edición o Nuevo Ingreso)
             if (socioEdicion != null)
             {
                 nuevoSocio.IdSocio = socioEdicion.IdSocio;
                 if (negocioSocio.EditarSocio(nuevoSocio))
                 {
-                    // Registro de auditoría por actualización
                     AsuFit.Datos.GestorAuditoria.Registrar(usuarioActual.NombreCompleto, "Socios", "Edición", $"Se actualizaron los datos del socio: {nuevoSocio.Nombre} {nuevoSocio.Apellido} ({nuevoSocio.Cedula}).");
-
                     MessageBox.Show("Los datos se actualizaron correctamente.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     this.Close();
                 }
@@ -286,10 +403,8 @@ namespace AsuFit.Presentacion
 
                 if (nuevoIdSocio > 0)
                 {
-                    // Registro de auditoría por nuevo ingreso
                     AsuFit.Datos.GestorAuditoria.Registrar(usuarioActual.NombreCompleto, "Socios", "Registro", $"Se registró al nuevo socio: {nuevoSocio.Nombre} {nuevoSocio.Apellido} ({nuevoSocio.Cedula}).");
 
-                    // 6. Vinculación automática y apertura del módulo de Caja (Cobro de inscripción)
                     string codigoPlanArtificial = $"PLAN-{planInfo.DuracionDias}-{nuevoIdSocio}-{planInfo.IdPlan}";
                     CarritoGlobal.AgregarItem(0, codigoPlanArtificial, "Inscripción y " + planInfo.NombrePlan, 1, planInfo.Precio, 10);
 
@@ -305,7 +420,8 @@ namespace AsuFit.Presentacion
                     else
                     {
                         frmCajaCobro nuevaCaja = new frmCajaCobro(usuarioActual);
-                        nuevaCaja.Show();
+                        // FIX ARQUITECTÓNICO: Abre la caja en modo Modal para bloquear el registro de fondo
+                        nuevaCaja.ShowDialog();
                     }
                     LimpiarCampos();
                 }
@@ -316,11 +432,20 @@ namespace AsuFit.Presentacion
             }
         }
 
+        // Evalúa el cumplimiento estructural de formato RFC 5322 básico para prevención de correos rebotados.
+        private bool EsEmailValido(string email)
+        {
+            string patron = @"^[^@\s]+@[^@\s]+\.[^@\s]+$";
+            return Regex.IsMatch(email, patron, RegexOptions.IgnoreCase);
+        }
+
+        // Finaliza el ciclo de vida del proceso de diálogo liberando recursos de instancia.
         private void btnCancelar_Click(object sender, EventArgs e)
         {
             this.Close();
         }
 
+        // Revierte el estado de los componentes visuales a su configuración nominal de arranque.
         private void LimpiarCampos()
         {
             txtCedula.Clear();
@@ -331,11 +456,11 @@ namespace AsuFit.Presentacion
             txtTelefono.Clear();
             txtContactoEmergencia.Clear();
             txtTelefonoEmergencia.Clear();
-            dtpFechaNacimiento.Value = DateTime.Now;
+            dtpFechaNacimiento.Value = dtpFechaNacimiento.MaxDate;
             cmbPlanes.SelectedIndex = 0;
 
             ConfigurarTextosDeAyuda();
-            this.ActiveControl = null;
+            this.ActiveControl = txtCedula;
         }
         #endregion
     }

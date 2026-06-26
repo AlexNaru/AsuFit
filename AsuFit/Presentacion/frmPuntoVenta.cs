@@ -57,9 +57,42 @@ namespace AsuFit.Presentacion
 
             AplicarPlaceholder(txtBuscarProducto, "Buscar Bebidas, Snacks o Suplementos...");
 
+            //Recupera visualmente el carrito si el cajero regresó de la caja
+            SincronizarCarritoVisual();
+
             flpCatalogo.ResumeLayout(false);
 
             this.ActiveControl = null;
+        }
+
+        // Lee los datos del CarritoGlobal en memoria y los dibuja en la grilla para permitir su edición
+        private void SincronizarCarritoVisual()
+        {
+            dgvCarrito.Rows.Clear();
+
+            if (CarritoGlobal.Detalles != null && CarritoGlobal.Detalles.Rows.Count > 0)
+            {
+                foreach (DataRow fila in CarritoGlobal.Detalles.Rows)
+                {
+                    int idProd = Convert.ToInt32(fila["IdProducto"]);
+
+                    // Solo recuperamos productos de inventario (IdProducto > 0), omitiendo suscripciones
+                    if (idProd > 0)
+                    {
+                        int rowIndex = dgvCarrito.Rows.Add();
+                        DataGridViewRow row = dgvCarrito.Rows[rowIndex];
+
+                        row.Cells["colCarritoId"].Value = idProd;
+                        row.Cells["colCarritoCodigo"].Value = fila["CodigoBarras"].ToString();
+                        row.Cells["colCarritoNombre"].Value = fila["Concepto"].ToString();
+                        row.Cells["colCarritoCantidad"].Value = Convert.ToInt32(fila["Cantidad"]);
+                        row.Cells["colCarritoPrecio"].Value = Convert.ToDecimal(fila["PrecioUnitario"]);
+                        row.Cells["colCarritoSubtotal"].Value = Convert.ToDecimal(fila["SubTotal"]);
+                        row.Cells["colCarritoIva"].Value = Convert.ToInt32(fila["PorcentajeIva"]);
+                    }
+                }
+                ActualizarTotal();
+            }
         }
 
         private void frmPuntoVenta_Shown(object sender, EventArgs e)
@@ -566,12 +599,11 @@ namespace AsuFit.Presentacion
             {
                 if (Convert.ToInt32(CarritoGlobal.Detalles.Rows[i]["IdProducto"]) > 0)
                 {
+                    decimal subTotalFila = Convert.ToDecimal(CarritoGlobal.Detalles.Rows[i]["SubTotal"]);
+                    CarritoGlobal.TotalAPagar -= subTotalFila;
                     CarritoGlobal.Detalles.Rows.RemoveAt(i);
                 }
             }
-
-            frmCajaCobro cajaAbierta = Application.OpenForms["frmCajaCobro"] as frmCajaCobro;
-            if (cajaAbierta != null) cajaAbierta.ActualizarPantallaDesdeCarrito();
         }
 
         private void btnFinalizarVenta_Click(object sender, EventArgs e)
@@ -584,10 +616,13 @@ namespace AsuFit.Presentacion
 
             try
             {
+                // Descuenta los productos actuales para evitar duplicar sumatorias
                 for (int i = CarritoGlobal.Detalles.Rows.Count - 1; i >= 0; i--)
                 {
                     if (Convert.ToInt32(CarritoGlobal.Detalles.Rows[i]["IdProducto"]) > 0)
                     {
+                        decimal subTotalFila = Convert.ToDecimal(CarritoGlobal.Detalles.Rows[i]["SubTotal"]);
+                        CarritoGlobal.TotalAPagar -= subTotalFila;
                         CarritoGlobal.Detalles.Rows.RemoveAt(i);
                     }
                 }
@@ -604,19 +639,12 @@ namespace AsuFit.Presentacion
                     CarritoGlobal.AgregarItem(idProd, codigoDeBarras, concepto, cant, precio, iva);
                 }
 
-                frmCajaCobro cajaAbierta = Application.OpenForms["frmCajaCobro"] as frmCajaCobro;
+                // FIX ARQUITECTÓNICO: Abrir en modo Modal (bloquea el formulario de atrás)
+                frmCajaCobro nuevaCaja = new frmCajaCobro(usuarioActual);
+                nuevaCaja.ShowDialog();
 
-                if (cajaAbierta != null)
-                {
-                    cajaAbierta.WindowState = FormWindowState.Normal;
-                    cajaAbierta.BringToFront();
-                    cajaAbierta.ActualizarPantallaDesdeCarrito();
-                }
-                else
-                {
-                    frmCajaCobro nuevaCaja = new frmCajaCobro(usuarioActual);
-                    nuevaCaja.Show();
-                }
+                // Al cerrar la caja (por pagar o por agregar cosas), actualizamos la vista
+                SincronizarCarritoVisual();
             }
             catch (Exception ex)
             {

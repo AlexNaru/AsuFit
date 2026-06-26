@@ -27,6 +27,8 @@ namespace AsuFit.Presentacion
 
             CargarGrilla();
 
+            SuscribirFiltrosDeSeguridad();
+
             // Configura el texto de sugerencia en el buscador
             AplicarPlaceholder(txtBuscar, "Buscar por Cédula, Nombre o Apellido...");
 
@@ -335,6 +337,62 @@ namespace AsuFit.Presentacion
                     MessageBox.Show("Estado actualizado con éxito.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     CargarGrilla();
                 }
+            }
+        }
+        #endregion
+
+        #region 7. GESTIÓN DE SEGURIDAD Y RESTRICCIONES DE ENTRADA
+        // Suscribe programáticamente todos los controles interactivos a sus barreras de contención
+        private void SuscribirFiltrosDeSeguridad()
+        {
+            // 1. Sanitización en tiempo real contra caracteres que corrompen expresiones RowFilter
+            if (txtBuscar != null)
+            {
+                txtBuscar.KeyPress += txtAntiInyeccion_KeyPress;
+            }
+
+            // 2. Neutralización del menú contextual nativo de Windows (Inhabilita pegado por clic derecho)
+            ContextMenuStrip menuVacio = new ContextMenuStrip();
+
+            // 3. Inspección profunda recursiva para silenciar el portapapeles (Ctrl+V / Shift+Insert)
+            foreach (Control contenedor in this.Controls)
+            {
+                AsignarBloqueosRecursivo(contenedor, menuVacio);
+            }
+        }
+
+        // Escanea la vista capturando cuadros de texto en cualquier nivel de anidamiento visual
+        private void AsignarBloqueosRecursivo(Control contenedor, ContextMenuStrip menuVacio)
+        {
+            if (contenedor is TextBox txt)
+            {
+                txt.KeyDown += BloquearPegado_KeyDown;
+                txt.ContextMenuStrip = menuVacio;
+            }
+
+            foreach (Control hijo in contenedor.Controls)
+            {
+                AsignarBloqueosRecursivo(hijo, menuVacio);
+            }
+        }
+
+        // Intercepta e invalida accesos rápidos de inserción masiva desde el portapapeles
+        private void BloquearPegado_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Control && e.KeyCode == Keys.V || e.Shift && e.KeyCode == Keys.Insert)
+            {
+                e.SuppressKeyPress = true;
+            }
+        }
+
+        // Suprime cualquier símbolo ajeno a identidades aplicando el patrón de contención de Lista Blanca (Whitelist)
+        private void txtAntiInyeccion_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            // Autoriza exclusivamente: retroceso, letras, dígitos, espacios y guion. Todo lo demás muere aquí.
+            if (!char.IsControl(e.KeyChar) && !char.IsLetterOrDigit(e.KeyChar) &&
+                !char.IsWhiteSpace(e.KeyChar) && e.KeyChar != '-')
+            {
+                e.Handled = true;
             }
         }
         #endregion

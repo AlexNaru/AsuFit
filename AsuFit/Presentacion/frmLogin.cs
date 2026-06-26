@@ -1,11 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using AsuFit.Negocio;
 using AsuFit.Entidades;
@@ -15,78 +9,84 @@ namespace AsuFit.Presentacion
 {
     public partial class frmLogin : Form
     {
-        #region 1. VARIABLES Y CONSTRUCTOR
-
-        // Bandera de control para evitar que el usuario haga doble clic rápido en "Ingresar"
+        #region 1. VARIABLES GLOBALES Y CONSTRUCTOR
         private bool iniciandoSesion = false;
+        private int intentosFallidos = 0;
 
+        // Inicializa la instancia del formulario, configura el doble búfer de gráficos y prepara la transición de opacidad inicial.
         public frmLogin()
         {
             InitializeComponent();
 
-            // Fuerzo el redibujado en memoria para evitar parpadeos visuales
             this.DoubleBuffered = true;
-
-            // 1. Hago que la ventana nazca invisible (0% opacidad) para ocultar el escalado del logo
             this.Opacity = 0;
-
-            // 2. Enlazo el evento Shown para que se ejecute justo cuando termine de cargar todo
             this.Shown += new EventHandler(frmLogin_Shown);
         }
-
         #endregion
 
         #region 2. CARGA DEL FORMULARIO Y DISEÑO
-
+        // Aplica el factor de escala, establece límites de seguridad en las entradas de texto y asigna el foco inicial al cargar la ventana.
         private void frmLogin_Load(object sender, EventArgs e)
         {
-            // 1. CONGELAMOS la interfaz gráfica para que no se vean los tirones de tamaño
             this.SuspendLayout();
 
-            // 2. Aplicamos la escala y ajustamos las fuentes proporcionales
             this.Scale(new SizeF(1.6f, 1.6f));
             AjustarFuentes(this, 1.6f);
             this.CenterToScreen();
 
-            // 3. Foco inicial en el usuario
-            this.ActiveControl = txtUsername;
-            txtPassword.Enabled = false;
+            txtUsername.MaxLength = 50;
+            txtPassword.MaxLength = 50;
 
-            // 4. DESCONGELAMOS la interfaz para que se dibuje de golpe
+            this.ActiveControl = txtUsername;
+
+            // Bloqueo físico contra pegado y menú contextual
+            SuscribirFiltrosDeSeguridad();
+
             this.ResumeLayout(false);
         }
 
+        // Restablece la opacidad al 100% una vez que la ventana se ha renderizado completamente, evitando parpadeos visuales.
         private void frmLogin_Shown(object sender, EventArgs e)
         {
-            // 5. Como ya se escaló y acomodó todo en las sombras, muestro la ventana al 100% de opacidad
             this.Opacity = 1;
         }
 
-        // Metodo recursivo para multiplicar el tamaño de letra de todos los controles
+        // Recorre recursivamente los controles de la interfaz para aplicar un factor de multiplicación al tamaño de sus fuentes.
         private void AjustarFuentes(Control contenedor, float factor)
         {
             foreach (Control c in contenedor.Controls)
             {
                 c.Font = new Font(c.Font.FontFamily, c.Font.Size * factor, c.Font.Style);
-
-                // Si hay controles agrupados (como dentro del Panel oscuro), entro a revisarlos también
                 if (c.HasChildren)
                 {
                     AjustarFuentes(c, factor);
                 }
             }
         }
-
         #endregion
 
-        #region 3. EVENTOS DE LOS CAMPOS DE TEXTO (USUARIO Y CONTRASEÑA)
+        #region 3. SECCIÓN DE ENTRADA: USUARIO
+        // Intercepta el tipeo del teclado para bloquear espacios y caracteres especiales, actuando como primera capa contra inyecciones SQL.
+        private void txtUsername_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar == (char)Keys.Space)
+            {
+                e.Handled = true;
+                return;
+            }
 
+            if (!char.IsLetterOrDigit(e.KeyChar) && !char.IsControl(e.KeyChar))
+            {
+                e.Handled = true;
+            }
+        }
+
+        // Gestiona la navegación hacia el siguiente campo al presionar Enter, previa validación de contenido nulo o vacío.
         private void txtUsername_KeyDown(object sender, KeyEventArgs e)
         {
-            // Al presionar Enter, paso el foco a la contraseña
             if (e.KeyCode == Keys.Enter)
             {
-                e.SuppressKeyPress = true; // Quito el sonido de error de Windows
+                e.SuppressKeyPress = true;
 
                 if (string.IsNullOrWhiteSpace(txtUsername.Text))
                 {
@@ -94,102 +94,112 @@ namespace AsuFit.Presentacion
                 }
                 else
                 {
-                    txtPassword.Enabled = true;
                     txtPassword.Focus();
                 }
             }
         }
+        #endregion
 
-        private void txtPassword_TextChanged(object sender, EventArgs e)
+        #region 4. SECCIÓN DE ENTRADA: CONTRASEÑA Y VISIBILIDAD
+        // Actúa como guardia de seguridad UX: verifica que exista un usuario ingresado antes de permitir el foco en la contraseña.
+        private void txtPassword_Enter(object sender, EventArgs e)
         {
-            // Habilito el boton de ingresar solo si ya escribieron algo en la clave
-            if (!iniciandoSesion)
+            if (string.IsNullOrWhiteSpace(txtUsername.Text))
             {
-                btnIngresar.Enabled = !string.IsNullOrWhiteSpace(txtPassword.Text);
+                MessageBox.Show("Por favor, ingresá primero tu usuario.", "Atención", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                txtUsername.Focus();
             }
         }
 
+        // Gestiona el atajo de teclado para disparar el proceso de inicio de sesión al presionar Enter.
         private void txtPassword_KeyDown(object sender, KeyEventArgs e)
         {
-            // Al presionar Enter en la contraseña, simulo el clic en INICIAR SESION
             if (e.KeyCode == Keys.Enter)
             {
                 e.SuppressKeyPress = true;
 
-                if (btnIngresar.Enabled && !iniciandoSesion)
+                if (!iniciandoSesion)
                 {
                     btnIngresar.PerformClick();
                 }
-                else if (string.IsNullOrWhiteSpace(txtPassword.Text))
-                {
-                    MessageBox.Show("Debes ingresar una contraseña.", "Atención", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                }
             }
         }
 
+        // Alterna la máscara de encriptación visual de la contraseña y actualiza el recurso gráfico del indicador visual.
         private void pictureBoxOjo_Click(object sender, EventArgs e)
         {
-            // Alternar visibilidad de la contraseña
-            if (txtPassword.UseSystemPasswordChar == true)
-            {
-                // Muestro el texto y cambio al ícono de ojo abierto
-                txtPassword.UseSystemPasswordChar = false;
-                pictureBoxOjo.Image = Properties.Resources.ojo_abierto;
-            }
-            else
-            {
-                // Oculto el texto y cambio al ícono de ojo cerrado/tachado
-                txtPassword.UseSystemPasswordChar = true;
-                pictureBoxOjo.Image = Properties.Resources.ojo_cerrado;
-            }
+            txtPassword.UseSystemPasswordChar = !txtPassword.UseSystemPasswordChar;
+            pictureBoxOjo.Image = txtPassword.UseSystemPasswordChar ? Properties.Resources.ojo_cerrado : Properties.Resources.ojo_abierto;
         }
 
+        // Reutiliza la lógica de alternancia de visibilidad en caso de interacciones rápidas (doble clic) sobre el control.
         private void pictureBoxOjo_DoubleClick(object sender, EventArgs e)
         {
-            // Si el usuario hace doble clic muy rápido, fuerzo a que actúe como un clic normal
             pictureBoxOjo_Click(sender, e);
         }
-
         #endregion
 
-        #region 4. BOTONES Y ACCIONES PRINCIPALES
-
+        #region 5. BOTONES DE ACCIÓN Y NAVEGACIÓN
+        // Ejecuta las validaciones pre-conexión, aplica el algoritmo SHA-256 a la credencial, verifica contra la base de datos y gestiona el flujo de acceso o bloqueo.
         private void btnIngresar_Click(object sender, EventArgs e)
         {
-            // Bloqueo multiples clics
             if (iniciandoSesion) return;
+
+            if (string.IsNullOrWhiteSpace(txtUsername.Text))
+            {
+                MessageBox.Show("Debes ingresar tu usuario.", "Datos incompletos", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                txtUsername.Focus();
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(txtPassword.Text))
+            {
+                MessageBox.Show("Falta ingresar la contraseña.", "Datos incompletos", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                txtPassword.Focus();
+                return;
+            }
 
             iniciandoSesion = true;
             btnIngresar.Enabled = false;
 
-            // Feedback visual de carga
             string textoOriginal = btnIngresar.Text;
             btnIngresar.Text = "Conectando...";
-            Application.DoEvents(); // Fuerzo el redibujado de la UI para que se vea el "Conectando..."
+            Application.DoEvents();
 
             try
             {
-                // Valido credenciales contra la BD
+                string passPlana = txtPassword.Text.Trim();
+                string passHasheada = AsuFit.Negocio.SeguridadHelper.HashearContrasena(passPlana);
+
                 UsuarioNegocio objNegocio = new UsuarioNegocio();
-                Usuario user = objNegocio.Loguear(txtUsername.Text.Trim(), txtPassword.Text.Trim());
+                Usuario user = objNegocio.Loguear(txtUsername.Text.Trim(), passHasheada);
 
                 if (user != null)
                 {
-                    // Registro el ingreso en auditoria
                     GestorAuditoria.Registrar(user.NombreCompleto, "Seguridad", "Inicio de Sesión", "El usuario ingresó al sistema.");
 
                     this.Hide();
-
-                    // Levanto el sistema principal
                     frmDashboard pantallaPrincipal = new frmDashboard(user);
                     pantallaPrincipal.Show();
                 }
                 else
                 {
-                    MessageBox.Show("Usuario o contraseña incorrectos, o el usuario está Inactivo.",
+                    intentosFallidos++;
+
+                    if (intentosFallidos >= 3)
+                    {
+                        MessageBox.Show("Has superado el límite de 3 intentos fallidos por razones de seguridad. El sistema se cerrará.",
+                                        "Alerta de Seguridad", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+
+                        GestorAuditoria.Registrar("Desconocido", "Seguridad", "Intento de Intrusión", $"Múltiples fallos con usuario: {txtUsername.Text.Trim()}");
+                        Application.Exit();
+                        return;
+                    }
+
+                    int intentosRestantes = 3 - intentosFallidos;
+                    MessageBox.Show($"Usuario o contraseña incorrectos, o el usuario está Inactivo.\n\nTe quedan {intentosRestantes} intentos.",
                                     "Error de Acceso", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
-                    // Limpio para reintentar
                     txtPassword.Clear();
                     txtUsername.Focus();
 
@@ -200,7 +210,7 @@ namespace AsuFit.Presentacion
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error de conexión con el servidor. Por favor, verifica tu conexión a internet (Puerto 1433) o intenta más tarde.\n\nDetalle técnico: " + ex.Message,
+                MessageBox.Show("Error de conexión con el servidor. Por favor, verifica tu red.\n\nDetalle técnico: " + ex.Message,
                                 "Error de Red", MessageBoxButtons.OK, MessageBoxIcon.Warning);
 
                 iniciandoSesion = false;
@@ -209,28 +219,63 @@ namespace AsuFit.Presentacion
             }
         }
 
+        // Finaliza el proceso principal de la aplicación desde la interfaz gráfica.
         private void btnSalir_Click(object sender, EventArgs e)
         {
             Application.Exit();
         }
 
+        // Instancia y despliega el formulario modal para el restablecimiento de credenciales de usuario.
         private void lnkRecuperarAcceso_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            // Levanto la ventana de recuperacion de clave
             frmRecuperarAcceso ventanaRecuperar = new frmRecuperarAcceso();
             ventanaRecuperar.ShowDialog();
         }
-
         #endregion
 
-        #region 5. EVENTOS DEL SISTEMA
-
+        #region 6. EVENTOS DEL SISTEMA
+        // Garantiza que la finalización del proceso se ejecute de manera forzada si el formulario es cerrado desde el control nativo de Windows (X).
         private void frmLogin_FormClosed(object sender, FormClosedEventArgs e)
         {
-            // Mato el proceso si cierran desde la 'X' de la ventana
             Application.Exit();
         }
+        #endregion
 
+        #region 7. GESTIÓN DE SEGURIDAD Y RESTRICCIONES DE ENTRADA
+        // Suscribe programáticamente las barreras de contención física para silenciar accesos del portapapeles
+        private void SuscribirFiltrosDeSeguridad()
+        {
+            ContextMenuStrip menuVacio = new ContextMenuStrip();
+
+            foreach (Control contenedor in this.Controls)
+            {
+                AsignarBloqueosRecursivo(contenedor, menuVacio);
+            }
+        }
+
+        // Inspecciona la jerarquía visual neutralizando menús contextuales y comandos de pegado en cajas de texto
+        private void AsignarBloqueosRecursivo(Control contenedor, ContextMenuStrip menuVacio)
+        {
+            if (contenedor is TextBox txt)
+            {
+                txt.KeyDown += BloquearPegado_KeyDown;
+                txt.ContextMenuStrip = menuVacio;
+            }
+
+            foreach (Control hijo in contenedor.Controls)
+            {
+                AsignarBloqueosRecursivo(hijo, menuVacio);
+            }
+        }
+
+        // Intercepta e invalida accesos rápidos de inserción masiva desde el teclado
+        private void BloquearPegado_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Control && e.KeyCode == Keys.V || e.Shift && e.KeyCode == Keys.Insert)
+            {
+                e.SuppressKeyPress = true;
+            }
+        }
         #endregion
     }
 }

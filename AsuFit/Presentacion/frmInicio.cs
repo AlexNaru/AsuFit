@@ -12,11 +12,11 @@ namespace AsuFit.Presentacion
         #region 1. VARIABLES GLOBALES Y CONSTRUCTOR
         private InventarioNegocio negocioInventario = new InventarioNegocio();
 
+        // Inicializa la instancia y bloquea la autogeneración de columnas para respetar el diseño visual.
         public frmInicio()
         {
             InitializeComponent();
 
-            // Bloquea la autogeneración de columnas para mantener el layout definido en el diseñador
             dgvVencimientos.AutoGenerateColumns = false;
             dgvVencidos.AutoGenerateColumns = false;
             dgvProductosStock.AutoGenerateColumns = false;
@@ -24,29 +24,27 @@ namespace AsuFit.Presentacion
         }
         #endregion
 
-        #region 2. EVENTOS DE CICLO DE VIDA (Load)
+        #region 2. CICLO DE VIDA DEL FORMULARIO
+        // Orquesta la inicialización de temas cromáticos y la carga asíncrona de datos para el dashboard al iniciar la vista.
         private void frmInicio_Load(object sender, EventArgs e)
         {
-            // Aplicación del tema oscuro a controles nativos
             AplicarTemaGraficoOscuro();
             AplicarTemaOscuroGrillas(dgvProductosStock);
             AplicarTemaOscuroGrillas(dgvProductosStockBajo);
             AplicarTemaOscuroGrillas(dgvVencimientos);
             AplicarTemaOscuroGrillas(dgvVencidos);
 
-            // Obtención y enlace de datos del dashboard
             CargarDashboard();
             CargarTablasInventario();
             CargarVencimientos();
 
-            // Ejecución del proceso de mensajería delegando a la capa de Negocio
             SocioNegocio negocioSocio = new SocioNegocio();
             negocioSocio.ProcesarEnvioCorreosVencimiento();
         }
         #endregion
 
         #region 3. MÓDULO DE MÉTRICAS Y FINANZAS
-        // Obtiene los KPI principales y actualiza los indicadores visuales
+        // Extrae los indicadores clave de rendimiento (KPIs) desde la capa de negocio y actualiza la interfaz.
         private void CargarDashboard()
         {
             DashboardNegocio negocio = new DashboardNegocio();
@@ -64,14 +62,14 @@ namespace AsuFit.Presentacion
             ConfigurarGrafico(ingresos, egresos);
         }
 
-        // Construye y enlaza la serie de datos para el control Chart
+        // Renderiza las series de datos financieros en el control Chart aplicando la paleta de colores corporativa.
         private void ConfigurarGrafico(decimal ingresos, decimal egresos)
         {
             chartFinanzas.Series.Clear();
 
             Series serie = new Series("Balance Mensual");
             serie.ChartType = SeriesChartType.Column;
-            serie["PointWidth"] = "0.7"; // Ajusta el grosor de las columnas
+            serie["PointWidth"] = "0.7";
 
             decimal utilidad = ingresos - egresos;
 
@@ -89,35 +87,35 @@ namespace AsuFit.Presentacion
         #endregion
 
         #region 4. MÓDULO DE INVENTARIO
-        // Enlaza las tablas de inventario general y alertas de stock
+        // Recupera los conjuntos de datos del inventario y los enlaza a sus respectivas grillas de visualización.
         private void CargarTablasInventario()
         {
             DataTable dtTodos = negocioInventario.ListarProductosBasico();
             if (dtTodos != null)
             {
                 dgvProductosStock.DataSource = dtTodos;
-                ConfigurarColumnasBasicas(dgvProductosStock);
             }
 
             DataTable dtBajo = negocioInventario.ListarProductosStockBajo();
             if (dtBajo != null)
             {
                 dgvProductosStockBajo.DataSource = dtBajo;
-                ConfigurarColumnasBasicas(dgvProductosStockBajo);
             }
         }
 
+        // Elimina el resaltado por defecto de la primera fila tras completar el enlace de datos.
         private void dgvProductosStock_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
         {
             dgvProductosStock.ClearSelection();
         }
 
+        // Elimina el resaltado por defecto de la primera fila tras completar el enlace de datos.
         private void dgvProductosStockBajo_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
         {
             dgvProductosStockBajo.ClearSelection();
         }
 
-        // Aplica formato condicional según el nivel de existencias (Stock 0 = Crítico, >0 = Advertencia)
+        // Inyecta formato condicional en las celdas para alertar visualmente sobre quiebres o advertencias de stock.
         private void dgvProductosStockBajo_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
         {
             if (e.RowIndex >= 0)
@@ -148,7 +146,7 @@ namespace AsuFit.Presentacion
         #endregion
 
         #region 5. MÓDULO DE SOCIOS Y VENCIMIENTOS
-        // Enlaza las tablas de notificaciones de membresías
+        // Recupera las listas de membresías en periodo de gracia o caducadas y las enlaza a la interfaz.
         private void CargarVencimientos()
         {
             try
@@ -161,9 +159,6 @@ namespace AsuFit.Presentacion
                 var listaVencidos = negocioSocio.ListarVencidos();
                 dgvVencidos.DataSource = listaVencidos;
                 lblVencimientos.Text = listaVencidos.Count.ToString();
-
-                dgvVencidos.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-                dgvVencidos.ClearSelection();
             }
             catch (Exception ex)
             {
@@ -171,17 +166,19 @@ namespace AsuFit.Presentacion
             }
         }
 
+        // Elimina el resaltado por defecto de la primera fila tras completar el enlace de datos.
         private void dgvVencimientos_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
         {
             dgvVencimientos.ClearSelection();
         }
 
+        // Elimina el resaltado por defecto de la primera fila tras completar el enlace de datos.
         private void dgvVencidos_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
         {
             dgvVencidos.ClearSelection();
         }
 
-        // Formato condicional: Alerta visual para membresías por vencer
+        // Aplica formato condicional de advertencia (color oro) para los socios próximos a vencer.
         private void dgvVencimientos_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
         {
             if (e.RowIndex >= 0)
@@ -191,7 +188,7 @@ namespace AsuFit.Presentacion
             }
         }
 
-        // Formato condicional: Alerta visual para membresías vencidas
+        // Aplica formato condicional de alerta crítica (color coral) para los socios con membresía expirada.
         private void dgvVencidos_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
         {
             if (e.RowIndex >= 0)
@@ -202,21 +199,8 @@ namespace AsuFit.Presentacion
         }
         #endregion
 
-        #region 6. UTILIDADES Y RENDERIZADO
-        // Establece las propiedades estándar de solo lectura y autoajuste para los DataGridViews
-        private void ConfigurarColumnasBasicas(DataGridView dgv)
-        {
-            if (dgv.Columns.Count > 0)
-            {
-                dgv.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-                dgv.ReadOnly = true;
-                dgv.RowHeadersVisible = false;
-                dgv.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-                dgv.AllowUserToAddRows = false;
-            }
-        }
-
-        // Sobrescribe las propiedades visuales del control Chart para integrarlo al tema oscuro
+        #region 6. RENDERIZADO DE TEMAS VISUALES
+        // Configura la paleta de colores oscuros para el área y los ejes del gráfico financiero.
         private void AplicarTemaGraficoOscuro()
         {
             var grafico = chartFinanzas;
@@ -239,7 +223,7 @@ namespace AsuFit.Presentacion
             }
         }
 
-        // Aplica estilo plano y colores personalizados a las instancias de DataGridView
+        // Inyecta dinámicamente las propiedades cromáticas corporativas sobre las estructuras de las grillas.
         private void AplicarTemaOscuroGrillas(DataGridView dgv)
         {
             dgv.BackgroundColor = Color.FromArgb(35, 39, 47);
@@ -257,12 +241,6 @@ namespace AsuFit.Presentacion
             dgv.DefaultCellStyle.ForeColor = Color.White;
             dgv.DefaultCellStyle.SelectionBackColor = Color.FromArgb(0, 229, 255);
             dgv.DefaultCellStyle.SelectionForeColor = Color.Black;
-
-            dgv.RowHeadersVisible = false;
-            dgv.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-            dgv.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            dgv.AllowUserToAddRows = false;
-            dgv.ReadOnly = true;
         }
         #endregion
     }

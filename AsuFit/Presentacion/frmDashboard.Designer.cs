@@ -34,23 +34,23 @@
             this.btnAuditoría = new System.Windows.Forms.Button();
             this.btnGestionUsuarios = new System.Windows.Forms.Button();
             this.btnRegistrarUsuario = new System.Windows.Forms.Button();
-            this.label4 = new System.Windows.Forms.Label();
+            this.lblModulo4 = new System.Windows.Forms.Label();
             this.btnReportesEstadísticas = new System.Windows.Forms.Button();
             this.btnArqueoCaja = new System.Windows.Forms.Button();
             this.btnGestionGastos = new System.Windows.Forms.Button();
             this.btnHistorialTransacciones = new System.Windows.Forms.Button();
             this.btnRegistrarCobro = new System.Windows.Forms.Button();
-            this.label3 = new System.Windows.Forms.Label();
+            this.lblModulo3 = new System.Windows.Forms.Label();
             this.btnProveedores = new System.Windows.Forms.Button();
             this.btnIngresoMercaderia = new System.Windows.Forms.Button();
             this.btnGestionProductos = new System.Windows.Forms.Button();
             this.btnInventarioVentas = new System.Windows.Forms.Button();
-            this.label2 = new System.Windows.Forms.Label();
+            this.lblModulo2 = new System.Windows.Forms.Label();
             this.btnGestionPlanes = new System.Windows.Forms.Button();
             this.btnGestionSocios = new System.Windows.Forms.Button();
             this.btnRegistrarSocio = new System.Windows.Forms.Button();
             this.btnRegistroAsistencia = new System.Windows.Forms.Button();
-            this.label1 = new System.Windows.Forms.Label();
+            this.lblModulo1 = new System.Windows.Forms.Label();
             this.btnInicio = new System.Windows.Forms.Button();
             this.btnCerrarSesion = new System.Windows.Forms.Button();
             this.btnConfiguración = new System.Windows.Forms.Button();
@@ -75,23 +75,23 @@
             this.pnlSidebar.Controls.Add(this.btnAuditoría);
             this.pnlSidebar.Controls.Add(this.btnGestionUsuarios);
             this.pnlSidebar.Controls.Add(this.btnRegistrarUsuario);
-            this.pnlSidebar.Controls.Add(this.label4);
+            this.pnlSidebar.Controls.Add(this.lblModulo4);
             this.pnlSidebar.Controls.Add(this.btnReportesEstadísticas);
             this.pnlSidebar.Controls.Add(this.btnArqueoCaja);
             this.pnlSidebar.Controls.Add(this.btnGestionGastos);
             this.pnlSidebar.Controls.Add(this.btnHistorialTransacciones);
             this.pnlSidebar.Controls.Add(this.btnRegistrarCobro);
-            this.pnlSidebar.Controls.Add(this.label3);
+            this.pnlSidebar.Controls.Add(this.lblModulo3);
             this.pnlSidebar.Controls.Add(this.btnProveedores);
             this.pnlSidebar.Controls.Add(this.btnIngresoMercaderia);
             this.pnlSidebar.Controls.Add(this.btnGestionProductos);
             this.pnlSidebar.Controls.Add(this.btnInventarioVentas);
-            this.pnlSidebar.Controls.Add(this.label2);
+            this.pnlSidebar.Controls.Add(this.lblModulo2);
             this.pnlSidebar.Controls.Add(this.btnGestionPlanes);
             this.pnlSidebar.Controls.Add(this.btnGestionSocios);
             this.pnlSidebar.Controls.Add(this.btnRegistrarSocio);
             this.pnlSidebar.Controls.Add(this.btnRegistroAsistencia);
-            this.pnlSidebar.Controls.Add(this.label1);
+            this.pnlSidebar.Controls.Add(this.lblModulo1);
             this.pnlSidebar.Controls.Add(this.btnInicio);
             this.pnlSidebar.Dock = System.Windows.Forms.DockStyle.Left;
             this.pnlSidebar.Location = new System.Drawing.Point(0, 30);
@@ -149,17 +149,17 @@
             this.btnRegistrarUsuario.UseVisualStyleBackColor = true;
             this.btnRegistrarUsuario.Click += new System.EventHandler(this.btnRegistrarUsuario_Click);
             // 
-            // label4
+            // lblModulo4
             // 
-            this.label4.Dock = System.Windows.Forms.DockStyle.Top;
-            this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label4.ForeColor = System.Drawing.Color.White;
-            this.label4.Location = new System.Drawing.Point(0, 454);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(208, 30);
-            this.label4.TabIndex = 22;
-            this.label4.Text = "SEGURIDAD Y CONTROL";
-            this.label4.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.lblModulo4.Dock = System.Windows.Forms.DockStyle.Top;
+            this.lblModulo4.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblModulo4.ForeColor = System.Drawing.Color.White;
+            this.lblModulo4.Location = new System.Drawing.Point(0, 454);
+            this.lblModulo4.Name = "lblModulo4";
+            this.lblModulo4.Size = new System.Drawing.Size(208, 30);
+            this.lblModulo4.TabIndex = 22;
+            this.lblModulo4.Text = "SEGURIDAD Y CONTROL";
+            this.lblModulo4.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // btnReportesEstadísticas
             // 
@@ -246,17 +246,17 @@
             this.btnRegistrarCobro.UseVisualStyleBackColor = false;
             this.btnRegistrarCobro.Click += new System.EventHandler(this.btnRegistrarCobro_Click);
             // 
-            // label3
+            // lblModulo3
             // 
-            this.label3.Dock = System.Windows.Forms.DockStyle.Top;
-            this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.ForeColor = System.Drawing.Color.White;
-            this.label3.Location = new System.Drawing.Point(0, 294);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(208, 30);
-            this.label3.TabIndex = 21;
-            this.label3.Text = "CAJA Y FINANZAS";
-            this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.lblModulo3.Dock = System.Windows.Forms.DockStyle.Top;
+            this.lblModulo3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblModulo3.ForeColor = System.Drawing.Color.White;
+            this.lblModulo3.Location = new System.Drawing.Point(0, 294);
+            this.lblModulo3.Name = "lblModulo3";
+            this.lblModulo3.Size = new System.Drawing.Size(208, 30);
+            this.lblModulo3.TabIndex = 21;
+            this.lblModulo3.Text = "CAJA Y FINANZAS";
+            this.lblModulo3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // btnProveedores
             // 
@@ -326,17 +326,17 @@
             this.btnInventarioVentas.UseVisualStyleBackColor = false;
             this.btnInventarioVentas.Click += new System.EventHandler(this.btnInventarioVentas_Click);
             // 
-            // label2
+            // lblModulo2
             // 
-            this.label2.Dock = System.Windows.Forms.DockStyle.Top;
-            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.ForeColor = System.Drawing.Color.White;
-            this.label2.Location = new System.Drawing.Point(0, 160);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(208, 30);
-            this.label2.TabIndex = 20;
-            this.label2.Text = "COMERCIAL E INVENTARIO";
-            this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.lblModulo2.Dock = System.Windows.Forms.DockStyle.Top;
+            this.lblModulo2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblModulo2.ForeColor = System.Drawing.Color.White;
+            this.lblModulo2.Location = new System.Drawing.Point(0, 160);
+            this.lblModulo2.Name = "lblModulo2";
+            this.lblModulo2.Size = new System.Drawing.Size(208, 30);
+            this.lblModulo2.TabIndex = 20;
+            this.lblModulo2.Text = "COMERCIAL E INVENTARIO";
+            this.lblModulo2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // btnGestionPlanes
             // 
@@ -405,17 +405,17 @@
             this.btnRegistroAsistencia.UseVisualStyleBackColor = false;
             this.btnRegistroAsistencia.Click += new System.EventHandler(this.btnRegistroAsistencia_Click);
             // 
-            // label1
+            // lblModulo1
             // 
-            this.label1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.ForeColor = System.Drawing.Color.White;
-            this.label1.Location = new System.Drawing.Point(0, 26);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(208, 30);
-            this.label1.TabIndex = 19;
-            this.label1.Text = "GESTIÓN DE SOCIOS Y ACCESOS";
-            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.lblModulo1.Dock = System.Windows.Forms.DockStyle.Top;
+            this.lblModulo1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblModulo1.ForeColor = System.Drawing.Color.White;
+            this.lblModulo1.Location = new System.Drawing.Point(0, 26);
+            this.lblModulo1.Name = "lblModulo1";
+            this.lblModulo1.Size = new System.Drawing.Size(208, 30);
+            this.lblModulo1.TabIndex = 19;
+            this.lblModulo1.Text = "GESTIÓN DE SOCIOS Y ACCESOS";
+            this.lblModulo1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // btnInicio
             // 
@@ -619,10 +619,10 @@
         private System.Windows.Forms.Button btnGestionProductos;
         private System.Windows.Forms.Button btnIngresoMercaderia;
         private System.Windows.Forms.Button btnHistorialTransacciones;
-        private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label lblModulo4;
+        private System.Windows.Forms.Label lblModulo3;
+        private System.Windows.Forms.Label lblModulo2;
+        private System.Windows.Forms.Label lblModulo1;
         private System.Windows.Forms.Panel pnlBarraSuperior;
         private System.Windows.Forms.Button btnNotificaciones;
         private System.Windows.Forms.Button btnUsuario;

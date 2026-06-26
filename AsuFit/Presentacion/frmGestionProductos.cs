@@ -125,6 +125,9 @@ namespace AsuFit.Presentacion
             CargarProveedores();
             CargarGrilla();
 
+            // Activamos los escudos de seguridad al cargar la ventana
+            SuscribirFiltrosDeSeguridad();
+
             // Vinculación del evento para limpiar el resaltado azul al elegir una opción
             cmbCategoria.DropDownClosed += QuitarFocoCombo_DropDownClosed;
             cmbProveedor.DropDownClosed += QuitarFocoCombo_DropDownClosed;
@@ -524,6 +527,72 @@ namespace AsuFit.Presentacion
         {
             dgvProductos.ClearSelection();
             LimpiarFormulario();
+        }
+        #endregion
+
+
+        #region 6. GESTIÓN DE SEGURIDAD Y RESTRICCIONES DE ENTRADA
+        // Suscribe programáticamente todos los controles a sus filtros y bloqueos
+        private void SuscribirFiltrosDeSeguridad()
+        {
+            // 1. Filtros físicos de teclado
+            txtPrecio.KeyPress += txtSoloNumeros_KeyPress;
+            txtStock.KeyPress += txtSoloNumeros_KeyPress;
+            txtCodigo.KeyPress += txtSoloNumeros_KeyPress; // El código de barras suele ser numérico
+
+            txtNombre.KeyPress += txtAntiInyeccion_KeyPress;
+            txtBuscarProducto.KeyPress += txtAntiInyeccion_KeyPress;
+
+            // 2. Anulación del menú contextual nativo de Windows (Clic derecho)
+            ContextMenuStrip menuVacio = new ContextMenuStrip();
+
+            // 3. Recorremos el formulario para bloquear el atajo Ctrl+V y el ratón
+            foreach (Control contenedor in this.Controls)
+            {
+                AsignarBloqueosRecursivo(contenedor, menuVacio);
+            }
+        }
+
+        // Busca todas las cajas de texto sin importar en qué panel estén escondidas
+        private void AsignarBloqueosRecursivo(Control contenedor, ContextMenuStrip menuVacio)
+        {
+            if (contenedor is TextBox txt)
+            {
+                txt.KeyDown += BloquearPegado_KeyDown;
+                txt.ContextMenuStrip = menuVacio; // Adiós clic derecho
+            }
+
+            foreach (Control hijo in contenedor.Controls)
+            {
+                AsignarBloqueosRecursivo(hijo, menuVacio);
+            }
+        }
+
+        // Invalida la ejecución de inserción desde el portapapeles
+        private void BloquearPegado_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Control && e.KeyCode == Keys.V || e.Shift && e.KeyCode == Keys.Insert)
+            {
+                e.SuppressKeyPress = true;
+            }
+        }
+
+        // Restringe el campo para que solo acepte dígitos numéricos y la tecla de borrar
+        private void txtSoloNumeros_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar))
+            {
+                e.Handled = true;
+            }
+        }
+
+        // Neutraliza caracteres reservados de T-SQL para mitigar vulnerabilidades
+        private void txtAntiInyeccion_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar == '\'' || e.KeyChar == '"' || e.KeyChar == ';')
+            {
+                e.Handled = true;
+            }
         }
         #endregion
     }

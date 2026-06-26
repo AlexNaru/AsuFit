@@ -28,9 +28,9 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend2 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.lblUtilidad = new System.Windows.Forms.Label();
             this.lblEgresos = new System.Windows.Forms.Label();
             this.lblIngresos = new System.Windows.Forms.Label();
@@ -174,6 +174,9 @@
             // dgvVencimientos
             // 
             this.dgvVencimientos.AllowUserToAddRows = false;
+            this.dgvVencimientos.AllowUserToDeleteRows = false;
+            this.dgvVencimientos.AllowUserToResizeColumns = false;
+            this.dgvVencimientos.AllowUserToResizeRows = false;
             this.dgvVencimientos.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.dgvVencimientos.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.dgvVencimientos.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
@@ -183,6 +186,7 @@
             this.colProxVencimiento});
             this.dgvVencimientos.Location = new System.Drawing.Point(18, 28);
             this.dgvVencimientos.Margin = new System.Windows.Forms.Padding(2);
+            this.dgvVencimientos.MultiSelect = false;
             this.dgvVencimientos.Name = "dgvVencimientos";
             this.dgvVencimientos.ReadOnly = true;
             this.dgvVencimientos.RowHeadersVisible = false;
@@ -232,6 +236,9 @@
             // dgvVencidos
             // 
             this.dgvVencidos.AllowUserToAddRows = false;
+            this.dgvVencidos.AllowUserToDeleteRows = false;
+            this.dgvVencidos.AllowUserToResizeColumns = false;
+            this.dgvVencidos.AllowUserToResizeRows = false;
             this.dgvVencidos.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.dgvVencidos.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.dgvVencidos.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
@@ -241,6 +248,7 @@
             this.colVencidoVencimiento});
             this.dgvVencidos.Location = new System.Drawing.Point(16, 28);
             this.dgvVencidos.Margin = new System.Windows.Forms.Padding(2);
+            this.dgvVencidos.MultiSelect = false;
             this.dgvVencidos.Name = "dgvVencidos";
             this.dgvVencidos.ReadOnly = true;
             this.dgvVencidos.RowHeadersVisible = false;
@@ -441,18 +449,18 @@
             // 
             // chartFinanzas
             // 
-            chartArea2.Name = "ChartArea1";
-            this.chartFinanzas.ChartAreas.Add(chartArea2);
-            legend2.Enabled = false;
-            legend2.Name = "Legend1";
-            this.chartFinanzas.Legends.Add(legend2);
+            chartArea1.Name = "ChartArea1";
+            this.chartFinanzas.ChartAreas.Add(chartArea1);
+            legend1.Enabled = false;
+            legend1.Name = "Legend1";
+            this.chartFinanzas.Legends.Add(legend1);
             this.chartFinanzas.Location = new System.Drawing.Point(21, 38);
             this.chartFinanzas.Margin = new System.Windows.Forms.Padding(2);
             this.chartFinanzas.Name = "chartFinanzas";
-            series2.ChartArea = "ChartArea1";
-            series2.Legend = "Legend1";
-            series2.Name = "Series1";
-            this.chartFinanzas.Series.Add(series2);
+            series1.ChartArea = "ChartArea1";
+            series1.Legend = "Legend1";
+            series1.Name = "Series1";
+            this.chartFinanzas.Series.Add(series1);
             this.chartFinanzas.Size = new System.Drawing.Size(377, 234);
             this.chartFinanzas.TabIndex = 6;
             this.chartFinanzas.Text = "chart1";
@@ -483,6 +491,7 @@
             this.colStockActual});
             this.dgvProductosStock.Location = new System.Drawing.Point(16, 28);
             this.dgvProductosStock.Margin = new System.Windows.Forms.Padding(2);
+            this.dgvProductosStock.MultiSelect = false;
             this.dgvProductosStock.Name = "dgvProductosStock";
             this.dgvProductosStock.ReadOnly = true;
             this.dgvProductosStock.RowHeadersVisible = false;
@@ -546,6 +555,7 @@
             this.colBajoActual});
             this.dgvProductosStockBajo.Location = new System.Drawing.Point(16, 27);
             this.dgvProductosStockBajo.Margin = new System.Windows.Forms.Padding(2);
+            this.dgvProductosStockBajo.MultiSelect = false;
             this.dgvProductosStockBajo.Name = "dgvProductosStockBajo";
             this.dgvProductosStockBajo.ReadOnly = true;
             this.dgvProductosStockBajo.RowHeadersVisible = false;
