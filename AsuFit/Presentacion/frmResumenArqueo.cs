@@ -148,20 +148,20 @@ namespace AsuFit.Presentacion
                 // Llamada completamente limpia
                 EnviarCorreoArqueo(rutaPDFGenerado);
 
-                MessageBox.Show("¡El turno se ha cerrado completamente y el reporte fue guardado y enviado!", "Cierre Exitoso", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MensajeAsuFit.Mostrar(this, "¡El turno se ha cerrado completamente y el reporte fue guardado y enviado!", "Cierre Exitoso", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                 this.DialogResult = DialogResult.OK;
                 this.Close();
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Se cerró la caja, pero hubo un problema al generar/enviar el comprobante: " + ex.Message, "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MensajeAsuFit.Mostrar(this, "Se cerró la caja, pero hubo un problema al generar/enviar el comprobante: " + ex.Message, "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 this.DialogResult = DialogResult.OK;
                 this.Close();
             }
         }
 
-        // --- SOLUCIÓN ARQUITECTÓNICA ---
+        // Para enviar el correo del arqueo
         private void EnviarCorreoArqueo(string rutaArchivoAdjunto)
         {
             try

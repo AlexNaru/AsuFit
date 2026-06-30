@@ -50,6 +50,12 @@ namespace AsuFit.Presentacion
             ConfigurarComportamientoComboBox();
             SuscribirFiltrosDeSeguridad();
             CambiarEstadoBoton(false);
+
+            // Sincroniza el encabezado no elegible si no se encuentra en modo edición
+            if (usuarioAEditar == null && cmbRol.Items.Count > 0)
+            {
+                cmbRol.SelectedIndex = 0;
+            }
         }
 
         // Intercepta la finalización del renderizado para forzar el foco inicial en el primer control de entrada.
@@ -166,7 +172,7 @@ namespace AsuFit.Presentacion
             {
                 if (c is Panel || c is GroupBox)
                 {
-                    c.BackColor = Color.FromArgb(35, 39, 47);
+                    c.BackColor = Color.FromArgb(25, 28, 35);
                     c.ForeColor = Color.White;
                 }
                 else if (c is Label lbl)
@@ -230,7 +236,7 @@ namespace AsuFit.Presentacion
                 !string.IsNullOrWhiteSpace(txtConfirmarPassword.Text) &&
                 !string.IsNullOrWhiteSpace(txtEmail.Text) &&
                 !string.IsNullOrWhiteSpace(txtRespuesta.Text) &&
-                cmbRol.SelectedIndex != -1)
+                cmbRol.SelectedIndex != 0)
             {
                 CambiarEstadoBoton(true);
             }

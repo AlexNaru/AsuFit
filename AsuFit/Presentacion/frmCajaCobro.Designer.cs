@@ -119,6 +119,7 @@
             // 
             this.txtBusquedaCliente.Location = new System.Drawing.Point(101, 123);
             this.txtBusquedaCliente.Margin = new System.Windows.Forms.Padding(2);
+            this.txtBusquedaCliente.MaxLength = 10;
             this.txtBusquedaCliente.Name = "txtBusquedaCliente";
             this.txtBusquedaCliente.Size = new System.Drawing.Size(115, 20);
             this.txtBusquedaCliente.TabIndex = 0;
@@ -219,6 +220,7 @@
             // 
             this.txtMontoRecibido.Location = new System.Drawing.Point(101, 365);
             this.txtMontoRecibido.Margin = new System.Windows.Forms.Padding(2);
+            this.txtMontoRecibido.MaxLength = 10;
             this.txtMontoRecibido.Name = "txtMontoRecibido";
             this.txtMontoRecibido.Size = new System.Drawing.Size(115, 20);
             this.txtMontoRecibido.TabIndex = 4;

@@ -30,6 +30,8 @@ namespace AsuFit.Presentacion
             // Aplicamos el placeholder interactivo estilo AsuFit (Color Plata)
             AplicarPlaceholder(txtBuscar, "Buscar por Usuario, Nombre o Rol...");
 
+            SuscribirFiltrosDeSeguridad();
+
             CargarGrilla("Activo");
 
             // Liberamos el foco para que el placeholder se dibuje correctamente
@@ -154,7 +156,7 @@ namespace AsuFit.Presentacion
             dgv.RowTemplate.Height = 35;
         }
 
-        // --- MÉTODO INTELIGENTE DE PLACEHOLDER ---
+        // Gestiona el ciclo de vida visual de la marca de agua mitigando el sombreado de selección del sistema operativo.
         private void AplicarPlaceholder(TextBox txt, string textoAyuda)
         {
             txt.Tag = textoAyuda;
@@ -173,17 +175,50 @@ namespace AsuFit.Presentacion
             {
                 if (txt.Text == textoAyuda)
                 {
-                    txt.Text = "";
-                    txt.ForeColor = Color.White;
+                    this.BeginInvoke(new Action(() => txt.SelectionStart = 0));
                 }
             };
 
-            txt.Leave += delegate
+            txt.MouseDown += delegate
             {
-                if (string.IsNullOrWhiteSpace(txt.Text))
+                if (txt.Text == textoAyuda)
                 {
-                    txt.Text = textoAyuda;
+                    txt.SelectionStart = 0;
+                    txt.SelectionLength = 0;
+                }
+            };
+
+            txt.MouseMove += delegate
+            {
+                if (txt.Text == textoAyuda && txt.SelectionLength > 0)
+                {
+                    txt.SelectionStart = 0;
+                    txt.SelectionLength = 0;
+                }
+            };
+
+            txt.TextChanged += delegate
+            {
+                if (txt.Text != textoAyuda && txt.ForeColor == Color.Silver)
+                {
+                    string entradaUsuario = txt.Text.Replace(textoAyuda, "");
+                    txt.ForeColor = Color.White;
+                    txt.Text = entradaUsuario;
+                    txt.SelectionStart = txt.Text.Length;
+                }
+                else if (string.IsNullOrEmpty(txt.Text))
+                {
                     txt.ForeColor = Color.Silver;
+                    txt.Text = textoAyuda;
+                    txt.SelectionStart = 0;
+                }
+            };
+
+            txt.KeyDown += delegate (object sender, KeyEventArgs e)
+            {
+                if (txt.Text == textoAyuda && (e.KeyCode == Keys.Back || e.KeyCode == Keys.Delete || e.KeyCode == Keys.Left || e.KeyCode == Keys.Right))
+                {
+                    e.SuppressKeyPress = true;
                 }
             };
         }
@@ -235,12 +270,15 @@ namespace AsuFit.Presentacion
             {
                 string textoBusqueda = txtBuscar.Text;
 
-                // Evitamos buscar el texto del placeholder
-                if (textoBusqueda == "Buscar por Usuario, Nombre o Rol...") textoBusqueda = "";
+                if (textoBusqueda == (string)txtBuscar.Tag || string.IsNullOrWhiteSpace(textoBusqueda))
+                {
+                    textoBusqueda = "";
+                }
 
-                dt.DefaultView.RowFilter = $"NombreCompleto LIKE '%{textoBusqueda}%' OR Username LIKE '%{textoBusqueda}%'";
+                string textoSeguro = textoBusqueda.Replace("'", "''");
 
-                // FIX: Usamos 'dt' en lugar de 'dgvUsuarios' para contar los registros
+                dt.DefaultView.RowFilter = $"NombreCompleto LIKE '%{textoSeguro}%' OR Username LIKE '%{textoSeguro}%'";
+
                 lblTotal.Text = "Registros encontrados: " + dt.DefaultView.Count.ToString();
             }
         }
@@ -363,6 +401,53 @@ namespace AsuFit.Presentacion
             else
             {
                 MessageBox.Show("Por favor, seleccioná un usuario de la lista.", "Atención", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+        }
+        #endregion
+
+        #region 8. GESTIÓN DE SEGURIDAD Y RESTRICCIONES DE ENTRADA
+        // Suscribe programáticamente los vectores de texto libre a directivas de descarte físico y anulación de menús.
+        private void SuscribirFiltrosDeSeguridad()
+        {
+            txtBuscar.KeyPress += txtAntiInyeccion_KeyPress;
+
+            ContextMenuStrip menuVacio = new ContextMenuStrip();
+            foreach (Control contenedor in this.Controls)
+            {
+                AsignarBloqueosRecursivo(contenedor, menuVacio);
+            }
+        }
+
+        // Aplica recursivamente la inmutabilidad del menú contextual nativo sobre los cuadros de texto anidados.
+        private void AsignarBloqueosRecursivo(Control contenedor, ContextMenuStrip menuVacio)
+        {
+            if (contenedor is TextBox txt)
+            {
+                txt.KeyDown += BloquearPegado_KeyDown;
+                txt.ContextMenuStrip = menuVacio;
+            }
+
+            foreach (Control hijo in contenedor.Controls)
+            {
+                AsignarBloqueosRecursivo(hijo, menuVacio);
+            }
+        }
+
+        // Intercepta y suprime la ejecución de combinaciones de pegado masivo por portapapeles.
+        private void BloquearPegado_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Control && e.KeyCode == Keys.V || e.Shift && e.KeyCode == Keys.Insert)
+            {
+                e.SuppressKeyPress = true;
+            }
+        }
+
+        // Descarta caracteres delimitadores relacionales para mitigar vectores de inyección en vistas en memoria.
+        private void txtAntiInyeccion_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar == '\'' || e.KeyChar == '"' || e.KeyChar == ';')
+            {
+                e.Handled = true;
             }
         }
         #endregion

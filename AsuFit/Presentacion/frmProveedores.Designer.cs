@@ -211,7 +211,9 @@
             // 
             this.txtBuscarProveedor.Location = new System.Drawing.Point(15, 41);
             this.txtBuscarProveedor.Margin = new System.Windows.Forms.Padding(2);
+            this.txtBuscarProveedor.MaxLength = 100;
             this.txtBuscarProveedor.Name = "txtBuscarProveedor";
+            this.txtBuscarProveedor.ShortcutsEnabled = false;
             this.txtBuscarProveedor.Size = new System.Drawing.Size(215, 20);
             this.txtBuscarProveedor.TabIndex = 0;
             this.txtBuscarProveedor.TextChanged += new System.EventHandler(this.txtBuscarProveedor_TextChanged);
@@ -264,7 +266,9 @@
             // 
             this.txtCorreo.Location = new System.Drawing.Point(224, 154);
             this.txtCorreo.Margin = new System.Windows.Forms.Padding(2);
+            this.txtCorreo.MaxLength = 80;
             this.txtCorreo.Name = "txtCorreo";
+            this.txtCorreo.ShortcutsEnabled = false;
             this.txtCorreo.Size = new System.Drawing.Size(120, 20);
             this.txtCorreo.TabIndex = 5;
             // 
@@ -292,7 +296,9 @@
             // 
             this.txtTelefono.Location = new System.Drawing.Point(19, 154);
             this.txtTelefono.Margin = new System.Windows.Forms.Padding(2);
+            this.txtTelefono.MaxLength = 20;
             this.txtTelefono.Name = "txtTelefono";
+            this.txtTelefono.ShortcutsEnabled = false;
             this.txtTelefono.Size = new System.Drawing.Size(179, 20);
             this.txtTelefono.TabIndex = 4;
             // 
@@ -377,7 +383,9 @@
             // 
             this.txtCiudad.Location = new System.Drawing.Point(224, 202);
             this.txtCiudad.Margin = new System.Windows.Forms.Padding(2);
+            this.txtCiudad.MaxLength = 60;
             this.txtCiudad.Name = "txtCiudad";
+            this.txtCiudad.ShortcutsEnabled = false;
             this.txtCiudad.Size = new System.Drawing.Size(120, 20);
             this.txtCiudad.TabIndex = 7;
             // 
@@ -405,7 +413,9 @@
             // 
             this.txtDireccion.Location = new System.Drawing.Point(19, 202);
             this.txtDireccion.Margin = new System.Windows.Forms.Padding(2);
+            this.txtDireccion.MaxLength = 150;
             this.txtDireccion.Name = "txtDireccion";
+            this.txtDireccion.ShortcutsEnabled = false;
             this.txtDireccion.Size = new System.Drawing.Size(179, 20);
             this.txtDireccion.TabIndex = 6;
             // 
@@ -413,7 +423,9 @@
             // 
             this.txtContacto.Location = new System.Drawing.Point(224, 110);
             this.txtContacto.Margin = new System.Windows.Forms.Padding(2);
+            this.txtContacto.MaxLength = 80;
             this.txtContacto.Name = "txtContacto";
+            this.txtContacto.ShortcutsEnabled = false;
             this.txtContacto.Size = new System.Drawing.Size(120, 20);
             this.txtContacto.TabIndex = 3;
             // 
@@ -467,7 +479,9 @@
             // 
             this.txtRuc.Location = new System.Drawing.Point(224, 58);
             this.txtRuc.Margin = new System.Windows.Forms.Padding(2);
+            this.txtRuc.MaxLength = 10;
             this.txtRuc.Name = "txtRuc";
+            this.txtRuc.ShortcutsEnabled = false;
             this.txtRuc.Size = new System.Drawing.Size(120, 20);
             this.txtRuc.TabIndex = 1;
             // 
@@ -485,7 +499,9 @@
             // 
             this.txtNombre.Location = new System.Drawing.Point(19, 58);
             this.txtNombre.Margin = new System.Windows.Forms.Padding(2);
+            this.txtNombre.MaxLength = 100;
             this.txtNombre.Name = "txtNombre";
+            this.txtNombre.ShortcutsEnabled = false;
             this.txtNombre.Size = new System.Drawing.Size(179, 20);
             this.txtNombre.TabIndex = 0;
             // 

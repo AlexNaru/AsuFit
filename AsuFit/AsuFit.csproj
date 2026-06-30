@@ -88,6 +88,7 @@
     <Compile Include="Entidades\TurnoCaja.cs" />
     <Compile Include="Entidades\Usuario.cs" />
     <Compile Include="Entidades\Venta.cs" />
+    <Compile Include="MensajeAsuFit.cs" />
     <Compile Include="Negocio\ArqueoNegocio.cs" />
     <Compile Include="Negocio\AsistenciaNegocio.cs" />
     <Compile Include="Negocio\AuditoriaNegocio.cs" />

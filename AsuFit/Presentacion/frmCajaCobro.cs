@@ -30,7 +30,6 @@ namespace AsuFit.Presentacion
             this.StartPosition = FormStartPosition.CenterScreen;
 
             ConfigurarTemaOscuro();
-            SuscribirFiltrosDeSeguridad();
 
             totalAPagar = CarritoGlobal.TotalAPagar;
             carritoDetalles = CarritoGlobal.Detalles;
@@ -66,10 +65,30 @@ namespace AsuFit.Presentacion
                     idClienteActual = socioInfo.IdSocio;
                 }
             }
+
+            // Enlace absoluto de inicialización tardía para blindaje financiero
+            this.Load += new EventHandler(frmCajaCobro_Load);
         }
         #endregion
 
         #region 2. ESTILOS VISUALES Y SEGURIDAD UI
+        private void frmCajaCobro_Load(object sender, EventArgs e)
+        {
+            // Mitigación visual: Quita el sombreado azul nativo de Windows al interactuar
+            cmbMetodoPago.DropDownClosed += DesmarcarCombo_Interaccion;
+            cmbMetodoPago.SelectedIndexChanged += DesmarcarCombo_Interaccion;
+            cmbTipoComprobante.DropDownClosed += DesmarcarCombo_Interaccion;
+            cmbTipoComprobante.SelectedIndexChanged += DesmarcarCombo_Interaccion;
+
+            SuscribirFiltrosDeSeguridad();
+        }
+
+        // Libera el foco del control activo de forma asíncrona para eliminar selecciones residuales de la interfaz.
+        private void DesmarcarCombo_Interaccion(object sender, EventArgs e)
+        {
+            this.BeginInvoke(new Action(() => this.ActiveControl = null));
+        }
+
         // Aplica la paleta corporativa y rescata la legibilidad de controles deshabilitados.
         private void ConfigurarTemaOscuro()
         {
@@ -151,11 +170,29 @@ namespace AsuFit.Presentacion
             }
         }
 
-        // Asigna bloqueos físicos para prevenir inyección de código mediante pegado de texto.
         private void SuscribirFiltrosDeSeguridad()
         {
-            txtBusquedaCliente.KeyDown += BloquearPegado_KeyDown;
-            txtMontoRecibido.KeyDown += BloquearPegado_KeyDown;
+            ContextMenuStrip menuVacio = new ContextMenuStrip();
+
+            foreach (Control contenedor in this.Controls)
+            {
+                AsignarBloqueosRecursivo(contenedor, menuVacio);
+            }
+        }
+
+        private void AsignarBloqueosRecursivo(Control contenedor, ContextMenuStrip menuVacio)
+        {
+            if (contenedor is TextBox txt)
+            {
+                txt.KeyDown += BloquearPegado_KeyDown;
+                txt.ContextMenuStrip = menuVacio;
+                txt.ShortcutsEnabled = false; // Desactiva Ctrl+V nativo en toda la pantalla
+            }
+
+            foreach (Control hijo in contenedor.Controls)
+            {
+                AsignarBloqueosRecursivo(hijo, menuVacio);
+            }
         }
 
         private void BloquearPegado_KeyDown(object sender, KeyEventArgs e)

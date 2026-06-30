@@ -27,6 +27,13 @@ namespace AsuFit.Presentacion
             if (txtHasta != null) txtHasta.Text = dtpHasta.Value.ToShortDateString();
 
             CargarHistorial();
+
+            // Neutraliza el menú contextual en la grilla, los calendarios y sus cuadros oscuros
+            dgvArqueos.ContextMenuStrip = new ContextMenuStrip();
+            dtpDesde.ContextMenuStrip = new ContextMenuStrip();
+            dtpHasta.ContextMenuStrip = new ContextMenuStrip();
+            if (txtDesde != null) txtDesde.ContextMenuStrip = new ContextMenuStrip();
+            if (txtHasta != null) txtHasta.ContextMenuStrip = new ContextMenuStrip();
         }
 
         #region ESTILOS VISUALES Y ESCALADO

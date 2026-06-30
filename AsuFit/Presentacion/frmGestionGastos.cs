@@ -66,17 +66,50 @@ namespace AsuFit.Presentacion
             {
                 if (txt.Text == textoAyuda)
                 {
-                    txt.Text = "";
-                    txt.ForeColor = Color.White;
+                    this.BeginInvoke(new Action(() => txt.SelectionStart = 0));
                 }
             };
 
-            txt.Leave += delegate
+            txt.MouseDown += delegate
             {
-                if (string.IsNullOrWhiteSpace(txt.Text))
+                if (txt.Text == textoAyuda)
                 {
-                    txt.Text = textoAyuda;
+                    txt.SelectionStart = 0;
+                    txt.SelectionLength = 0;
+                }
+            };
+
+            txt.MouseMove += delegate
+            {
+                if (txt.Text == textoAyuda && txt.SelectionLength > 0)
+                {
+                    txt.SelectionStart = 0;
+                    txt.SelectionLength = 0;
+                }
+            };
+
+            txt.TextChanged += delegate
+            {
+                if (txt.Text != textoAyuda && txt.ForeColor == Color.Silver)
+                {
+                    string entradaUsuario = txt.Text.Replace(textoAyuda, "");
+                    txt.ForeColor = Color.White;
+                    txt.Text = entradaUsuario;
+                    txt.SelectionStart = txt.Text.Length;
+                }
+                else if (string.IsNullOrEmpty(txt.Text))
+                {
                     txt.ForeColor = Color.Silver;
+                    txt.Text = textoAyuda;
+                    txt.SelectionStart = 0;
+                }
+            };
+
+            txt.KeyDown += delegate (object sender, KeyEventArgs e)
+            {
+                if (txt.Text == textoAyuda && (e.KeyCode == Keys.Back || e.KeyCode == Keys.Delete || e.KeyCode == Keys.Left || e.KeyCode == Keys.Right))
+                {
+                    e.SuppressKeyPress = true;
                 }
             };
         }
@@ -88,9 +121,10 @@ namespace AsuFit.Presentacion
             return txt.Text;
         }
 
+        // Libera el foco del componente de forma asíncrona mitigando remanentes visuales de selección del sistema.
         private void QuitarFocoCombo_DropDownClosed(object sender, EventArgs e)
         {
-            this.ActiveControl = null;
+            this.BeginInvoke(new Action(() => this.ActiveControl = null));
         }
 
         // Vincula el evento clic a todo el fondo y sus paneles para asegurar la deselección
@@ -121,7 +155,14 @@ namespace AsuFit.Presentacion
             AplicarPlaceholder(txtDescripcion, "Ej: Pago de internet, insumos...");
             AplicarPlaceholder(txtMonto, "Ej: 150000");
 
-            if (cmbCategoria != null) cmbCategoria.DropDownClosed += QuitarFocoCombo_DropDownClosed;
+            // Sincroniza el primer ítem de la lista si el control posee elementos lícitos
+            if (cmbCategoria != null)
+            {
+                cmbCategoria.DropDownClosed += QuitarFocoCombo_DropDownClosed;
+                if (cmbCategoria.Items.Count > 0) cmbCategoria.SelectedIndex = 0;
+            }
+
+            SuscribirFiltrosDeSeguridad();
 
             CargarGrillaGastos();
             VincularClicDeseleccion(this);
@@ -166,7 +207,7 @@ namespace AsuFit.Presentacion
             string descripcionReal = ObtenerTextoReal(txtDescripcion);
             string montoReal = ObtenerTextoReal(txtMonto);
 
-            if (string.IsNullOrWhiteSpace(descripcionReal) || string.IsNullOrWhiteSpace(montoReal) || cmbCategoria.SelectedIndex == -1)
+            if (string.IsNullOrWhiteSpace(descripcionReal) || string.IsNullOrWhiteSpace(montoReal) || cmbCategoria.SelectedIndex == 0)
             {
                 MessageBox.Show("Por favor, complete todos los campos antes de guardar.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
@@ -194,7 +235,7 @@ namespace AsuFit.Presentacion
 
                     txtDescripcion.Clear();
                     txtMonto.Clear();
-                    cmbCategoria.SelectedIndex = -1;
+                    if (cmbCategoria.Items.Count > 0) cmbCategoria.SelectedIndex = 0;
 
                     AplicarPlaceholder(txtDescripcion, "Ej: Pago de internet, insumos...");
                     AplicarPlaceholder(txtMonto, "Ej: 150000");
@@ -210,6 +251,69 @@ namespace AsuFit.Presentacion
             catch (FormatException)
             {
                 MessageBox.Show("Por favor, ingresá un monto numérico válido.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+        #endregion
+
+        #region 6. GESTIÓN DE SEGURIDAD Y RESTRICCIONES DE ENTRADA
+        // Suscribe programáticamente los vectores de captura a las directivas de sanitización financiera.
+        private void SuscribirFiltrosDeSeguridad()
+        {
+            txtMonto.KeyPress += txtSoloNumeros_KeyPress;
+            txtDescripcion.KeyPress += txtAntiInyeccion_KeyPress;
+
+            ContextMenuStrip menuVacio = new ContextMenuStrip();
+            foreach (Control contenedor in this.Controls)
+            {
+                AsignarBloqueosRecursivo(contenedor, menuVacio);
+            }
+        }
+
+        private void AsignarBloqueosRecursivo(Control contenedor, ContextMenuStrip menuVacio)
+        {
+            if (contenedor is TextBox txt)
+            {
+                txt.KeyDown += BloquearPegado_KeyDown;
+                txt.ContextMenuStrip = menuVacio;
+            }
+
+            foreach (Control hijo in contenedor.Controls)
+            {
+                AsignarBloqueosRecursivo(hijo, menuVacio);
+            }
+        }
+
+        private void BloquearPegado_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Control && e.KeyCode == Keys.V || e.Shift && e.KeyCode == Keys.Insert)
+            {
+                e.SuppressKeyPress = true;
+            }
+        }
+
+        // Restringe el campo para que solo acepte dígitos numéricos y la tecla de borrar, barriendo el texto de ayuda.
+        private void txtSoloNumeros_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            TextBox txt = sender as TextBox;
+
+            // Si el usuario empieza a tipear números teniendo el texto de ayuda activo
+            if (txt != null && txt.Text == (string)txt.Tag && char.IsDigit(e.KeyChar))
+            {
+                txt.Text = "";
+                txt.ForeColor = Color.White;
+            }
+
+            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar))
+            {
+                e.Handled = true;
+            }
+        }
+
+        private void txtAntiInyeccion_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar == '\'' || e.KeyChar == '"' || e.KeyChar == ';')
+            {
+                e.Handled = true;
             }
         }
         #endregion

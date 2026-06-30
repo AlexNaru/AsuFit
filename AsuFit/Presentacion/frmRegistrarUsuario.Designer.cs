@@ -70,6 +70,7 @@
             // 
             this.txtNombreCompleto.Location = new System.Drawing.Point(7, 47);
             this.txtNombreCompleto.Margin = new System.Windows.Forms.Padding(2);
+            this.txtNombreCompleto.MaxLength = 100;
             this.txtNombreCompleto.Name = "txtNombreCompleto";
             this.txtNombreCompleto.Size = new System.Drawing.Size(103, 20);
             this.txtNombreCompleto.TabIndex = 0;
@@ -80,6 +81,7 @@
             // 
             this.txtEmail.Location = new System.Drawing.Point(175, 47);
             this.txtEmail.Margin = new System.Windows.Forms.Padding(2);
+            this.txtEmail.MaxLength = 50;
             this.txtEmail.Name = "txtEmail";
             this.txtEmail.Size = new System.Drawing.Size(103, 20);
             this.txtEmail.TabIndex = 1;
@@ -89,6 +91,7 @@
             // 
             this.txtPassword.Location = new System.Drawing.Point(7, 105);
             this.txtPassword.Margin = new System.Windows.Forms.Padding(2);
+            this.txtPassword.MaxLength = 50;
             this.txtPassword.Name = "txtPassword";
             this.txtPassword.Size = new System.Drawing.Size(103, 20);
             this.txtPassword.TabIndex = 3;
@@ -100,6 +103,7 @@
             // 
             this.txtUsername.Location = new System.Drawing.Point(7, 51);
             this.txtUsername.Margin = new System.Windows.Forms.Padding(2);
+            this.txtUsername.MaxLength = 30;
             this.txtUsername.Name = "txtUsername";
             this.txtUsername.Size = new System.Drawing.Size(103, 20);
             this.txtUsername.TabIndex = 0;
@@ -110,6 +114,7 @@
             // 
             this.txtRespuesta.Location = new System.Drawing.Point(9, 84);
             this.txtRespuesta.Margin = new System.Windows.Forms.Padding(2);
+            this.txtRespuesta.MaxLength = 50;
             this.txtRespuesta.Name = "txtRespuesta";
             this.txtRespuesta.Size = new System.Drawing.Size(101, 20);
             this.txtRespuesta.TabIndex = 0;
@@ -122,6 +127,7 @@
             this.cmbRol.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbRol.FormattingEnabled = true;
             this.cmbRol.Items.AddRange(new object[] {
+            "--- Seleccionar ---",
             "Administrador",
             "Recepcionista"});
             this.cmbRol.Location = new System.Drawing.Point(175, 50);
@@ -251,6 +257,7 @@
             // 
             this.txtConfirmarPassword.Location = new System.Drawing.Point(175, 105);
             this.txtConfirmarPassword.Margin = new System.Windows.Forms.Padding(2);
+            this.txtConfirmarPassword.MaxLength = 50;
             this.txtConfirmarPassword.Name = "txtConfirmarPassword";
             this.txtConfirmarPassword.Size = new System.Drawing.Size(103, 20);
             this.txtConfirmarPassword.TabIndex = 4;

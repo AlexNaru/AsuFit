@@ -39,9 +39,11 @@
             // 
             // btnConfirmarCierre
             // 
-            this.btnConfirmarCierre.Location = new System.Drawing.Point(200, 219);
+            this.btnConfirmarCierre.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnConfirmarCierre.Location = new System.Drawing.Point(11, 175);
+            this.btnConfirmarCierre.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.btnConfirmarCierre.Name = "btnConfirmarCierre";
-            this.btnConfirmarCierre.Size = new System.Drawing.Size(191, 37);
+            this.btnConfirmarCierre.Size = new System.Drawing.Size(152, 24);
             this.btnConfirmarCierre.TabIndex = 28;
             this.btnConfirmarCierre.Text = "CONFIRMAR CIERRE";
             this.btnConfirmarCierre.UseVisualStyleBackColor = true;
@@ -49,9 +51,11 @@
             // 
             // btnCancelar
             // 
-            this.btnCancelar.Location = new System.Drawing.Point(16, 219);
+            this.btnCancelar.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnCancelar.Location = new System.Drawing.Point(34, 143);
+            this.btnCancelar.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.btnCancelar.Name = "btnCancelar";
-            this.btnCancelar.Size = new System.Drawing.Size(160, 37);
+            this.btnCancelar.Size = new System.Drawing.Size(107, 24);
             this.btnCancelar.TabIndex = 27;
             this.btnCancelar.Text = "CANCELAR";
             this.btnCancelar.UseVisualStyleBackColor = true;
@@ -59,52 +63,59 @@
             // 
             // txtMontoContado
             // 
-            this.txtMontoContado.Location = new System.Drawing.Point(16, 156);
+            this.txtMontoContado.Location = new System.Drawing.Point(11, 101);
+            this.txtMontoContado.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.txtMontoContado.MaxLength = 10;
             this.txtMontoContado.Name = "txtMontoContado";
-            this.txtMontoContado.Size = new System.Drawing.Size(161, 26);
+            this.txtMontoContado.ShortcutsEnabled = false;
+            this.txtMontoContado.Size = new System.Drawing.Size(109, 20);
             this.txtMontoContado.TabIndex = 26;
             this.txtMontoContado.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtMontoContado_KeyPress);
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(12, 133);
+            this.label1.Location = new System.Drawing.Point(8, 86);
+            this.label1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(255, 20);
+            this.label1.Size = new System.Drawing.Size(172, 13);
             this.label1.TabIndex = 25;
             this.label1.Text = "¿Cuánto dinero tienes en efectivo?";
             // 
             // txtCajeroCierre
             // 
-            this.txtCajeroCierre.Location = new System.Drawing.Point(16, 78);
+            this.txtCajeroCierre.Location = new System.Drawing.Point(11, 51);
+            this.txtCajeroCierre.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.txtCajeroCierre.Name = "txtCajeroCierre";
             this.txtCajeroCierre.ReadOnly = true;
-            this.txtCajeroCierre.Size = new System.Drawing.Size(161, 26);
+            this.txtCajeroCierre.Size = new System.Drawing.Size(109, 20);
             this.txtCajeroCierre.TabIndex = 24;
             // 
             // lblEstadoCaja
             // 
             this.lblEstadoCaja.AutoSize = true;
-            this.lblEstadoCaja.Location = new System.Drawing.Point(12, 54);
+            this.lblEstadoCaja.Location = new System.Drawing.Point(8, 35);
+            this.lblEstadoCaja.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblEstadoCaja.Name = "lblEstadoCaja";
-            this.lblEstadoCaja.Size = new System.Drawing.Size(165, 20);
+            this.lblEstadoCaja.Size = new System.Drawing.Size(111, 13);
             this.lblEstadoCaja.TabIndex = 23;
             this.lblEstadoCaja.Text = "Empleado encargado:";
             // 
             // label10
             // 
             this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(12, 9);
+            this.label10.Location = new System.Drawing.Point(8, 6);
+            this.label10.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(198, 20);
+            this.label10.Size = new System.Drawing.Size(133, 13);
             this.label10.TabIndex = 22;
             this.label10.Text = "CERRAR CAJA Y TURNO";
             // 
             // frmCerrarCaja
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(387, 281);
+            this.ClientSize = new System.Drawing.Size(197, 210);
             this.Controls.Add(this.btnConfirmarCierre);
             this.Controls.Add(this.btnCancelar);
             this.Controls.Add(this.txtMontoContado);
@@ -112,6 +123,7 @@
             this.Controls.Add(this.txtCajeroCierre);
             this.Controls.Add(this.lblEstadoCaja);
             this.Controls.Add(this.label10);
+            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.Name = "frmCerrarCaja";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "frmCerrarCaja";

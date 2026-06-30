@@ -71,6 +71,7 @@
             this.txtCedula.ForeColor = System.Drawing.Color.White;
             this.txtCedula.Location = new System.Drawing.Point(7, 45);
             this.txtCedula.Margin = new System.Windows.Forms.Padding(2);
+            this.txtCedula.MaxLength = 8;
             this.txtCedula.Name = "txtCedula";
             this.txtCedula.Size = new System.Drawing.Size(103, 20);
             this.txtCedula.TabIndex = 0;
@@ -83,6 +84,7 @@
             this.txtNombre.ForeColor = System.Drawing.Color.White;
             this.txtNombre.Location = new System.Drawing.Point(131, 45);
             this.txtNombre.Margin = new System.Windows.Forms.Padding(2);
+            this.txtNombre.MaxLength = 100;
             this.txtNombre.Name = "txtNombre";
             this.txtNombre.Size = new System.Drawing.Size(103, 20);
             this.txtNombre.TabIndex = 1;
@@ -95,6 +97,7 @@
             this.txtApellido.ForeColor = System.Drawing.Color.White;
             this.txtApellido.Location = new System.Drawing.Point(257, 45);
             this.txtApellido.Margin = new System.Windows.Forms.Padding(2);
+            this.txtApellido.MaxLength = 100;
             this.txtApellido.Name = "txtApellido";
             this.txtApellido.Size = new System.Drawing.Size(103, 20);
             this.txtApellido.TabIndex = 2;
@@ -122,6 +125,7 @@
             this.txtEmail.ForeColor = System.Drawing.Color.White;
             this.txtEmail.Location = new System.Drawing.Point(131, 94);
             this.txtEmail.Margin = new System.Windows.Forms.Padding(2);
+            this.txtEmail.MaxLength = 100;
             this.txtEmail.Name = "txtEmail";
             this.txtEmail.Size = new System.Drawing.Size(103, 20);
             this.txtEmail.TabIndex = 6;
@@ -135,6 +139,7 @@
             this.txtTelefono.ForeColor = System.Drawing.Color.White;
             this.txtTelefono.Location = new System.Drawing.Point(7, 94);
             this.txtTelefono.Margin = new System.Windows.Forms.Padding(2);
+            this.txtTelefono.MaxLength = 50;
             this.txtTelefono.Name = "txtTelefono";
             this.txtTelefono.Size = new System.Drawing.Size(103, 20);
             this.txtTelefono.TabIndex = 5;
@@ -147,6 +152,7 @@
             this.txtContactoEmergencia.ForeColor = System.Drawing.Color.White;
             this.txtContactoEmergencia.Location = new System.Drawing.Point(7, 47);
             this.txtContactoEmergencia.Margin = new System.Windows.Forms.Padding(2);
+            this.txtContactoEmergencia.MaxLength = 100;
             this.txtContactoEmergencia.Name = "txtContactoEmergencia";
             this.txtContactoEmergencia.Size = new System.Drawing.Size(103, 20);
             this.txtContactoEmergencia.TabIndex = 0;
@@ -159,6 +165,7 @@
             this.txtTelefonoEmergencia.ForeColor = System.Drawing.Color.White;
             this.txtTelefonoEmergencia.Location = new System.Drawing.Point(124, 47);
             this.txtTelefonoEmergencia.Margin = new System.Windows.Forms.Padding(2);
+            this.txtTelefonoEmergencia.MaxLength = 50;
             this.txtTelefonoEmergencia.Name = "txtTelefonoEmergencia";
             this.txtTelefonoEmergencia.Size = new System.Drawing.Size(103, 20);
             this.txtTelefonoEmergencia.TabIndex = 1;
@@ -316,6 +323,7 @@
             this.txtRuc.ForeColor = System.Drawing.Color.White;
             this.txtRuc.Location = new System.Drawing.Point(257, 94);
             this.txtRuc.Margin = new System.Windows.Forms.Padding(2);
+            this.txtRuc.MaxLength = 10;
             this.txtRuc.Name = "txtRuc";
             this.txtRuc.Size = new System.Drawing.Size(103, 20);
             this.txtRuc.TabIndex = 7;

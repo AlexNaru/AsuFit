@@ -28,8 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             this.dgvGastos = new System.Windows.Forms.DataGridView();
             this.colGastoId = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colGastoDescripcion = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -61,7 +61,7 @@
             this.colGastoFecha,
             this.colGastoUsuario});
             this.dgvGastos.Location = new System.Drawing.Point(11, 29);
-            this.dgvGastos.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.dgvGastos.Margin = new System.Windows.Forms.Padding(2);
             this.dgvGastos.Name = "dgvGastos";
             this.dgvGastos.ReadOnly = true;
             this.dgvGastos.RowHeadersVisible = false;
@@ -100,8 +100,8 @@
             // colGastoMonto
             // 
             this.colGastoMonto.DataPropertyName = "Monto";
-            dataGridViewCellStyle3.Format = "N0";
-            this.colGastoMonto.DefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle1.Format = "N0";
+            this.colGastoMonto.DefaultCellStyle = dataGridViewCellStyle1;
             this.colGastoMonto.HeaderText = "Monto";
             this.colGastoMonto.MinimumWidth = 8;
             this.colGastoMonto.Name = "colGastoMonto";
@@ -110,8 +110,8 @@
             // colGastoFecha
             // 
             this.colGastoFecha.DataPropertyName = "FechaGasto";
-            dataGridViewCellStyle4.Format = "dd/MM/yyyy HH:mm";
-            this.colGastoFecha.DefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle2.Format = "dd/MM/yyyy HH:mm";
+            this.colGastoFecha.DefaultCellStyle = dataGridViewCellStyle2;
             this.colGastoFecha.HeaderText = "Fecha";
             this.colGastoFecha.MinimumWidth = 8;
             this.colGastoFecha.Name = "colGastoFecha";
@@ -130,10 +130,12 @@
             this.txtDescripcion.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(39)))), ((int)(((byte)(47)))));
             this.txtDescripcion.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.txtDescripcion.ForeColor = System.Drawing.Color.White;
-            this.txtDescripcion.Location = new System.Drawing.Point(168, 157);
-            this.txtDescripcion.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.txtDescripcion.Location = new System.Drawing.Point(184, 157);
+            this.txtDescripcion.Margin = new System.Windows.Forms.Padding(2);
+            this.txtDescripcion.MaxLength = 150;
             this.txtDescripcion.Name = "txtDescripcion";
-            this.txtDescripcion.Size = new System.Drawing.Size(68, 20);
+            this.txtDescripcion.ShortcutsEnabled = false;
+            this.txtDescripcion.Size = new System.Drawing.Size(85, 20);
             this.txtDescripcion.TabIndex = 1;
             // 
             // txtMonto
@@ -142,16 +144,18 @@
             this.txtMonto.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.txtMonto.ForeColor = System.Drawing.Color.White;
             this.txtMonto.Location = new System.Drawing.Point(323, 157);
-            this.txtMonto.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.txtMonto.Margin = new System.Windows.Forms.Padding(2);
+            this.txtMonto.MaxLength = 10;
             this.txtMonto.Name = "txtMonto";
-            this.txtMonto.Size = new System.Drawing.Size(68, 20);
+            this.txtMonto.ShortcutsEnabled = false;
+            this.txtMonto.Size = new System.Drawing.Size(91, 20);
             this.txtMonto.TabIndex = 2;
             // 
             // label1
             // 
             this.label1.AutoSize = true;
             this.label1.ForeColor = System.Drawing.Color.White;
-            this.label1.Location = new System.Drawing.Point(165, 142);
+            this.label1.Location = new System.Drawing.Point(181, 142);
             this.label1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(63, 13);
@@ -187,7 +191,7 @@
             this.btnGuardar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnGuardar.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnGuardar.Location = new System.Drawing.Point(495, 154);
-            this.btnGuardar.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btnGuardar.Margin = new System.Windows.Forms.Padding(2);
             this.btnGuardar.Name = "btnGuardar";
             this.btnGuardar.Size = new System.Drawing.Size(80, 24);
             this.btnGuardar.TabIndex = 3;
@@ -214,6 +218,7 @@
             this.cmbCategoria.ForeColor = System.Drawing.Color.White;
             this.cmbCategoria.FormattingEnabled = true;
             this.cmbCategoria.Items.AddRange(new object[] {
+            "--- Seleccionar ---",
             "Servicios (Luz/Agua)",
             "Mantenimiento/Limpieza",
             "Insumos",
@@ -221,7 +226,7 @@
             this.cmbCategoria.Location = new System.Drawing.Point(11, 157);
             this.cmbCategoria.Margin = new System.Windows.Forms.Padding(2);
             this.cmbCategoria.Name = "cmbCategoria";
-            this.cmbCategoria.Size = new System.Drawing.Size(117, 21);
+            this.cmbCategoria.Size = new System.Drawing.Size(143, 21);
             this.cmbCategoria.TabIndex = 9;
             // 
             // frmGestionGastos
@@ -239,7 +244,7 @@
             this.Controls.Add(this.txtMonto);
             this.Controls.Add(this.txtDescripcion);
             this.Controls.Add(this.dgvGastos);
-            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "frmGestionGastos";
             this.Text = "frmGestionGastos";
             this.Load += new System.EventHandler(this.frmGestionGastos_Load);

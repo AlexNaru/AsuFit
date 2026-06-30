@@ -20,21 +20,37 @@ namespace AsuFit.Presentacion
         #endregion
 
         #region 2. INICIALIZACIÓN Y CARGA INICIAL
+        // Inicializa el rango nominal de fechas, ejecuta la consulta estadística base y aplica políticas de restricción UI.
         private void frmReportes_Load(object sender, EventArgs e)
         {
             ConfigurarTemaYEscala();
 
-            dtpDesde.Value = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
+            dtpDesde.Value = DateTime.Now.AddDays(-1).Date;
             dtpHasta.Value = DateTime.Now;
 
-            dtpDesdeTop.Value = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
+            dtpDesdeTop.Value = DateTime.Now.AddDays(-1).Date;
             dtpHastaTop.Value = DateTime.Now;
 
-            // Sincronizamos las fechas con los TextBox oscuros (si los agregaste en el diseñador)
             SincronizarTextosFecha();
 
             CargarReporteIngresos();
             CargarTopProductos();
+
+            // Restricción UI: Neutraliza el menú contextual nativo del sistema en calendarios, cuadros adyacentes y grillas
+            ContextMenuStrip menuNulo = new ContextMenuStrip();
+
+            dtpDesde.ContextMenuStrip = menuNulo;
+            dtpHasta.ContextMenuStrip = menuNulo;
+            dtpDesdeTop.ContextMenuStrip = menuNulo;
+            dtpHastaTop.ContextMenuStrip = menuNulo;
+
+            if (txtDesde != null) txtDesde.ContextMenuStrip = menuNulo;
+            if (txtHasta != null) txtHasta.ContextMenuStrip = menuNulo;
+            if (txtDesdeTop != null) txtDesdeTop.ContextMenuStrip = menuNulo;
+            if (txtHastaTop != null) txtHastaTop.ContextMenuStrip = menuNulo;
+
+            dgvIngresos.ContextMenuStrip = menuNulo;
+            dgvTopProductos.ContextMenuStrip = menuNulo;
         }
         #endregion
 

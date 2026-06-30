@@ -35,7 +35,9 @@ namespace AsuFit.Presentacion
             CargarGrilla();
             ConfigurarAutocompletado();
 
-            // FIX: Aplicamos el placeholder interactivo estilo AsuFit
+            SuscribirFiltrosDeSeguridad();
+
+            // Aplicamos el placeholder interactivo estilo AsuFit
             AplicarPlaceholder(txtBuscarProducto, "Buscar producto en el catálogo...");
 
             // Liberamos el foco para que se vea el placeholder
@@ -167,7 +169,7 @@ namespace AsuFit.Presentacion
             dgv.RowTemplate.Height = 35;
         }
 
-        // --- MÉTODO INTELIGENTE DE PLACEHOLDER ---
+        // Gestiona el comportamiento de la marca de agua con desvanecimiento dinámico estilo AsuFit
         private void AplicarPlaceholder(TextBox txt, string textoAyuda)
         {
             txt.Tag = textoAyuda;
@@ -186,17 +188,51 @@ namespace AsuFit.Presentacion
             {
                 if (txt.Text == textoAyuda)
                 {
-                    txt.Text = "";
-                    txt.ForeColor = Color.White;
+                    this.BeginInvoke(new Action(() => txt.SelectionStart = 0));
                 }
             };
 
-            txt.Leave += delegate
+            // Intercepta el clic y el arrastre del mouse para impedir que pinten de azul la ayuda
+            txt.MouseDown += delegate
             {
-                if (string.IsNullOrWhiteSpace(txt.Text))
+                if (txt.Text == textoAyuda)
                 {
-                    txt.Text = textoAyuda;
+                    txt.SelectionStart = 0;
+                    txt.SelectionLength = 0;
+                }
+            };
+
+            txt.MouseMove += delegate
+            {
+                if (txt.Text == textoAyuda && txt.SelectionLength > 0)
+                {
+                    txt.SelectionStart = 0;
+                    txt.SelectionLength = 0;
+                }
+            };
+
+            txt.TextChanged += delegate
+            {
+                if (txt.Text != textoAyuda && txt.ForeColor == Color.Silver)
+                {
+                    string entradaUsuario = txt.Text.Replace(textoAyuda, "");
+                    txt.ForeColor = Color.White;
+                    txt.Text = entradaUsuario;
+                    txt.SelectionStart = txt.Text.Length;
+                }
+                else if (string.IsNullOrEmpty(txt.Text))
+                {
                     txt.ForeColor = Color.Silver;
+                    txt.Text = textoAyuda;
+                    txt.SelectionStart = 0;
+                }
+            };
+
+            txt.KeyDown += delegate (object sender, KeyEventArgs e)
+            {
+                if (txt.Text == textoAyuda && (e.KeyCode == Keys.Back || e.KeyCode == Keys.Delete || e.KeyCode == Keys.Left || e.KeyCode == Keys.Right))
+                {
+                    e.SuppressKeyPress = true;
                 }
             };
         }
@@ -417,19 +453,10 @@ namespace AsuFit.Presentacion
             this.ActiveControl = null;
         }
 
+        // Libera el foco del componente de forma asíncrona mitigando selecciones residuales del sistema operativo.
         private void cmbProveedores_DropDownClosed(object sender, EventArgs e)
         {
-            this.ActiveControl = null;
-        }
-
-        private void txtCantidadIngreso_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar)) e.Handled = true;
-        }
-
-        private void txtCostoTotal_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar)) e.Handled = true;
+            this.BeginInvoke(new Action(() => this.ActiveControl = null));
         }
         #endregion
 
@@ -511,6 +538,65 @@ namespace AsuFit.Presentacion
             dgvProductos.ClearSelection();
             txtIdProductoSeleccionado.Clear();
             btnLimpiar_Click(null, null);
+        }
+        #endregion
+
+        #region 8. GESTIÓN DE SEGURIDAD Y RESTRICCIONES DE ENTRADA
+        // Suscribe programáticamente todos los controles a sus filtros de sanitización y bloqueos físicos.
+        private void SuscribirFiltrosDeSeguridad()
+        {
+            txtBuscarProducto.KeyPress += txtAntiInyeccion_KeyPress;
+            txtCantidadIngreso.KeyPress += txtSoloNumeros_KeyPress;
+            txtCostoTotal.KeyPress += txtSoloNumeros_KeyPress;
+
+            ContextMenuStrip menuVacio = new ContextMenuStrip();
+
+            foreach (Control contenedor in this.Controls)
+            {
+                AsignarBloqueosRecursivo(contenedor, menuVacio);
+            }
+        }
+
+        // Inspecciona la jerarquía de la vista capturando TextBoxes en cualquier nivel de anidamiento.
+        private void AsignarBloqueosRecursivo(Control contenedor, ContextMenuStrip menuVacio)
+        {
+            if (contenedor is TextBox txt)
+            {
+                txt.KeyDown += BloquearPegado_KeyDown;
+                txt.ContextMenuStrip = menuVacio;
+            }
+
+            foreach (Control hijo in contenedor.Controls)
+            {
+                AsignarBloqueosRecursivo(hijo, menuVacio);
+            }
+        }
+
+        // Invalida combinaciones de teclado orientadas a la inserción masiva desde el portapapeles.
+        private void BloquearPegado_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Control && e.KeyCode == Keys.V || e.Shift && e.KeyCode == Keys.Insert)
+            {
+                e.SuppressKeyPress = true;
+            }
+        }
+
+        // Limita el ingreso de datos exclusivamente a secuencias numéricas y retroceso.
+        private void txtSoloNumeros_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar))
+            {
+                e.Handled = true;
+            }
+        }
+
+        // Neutraliza caracteres reservados de T-SQL para mitigar vulnerabilidades.
+        private void txtAntiInyeccion_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar == '\'' || e.KeyChar == '"' || e.KeyChar == ';')
+            {
+                e.Handled = true;
+            }
         }
         #endregion
     }

@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
             this.btnEstado = new System.Windows.Forms.Button();
             this.btnEditar = new System.Windows.Forms.Button();
             this.btnNuevo = new System.Windows.Forms.Button();
@@ -53,7 +53,7 @@
             this.btnEstado.BackColor = System.Drawing.Color.White;
             this.btnEstado.ForeColor = System.Drawing.Color.Black;
             this.btnEstado.Location = new System.Drawing.Point(541, 235);
-            this.btnEstado.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btnEstado.Margin = new System.Windows.Forms.Padding(2);
             this.btnEstado.Name = "btnEstado";
             this.btnEstado.Size = new System.Drawing.Size(120, 32);
             this.btnEstado.TabIndex = 4;
@@ -66,7 +66,7 @@
             this.btnEditar.BackColor = System.Drawing.Color.White;
             this.btnEditar.ForeColor = System.Drawing.Color.Black;
             this.btnEditar.Location = new System.Drawing.Point(439, 235);
-            this.btnEditar.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btnEditar.Margin = new System.Windows.Forms.Padding(2);
             this.btnEditar.Name = "btnEditar";
             this.btnEditar.Size = new System.Drawing.Size(57, 32);
             this.btnEditar.TabIndex = 3;
@@ -79,7 +79,7 @@
             this.btnNuevo.BackColor = System.Drawing.Color.White;
             this.btnNuevo.ForeColor = System.Drawing.Color.Black;
             this.btnNuevo.Location = new System.Drawing.Point(331, 235);
-            this.btnNuevo.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btnNuevo.Margin = new System.Windows.Forms.Padding(2);
             this.btnNuevo.Name = "btnNuevo";
             this.btnNuevo.Size = new System.Drawing.Size(61, 32);
             this.btnNuevo.TabIndex = 2;
@@ -91,10 +91,10 @@
             // 
             this.btnResetearClave.BackColor = System.Drawing.Color.White;
             this.btnResetearClave.ForeColor = System.Drawing.Color.Black;
-            this.btnResetearClave.Location = new System.Drawing.Point(699, 235);
-            this.btnResetearClave.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btnResetearClave.Location = new System.Drawing.Point(688, 235);
+            this.btnResetearClave.Margin = new System.Windows.Forms.Padding(2);
             this.btnResetearClave.Name = "btnResetearClave";
-            this.btnResetearClave.Size = new System.Drawing.Size(112, 32);
+            this.btnResetearClave.Size = new System.Drawing.Size(123, 32);
             this.btnResetearClave.TabIndex = 5;
             this.btnResetearClave.Text = "RESETEAR CLAVE";
             this.btnResetearClave.UseVisualStyleBackColor = false;
@@ -119,7 +119,7 @@
             this.colUsuarioEstado,
             this.colUsuarioFecha});
             this.dgvUsuarios.Location = new System.Drawing.Point(12, 66);
-            this.dgvUsuarios.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.dgvUsuarios.Margin = new System.Windows.Forms.Padding(2);
             this.dgvUsuarios.Name = "dgvUsuarios";
             this.dgvUsuarios.ReadOnly = true;
             this.dgvUsuarios.RowHeadersVisible = false;
@@ -183,8 +183,8 @@
             // colUsuarioFecha
             // 
             this.colUsuarioFecha.DataPropertyName = "FechaRegistro";
-            dataGridViewCellStyle1.Format = "dd/MM/yyyy HH:mm";
-            this.colUsuarioFecha.DefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle4.Format = "dd/MM/yyyy HH:mm";
+            this.colUsuarioFecha.DefaultCellStyle = dataGridViewCellStyle4;
             this.colUsuarioFecha.HeaderText = "Fecha de Registro";
             this.colUsuarioFecha.MinimumWidth = 8;
             this.colUsuarioFecha.Name = "colUsuarioFecha";
@@ -195,8 +195,10 @@
             this.txtBuscar.BackColor = System.Drawing.Color.White;
             this.txtBuscar.ForeColor = System.Drawing.Color.Black;
             this.txtBuscar.Location = new System.Drawing.Point(245, 40);
-            this.txtBuscar.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.txtBuscar.Margin = new System.Windows.Forms.Padding(2);
+            this.txtBuscar.MaxLength = 100;
             this.txtBuscar.Name = "txtBuscar";
+            this.txtBuscar.ShortcutsEnabled = false;
             this.txtBuscar.Size = new System.Drawing.Size(259, 20);
             this.txtBuscar.TabIndex = 0;
             this.txtBuscar.TextChanged += new System.EventHandler(this.txtBuscar_TextChanged);
@@ -215,7 +217,7 @@
             // 
             this.chkMostrarInactivos.AutoSize = true;
             this.chkMostrarInactivos.Location = new System.Drawing.Point(662, 41);
-            this.chkMostrarInactivos.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.chkMostrarInactivos.Margin = new System.Windows.Forms.Padding(2);
             this.chkMostrarInactivos.Name = "chkMostrarInactivos";
             this.chkMostrarInactivos.Size = new System.Drawing.Size(151, 17);
             this.chkMostrarInactivos.TabIndex = 1;
@@ -247,7 +249,7 @@
             this.Controls.Add(this.btnEstado);
             this.Controls.Add(this.btnEditar);
             this.Controls.Add(this.btnNuevo);
-            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.Margin = new System.Windows.Forms.Padding(2);
             this.MaximizeBox = false;
             this.Name = "frmGestionUsuarios";
             this.Text = "frmGestionUsuarios";

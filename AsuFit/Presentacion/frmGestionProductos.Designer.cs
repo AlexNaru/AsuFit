@@ -278,8 +278,10 @@
             this.txtStock.ForeColor = System.Drawing.Color.White;
             this.txtStock.Location = new System.Drawing.Point(11, 356);
             this.txtStock.Margin = new System.Windows.Forms.Padding(2);
+            this.txtStock.MaxLength = 6;
             this.txtStock.Name = "txtStock";
             this.txtStock.ReadOnly = true;
+            this.txtStock.ShortcutsEnabled = false;
             this.txtStock.Size = new System.Drawing.Size(68, 20);
             this.txtStock.TabIndex = 8;
             // 
@@ -290,7 +292,9 @@
             this.txtPrecio.ForeColor = System.Drawing.Color.White;
             this.txtPrecio.Location = new System.Drawing.Point(11, 309);
             this.txtPrecio.Margin = new System.Windows.Forms.Padding(2);
+            this.txtPrecio.MaxLength = 10;
             this.txtPrecio.Name = "txtPrecio";
+            this.txtPrecio.ShortcutsEnabled = false;
             this.txtPrecio.Size = new System.Drawing.Size(68, 20);
             this.txtPrecio.TabIndex = 7;
             // 
@@ -301,7 +305,9 @@
             this.txtNombre.ForeColor = System.Drawing.Color.White;
             this.txtNombre.Location = new System.Drawing.Point(11, 215);
             this.txtNombre.Margin = new System.Windows.Forms.Padding(2);
+            this.txtNombre.MaxLength = 100;
             this.txtNombre.Name = "txtNombre";
+            this.txtNombre.ShortcutsEnabled = false;
             this.txtNombre.Size = new System.Drawing.Size(68, 20);
             this.txtNombre.TabIndex = 3;
             // 
@@ -329,7 +335,9 @@
             this.txtCodigo.ForeColor = System.Drawing.Color.White;
             this.txtCodigo.Location = new System.Drawing.Point(11, 161);
             this.txtCodigo.Margin = new System.Windows.Forms.Padding(2);
+            this.txtCodigo.MaxLength = 50;
             this.txtCodigo.Name = "txtCodigo";
+            this.txtCodigo.ShortcutsEnabled = false;
             this.txtCodigo.Size = new System.Drawing.Size(68, 20);
             this.txtCodigo.TabIndex = 1;
             // 
@@ -403,7 +411,9 @@
             this.txtBuscarProducto.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.txtBuscarProducto.Location = new System.Drawing.Point(25, 17);
             this.txtBuscarProducto.Margin = new System.Windows.Forms.Padding(2);
+            this.txtBuscarProducto.MaxLength = 100;
             this.txtBuscarProducto.Name = "txtBuscarProducto";
+            this.txtBuscarProducto.ShortcutsEnabled = false;
             this.txtBuscarProducto.Size = new System.Drawing.Size(328, 20);
             this.txtBuscarProducto.TabIndex = 0;
             this.txtBuscarProducto.Click += new System.EventHandler(this.txtBuscarProducto_TextChanged);

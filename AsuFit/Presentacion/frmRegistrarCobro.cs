@@ -47,6 +47,9 @@ namespace AsuFit.Presentacion
             // Establece el texto por defecto en el selector de planes
             if (cmbPlanes.Items.Count > 0) cmbPlanes.SelectedIndex = 0;
 
+            // Activación del blindaje transaccional
+            SuscribirFiltrosDeSeguridad();
+
             // Libera el foco inicial de los controles
             this.ActiveControl = null;
         }
@@ -67,7 +70,7 @@ namespace AsuFit.Presentacion
             e.Graphics.DrawString(combo.Items[e.Index].ToString(), e.Font, new SolidBrush(txtColor), e.Bounds, StringFormat.GenericDefault);
         }
 
-        // Gestiona el comportamiento del texto de ayuda interactivo (Placeholder)
+        // Gestiona el comportamiento de la marca de agua con desvanecimiento dinámico estilo AsuFit
         private void AplicarPlaceholder(TextBox txt, string textoAyuda)
         {
             txt.Tag = textoAyuda;
@@ -86,17 +89,51 @@ namespace AsuFit.Presentacion
             {
                 if (txt.Text == textoAyuda)
                 {
-                    txt.Text = "";
-                    txt.ForeColor = Color.White;
+                    this.BeginInvoke(new Action(() => txt.SelectionStart = 0));
                 }
             };
 
-            txt.Leave += delegate
+            // Intercepta el clic y el arrastre del mouse para impedir que pinten de azul la ayuda
+            txt.MouseDown += delegate
             {
-                if (string.IsNullOrWhiteSpace(txt.Text))
+                if (txt.Text == textoAyuda)
                 {
-                    txt.Text = textoAyuda;
+                    txt.SelectionStart = 0;
+                    txt.SelectionLength = 0;
+                }
+            };
+
+            txt.MouseMove += delegate
+            {
+                if (txt.Text == textoAyuda && txt.SelectionLength > 0)
+                {
+                    txt.SelectionStart = 0;
+                    txt.SelectionLength = 0;
+                }
+            };
+
+            txt.TextChanged += delegate
+            {
+                if (txt.Text != textoAyuda && txt.ForeColor == Color.Silver)
+                {
+                    string entradaUsuario = txt.Text.Replace(textoAyuda, "");
+                    txt.ForeColor = Color.White;
+                    txt.Text = entradaUsuario;
+                    txt.SelectionStart = txt.Text.Length;
+                }
+                else if (string.IsNullOrEmpty(txt.Text))
+                {
                     txt.ForeColor = Color.Silver;
+                    txt.Text = textoAyuda;
+                    txt.SelectionStart = 0;
+                }
+            };
+
+            txt.KeyDown += delegate (object sender, KeyEventArgs e)
+            {
+                if (txt.Text == textoAyuda && (e.KeyCode == Keys.Back || e.KeyCode == Keys.Delete || e.KeyCode == Keys.Left || e.KeyCode == Keys.Right))
+                {
+                    e.SuppressKeyPress = true;
                 }
             };
         }
@@ -246,7 +283,7 @@ namespace AsuFit.Presentacion
         // Libera el foco tras la selección para evitar el resaltado nativo de Windows
         private void cmbPlanes_DropDownClosed(object sender, EventArgs e)
         {
-            this.ActiveControl = null;
+            this.BeginInvoke(new Action(() => this.ActiveControl = null));
         }
 
         // Integra la solicitud de cobro con el Carrito Global y transfiere al módulo de Caja
@@ -294,12 +331,14 @@ namespace AsuFit.Presentacion
             if (cajaAbierta != null)
             {
                 cajaAbierta.WindowState = FormWindowState.Normal;
+                CentrarSobreContenedor(cajaAbierta);
                 cajaAbierta.BringToFront();
                 cajaAbierta.ActualizarPantallaDesdeCarrito();
             }
             else
             {
                 frmCajaCobro nuevaCaja = new frmCajaCobro(usuarioActual);
+                CentrarSobreContenedor(nuevaCaja);
                 nuevaCaja.Show();
             }
 
@@ -311,11 +350,70 @@ namespace AsuFit.Presentacion
             AplicarPlaceholder(txtBuscar, "Buscar por Cédula, Nombre o Apellido...");
             dgvSocios.ClearSelection();
         }
+
+        // Proyecta las coordenadas absolutas en pantalla del panel principal para anclar ventanas transaccionales secundarias.
+        private void CentrarSobreContenedor(Form frm)
+        {
+            Form dashboard = Application.OpenForms["frmDashboard"];
+            if (dashboard != null)
+            {
+                Control[] contenedores = dashboard.Controls.Find("pnlContenedor", true);
+                if (contenedores.Length > 0)
+                {
+                    Control pnl = contenedores[0];
+                    frm.StartPosition = FormStartPosition.Manual;
+                    Point pos = pnl.PointToScreen(Point.Empty);
+                    int x = pos.X + (pnl.Width - frm.Width) / 2;
+                    int y = pos.Y + (pnl.Height - frm.Height) / 2;
+                    frm.Location = new Point(x > 0 ? x : 0, y > 0 ? y : 0);
+                    return;
+                }
+            }
+            frm.StartPosition = FormStartPosition.CenterScreen;
+        }
         #endregion
 
-        private void frmRegistrarCobro_Load(object sender, EventArgs e)
+        #region 6. GESTIÓN DE SEGURIDAD Y RESTRICCIONES DE ENTRADA
+        private void SuscribirFiltrosDeSeguridad()
         {
-            // Evento reservado para futuras implementaciones
+            txtBuscar.KeyPress += txtAntiInyeccion_KeyPress;
+
+            ContextMenuStrip menuVacio = new ContextMenuStrip();
+            foreach (Control contenedor in this.Controls)
+            {
+                AsignarBloqueosRecursivo(contenedor, menuVacio);
+            }
         }
+
+        private void AsignarBloqueosRecursivo(Control contenedor, ContextMenuStrip menuVacio)
+        {
+            if (contenedor is TextBox txt)
+            {
+                txt.KeyDown += BloquearPegado_KeyDown;
+                txt.ContextMenuStrip = menuVacio;
+            }
+
+            foreach (Control hijo in contenedor.Controls)
+            {
+                AsignarBloqueosRecursivo(hijo, menuVacio);
+            }
+        }
+
+        private void BloquearPegado_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Control && e.KeyCode == Keys.V || e.Shift && e.KeyCode == Keys.Insert)
+            {
+                e.SuppressKeyPress = true;
+            }
+        }
+
+        private void txtAntiInyeccion_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar == '\'' || e.KeyChar == '"' || e.KeyChar == ';')
+            {
+                e.Handled = true;
+            }
+        }
+        #endregion
     }
 }

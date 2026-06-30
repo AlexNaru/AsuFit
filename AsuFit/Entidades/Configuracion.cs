@@ -15,5 +15,6 @@ namespace AsuFit.Entidades
         public int DiasAviso1 { get; set; }
         public int DiasAviso2 { get; set; }
         public string RutaBackup { get; set; }
+        public DateTime FechaUltimoBackup { get; set; }
     }
 }

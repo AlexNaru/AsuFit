@@ -63,6 +63,7 @@
             this.txtBuscar.ForeColor = System.Drawing.Color.White;
             this.txtBuscar.Location = new System.Drawing.Point(260, 41);
             this.txtBuscar.Margin = new System.Windows.Forms.Padding(2);
+            this.txtBuscar.MaxLength = 100;
             this.txtBuscar.Name = "txtBuscar";
             this.txtBuscar.Size = new System.Drawing.Size(306, 20);
             this.txtBuscar.TabIndex = 0;

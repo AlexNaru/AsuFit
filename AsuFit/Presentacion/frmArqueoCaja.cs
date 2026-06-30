@@ -27,6 +27,9 @@ namespace AsuFit.Presentacion
             ConfigurarTemaOscuro();
             lblCajeroActual.Text = "Cajero: " + usuarioActual.NombreCompleto;
             RevisarEstadoDeCaja();
+
+            // Libera el foco inicial para un despliegue visual completamente limpio
+            this.ActiveControl = null;
         }
         #endregion
 

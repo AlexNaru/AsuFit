@@ -66,7 +66,7 @@ namespace AsuFit.Presentacion
             dtpHasta.CalendarForeColor = Color.White;
         }
 
-        // Gestiona el comportamiento de las marcas de agua en el TextBox de búsqueda
+        // Gestiona el comportamiento de la marca de agua con desvanecimiento dinámico estilo AsuFit
         private void AplicarPlaceholder(TextBox txt, string textoAyuda)
         {
             txt.Tag = textoAyuda;
@@ -85,24 +85,58 @@ namespace AsuFit.Presentacion
             {
                 if (txt.Text == textoAyuda)
                 {
-                    txt.Text = "";
-                    txt.ForeColor = Color.White;
+                    this.BeginInvoke(new Action(() => txt.SelectionStart = 0));
                 }
             };
 
-            txt.Leave += delegate
+            txt.MouseDown += delegate
             {
-                if (string.IsNullOrWhiteSpace(txt.Text))
+                if (txt.Text == textoAyuda)
                 {
-                    txt.Text = textoAyuda;
+                    txt.SelectionStart = 0;
+                    txt.SelectionLength = 0;
+                }
+            };
+
+            txt.MouseMove += delegate
+            {
+                if (txt.Text == textoAyuda && txt.SelectionLength > 0)
+                {
+                    txt.SelectionStart = 0;
+                    txt.SelectionLength = 0;
+                }
+            };
+
+            txt.TextChanged += delegate
+            {
+                if (txt.Text != textoAyuda && txt.ForeColor == Color.Silver)
+                {
+                    string entradaUsuario = txt.Text.Replace(textoAyuda, "");
+                    txt.ForeColor = Color.White;
+                    txt.Text = entradaUsuario;
+                    txt.SelectionStart = txt.Text.Length;
+                }
+                else if (string.IsNullOrEmpty(txt.Text))
+                {
                     txt.ForeColor = Color.Silver;
+                    txt.Text = textoAyuda;
+                    txt.SelectionStart = 0;
+                }
+            };
+
+            txt.KeyDown += delegate (object sender, KeyEventArgs e)
+            {
+                if (txt.Text == textoAyuda && (e.KeyCode == Keys.Back || e.KeyCode == Keys.Delete || e.KeyCode == Keys.Left || e.KeyCode == Keys.Right))
+                {
+                    e.SuppressKeyPress = true;
                 }
             };
         }
 
+        // Libera el foco del componente de forma asíncrona mitigando remanentes visuales de selección del sistema.
         private void QuitarFocoCombo_DropDownClosed(object sender, EventArgs e)
         {
-            this.ActiveControl = null;
+            this.BeginInvoke(new Action(() => this.ActiveControl = null));
         }
 
         // Vincula el evento clic a todo el fondo y sus paneles para asegurar la deselección
@@ -131,7 +165,7 @@ namespace AsuFit.Presentacion
         #region 3. INICIALIZACIÓN
         private void frmHistorialTransacciones_Load(object sender, EventArgs e)
         {
-            dtpDesde.Value = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
+            dtpDesde.Value = DateTime.Now.AddDays(-1).Date;
             dtpHasta.Value = DateTime.Now.Date;
 
             // Sincroniza la fecha inicial a los TextBox oscuros creados en el diseñador
@@ -142,6 +176,9 @@ namespace AsuFit.Presentacion
 
             cmbFiltroTipo.SelectedIndex = 0;
             cmbFiltroTipo.DropDownClosed += QuitarFocoCombo_DropDownClosed;
+            cmbFiltroTipo.SelectedIndexChanged += QuitarFocoCombo_DropDownClosed;
+
+            SuscribirFiltrosDeSeguridad();
 
             BuscarVentas();
 
@@ -289,6 +326,50 @@ namespace AsuFit.Presentacion
             else
             {
                 MessageBox.Show("Por favor, selecciona una transacción de la tabla primero.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+        }
+        #endregion
+
+        #region 8. GESTIÓN DE SEGURIDAD Y RESTRICCIONES DE ENTRADA
+        // Suscribe programáticamente los vectores de captura a las directivas de sanitización de consultas.
+        private void SuscribirFiltrosDeSeguridad()
+        {
+            txtBuscar.KeyPress += txtAntiInyeccion_KeyPress;
+
+            ContextMenuStrip menuVacio = new ContextMenuStrip();
+            foreach (Control contenedor in this.Controls)
+            {
+                AsignarBloqueosRecursivo(contenedor, menuVacio);
+            }
+        }
+
+        private void AsignarBloqueosRecursivo(Control contenedor, ContextMenuStrip menuVacio)
+        {
+            if (contenedor is TextBox txt)
+            {
+                txt.KeyDown += BloquearPegado_KeyDown;
+                txt.ContextMenuStrip = menuVacio;
+            }
+
+            foreach (Control hijo in contenedor.Controls)
+            {
+                AsignarBloqueosRecursivo(hijo, menuVacio);
+            }
+        }
+
+        private void BloquearPegado_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Control && e.KeyCode == Keys.V || e.Shift && e.KeyCode == Keys.Insert)
+            {
+                e.SuppressKeyPress = true;
+            }
+        }
+
+        private void txtAntiInyeccion_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar == '\'' || e.KeyChar == '"' || e.KeyChar == ';')
+            {
+                e.Handled = true;
             }
         }
         #endregion

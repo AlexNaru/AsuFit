@@ -241,7 +241,9 @@
             this.txtBuscar.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(39)))), ((int)(((byte)(47)))));
             this.txtBuscar.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.txtBuscar.Location = new System.Drawing.Point(12, 70);
+            this.txtBuscar.MaxLength = 100;
             this.txtBuscar.Name = "txtBuscar";
+            this.txtBuscar.ShortcutsEnabled = false;
             this.txtBuscar.Size = new System.Drawing.Size(269, 20);
             this.txtBuscar.TabIndex = 24;
             this.txtBuscar.TextChanged += new System.EventHandler(this.txtBuscar_TextChanged);
@@ -264,6 +266,7 @@
             this.txtDesde.Location = new System.Drawing.Point(54, 35);
             this.txtDesde.Name = "txtDesde";
             this.txtDesde.ReadOnly = true;
+            this.txtDesde.ShortcutsEnabled = false;
             this.txtDesde.Size = new System.Drawing.Size(102, 20);
             this.txtDesde.TabIndex = 30;
             // 
@@ -285,6 +288,7 @@
             this.txtHasta.Location = new System.Drawing.Point(339, 35);
             this.txtHasta.Name = "txtHasta";
             this.txtHasta.ReadOnly = true;
+            this.txtHasta.ShortcutsEnabled = false;
             this.txtHasta.Size = new System.Drawing.Size(102, 20);
             this.txtHasta.TabIndex = 32;
             // 

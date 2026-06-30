@@ -107,6 +107,7 @@
             // 
             this.txtRutaDestino.Location = new System.Drawing.Point(37, 150);
             this.txtRutaDestino.Margin = new System.Windows.Forms.Padding(2);
+            this.txtRutaDestino.MaxLength = 255;
             this.txtRutaDestino.Name = "txtRutaDestino";
             this.txtRutaDestino.ReadOnly = true;
             this.txtRutaDestino.Size = new System.Drawing.Size(193, 20);
@@ -379,6 +380,7 @@
             // 
             this.txtContrasenaCorreo.Location = new System.Drawing.Point(161, 72);
             this.txtContrasenaCorreo.Margin = new System.Windows.Forms.Padding(2);
+            this.txtContrasenaCorreo.MaxLength = 50;
             this.txtContrasenaCorreo.Name = "txtContrasenaCorreo";
             this.txtContrasenaCorreo.PasswordChar = '*';
             this.txtContrasenaCorreo.Size = new System.Drawing.Size(177, 20);
@@ -388,6 +390,7 @@
             // 
             this.txtCorreoEmisor.Location = new System.Drawing.Point(161, 45);
             this.txtCorreoEmisor.Margin = new System.Windows.Forms.Padding(2);
+            this.txtCorreoEmisor.MaxLength = 100;
             this.txtCorreoEmisor.Name = "txtCorreoEmisor";
             this.txtCorreoEmisor.Size = new System.Drawing.Size(177, 20);
             this.txtCorreoEmisor.TabIndex = 2;
@@ -493,6 +496,7 @@
             // 
             this.txtDireccion.Location = new System.Drawing.Point(34, 193);
             this.txtDireccion.Margin = new System.Windows.Forms.Padding(2);
+            this.txtDireccion.MaxLength = 255;
             this.txtDireccion.Name = "txtDireccion";
             this.txtDireccion.Size = new System.Drawing.Size(121, 20);
             this.txtDireccion.TabIndex = 3;
@@ -501,6 +505,7 @@
             // 
             this.txtTelefono.Location = new System.Drawing.Point(34, 143);
             this.txtTelefono.Margin = new System.Windows.Forms.Padding(2);
+            this.txtTelefono.MaxLength = 20;
             this.txtTelefono.Name = "txtTelefono";
             this.txtTelefono.Size = new System.Drawing.Size(121, 20);
             this.txtTelefono.TabIndex = 2;
@@ -509,6 +514,7 @@
             // 
             this.txtRUC.Location = new System.Drawing.Point(34, 95);
             this.txtRUC.Margin = new System.Windows.Forms.Padding(2);
+            this.txtRUC.MaxLength = 10;
             this.txtRUC.Name = "txtRUC";
             this.txtRUC.Size = new System.Drawing.Size(121, 20);
             this.txtRUC.TabIndex = 1;
@@ -517,6 +523,7 @@
             // 
             this.txtNombreGimnasio.Location = new System.Drawing.Point(34, 50);
             this.txtNombreGimnasio.Margin = new System.Windows.Forms.Padding(2);
+            this.txtNombreGimnasio.MaxLength = 100;
             this.txtNombreGimnasio.Name = "txtNombreGimnasio";
             this.txtNombreGimnasio.Size = new System.Drawing.Size(121, 20);
             this.txtNombreGimnasio.TabIndex = 0;

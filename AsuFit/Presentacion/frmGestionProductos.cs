@@ -69,7 +69,7 @@ namespace AsuFit.Presentacion
             AplicarPlaceholder(txtStock, "0");
         }
 
-        // Gestiona el comportamiento de las marcas de agua en los TextBox
+        // Gestiona el comportamiento de la marca de agua con desvanecimiento dinámico estilo AsuFit
         private void AplicarPlaceholder(TextBox txt, string textoAyuda)
         {
             txt.Tag = textoAyuda;
@@ -88,17 +88,51 @@ namespace AsuFit.Presentacion
             {
                 if (txt.Text == textoAyuda)
                 {
-                    txt.Text = "";
-                    txt.ForeColor = Color.White;
+                    this.BeginInvoke(new Action(() => txt.SelectionStart = 0));
                 }
             };
 
-            txt.Leave += delegate
+            // Intercepta el clic y el arrastre del mouse para impedir que pinten de azul la ayuda
+            txt.MouseDown += delegate
             {
-                if (string.IsNullOrWhiteSpace(txt.Text))
+                if (txt.Text == textoAyuda)
                 {
-                    txt.Text = textoAyuda;
+                    txt.SelectionStart = 0;
+                    txt.SelectionLength = 0;
+                }
+            };
+
+            txt.MouseMove += delegate
+            {
+                if (txt.Text == textoAyuda && txt.SelectionLength > 0)
+                {
+                    txt.SelectionStart = 0;
+                    txt.SelectionLength = 0;
+                }
+            };
+
+            txt.TextChanged += delegate
+            {
+                if (txt.Text != textoAyuda && txt.ForeColor == Color.Silver)
+                {
+                    string entradaUsuario = txt.Text.Replace(textoAyuda, "");
+                    txt.ForeColor = Color.White;
+                    txt.Text = entradaUsuario;
+                    txt.SelectionStart = txt.Text.Length;
+                }
+                else if (string.IsNullOrEmpty(txt.Text))
+                {
                     txt.ForeColor = Color.Silver;
+                    txt.Text = textoAyuda;
+                    txt.SelectionStart = 0;
+                }
+            };
+
+            txt.KeyDown += delegate (object sender, KeyEventArgs e)
+            {
+                if (txt.Text == textoAyuda && (e.KeyCode == Keys.Back || e.KeyCode == Keys.Delete || e.KeyCode == Keys.Left || e.KeyCode == Keys.Right))
+                {
+                    e.SuppressKeyPress = true;
                 }
             };
         }
@@ -110,10 +144,10 @@ namespace AsuFit.Presentacion
             return txt.Text;
         }
 
-        // Libera el foco del componente para evitar el remanente de color de selección (Azul nativo)
+        // Libera el foco del componente de forma asíncrona mitigando selecciones residuales del sistema operativo.
         private void QuitarFocoCombo_DropDownClosed(object sender, EventArgs e)
         {
-            this.ActiveControl = null;
+            this.BeginInvoke(new Action(() => this.ActiveControl = null));
         }
         #endregion
 
@@ -146,12 +180,27 @@ namespace AsuFit.Presentacion
 
         private void ConfigurarFiltros()
         {
+            // Catálogo inmutable de categorías del gimnasio
             cmbCategoria.Items.Clear();
             cmbCategoria.Items.Add("Suplementos");
             cmbCategoria.Items.Add("Bebidas");
             cmbCategoria.Items.Add("Snacks");
+
+            if (cmbCategoria.Items.Count > 0) cmbCategoria.SelectedIndex = 0;
+
+            // Inicialización y blindaje del combo de IVA por si no se cargó en el diseñador
+            if (cmbIva != null)
+            {
+                cmbIva.Items.Clear();
+                cmbIva.Items.Add("10");
+                cmbIva.Items.Add("5");
+                cmbIva.Items.Add("0");
+
+                if (cmbIva.Items.Count > 0) cmbIva.SelectedIndex = 0; // Selecciona '10' por defecto
+            }
         }
 
+        // Obtiene el directorio de proveedores activos y selecciona el primer registro hábil.
         private void CargarProveedores()
         {
             try
@@ -163,7 +212,8 @@ namespace AsuFit.Presentacion
                 cmbProveedor.DisplayMember = "Nombre";
                 cmbProveedor.ValueMember = "IdProveedor";
                 cmbProveedor.DataSource = dv.ToTable();
-                cmbProveedor.SelectedIndex = -1;
+
+                if (cmbProveedor.Items.Count > 0) cmbProveedor.SelectedIndex = 0;
             }
             catch (Exception ex)
             {
@@ -291,7 +341,7 @@ namespace AsuFit.Presentacion
                 }
                 else
                 {
-                    cmbProveedor.SelectedIndex = -1;
+                    if (cmbProveedor.Items.Count > 0) cmbProveedor.SelectedIndex = 0;
                 }
 
                 if (dgvProductos.Columns.Contains("colProductoIva") && fila.Cells["colProductoIva"].Value != DBNull.Value)
@@ -300,7 +350,7 @@ namespace AsuFit.Presentacion
                 }
                 else
                 {
-                    cmbIva.SelectedIndex = -1;
+                    if (cmbIva != null && cmbIva.Items.Count > 0) cmbIva.SelectedIndex = 0;
                 }
 
                 string codigo = fila.Cells["colProductoCodigo"].Value.ToString();
@@ -500,22 +550,22 @@ namespace AsuFit.Presentacion
             LimpiarFormulario();
         }
 
+        // Revierte las casillas de edición a su estado nominal preservando el término de búsqueda en la grilla.
         private void LimpiarFormulario()
         {
             txtId.Clear();
             txtCodigo.Clear();
             txtNombre.Clear();
-            cmbCategoria.SelectedIndex = -1;
-            cmbProveedor.SelectedIndex = -1;
 
-            if (cmbIva != null) cmbIva.SelectedIndex = -1;
+            if (cmbCategoria.Items.Count > 0) cmbCategoria.SelectedIndex = 0;
+            if (cmbProveedor.Items.Count > 0) cmbProveedor.SelectedIndex = 0;
+            if (cmbIva != null && cmbIva.Items.Count > 0) cmbIva.SelectedIndex = 0;
 
             txtPrecio.Clear();
             txtStock.Clear();
             picFoto.Image = null;
             rutaFotoOrigen = "";
 
-            txtBuscarProducto.Clear();
             dgvProductos.ClearSelection();
 
             ConfigurarTextosDeAyuda();

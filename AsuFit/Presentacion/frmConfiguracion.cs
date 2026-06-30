@@ -32,6 +32,17 @@ namespace AsuFit.Presentacion
             ConfigurarTemaOscuro();
             CargarConfiguracion();
             CargarEscalaActual();
+
+            // Restaura la fecha del último backup desde la memoria local de la PC
+            string fechaBackup = Properties.Settings.Default.FechaUltimoBackup;
+            if (!string.IsNullOrEmpty(fechaBackup))
+            {
+                lblUltimoRespaldo.Text = "Último respaldo realizado: " + fechaBackup;
+            }
+
+            // Activa el blindaje de seguridad para todos los TextBox
+            SuscribirFiltrosDeSeguridad();
+
             this.ActiveControl = null; // Evita el borde azul en el combobox al cargar
 
             _esCargaInicial = false; // ¡Carga completada! A partir de aquí, el evento responderá al usuario
@@ -52,6 +63,16 @@ namespace AsuFit.Presentacion
                 nudDiasAviso1.Value = config.DiasAviso1;
                 nudDiasAviso2.Value = config.DiasAviso2;
                 txtRutaDestino.Text = config.RutaBackup;
+
+                // Carga de forma persistente la fecha del último backup desde la columna SQL
+                if (config.FechaUltimoBackup != null && config.FechaUltimoBackup != DateTime.MinValue)
+                {
+                    lblUltimoRespaldo.Text = "Último respaldo realizado: " + config.FechaUltimoBackup.ToString("dd/MM/yyyy HH:mm") + " hs";
+                }
+                else
+                {
+                    lblUltimoRespaldo.Text = "Último respaldo realizado: Nunca / Desconocido";
+                }
 
                 if (config.Logo != null)
                 {
@@ -264,6 +285,7 @@ namespace AsuFit.Presentacion
             }
         }
 
+        // Ejecuta el volcado de la base de datos a un archivo físico, actualizando el registro de auditoría y persistencia.
         private void btnGenerarBackup_Click(object sender, EventArgs e)
         {
             if (string.IsNullOrWhiteSpace(txtRutaDestino.Text))
@@ -276,18 +298,55 @@ namespace AsuFit.Presentacion
             string nombreArchivo = $"AsuFit_Backup_{fechaHoy}.bak";
             string rutaCompleta = Path.Combine(txtRutaDestino.Text, nombreArchivo);
 
+            // Estado reactivo "Generando..." con bloqueo preventivo de UI
+            btnGenerarBackup.Enabled = false;
+            btnGenerarBackup.Text = "GENERANDO...";
+            lblUltimoRespaldo.Text = "Estado: Generando copia de seguridad, por favor espere...";
+
+            Application.DoEvents();
+
             try
             {
                 negocio.GenerarBackup(rutaCompleta);
 
                 GestorAuditoria.Registrar(usuarioActual.NombreCompleto, "Sistema", "Backup de Base de Datos", $"Se generó una copia de seguridad en: {rutaCompleta}");
 
-                lblUltimoRespaldo.Text = "Último respaldo realizado: " + DateTime.Now.ToString("dd/MM/yyyy HH:mm") + " hs";
+                // Construcción integral de la entidad para evitar el envío de parámetros nulos
+                Configuracion obj = new Configuracion();
+                obj.NombreGimnasio = txtNombreGimnasio.Text;
+                obj.Ruc = txtRUC.Text;
+                obj.Direccion = txtDireccion.Text;
+                obj.Telefono = txtTelefono.Text;
+
+                if (picLogo.Image != null)
+                {
+                    using (MemoryStream ms = new MemoryStream())
+                    {
+                        picLogo.Image.Save(ms, picLogo.Image.RawFormat);
+                        obj.Logo = ms.ToArray();
+                    }
+                }
+
+                obj.RutaBackup = txtRutaDestino.Text;
+                obj.FechaUltimoBackup = DateTime.Now;
+
+                negocio.ActualizarDatosGenerales(obj);
+
+                string fechaFormateada = obj.FechaUltimoBackup.ToString("dd/MM/yyyy HH:mm") + " hs";
+                lblUltimoRespaldo.Text = "Último respaldo realizado: " + fechaFormateada;
+
                 MessageBox.Show($"¡Copia de seguridad generada con éxito!\n\nSe guardó en:\n{rutaCompleta}", "Respaldo Exitoso", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (Exception ex)
             {
                 MessageBox.Show("Ocurrió un error al intentar generar la copia de seguridad:\n\n" + ex.Message, "Error Crítico", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                CargarConfiguracion();
+            }
+            finally
+            {
+                // Restauración del estado interactivo
+                btnGenerarBackup.Enabled = true;
+                btnGenerarBackup.Text = "GENERAR BACKUP AHORA";
             }
         }
         #endregion
@@ -347,6 +406,77 @@ namespace AsuFit.Presentacion
                         btnSinAcento.PerformClick();
                     }
                 }
+            }
+        }
+        #endregion
+
+        #region 8. GESTIÓN DE SEGURIDAD Y RESTRICCIONES DE ENTRADA
+        // Suscribe los cuadros de texto a filtros físicos específicos por teclado y anula menús contextuales.
+        private void SuscribirFiltrosDeSeguridad()
+        {
+            // Filtros estándar anti-inyección
+            txtNombreGimnasio.KeyPress += txtAntiInyeccion_KeyPress;
+            txtDireccion.KeyPress += txtAntiInyeccion_KeyPress;
+            txtCorreoEmisor.KeyPress += txtAntiInyeccion_KeyPress;
+            txtContrasenaCorreo.KeyPress += txtAntiInyeccion_KeyPress;
+            txtRutaDestino.KeyPress += txtAntiInyeccion_KeyPress;
+
+            // REQUERIMIENTO 2 Y 3: Filtros específicos por teclado
+            txtRUC.KeyPress += txtRuc_KeyPress;
+            txtTelefono.KeyPress += txtTelefono_KeyPress;
+
+            ContextMenuStrip menuVacio = new ContextMenuStrip();
+            foreach (Control contenedor in this.Controls)
+            {
+                AsignarBloqueosRecursivo(contenedor, menuVacio);
+            }
+        }
+
+        private void AsignarBloqueosRecursivo(Control contenedor, ContextMenuStrip menuVacio)
+        {
+            if (contenedor is TextBox txt)
+            {
+                txt.KeyDown += BloquearPegado_KeyDown;
+                txt.ContextMenuStrip = menuVacio;
+            }
+
+            foreach (Control hijo in contenedor.Controls)
+            {
+                AsignarBloqueosRecursivo(hijo, menuVacio);
+            }
+        }
+
+        private void BloquearPegado_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Control && e.KeyCode == Keys.V || e.Shift && e.KeyCode == Keys.Insert)
+            {
+                e.SuppressKeyPress = true;
+            }
+        }
+
+        // Solo permite dígitos numéricos y el guion medio '-'
+        private void txtRuc_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar) && e.KeyChar != '-')
+            {
+                e.Handled = true;
+            }
+        }
+
+        // Solo permite dígitos numéricos y el signo más '+'
+        private void txtTelefono_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar) && e.KeyChar != '+')
+            {
+                e.Handled = true;
+            }
+        }
+
+        private void txtAntiInyeccion_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar == '\'' || e.KeyChar == '"' || e.KeyChar == ';')
+            {
+                e.Handled = true;
             }
         }
         #endregion

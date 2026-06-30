@@ -8,5 +8,8 @@
     <Setting Name="TamanoFuente" Type="System.Single" Scope="User">
       <Value Profile="(Default)">10</Value>
     </Setting>
+    <Setting Name="FechaUltimoBackup" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
   </Settings>
 </SettingsFile>

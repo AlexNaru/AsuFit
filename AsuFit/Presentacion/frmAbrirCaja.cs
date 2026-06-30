@@ -33,6 +33,10 @@ namespace AsuFit.Presentacion
             txtCajero.SelectionLength = 0;
 
             this.ActiveControl = txtMontoInicial;
+
+            // Sella ambos cuadros de texto contra menús contextuales de Windows
+            txtMontoInicial.ContextMenuStrip = new ContextMenuStrip();
+            txtCajero.ContextMenuStrip = new ContextMenuStrip();
         }
 
         #region ESTILOS VISUALES Y ESCALADO
@@ -136,13 +140,13 @@ namespace AsuFit.Presentacion
         {
             if (string.IsNullOrWhiteSpace(txtMontoInicial.Text))
             {
-                MessageBox.Show("Debes ingresar el monto de dinero base con el que empiezas tu turno.", "Atención", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MensajeAsuFit.Mostrar("Debes ingresar el monto de dinero base con el que empiezas tu turno.", "Atención", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
             if (!decimal.TryParse(txtMontoInicial.Text, out decimal fondoInicial))
             {
-                MessageBox.Show("El monto ingresado no es válido.", "Atención", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MensajeAsuFit.Mostrar("El monto ingresado no es válido.", "Atención", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
@@ -158,20 +162,24 @@ namespace AsuFit.Presentacion
 
                 if (exito)
                 {
-                    MessageBox.Show("¡Turno iniciado con éxito! La caja ya está abierta.", "Caja Abierta", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MensajeAsuFit.Mostrar(this, "¡Turno iniciado con éxito! La caja ya está abierta.", "Caja Abierta", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     this.DialogResult = DialogResult.OK;
                     this.Close();
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error al abrir la caja: " + ex.Message, "Error Crítico", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MensajeAsuFit.Mostrar(this, "Error al abrir la caja: " + ex.Message, "Error Crítico", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
         private void txtMontoInicial_KeyPress(object sender, KeyPressEventArgs e)
         {
-            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar)) e.Handled = true;
+            // Filtro numérico puro: solo dígitos y teclas de control del sistema
+            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar))
+            {
+                e.Handled = true;
+            }
         }
     }
 }

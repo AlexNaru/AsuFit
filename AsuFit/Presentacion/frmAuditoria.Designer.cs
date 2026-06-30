@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.btnAbrirHistorial = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
@@ -219,8 +219,8 @@
             // colAuditoriaFecha
             // 
             this.colAuditoriaFecha.DataPropertyName = "FechaHora";
-            dataGridViewCellStyle3.Format = "dd/MM/yyyy HH:mm";
-            this.colAuditoriaFecha.DefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle1.Format = "dd/MM/yyyy HH:mm";
+            this.colAuditoriaFecha.DefaultCellStyle = dataGridViewCellStyle1;
             this.colAuditoriaFecha.HeaderText = "Fecha y Hora";
             this.colAuditoriaFecha.MinimumWidth = 8;
             this.colAuditoriaFecha.Name = "colAuditoriaFecha";
@@ -257,7 +257,9 @@
             // 
             this.txtBuscar.Location = new System.Drawing.Point(203, 11);
             this.txtBuscar.Margin = new System.Windows.Forms.Padding(2);
+            this.txtBuscar.MaxLength = 100;
             this.txtBuscar.Name = "txtBuscar";
+            this.txtBuscar.ShortcutsEnabled = false;
             this.txtBuscar.Size = new System.Drawing.Size(241, 20);
             this.txtBuscar.TabIndex = 1;
             this.txtBuscar.TextChanged += new System.EventHandler(this.txtBuscar_TextChanged);

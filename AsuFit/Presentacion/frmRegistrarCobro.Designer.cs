@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             this.dgvSocios = new System.Windows.Forms.DataGridView();
             this.colCobroId = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colCobroCedula = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -56,14 +56,14 @@
             this.dgvSocios.AllowUserToResizeRows = false;
             this.dgvSocios.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.dgvSocios.BackgroundColor = System.Drawing.Color.White;
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(39)))), ((int)(((byte)(47)))));
-            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dgvSocios.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(39)))), ((int)(((byte)(47)))));
+            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dgvSocios.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
             this.dgvSocios.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvSocios.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.colCobroId,
@@ -170,7 +170,9 @@
             this.txtBuscar.ForeColor = System.Drawing.Color.White;
             this.txtBuscar.Location = new System.Drawing.Point(278, 40);
             this.txtBuscar.Margin = new System.Windows.Forms.Padding(2);
+            this.txtBuscar.MaxLength = 100;
             this.txtBuscar.Name = "txtBuscar";
+            this.txtBuscar.ShortcutsEnabled = false;
             this.txtBuscar.Size = new System.Drawing.Size(306, 20);
             this.txtBuscar.TabIndex = 0;
             this.txtBuscar.TextChanged += new System.EventHandler(this.txtBuscar_TextChanged);
@@ -201,6 +203,7 @@
             this.txtMonto.Margin = new System.Windows.Forms.Padding(2);
             this.txtMonto.Name = "txtMonto";
             this.txtMonto.ReadOnly = true;
+            this.txtMonto.ShortcutsEnabled = false;
             this.txtMonto.Size = new System.Drawing.Size(68, 20);
             this.txtMonto.TabIndex = 3;
             this.txtMonto.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -270,7 +273,6 @@
             this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "frmRegistrarCobro";
             this.Text = "frmRegistrarCobro";
-            this.Load += new System.EventHandler(this.frmRegistrarCobro_Load);
             this.Click += new System.EventHandler(this.frmRegistrarCobro_Click);
             ((System.ComponentModel.ISupportInitialize)(this.dgvSocios)).EndInit();
             this.ResumeLayout(false);

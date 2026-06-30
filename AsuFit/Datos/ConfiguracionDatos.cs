@@ -32,6 +32,10 @@ namespace AsuFit.Datos
                             obj.RutaBackup = reader["RutaBackup"] != DBNull.Value ? reader["RutaBackup"].ToString() : "";
 
                             if (reader["Logo"] != DBNull.Value) obj.Logo = (byte[])reader["Logo"];
+
+                            // Lee la fecha del último backup directamente de la base de datos
+                            if (reader["FechaUltimoBackup"] != DBNull.Value)
+                                obj.FechaUltimoBackup = Convert.ToDateTime(reader["FechaUltimoBackup"]);
                         }
                     }
                 }
@@ -47,9 +51,11 @@ namespace AsuFit.Datos
             {
                 try
                 {
+                    // Se agregó 'FechaUltimoBackup = @FechaBackup' a la consulta
                     string query = @"UPDATE Configuracion SET 
                              NombreGimnasio = @Nombre, RUC = @RUC, Direccion = @Direccion, 
-                             Telefono = @Telefono, RutaBackup = @RutaBackup, Logo = @Logo
+                             Telefono = @Telefono, RutaBackup = @RutaBackup, Logo = @Logo,
+                             FechaUltimoBackup = @FechaBackup
                              WHERE IdConfiguracion = 1";
 
                     SqlCommand cmd = new SqlCommand(query, oConexion);
@@ -61,6 +67,12 @@ namespace AsuFit.Datos
 
                     if (obj.Logo != null) cmd.Parameters.AddWithValue("@Logo", obj.Logo);
                     else cmd.Parameters.Add("@Logo", SqlDbType.VarBinary).Value = DBNull.Value;
+
+                    // Se envía el parámetro de la fecha a SQL Server
+                    if (obj.FechaUltimoBackup != DateTime.MinValue)
+                        cmd.Parameters.AddWithValue("@FechaBackup", obj.FechaUltimoBackup);
+                    else
+                        cmd.Parameters.Add("@FechaBackup", SqlDbType.DateTime).Value = DBNull.Value;
 
                     oConexion.Open();
                     respuesta = cmd.ExecuteNonQuery() > 0;

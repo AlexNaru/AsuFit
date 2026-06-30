@@ -46,5 +46,17 @@ namespace AsuFit.Properties {
                 this["TamanoFuente"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string FechaUltimoBackup {
+            get {
+                return ((string)(this["FechaUltimoBackup"]));
+            }
+            set {
+                this["FechaUltimoBackup"] = value;
+            }
+        }
     }
 }

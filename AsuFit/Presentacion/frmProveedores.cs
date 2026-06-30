@@ -29,7 +29,11 @@ namespace AsuFit.Presentacion
             ConfigurarTemaOscuro();
             CargarGrilla();
 
-            // FIX: Aplicamos el placeholder interactivo estilo AsuFit
+            if (cmbCategoria.Items.Count > 0) cmbCategoria.SelectedIndex = 0;
+
+            SuscribirFiltrosDeSeguridad();
+
+            // Aplicamos el placeholder interactivo estilo AsuFit
             AplicarPlaceholder(txtBuscarProveedor, "Buscar por Nombre o RUC...");
 
             // Liberamos el foco para que se vea el placeholder
@@ -145,7 +149,7 @@ namespace AsuFit.Presentacion
             dgv.RowTemplate.Height = 35;
         }
 
-        // --- MÉTODO INTELIGENTE DE PLACEHOLDER ---
+        // Gestiona el comportamiento de la marca de agua con desvanecimiento dinámico estilo AsuFit
         private void AplicarPlaceholder(TextBox txt, string textoAyuda)
         {
             txt.Tag = textoAyuda;
@@ -164,17 +168,51 @@ namespace AsuFit.Presentacion
             {
                 if (txt.Text == textoAyuda)
                 {
-                    txt.Text = "";
-                    txt.ForeColor = Color.White;
+                    this.BeginInvoke(new Action(() => txt.SelectionStart = 0));
                 }
             };
 
-            txt.Leave += delegate
+            // Intercepta el clic y el arrastre del mouse para impedir que pinten de azul la ayuda
+            txt.MouseDown += delegate
             {
-                if (string.IsNullOrWhiteSpace(txt.Text))
+                if (txt.Text == textoAyuda)
                 {
-                    txt.Text = textoAyuda;
+                    txt.SelectionStart = 0;
+                    txt.SelectionLength = 0;
+                }
+            };
+
+            txt.MouseMove += delegate
+            {
+                if (txt.Text == textoAyuda && txt.SelectionLength > 0)
+                {
+                    txt.SelectionStart = 0;
+                    txt.SelectionLength = 0;
+                }
+            };
+
+            txt.TextChanged += delegate
+            {
+                if (txt.Text != textoAyuda && txt.ForeColor == Color.Silver)
+                {
+                    string entradaUsuario = txt.Text.Replace(textoAyuda, "");
+                    txt.ForeColor = Color.White;
+                    txt.Text = entradaUsuario;
+                    txt.SelectionStart = txt.Text.Length;
+                }
+                else if (string.IsNullOrEmpty(txt.Text))
+                {
                     txt.ForeColor = Color.Silver;
+                    txt.Text = textoAyuda;
+                    txt.SelectionStart = 0;
+                }
+            };
+
+            txt.KeyDown += delegate (object sender, KeyEventArgs e)
+            {
+                if (txt.Text == textoAyuda && (e.KeyCode == Keys.Back || e.KeyCode == Keys.Delete || e.KeyCode == Keys.Left || e.KeyCode == Keys.Right))
+                {
+                    e.SuppressKeyPress = true;
                 }
             };
         }
@@ -318,7 +356,7 @@ namespace AsuFit.Presentacion
             txtId.Clear();
             txtRuc.Clear();
             txtNombre.Clear();
-            cmbCategoria.SelectedIndex = 0;
+            if (cmbCategoria.Items.Count > 0) cmbCategoria.SelectedIndex = 0;
             txtContacto.Clear();
             txtTelefono.Clear();
             txtCorreo.Clear();
@@ -328,8 +366,8 @@ namespace AsuFit.Presentacion
 
             dgvProveedores.ClearSelection();
 
+            // Preserva la lectura pasiva del buscador moderno
             txtBuscarProveedor.Text = "";
-            txtBuscarProveedor.Focus();
             this.ActiveControl = null;
         }
 
@@ -341,12 +379,12 @@ namespace AsuFit.Presentacion
         // --- EVENTOS PARA QUITAR EL AZUL DEL COMBOBOX ---
         private void cmbCategoria_SelectedIndexChanged(object sender, EventArgs e)
         {
-            this.ActiveControl = null;
+            this.BeginInvoke(new Action(() => this.ActiveControl = null));
         }
 
         private void cmbCategoria_DropDownClosed(object sender, EventArgs e)
         {
-            this.ActiveControl = null;
+            this.BeginInvoke(new Action(() => this.ActiveControl = null));
         }
         #endregion
 
@@ -368,6 +406,75 @@ namespace AsuFit.Presentacion
             lblTotal.Text = total.ToString();
             lblActivos.Text = activos.ToString();
             lblInactivos.Text = inactivos.ToString();
+        }
+        #endregion
+
+        #region 7. GESTIÓN DE SEGURIDAD Y RESTRICCIONES DE ENTRADA
+        // Suscribe programáticamente todos los controles a sus filtros de sanitización transaccional.
+        private void SuscribirFiltrosDeSeguridad()
+        {
+            txtRuc.KeyPress += txtRuc_KeyPress;
+            txtTelefono.KeyPress += txtTelefono_KeyPress;
+            txtCorreo.KeyPress += txtEmail_KeyPress;
+
+            txtNombre.KeyPress += txtAntiInyeccion_KeyPress;
+            txtContacto.KeyPress += txtAntiInyeccion_KeyPress;
+            txtDireccion.KeyPress += txtAntiInyeccion_KeyPress;
+            txtCiudad.KeyPress += txtAntiInyeccion_KeyPress;
+            txtBuscarProveedor.KeyPress += txtAntiInyeccion_KeyPress;
+
+            ContextMenuStrip menuVacio = new ContextMenuStrip();
+            foreach (Control contenedor in this.Controls)
+            {
+                AsignarBloqueosRecursivo(contenedor, menuVacio);
+            }
+        }
+
+        private void AsignarBloqueosRecursivo(Control contenedor, ContextMenuStrip menuVacio)
+        {
+            if (contenedor is TextBox txt)
+            {
+                txt.KeyDown += BloquearPegado_KeyDown;
+                txt.ContextMenuStrip = menuVacio;
+            }
+
+            foreach (Control hijo in contenedor.Controls)
+            {
+                AsignarBloqueosRecursivo(hijo, menuVacio);
+            }
+        }
+
+        private void BloquearPegado_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Control && e.KeyCode == Keys.V || e.Shift && e.KeyCode == Keys.Insert)
+            {
+                e.SuppressKeyPress = true;
+            }
+        }
+
+        private void txtRuc_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar) && e.KeyChar != '-')
+                e.Handled = true;
+        }
+
+        private void txtTelefono_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar) && !char.IsWhiteSpace(e.KeyChar) && e.KeyChar != '+')
+                e.Handled = true;
+        }
+
+        private void txtEmail_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (!char.IsControl(e.KeyChar) && !char.IsLetterOrDigit(e.KeyChar) &&
+                e.KeyChar != '@' && e.KeyChar != '.' && e.KeyChar != '-' && e.KeyChar != '_')
+                e.Handled = true;
+        }
+
+        private void txtAntiInyeccion_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar == '\'' || e.KeyChar == '"' || e.KeyChar == ';')
+                e.Handled = true;
         }
         #endregion
     }

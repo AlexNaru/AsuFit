@@ -49,13 +49,18 @@ namespace AsuFit.Presentacion
 
             ConfigurarAutocompletado();
 
-            // FIX CRÍTICO: Generamos todas las tarjetas UNA SOLA VEZ y las dejamos en memoria.
+            // Generamos todas las tarjetas UNA SOLA VEZ y las dejamos en memoria.
             GenerarTarjetasIniciales();
 
             // Aplicamos los filtros iniciales (Solo ocultará o mostrará, sin volver a cargar imágenes)
             AplicarFiltros();
 
             AplicarPlaceholder(txtBuscarProducto, "Buscar Bebidas, Snacks o Suplementos...");
+
+            // Inyecta un menú nulo para neutralizar el clic derecho en el cuadro de búsqueda
+            txtBuscarProducto.ContextMenuStrip = new ContextMenuStrip();
+            txtBuscarProducto.KeyDown += txtBuscarProducto_KeyDown;
+            txtBuscarProducto.KeyPress += txtBuscarProducto_KeyPress;
 
             //Recupera visualmente el carrito si el cajero regresó de la caja
             SincronizarCarritoVisual();
@@ -240,6 +245,7 @@ namespace AsuFit.Presentacion
             dgv.RowTemplate.Height = 35;
         }
 
+        // Gestiona el comportamiento de la marca de agua con desvanecimiento dinámico estilo AsuFit
         private void AplicarPlaceholder(TextBox txt, string textoAyuda)
         {
             txt.Tag = textoAyuda;
@@ -249,22 +255,60 @@ namespace AsuFit.Presentacion
                 txt.Text = textoAyuda;
                 txt.ForeColor = Color.Silver;
             }
+            else
+            {
+                txt.ForeColor = Color.White;
+            }
 
             txt.Enter += delegate
             {
                 if (txt.Text == textoAyuda)
                 {
-                    txt.Text = "";
-                    txt.ForeColor = Color.White;
+                    this.BeginInvoke(new Action(() => txt.SelectionStart = 0));
                 }
             };
 
-            txt.Leave += delegate
+            // Intercepta el clic y el arrastre del mouse para impedir que pinten de azul la ayuda
+            txt.MouseDown += delegate
             {
-                if (string.IsNullOrWhiteSpace(txt.Text))
+                if (txt.Text == textoAyuda)
                 {
-                    txt.Text = textoAyuda;
+                    txt.SelectionStart = 0;
+                    txt.SelectionLength = 0;
+                }
+            };
+
+            txt.MouseMove += delegate
+            {
+                if (txt.Text == textoAyuda && txt.SelectionLength > 0)
+                {
+                    txt.SelectionStart = 0;
+                    txt.SelectionLength = 0;
+                }
+            };
+
+            txt.TextChanged += delegate
+            {
+                if (txt.Text != textoAyuda && txt.ForeColor == Color.Silver)
+                {
+                    string entradaUsuario = txt.Text.Replace(textoAyuda, "");
+                    txt.ForeColor = Color.White;
+                    txt.Text = entradaUsuario;
+                    txt.SelectionStart = txt.Text.Length;
+                }
+                else if (string.IsNullOrEmpty(txt.Text))
+                {
                     txt.ForeColor = Color.Silver;
+                    txt.Text = textoAyuda;
+                    txt.SelectionStart = 0;
+                }
+            };
+
+            txt.KeyDown += delegate (object sender, KeyEventArgs e)
+            {
+                if (txt.Text == textoAyuda && (e.KeyCode == Keys.Back || e.KeyCode == Keys.Delete || e.KeyCode == Keys.Left || e.KeyCode == Keys.Right))
+                {
+                    e.SuppressKeyPress = true;
                 }
             };
         }
@@ -301,7 +345,8 @@ namespace AsuFit.Presentacion
 
             if (!string.IsNullOrWhiteSpace(textoBusqueda))
             {
-                string textoLimpio = QuitarAcentos(textoBusqueda);
+                // PROTECCIÓN CRÍTICA: Sanitiza la entrada duplicando comillas simples para anular inyecciones lógicas en DataView
+                string textoLimpio = QuitarAcentos(textoBusqueda).Replace("'", "''");
                 filtro = "NombreBusqueda LIKE '%" + textoLimpio + "%'";
             }
 
@@ -639,8 +684,9 @@ namespace AsuFit.Presentacion
                     CarritoGlobal.AgregarItem(idProd, codigoDeBarras, concepto, cant, precio, iva);
                 }
 
-                // FIX ARQUITECTÓNICO: Abrir en modo Modal (bloquea el formulario de atrás)
+                // Abrir en modo Modal (bloquea el formulario de atrás)
                 frmCajaCobro nuevaCaja = new frmCajaCobro(usuarioActual);
+                CentrarSobreContenedor(nuevaCaja);
                 nuevaCaja.ShowDialog();
 
                 // Al cerrar la caja (por pagar o por agregar cosas), actualizamos la vista
@@ -650,6 +696,47 @@ namespace AsuFit.Presentacion
             {
                 MessageBox.Show("Error al enviar productos a la caja: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+        }
+
+        // Intercepta combinaciones de teclas prohibidas para mitigar ingresos masivos no sanitizados
+        private void txtBuscarProducto_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Control && e.KeyCode == Keys.V || e.Shift && e.KeyCode == Keys.Insert)
+            {
+                e.SuppressKeyPress = true;
+            }
+        }
+
+        // Lista Blanca Comercial: Permite caracteres alfanuméricos, espacios, guiones y porcentajes, destruyendo delimitadores relacionales
+        private void txtBuscarProducto_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            char c = e.KeyChar;
+            if (!char.IsControl(c) && !char.IsLetterOrDigit(c) && !char.IsWhiteSpace(c) &&
+                c != '-' && c != '%' && c != '.' && c != '+' && c != '#')
+            {
+                e.Handled = true;
+            }
+        }
+
+        // Proyecta las coordenadas absolutas en pantalla del panel principal para anclar ventanas transaccionales secundarias.
+        private void CentrarSobreContenedor(Form frm)
+        {
+            Form dashboard = Application.OpenForms["frmDashboard"];
+            if (dashboard != null)
+            {
+                Control[] contenedores = dashboard.Controls.Find("pnlContenedor", true);
+                if (contenedores.Length > 0)
+                {
+                    Control pnl = contenedores[0];
+                    frm.StartPosition = FormStartPosition.Manual;
+                    Point pos = pnl.PointToScreen(Point.Empty);
+                    int x = pos.X + (pnl.Width - frm.Width) / 2;
+                    int y = pos.Y + (pnl.Height - frm.Height) / 2;
+                    frm.Location = new Point(x > 0 ? x : 0, y > 0 ? y : 0);
+                    return;
+                }
+            }
+            frm.StartPosition = FormStartPosition.CenterScreen;
         }
         #endregion
     }

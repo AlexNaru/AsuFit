@@ -44,6 +44,10 @@ namespace AsuFit.Presentacion
             txtCajeroCierre.SelectionLength = 0;
 
             this.ActiveControl = txtMontoContado;
+
+            // Sella ambos cuadros de texto contra el menú nativo de Windows
+            txtMontoContado.ContextMenuStrip = new ContextMenuStrip();
+            txtCajeroCierre.ContextMenuStrip = new ContextMenuStrip();
         }
 
         #region ESTILOS VISUALES Y ESCALADO
@@ -146,14 +150,14 @@ namespace AsuFit.Presentacion
         {
             if (string.IsNullOrWhiteSpace(txtMontoContado.Text))
             {
-                MessageBox.Show("Debes ingresar el dinero físico que contaste.", "Atención", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MensajeAsuFit.Mostrar("Debes ingresar el dinero físico que contaste.", "Atención", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
             decimal montoContado = Convert.ToDecimal(txtMontoContado.Text);
             decimal diferencia = montoContado - totalEsperado;
 
-            DialogResult respuesta = MessageBox.Show($"Efectivo Contado: Gs. {montoContado:N0}\nDiferencia (Descuadre): Gs. {diferencia:N0}\n\n¿Estás seguro de cerrar el turno con estos valores?", "Confirmar Cierre", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            DialogResult respuesta = MensajeAsuFit.Mostrar(this, $"Efectivo Contado: Gs. {montoContado:N0}\nDiferencia (Descuadre): Gs. {diferencia:N0}\n\n¿Estás seguro de cerrar el turno con estos valores?", "Confirmar Cierre", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
             if (respuesta == DialogResult.Yes)
             {
@@ -174,7 +178,7 @@ namespace AsuFit.Presentacion
                     if (exito)
                     {
                         frmResumenArqueo frmResumen = new frmResumenArqueo(idTurno, nombreCajero, fechaApertura, ingTrans, ingEfectivo, fondoInicial, gastos, totalEsperado, montoContado, diferencia);
-                        frmResumen.ShowDialog();
+                        frmResumen.ShowDialog(this);
 
                         this.DialogResult = DialogResult.OK;
                         this.Close();
@@ -182,14 +186,17 @@ namespace AsuFit.Presentacion
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("Error al cerrar la caja: " + ex.Message, "Error Crítico", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MensajeAsuFit.Mostrar("Error al cerrar la caja: " + ex.Message, "Error Crítico", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
         }
 
         private void txtMontoContado_KeyPress(object sender, KeyPressEventArgs e)
         {
-            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar)) e.Handled = true;
+            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar))
+            {
+                e.Handled = true;
+            }
         }
     }
 }
