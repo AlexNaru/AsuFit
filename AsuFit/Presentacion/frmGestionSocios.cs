@@ -135,7 +135,7 @@ namespace AsuFit.Presentacion
         #endregion
 
         #region 3. BÚSQUEDA Y CARGA DE DATOS
-        // Carga los registros de socios desde la base de datos según el estado seleccionado
+        // Carga la colección de socios desde la base de datos según el filtro de estado lógico.
         private void CargarGrilla()
         {
             SocioNegocio negocio = new SocioNegocio();
@@ -147,15 +147,20 @@ namespace AsuFit.Presentacion
             txtBuscar_TextChanged(null, null);
         }
 
-        // Filtra los datos en memoria sin requerir consultas adicionales a la BD
+        // Filtra la colección en memoria mitigando excepciones de sintaxis mediante el escape de delimitadores.
         private void txtBuscar_TextChanged(object sender, EventArgs e)
         {
             string textoBusqueda = txtBuscar.Text;
-            if (textoBusqueda == (string)txtBuscar.Tag) textoBusqueda = "";
+            if (textoBusqueda == (string)txtBuscar.Tag || string.IsNullOrWhiteSpace(textoBusqueda))
+            {
+                textoBusqueda = "";
+            }
 
             if (dgvSocios.DataSource is DataTable dt)
             {
-                dt.DefaultView.RowFilter = $"Cedula LIKE '%{textoBusqueda}%' OR Apellido LIKE '%{textoBusqueda}%' OR Nombre LIKE '%{textoBusqueda}%'";
+                string textoSeguro = textoBusqueda.Replace("'", "''");
+
+                dt.DefaultView.RowFilter = $"Cedula LIKE '%{textoSeguro}%' OR Apellido LIKE '%{textoSeguro}%' OR Nombre LIKE '%{textoSeguro}%'";
 
                 int cantidad = 0;
                 foreach (DataGridViewRow fila in dgvSocios.Rows)
@@ -166,7 +171,7 @@ namespace AsuFit.Presentacion
             }
         }
 
-        // Alterna la visualización entre socios activos e inactivos
+        // Intercepta la mutación del control de estado para desencadenar la recarga del origen de datos.
         private void chkActivo_Click(object sender, EventArgs e)
         {
             CargarGrilla();

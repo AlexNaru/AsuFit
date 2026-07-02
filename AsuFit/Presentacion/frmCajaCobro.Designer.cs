@@ -121,6 +121,7 @@
             this.txtBusquedaCliente.Margin = new System.Windows.Forms.Padding(2);
             this.txtBusquedaCliente.MaxLength = 10;
             this.txtBusquedaCliente.Name = "txtBusquedaCliente";
+            this.txtBusquedaCliente.ShortcutsEnabled = false;
             this.txtBusquedaCliente.Size = new System.Drawing.Size(115, 20);
             this.txtBusquedaCliente.TabIndex = 0;
             this.txtBusquedaCliente.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtBusquedaCliente_KeyPress);
@@ -222,6 +223,7 @@
             this.txtMontoRecibido.Margin = new System.Windows.Forms.Padding(2);
             this.txtMontoRecibido.MaxLength = 10;
             this.txtMontoRecibido.Name = "txtMontoRecibido";
+            this.txtMontoRecibido.ShortcutsEnabled = false;
             this.txtMontoRecibido.Size = new System.Drawing.Size(115, 20);
             this.txtMontoRecibido.TabIndex = 4;
             this.txtMontoRecibido.TextChanged += new System.EventHandler(this.txtMontoRecibido_TextChanged);

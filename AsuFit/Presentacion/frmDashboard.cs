@@ -487,7 +487,7 @@ namespace AsuFit.Presentacion
         private void btnGestionGastos_Click(object sender, EventArgs e)
         {
             ResaltarBoton(sender);
-            AbrirFormularioHijo(new frmGestionGastos());
+            AbrirFormularioHijo(new frmGestionGastos(usuarioActual));
         }
 
         private void btnArqueoCaja_Click(object sender, EventArgs e)

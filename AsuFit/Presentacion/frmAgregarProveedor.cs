@@ -15,6 +15,8 @@ namespace AsuFit.Presentacion
         public frmAgregarProveedor()
         {
             InitializeComponent();
+
+            this.Load += new EventHandler(frmAgregarProveedor_Load);
         }
         #endregion
 
@@ -26,6 +28,8 @@ namespace AsuFit.Presentacion
             // Selección por defecto y prevención de foco remanente
             if (cmbCategoria.Items.Count > 0) cmbCategoria.SelectedIndex = 0;
             cmbCategoria.DropDownClosed += QuitarFocoCombo_DropDownClosed;
+
+            SuscribirFiltrosDeSeguridad();
 
             CargarResumen();
 
@@ -168,18 +172,73 @@ namespace AsuFit.Presentacion
                 }
 
                 // Delegación a la capa de negocio
-                bool exito = negocioProveedor.GuardarProveedor(objProveedor);
+                string mensajeError = "";
+                bool exito = negocioProveedor.GuardarProveedor(objProveedor, out mensajeError);
 
                 if (exito)
                 {
                     MessageBox.Show("¡Proveedor registrado con éxito!", "Operación Exitosa", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     this.Close();
                 }
+                else
+                {
+                    MessageBox.Show(mensajeError, "Aviso de Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
             }
             catch (Exception ex)
             {
                 MessageBox.Show("Error al guardar el proveedor: " + ex.Message, "Excepción Crítica", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+        }
+        #endregion
+
+        #region 5. GESTIÓN DE SEGURIDAD Y RESTRICCIONES
+        private void SuscribirFiltrosDeSeguridad()
+        {
+            if (txtRuc != null) txtRuc.KeyPress += txtRuc_KeyPress;
+            if (txtTelefono != null) txtTelefono.KeyPress += txtTelefono_KeyPress;
+            if (txtCorreo != null) txtCorreo.KeyPress += txtEmail_KeyPress;
+
+            if (txtNombre != null) txtNombre.KeyPress += txtAntiInyeccion_KeyPress;
+            if (txtContacto != null) txtContacto.KeyPress += txtAntiInyeccion_KeyPress;
+            if (txtDireccion != null) txtDireccion.KeyPress += txtAntiInyeccion_KeyPress;
+            if (txtCiudad != null) txtCiudad.KeyPress += txtAntiInyeccion_KeyPress;
+
+            ContextMenuStrip menuVacio = new ContextMenuStrip();
+            foreach (Control contenedor in this.Controls)
+            {
+                AsignarBloqueosRecursivo(contenedor, menuVacio);
+            }
+        }
+
+        private void AsignarBloqueosRecursivo(Control contenedor, ContextMenuStrip menuVacio)
+        {
+            if (contenedor is TextBox txt)
+            {
+                txt.KeyDown += (s, e) => { if (e.Control && e.KeyCode == Keys.V || e.Shift && e.KeyCode == Keys.Insert) e.SuppressKeyPress = true; };
+                txt.ContextMenuStrip = menuVacio;
+            }
+            foreach (Control hijo in contenedor.Controls) AsignarBloqueosRecursivo(hijo, menuVacio);
+        }
+
+        private void txtRuc_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar) && e.KeyChar != '-') e.Handled = true;
+        }
+
+        private void txtTelefono_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar) && !char.IsWhiteSpace(e.KeyChar) && e.KeyChar != '+') e.Handled = true;
+        }
+
+        private void txtEmail_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (!char.IsControl(e.KeyChar) && !char.IsLetterOrDigit(e.KeyChar) && e.KeyChar != '@' && e.KeyChar != '.' && e.KeyChar != '-' && e.KeyChar != '_') e.Handled = true;
+        }
+
+        private void txtAntiInyeccion_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar == '\'' || e.KeyChar == '"' || e.KeyChar == ';') e.Handled = true;
         }
         #endregion
     }

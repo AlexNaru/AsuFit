@@ -80,24 +80,52 @@ namespace AsuFit.Negocio
             return respuestaBD;
         }
 
-        // Procesa el registro inicial del socio y retorna el identificador generado.
+        // Validar formato
+        private bool EsEmailValido(string email)
+        {
+            if (string.IsNullOrWhiteSpace(email) || email == "No especificado") return true;
+            return System.Text.RegularExpressions.Regex.IsMatch(email, @"^[^@\s]+@[^@\s]+\.[^@\s]+$", System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+        }
+
+        // Modificar firma y agregar validaciones
         public int InsertarSocioYObtenerId(Socio nuevoSocio, out string mensaje)
         {
             mensaje = string.Empty;
-
             if (string.IsNullOrWhiteSpace(nuevoSocio.Cedula) || string.IsNullOrWhiteSpace(nuevoSocio.Nombre))
             {
-                mensaje = "La Cédula y el Nombre son obligatorios.";
-                return 0;
+                mensaje = "Cédula y Nombre son obligatorios."; return 0;
             }
-
+            if (!EsEmailValido(nuevoSocio.Email))
+            {
+                mensaje = "El correo no es válido."; return 0;
+            }
+            if (objSocioDatos.ExisteCedula(nuevoSocio.Cedula, 0))
+            {
+                mensaje = "La cédula ya está registrada."; return 0;
+            }
             return objSocioDatos.InsertarSocioYObtenerId(nuevoSocio, out mensaje);
         }
 
-        // Valida y procesa la actualización de datos de un socio existente.
-        public bool EditarSocio(Socio obj)
+        // Agregar el parámetro 'out' a la firma para atrapar el error
+        public bool EditarSocio(Socio obj, out string mensaje)
         {
-            return objSocioDatos.EditarSocio(obj);
+            mensaje = string.Empty;
+            if (string.IsNullOrWhiteSpace(obj.Cedula) || string.IsNullOrWhiteSpace(obj.Nombre))
+            {
+                mensaje = "Cédula y Nombre son obligatorios."; return false;
+            }
+            if (!EsEmailValido(obj.Email))
+            {
+                mensaje = "El correo no es válido."; return false;
+            }
+            if (objSocioDatos.ExisteCedula(obj.Cedula, obj.IdSocio))
+            {
+                mensaje = "Cédula ya registrada por otro socio."; return false;
+            }
+
+            bool exito = objSocioDatos.EditarSocio(obj);
+            if (!exito) mensaje = "Error al intentar guardar en base de datos.";
+            return exito;
         }
 
         // Modifica el estado lógico de un socio en el sistema.
@@ -122,6 +150,29 @@ namespace AsuFit.Negocio
         public void RegistrarAsistencia(int idSocio)
         {
             objSocioDatos.RegistrarAsistencia(idSocio);
+        }
+
+        // Evalúa las fechas y estado lógico del socio para determinar la respuesta de la terminal de acceso.
+        public int EvaluarAccesoSocio(Socio socio, out string detalleVencimiento)
+        {
+            detalleVencimiento = string.Empty;
+
+            if (socio == null) return -1; // No existe en BD
+            if (socio.Estado != "Activo" || !socio.FechaVencimiento.HasValue) return 0; // Inactivo o sin plan
+
+            int diasRestantes = (socio.FechaVencimiento.Value.Date - DateTime.Now.Date).Days;
+            string fechaVenceTexto = socio.FechaVencimiento.Value.ToString("dd/MM/yyyy");
+
+            if (diasRestantes >= 0)
+            {
+                detalleVencimiento = $"Quedan {diasRestantes} días de plan. Vence el: {fechaVenceTexto}";
+                return diasRestantes <= 1 ? 2 : 1; // 2 = Alerta (Próximo a vencer), 1 = Acceso Normal
+            }
+            else
+            {
+                detalleVencimiento = $"Tu plan venció el día: {fechaVenceTexto}. Pasá por caja.";
+                return -2; // Plan Vencido
+            }
         }
         #endregion
 

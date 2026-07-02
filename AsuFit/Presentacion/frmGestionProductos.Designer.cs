@@ -179,6 +179,7 @@
             this.txtId.Location = new System.Drawing.Point(140, 161);
             this.txtId.Margin = new System.Windows.Forms.Padding(2);
             this.txtId.Name = "txtId";
+            this.txtId.ShortcutsEnabled = false;
             this.txtId.Size = new System.Drawing.Size(68, 20);
             this.txtId.TabIndex = 2;
             this.txtId.Visible = false;
@@ -281,7 +282,6 @@
             this.txtStock.MaxLength = 6;
             this.txtStock.Name = "txtStock";
             this.txtStock.ReadOnly = true;
-            this.txtStock.ShortcutsEnabled = false;
             this.txtStock.Size = new System.Drawing.Size(68, 20);
             this.txtStock.TabIndex = 8;
             // 
@@ -294,7 +294,6 @@
             this.txtPrecio.Margin = new System.Windows.Forms.Padding(2);
             this.txtPrecio.MaxLength = 10;
             this.txtPrecio.Name = "txtPrecio";
-            this.txtPrecio.ShortcutsEnabled = false;
             this.txtPrecio.Size = new System.Drawing.Size(68, 20);
             this.txtPrecio.TabIndex = 7;
             // 
@@ -307,7 +306,6 @@
             this.txtNombre.Margin = new System.Windows.Forms.Padding(2);
             this.txtNombre.MaxLength = 100;
             this.txtNombre.Name = "txtNombre";
-            this.txtNombre.ShortcutsEnabled = false;
             this.txtNombre.Size = new System.Drawing.Size(68, 20);
             this.txtNombre.TabIndex = 3;
             // 
@@ -337,7 +335,6 @@
             this.txtCodigo.Margin = new System.Windows.Forms.Padding(2);
             this.txtCodigo.MaxLength = 50;
             this.txtCodigo.Name = "txtCodigo";
-            this.txtCodigo.ShortcutsEnabled = false;
             this.txtCodigo.Size = new System.Drawing.Size(68, 20);
             this.txtCodigo.TabIndex = 1;
             // 
@@ -413,7 +410,6 @@
             this.txtBuscarProducto.Margin = new System.Windows.Forms.Padding(2);
             this.txtBuscarProducto.MaxLength = 100;
             this.txtBuscarProducto.Name = "txtBuscarProducto";
-            this.txtBuscarProducto.ShortcutsEnabled = false;
             this.txtBuscarProducto.Size = new System.Drawing.Size(328, 20);
             this.txtBuscarProducto.TabIndex = 0;
             this.txtBuscarProducto.Click += new System.EventHandler(this.txtBuscarProducto_TextChanged);

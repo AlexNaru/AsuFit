@@ -50,7 +50,9 @@
             this.txtCedula.ForeColor = System.Drawing.Color.White;
             this.txtCedula.Location = new System.Drawing.Point(242, 170);
             this.txtCedula.Margin = new System.Windows.Forms.Padding(2);
+            this.txtCedula.MaxLength = 8;
             this.txtCedula.Name = "txtCedula";
+            this.txtCedula.ShortcutsEnabled = false;
             this.txtCedula.Size = new System.Drawing.Size(68, 20);
             this.txtCedula.TabIndex = 0;
             this.txtCedula.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;

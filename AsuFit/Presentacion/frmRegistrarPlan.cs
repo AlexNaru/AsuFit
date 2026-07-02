@@ -41,14 +41,6 @@ namespace AsuFit.Presentacion
         {
             ConfigurarTemaOscuro();
 
-            txtNombrePlan.MaxLength = 100;
-            txtPrecio.MaxLength = 9;
-            txtDuracionDias.MaxLength = 4;
-
-            txtNombrePlan.ShortcutsEnabled = false;
-            txtPrecio.ShortcutsEnabled = false;
-            txtDuracionDias.ShortcutsEnabled = false;
-
             SuscribirFiltrosDeSeguridad();
 
             if (planAEditar != null)

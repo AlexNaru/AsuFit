@@ -18,6 +18,9 @@ namespace AsuFit.Presentacion
         public frmProveedores(Usuario userLogueado)
         {
             InitializeComponent();
+
+            this.Load += new EventHandler(frmProveedores_Load);
+
             usuarioActual = userLogueado;
             dgvProveedores.AutoGenerateColumns = false;
         }
@@ -195,7 +198,14 @@ namespace AsuFit.Presentacion
             {
                 if (txt.Text != textoAyuda && txt.ForeColor == Color.Silver)
                 {
-                    string entradaUsuario = txt.Text.Replace(textoAyuda, "");
+                    string entradaUsuario = txt.Text;
+
+                    // Solo quitamos el bloque exacto del placeholder, sin destruir caracteres similares
+                    if (entradaUsuario.StartsWith(textoAyuda))
+                        entradaUsuario = entradaUsuario.Substring(textoAyuda.Length);
+                    else if (entradaUsuario.EndsWith(textoAyuda))
+                        entradaUsuario = entradaUsuario.Substring(0, entradaUsuario.Length - textoAyuda.Length);
+
                     txt.ForeColor = Color.White;
                     txt.Text = entradaUsuario;
                     txt.SelectionStart = txt.Text.Length;
@@ -306,7 +316,8 @@ namespace AsuFit.Presentacion
                 objProveedor.Ciudad = txtCiudad.Text.Trim();
                 objProveedor.Estado = chkActivo.Checked ? "Activo" : "Inactivo";
 
-                bool exito = negocio.GuardarProveedor(objProveedor);
+                string mensajeError = "";
+                bool exito = negocio.GuardarProveedor(objProveedor, out mensajeError);
 
                 if (exito)
                 {
@@ -316,6 +327,10 @@ namespace AsuFit.Presentacion
 
                     LimpiarFormulario();
                     CargarGrilla();
+                }
+                else
+                {
+                    MessageBox.Show(mensajeError, "Aviso de Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
             }
             catch (Exception ex)

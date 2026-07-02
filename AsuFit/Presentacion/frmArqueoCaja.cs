@@ -17,6 +17,9 @@ namespace AsuFit.Presentacion
         public frmArqueoCaja(Usuario user)
         {
             InitializeComponent();
+
+            this.Load += new EventHandler(frmArqueoCaja_Load);
+
             usuarioActual = user;
         }
         #endregion
@@ -219,7 +222,16 @@ namespace AsuFit.Presentacion
         private void btnHistorialArqueos_Click(object sender, EventArgs e)
         {
             frmHistorialArqueos frm = new frmHistorialArqueos();
-            frm.ShowDialog();
+
+            // Aplicamos la misma escala dinámica heredada de la configuración global
+            float escalaActual = Properties.Settings.Default.EscalaInterfaz;
+            frm.Scale(new SizeF(escalaActual, escalaActual));
+
+            // Centramos el pop-up respecto a la ventana padre
+            frm.StartPosition = FormStartPosition.CenterParent;
+
+            // Al pasarle 'this', le aseguramos a Windows quién es el padre exacto para el centrado
+            frm.ShowDialog(this);
         }
         #endregion
     }

@@ -16,6 +16,9 @@ namespace AsuFit.Presentacion
         public frmGestionPlanes(Usuario userLogueado)
         {
             InitializeComponent();
+
+            this.Load += new EventHandler(frmGestionPlanes_Load);
+
             usuarioActual = userLogueado;
             dgvPlanes.AutoGenerateColumns = false;
         }

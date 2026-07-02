@@ -41,7 +41,7 @@
             // 
             this.btnConfirmarCierre.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnConfirmarCierre.Location = new System.Drawing.Point(11, 175);
-            this.btnConfirmarCierre.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btnConfirmarCierre.Margin = new System.Windows.Forms.Padding(2);
             this.btnConfirmarCierre.Name = "btnConfirmarCierre";
             this.btnConfirmarCierre.Size = new System.Drawing.Size(152, 24);
             this.btnConfirmarCierre.TabIndex = 28;
@@ -53,7 +53,7 @@
             // 
             this.btnCancelar.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnCancelar.Location = new System.Drawing.Point(34, 143);
-            this.btnCancelar.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btnCancelar.Margin = new System.Windows.Forms.Padding(2);
             this.btnCancelar.Name = "btnCancelar";
             this.btnCancelar.Size = new System.Drawing.Size(107, 24);
             this.btnCancelar.TabIndex = 27;
@@ -64,7 +64,7 @@
             // txtMontoContado
             // 
             this.txtMontoContado.Location = new System.Drawing.Point(11, 101);
-            this.txtMontoContado.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.txtMontoContado.Margin = new System.Windows.Forms.Padding(2);
             this.txtMontoContado.MaxLength = 10;
             this.txtMontoContado.Name = "txtMontoContado";
             this.txtMontoContado.ShortcutsEnabled = false;
@@ -85,7 +85,7 @@
             // txtCajeroCierre
             // 
             this.txtCajeroCierre.Location = new System.Drawing.Point(11, 51);
-            this.txtCajeroCierre.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.txtCajeroCierre.Margin = new System.Windows.Forms.Padding(2);
             this.txtCajeroCierre.Name = "txtCajeroCierre";
             this.txtCajeroCierre.ReadOnly = true;
             this.txtCajeroCierre.Size = new System.Drawing.Size(109, 20);
@@ -123,7 +123,7 @@
             this.Controls.Add(this.txtCajeroCierre);
             this.Controls.Add(this.lblEstadoCaja);
             this.Controls.Add(this.label10);
-            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "frmCerrarCaja";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "frmCerrarCaja";

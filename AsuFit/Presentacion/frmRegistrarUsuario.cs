@@ -246,7 +246,7 @@ namespace AsuFit.Presentacion
             }
         }
 
-        // Intercepta la pulsación de retorno del carro (Enter) para validar sintaxis antes de transferir el foco al control adyacente.
+        // Intercepta la pulsación de la tecla Enter para gestionar el salto secuencial entre campos de entrada de la UI.
         private void NavegacionEnter_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter)
@@ -270,17 +270,6 @@ namespace AsuFit.Presentacion
                         return;
                     }
 
-                    if (txtActivo.Name == "txtEmail")
-                    {
-                        string patronEmail = @"^[^@\s]+@[^@\s]+\.[^@\s]+$";
-                        if (!Regex.IsMatch(txtEmail.Text, patronEmail))
-                        {
-                            MessageBox.Show("Por favor, ingresá un correo válido (debe contener '@' y un punto).", "Validación de Email", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                            txtEmail.Focus();
-                            return;
-                        }
-                    }
-
                     if (txtActivo.Name == "txtConfirmarPassword")
                     {
                         if (txtPassword.Text != txtConfirmarPassword.Text)
@@ -301,13 +290,13 @@ namespace AsuFit.Presentacion
             }
         }
 
-        // Transfiere el foco al selector de estado tras definir la designación de rol.
+        // Transfiere el enfoque operativo al componente de activación lógica tras consolidar el rol.
         private void cmbRol_SelectionChangeCommitted(object sender, EventArgs e)
         {
             chkActivo.Focus();
         }
 
-        // Mantiene la continuidad de la navegación direccional desde controles tipo ComboBox.
+        // Resguarda el flujo direccional del carro cuando se interactúa desde el combo desplegable.
         private void cmbRol_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter)
@@ -326,7 +315,7 @@ namespace AsuFit.Presentacion
         #endregion
 
         #region 6. LÓGICA DE VALIDACIÓN Y PERSISTENCIA
-        // Orquesta las validaciones de negocio, evalúa unicidad, hashea credenciales y delega la operación DML a la capa de Negocio.
+        // Empaqueta los datos de la interfaz y delega el flujo completo a la capa de Negocio para su validación y persistencia.
         private void btnGuardar_Click(object sender, EventArgs e)
         {
             if (!puedeGuardar)
@@ -342,24 +331,7 @@ namespace AsuFit.Presentacion
                 return;
             }
 
-            string patronMail = @"^[^@\s]+@[^@\s]+\.[^@\s]+$";
-            if (!Regex.IsMatch(txtEmail.Text, patronMail))
-            {
-                MessageBox.Show("Por favor, ingresá un correo válido.", "Validación de Email", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                txtEmail.Focus();
-                return;
-            }
-
             UsuarioNegocio negocio = new UsuarioNegocio();
-            int idActual = usuarioAEditar != null ? usuarioAEditar.IdUsuario : 0;
-
-            if (negocio.ExisteUsername(txtUsername.Text.Trim(), idActual))
-            {
-                MessageBox.Show("El nombre de usuario (Username) ya está en uso. Elegí otro.", "Usuario Duplicado", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                txtUsername.Focus();
-                return;
-            }
-
             bool exito = false;
             string mensajeError = string.Empty;
 
@@ -371,7 +343,6 @@ namespace AsuFit.Presentacion
                 nuevo.Password = AsuFit.Negocio.SeguridadHelper.HashearContrasena(txtPassword.Text.Trim());
                 nuevo.Rol = cmbRol.Text;
                 nuevo.Email = txtEmail.Text.Trim();
-
                 nuevo.RespuestaSeguridad = AsuFit.Negocio.SeguridadHelper.HashearContrasena(txtRespuesta.Text.Trim());
                 nuevo.PreguntaSeguridad = lblPreguntaSeguridad.Text;
                 nuevo.Estado = chkActivo.Checked ? "Activo" : "Inactivo";
@@ -402,7 +373,6 @@ namespace AsuFit.Presentacion
                 usuarioAEditar.Password = AsuFit.Negocio.SeguridadHelper.HashearContrasena(txtPassword.Text.Trim());
                 usuarioAEditar.Rol = cmbRol.Text;
                 usuarioAEditar.Email = txtEmail.Text.Trim();
-
                 usuarioAEditar.RespuestaSeguridad = AsuFit.Negocio.SeguridadHelper.HashearContrasena(txtRespuesta.Text.Trim());
                 usuarioAEditar.PreguntaSeguridad = lblPreguntaSeguridad.Text;
                 usuarioAEditar.Estado = chkActivo.Checked ? "Activo" : "Inactivo";
@@ -418,7 +388,7 @@ namespace AsuFit.Presentacion
 
             if (!exito)
             {
-                MessageBox.Show(mensajeError, "Error de Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show(mensajeError, "Aviso de Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
 

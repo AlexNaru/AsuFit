@@ -14,6 +14,7 @@ namespace AsuFit.Presentacion
         public frmReportes()
         {
             InitializeComponent();
+            this.Load += new EventHandler(frmReportes_Load);
             dgvIngresos.AutoGenerateColumns = false;
             dgvTopProductos.AutoGenerateColumns = false;
         }

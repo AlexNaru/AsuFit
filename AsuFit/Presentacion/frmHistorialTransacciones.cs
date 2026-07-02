@@ -14,6 +14,7 @@ namespace AsuFit.Presentacion
         public frmHistorialTransacciones()
         {
             InitializeComponent();
+            this.Load += new EventHandler(frmHistorialTransacciones_Load);
             dgvVentas.AutoGenerateColumns = false;
 
             ConfigurarTemaOscuroGrilla(dgvVentas);
@@ -111,7 +112,14 @@ namespace AsuFit.Presentacion
             {
                 if (txt.Text != textoAyuda && txt.ForeColor == Color.Silver)
                 {
-                    string entradaUsuario = txt.Text.Replace(textoAyuda, "");
+                    string entradaUsuario = txt.Text;
+
+                    // Solo quitamos el bloque exacto del placeholder, sin destruir caracteres similares
+                    if (entradaUsuario.StartsWith(textoAyuda))
+                        entradaUsuario = entradaUsuario.Substring(textoAyuda.Length);
+                    else if (entradaUsuario.EndsWith(textoAyuda))
+                        entradaUsuario = entradaUsuario.Substring(0, entradaUsuario.Length - textoAyuda.Length);
+
                     txt.ForeColor = Color.White;
                     txt.Text = entradaUsuario;
                     txt.SelectionStart = txt.Text.Length;

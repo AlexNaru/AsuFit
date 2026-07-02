@@ -21,6 +21,7 @@ namespace AsuFit.Presentacion
         public frmCerrarCaja(int idTurno, string nombreCajero, DateTime fechaApertura, decimal fondoInicial, decimal ingEfectivo, decimal ingTrans, decimal gastos, decimal totalEsperado)
         {
             InitializeComponent();
+            this.Load += new EventHandler(frmCerrarCaja_Load);
             this.idTurno = idTurno;
             this.nombreCajero = nombreCajero;
             this.fechaApertura = fechaApertura;
@@ -40,8 +41,8 @@ namespace AsuFit.Presentacion
             txtCajeroCierre.ReadOnly = true;
             txtCajeroCierre.Text = nombreCajero;
 
-            txtCajeroCierre.SelectionStart = txtCajeroCierre.Text.Length;
-            txtCajeroCierre.SelectionLength = 0;
+            // El cursor rebota a la caja de efectivo contado
+            txtCajeroCierre.Enter += delegate { this.ActiveControl = txtMontoContado; };
 
             this.ActiveControl = txtMontoContado;
 

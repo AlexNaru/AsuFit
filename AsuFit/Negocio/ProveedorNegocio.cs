@@ -16,10 +16,18 @@ namespace AsuFit.Negocio
             return datos.Listar();
         }
 
-        // Procesa y delega el registro o actualización de un proveedor.
-        public bool GuardarProveedor(Proveedor obj)
+        // Procesa y delega el registro o actualización de un proveedor, emitiendo el diagnóstico de la operación mediante referencia.
+        public bool GuardarProveedor(Proveedor obj, out string mensaje)
         {
-            return datos.Guardar(obj);
+            mensaje = string.Empty;
+            bool exito = datos.Guardar(obj);
+
+            if (!exito)
+            {
+                mensaje = "Ocurrió un error al intentar guardar el proveedor en la base de datos.";
+            }
+
+            return exito;
         }
 
         // Modifica el estado lógico de un proveedor en la base de datos.

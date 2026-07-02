@@ -25,6 +25,9 @@ namespace AsuFit.Presentacion
         public frmGestionProductos(Usuario userLogueado)
         {
             InitializeComponent();
+
+            this.Load += new EventHandler(frmGestionProductos_Load);
+
             usuarioActual = userLogueado;
             dgvProductos.AutoGenerateColumns = false;
 
@@ -115,7 +118,14 @@ namespace AsuFit.Presentacion
             {
                 if (txt.Text != textoAyuda && txt.ForeColor == Color.Silver)
                 {
-                    string entradaUsuario = txt.Text.Replace(textoAyuda, "");
+                    string entradaUsuario = txt.Text;
+
+                    // Solo quitamos el bloque exacto del placeholder, sin destruir caracteres similares
+                    if (entradaUsuario.StartsWith(textoAyuda))
+                        entradaUsuario = entradaUsuario.Substring(textoAyuda.Length);
+                    else if (entradaUsuario.EndsWith(textoAyuda))
+                        entradaUsuario = entradaUsuario.Substring(0, entradaUsuario.Length - textoAyuda.Length);
+
                     txt.ForeColor = Color.White;
                     txt.Text = entradaUsuario;
                     txt.SelectionStart = txt.Text.Length;
@@ -321,19 +331,19 @@ namespace AsuFit.Presentacion
 
                 txtId.Text = fila.Cells["colProductoId"].Value.ToString();
 
-                txtCodigo.Text = fila.Cells["colProductoCodigo"].Value.ToString();
                 txtCodigo.ForeColor = Color.White;
+                txtCodigo.Text = fila.Cells["colProductoCodigo"].Value.ToString();
 
-                txtNombre.Text = fila.Cells["colProductoNombre"].Value.ToString();
                 txtNombre.ForeColor = Color.White;
+                txtNombre.Text = fila.Cells["colProductoNombre"].Value.ToString();
 
                 cmbCategoria.Text = fila.Cells["colProductoCategoria"].Value.ToString();
 
-                txtPrecio.Text = Convert.ToDecimal(fila.Cells["colProductoPrecioVenta"].Value).ToString("N0");
                 txtPrecio.ForeColor = Color.White;
+                txtPrecio.Text = Math.Round(Convert.ToDecimal(fila.Cells["colProductoPrecioVenta"].Value), 0).ToString();
 
-                txtStock.Text = fila.Cells["colProductoStock"].Value.ToString();
                 txtStock.ForeColor = Color.White;
+                txtStock.Text = fila.Cells["colProductoStock"].Value.ToString();
 
                 if (fila.Cells["colProductoProveedor"].Value != DBNull.Value && fila.Cells["colProductoProveedor"].Value != null)
                 {
@@ -358,7 +368,10 @@ namespace AsuFit.Presentacion
 
                 if (File.Exists(rutaFoto))
                 {
-                    picFoto.Image = Image.FromFile(rutaFoto);
+                    using (Image imgTemp = Image.FromFile(rutaFoto))
+                    {
+                        picFoto.Image = new Bitmap(imgTemp);
+                    }
                 }
                 else
                 {
@@ -618,12 +631,35 @@ namespace AsuFit.Presentacion
             }
         }
 
-        // Invalida la ejecución de inserción desde el portapapeles
+        // Intercepta el pegado (Ctrl+V), sanitiza el contenido del portapapeles y lo inyecta de forma segura.
         private void BloquearPegado_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.Control && e.KeyCode == Keys.V || e.Shift && e.KeyCode == Keys.Insert)
             {
-                e.SuppressKeyPress = true;
+                e.SuppressKeyPress = true; // Invalida el pegado nativo (inseguro) de Windows
+
+                if (sender is TextBox txt && Clipboard.ContainsText())
+                {
+                    string textoPegado = Clipboard.GetText();
+
+                    // 1. Sanitización estricta: Elimina comillas, punto y coma, y saltos de línea
+                    textoPegado = textoPegado.Replace("'", "").Replace("\"", "").Replace(";", "").Replace("\r", "").Replace("\n", "");
+
+                    // 2. Control de Desbordamiento de Memoria (Respeta tu MaxLength)
+                    int limite = txt.MaxLength > 0 ? txt.MaxLength : 32767;
+                    int espacioDisponible = limite - (txt.Text.Length - txt.SelectionLength);
+
+                    if (espacioDisponible > 0)
+                    {
+                        if (textoPegado.Length > espacioDisponible)
+                        {
+                            textoPegado = textoPegado.Substring(0, espacioDisponible);
+                        }
+
+                        // 3. Inyección segura en la posición exacta del cursor
+                        txt.SelectedText = textoPegado;
+                    }
+                }
             }
         }
 

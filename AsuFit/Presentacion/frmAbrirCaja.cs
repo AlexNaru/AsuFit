@@ -14,6 +14,7 @@ namespace AsuFit.Presentacion
         public frmAbrirCaja(Usuario user)
         {
             InitializeComponent();
+            this.Load += new EventHandler(frmAbrirCaja_Load);
             usuarioActual = user;
         }
 
@@ -24,6 +25,10 @@ namespace AsuFit.Presentacion
             CentrarFormulario();
 
             txtCajero.ReadOnly = true;
+
+            // El cursor rebota a la caja de dinero inicial
+            txtCajero.Enter += delegate { this.ActiveControl = txtMontoInicial; };
+
             if (usuarioActual != null)
             {
                 txtCajero.Text = usuarioActual.NombreCompleto;

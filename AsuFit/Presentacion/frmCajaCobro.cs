@@ -46,6 +46,9 @@ namespace AsuFit.Presentacion
                 txtCajero.Text = "Cajero: Administrador (No detectado)";
             }
 
+            // El cursor rebota hacia el buscador de clientes
+            txtCajero.Enter += delegate { this.ActiveControl = txtBusquedaCliente; };
+
             cmbTipoComprobante.SelectedItem = "Ticket";
             cmbMetodoPago.SelectedItem = "Efectivo";
 

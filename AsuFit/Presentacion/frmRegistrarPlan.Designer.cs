@@ -104,6 +104,7 @@
             // txtDuracionDias
             // 
             this.txtDuracionDias.Location = new System.Drawing.Point(11, 153);
+            this.txtDuracionDias.MaxLength = 4;
             this.txtDuracionDias.Name = "txtDuracionDias";
             this.txtDuracionDias.ShortcutsEnabled = false;
             this.txtDuracionDias.Size = new System.Drawing.Size(113, 20);
@@ -112,6 +113,7 @@
             // txtPrecio
             // 
             this.txtPrecio.Location = new System.Drawing.Point(11, 105);
+            this.txtPrecio.MaxLength = 9;
             this.txtPrecio.Name = "txtPrecio";
             this.txtPrecio.ShortcutsEnabled = false;
             this.txtPrecio.Size = new System.Drawing.Size(113, 20);
@@ -120,6 +122,7 @@
             // txtNombrePlan
             // 
             this.txtNombrePlan.Location = new System.Drawing.Point(11, 57);
+            this.txtNombrePlan.MaxLength = 100;
             this.txtNombrePlan.Name = "txtNombrePlan";
             this.txtNombrePlan.ShortcutsEnabled = false;
             this.txtNombrePlan.Size = new System.Drawing.Size(113, 20);

@@ -343,6 +343,7 @@
             this.txtId.Location = new System.Drawing.Point(224, 249);
             this.txtId.Margin = new System.Windows.Forms.Padding(2);
             this.txtId.Name = "txtId";
+            this.txtId.ShortcutsEnabled = false;
             this.txtId.Size = new System.Drawing.Size(120, 20);
             this.txtId.TabIndex = 18;
             this.txtId.Visible = false;

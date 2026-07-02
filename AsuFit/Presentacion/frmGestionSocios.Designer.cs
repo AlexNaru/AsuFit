@@ -65,6 +65,7 @@
             this.txtBuscar.Margin = new System.Windows.Forms.Padding(2);
             this.txtBuscar.MaxLength = 100;
             this.txtBuscar.Name = "txtBuscar";
+            this.txtBuscar.ShortcutsEnabled = false;
             this.txtBuscar.Size = new System.Drawing.Size(306, 20);
             this.txtBuscar.TabIndex = 0;
             this.txtBuscar.TextChanged += new System.EventHandler(this.txtBuscar_TextChanged);

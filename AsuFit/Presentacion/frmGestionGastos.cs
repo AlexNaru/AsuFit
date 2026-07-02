@@ -9,9 +9,13 @@ namespace AsuFit.Presentacion
     public partial class frmGestionGastos : Form
     {
         #region 1. VARIABLES GLOBALES Y CONSTRUCTOR
-        public frmGestionGastos()
+        private Usuario usuarioActual;
+
+        public frmGestionGastos(Usuario userLogueado)
         {
             InitializeComponent();
+            this.Load += new EventHandler(frmGestionGastos_Load);
+            usuarioActual = userLogueado;
             dgvGastos.AutoGenerateColumns = false;
 
             ConfigurarTemaOscuroGrilla(dgvGastos);
@@ -92,7 +96,14 @@ namespace AsuFit.Presentacion
             {
                 if (txt.Text != textoAyuda && txt.ForeColor == Color.Silver)
                 {
-                    string entradaUsuario = txt.Text.Replace(textoAyuda, "");
+                    string entradaUsuario = txt.Text;
+
+                    // Solo quitamos el bloque exacto del placeholder, sin destruir caracteres similares
+                    if (entradaUsuario.StartsWith(textoAyuda))
+                        entradaUsuario = entradaUsuario.Substring(textoAyuda.Length);
+                    else if (entradaUsuario.EndsWith(textoAyuda))
+                        entradaUsuario = entradaUsuario.Substring(0, entradaUsuario.Length - textoAyuda.Length);
+
                     txt.ForeColor = Color.White;
                     txt.Text = entradaUsuario;
                     txt.SelectionStart = txt.Text.Length;
@@ -221,7 +232,7 @@ namespace AsuFit.Presentacion
                 nuevoGasto.Monto = Convert.ToDecimal(montoReal.Replace(".", ""));
 
                 // Asignación estática temporal del usuario que registra el movimiento
-                nuevoGasto.UsuarioRegistra = "Admin";
+                nuevoGasto.UsuarioRegistra = usuarioActual.NombreCompleto;
 
                 GastoNegocio negocio = new GastoNegocio();
                 string mensaje;
@@ -287,23 +298,37 @@ namespace AsuFit.Presentacion
         {
             if (e.Control && e.KeyCode == Keys.V || e.Shift && e.KeyCode == Keys.Insert)
             {
-                e.SuppressKeyPress = true;
+                e.SuppressKeyPress = true; // Invalida el pegado nativo (inseguro) de Windows
+
+                if (sender is TextBox txt && Clipboard.ContainsText())
+                {
+                    string textoPegado = Clipboard.GetText();
+
+                    // Sanitización estricta: Elimina comillas, punto y coma, y saltos de línea
+                    textoPegado = textoPegado.Replace("'", "").Replace("\"", "").Replace(";", "").Replace("\r", "").Replace("\n", "");
+
+                    // Control de Desbordamiento de Memoria
+                    int limite = txt.MaxLength > 0 ? txt.MaxLength : 32767;
+                    int espacioDisponible = limite - (txt.Text.Length - txt.SelectionLength);
+
+                    if (espacioDisponible > 0)
+                    {
+                        if (textoPegado.Length > espacioDisponible)
+                        {
+                            textoPegado = textoPegado.Substring(0, espacioDisponible);
+                        }
+
+                        // Inyección segura en la posición exacta del cursor
+                        txt.SelectedText = textoPegado;
+                    }
+                }
             }
         }
 
-        // Restringe el campo para que solo acepte dígitos numéricos y la tecla de borrar, barriendo el texto de ayuda.
+        // Valida la entrada del usuario permitiendo exclusivamente dígitos numéricos, puntos separadores de miles y caracteres de control.
         private void txtSoloNumeros_KeyPress(object sender, KeyPressEventArgs e)
         {
-            TextBox txt = sender as TextBox;
-
-            // Si el usuario empieza a tipear números teniendo el texto de ayuda activo
-            if (txt != null && txt.Text == (string)txt.Tag && char.IsDigit(e.KeyChar))
-            {
-                txt.Text = "";
-                txt.ForeColor = Color.White;
-            }
-
-            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar))
+            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar) && e.KeyChar != '.')
             {
                 e.Handled = true;
             }

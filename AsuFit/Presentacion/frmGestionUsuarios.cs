@@ -17,6 +17,9 @@ namespace AsuFit.Presentacion
         public frmGestionUsuarios(Usuario userLogueado)
         {
             InitializeComponent();
+
+            this.Load += new EventHandler(frmGestionUsuarios_Load);
+
             usuarioActual = userLogueado;
             dgvUsuarios.AutoGenerateColumns = false;
         }

@@ -73,6 +73,7 @@
             this.txtCedula.Margin = new System.Windows.Forms.Padding(2);
             this.txtCedula.MaxLength = 8;
             this.txtCedula.Name = "txtCedula";
+            this.txtCedula.ShortcutsEnabled = false;
             this.txtCedula.Size = new System.Drawing.Size(103, 20);
             this.txtCedula.TabIndex = 0;
             this.txtCedula.KeyDown += new System.Windows.Forms.KeyEventHandler(this.NavegacionEnter_KeyDown);
@@ -86,6 +87,7 @@
             this.txtNombre.Margin = new System.Windows.Forms.Padding(2);
             this.txtNombre.MaxLength = 100;
             this.txtNombre.Name = "txtNombre";
+            this.txtNombre.ShortcutsEnabled = false;
             this.txtNombre.Size = new System.Drawing.Size(103, 20);
             this.txtNombre.TabIndex = 1;
             this.txtNombre.KeyDown += new System.Windows.Forms.KeyEventHandler(this.NavegacionEnter_KeyDown);
@@ -99,6 +101,7 @@
             this.txtApellido.Margin = new System.Windows.Forms.Padding(2);
             this.txtApellido.MaxLength = 100;
             this.txtApellido.Name = "txtApellido";
+            this.txtApellido.ShortcutsEnabled = false;
             this.txtApellido.Size = new System.Drawing.Size(103, 20);
             this.txtApellido.TabIndex = 2;
             this.txtApellido.KeyDown += new System.Windows.Forms.KeyEventHandler(this.NavegacionEnter_KeyDown);
@@ -127,6 +130,7 @@
             this.txtEmail.Margin = new System.Windows.Forms.Padding(2);
             this.txtEmail.MaxLength = 100;
             this.txtEmail.Name = "txtEmail";
+            this.txtEmail.ShortcutsEnabled = false;
             this.txtEmail.Size = new System.Drawing.Size(103, 20);
             this.txtEmail.TabIndex = 6;
             this.txtEmail.KeyDown += new System.Windows.Forms.KeyEventHandler(this.NavegacionEnter_KeyDown);
@@ -141,6 +145,7 @@
             this.txtTelefono.Margin = new System.Windows.Forms.Padding(2);
             this.txtTelefono.MaxLength = 50;
             this.txtTelefono.Name = "txtTelefono";
+            this.txtTelefono.ShortcutsEnabled = false;
             this.txtTelefono.Size = new System.Drawing.Size(103, 20);
             this.txtTelefono.TabIndex = 5;
             this.txtTelefono.KeyDown += new System.Windows.Forms.KeyEventHandler(this.NavegacionEnter_KeyDown);
@@ -154,6 +159,7 @@
             this.txtContactoEmergencia.Margin = new System.Windows.Forms.Padding(2);
             this.txtContactoEmergencia.MaxLength = 100;
             this.txtContactoEmergencia.Name = "txtContactoEmergencia";
+            this.txtContactoEmergencia.ShortcutsEnabled = false;
             this.txtContactoEmergencia.Size = new System.Drawing.Size(103, 20);
             this.txtContactoEmergencia.TabIndex = 0;
             this.txtContactoEmergencia.KeyDown += new System.Windows.Forms.KeyEventHandler(this.NavegacionEnter_KeyDown);
@@ -167,6 +173,7 @@
             this.txtTelefonoEmergencia.Margin = new System.Windows.Forms.Padding(2);
             this.txtTelefonoEmergencia.MaxLength = 50;
             this.txtTelefonoEmergencia.Name = "txtTelefonoEmergencia";
+            this.txtTelefonoEmergencia.ShortcutsEnabled = false;
             this.txtTelefonoEmergencia.Size = new System.Drawing.Size(103, 20);
             this.txtTelefonoEmergencia.TabIndex = 1;
             this.txtTelefonoEmergencia.KeyDown += new System.Windows.Forms.KeyEventHandler(this.NavegacionEnter_KeyDown);
@@ -325,6 +332,7 @@
             this.txtRuc.Margin = new System.Windows.Forms.Padding(2);
             this.txtRuc.MaxLength = 10;
             this.txtRuc.Name = "txtRuc";
+            this.txtRuc.ShortcutsEnabled = false;
             this.txtRuc.Size = new System.Drawing.Size(103, 20);
             this.txtRuc.TabIndex = 7;
             // 

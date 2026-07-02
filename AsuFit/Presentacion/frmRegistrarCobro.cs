@@ -18,6 +18,10 @@ namespace AsuFit.Presentacion
         public frmRegistrarCobro(Usuario userLogueado)
         {
             InitializeComponent();
+
+            // FIX ARQUITECTÓNICO: Suscripción manual del evento Load para garantizar el orden de renderizado
+            this.Load += new EventHandler(frmRegistrarCobro_Load);
+
             usuarioActual = userLogueado;
 
             // Bloquea la autogeneración de columnas para mantener la estructura del diseñador
@@ -35,9 +39,18 @@ namespace AsuFit.Presentacion
             txtMonto.ForeColor = Color.White;
             txtMonto.ReadOnly = true;
             txtMonto.Enter += delegate { this.Focus(); };
+        }
+        #endregion
 
+        #region 2. INICIALIZACIÓN Y CARGA DE DATOS
+        // Orquesta el arranque del formulario, inyectando límites de memoria y renderizando los listados principales.
+        private void frmRegistrarCobro_Load(object sender, EventArgs e)
+        {
             // Aplica la paleta de colores del sistema a la grilla
             ConfigurarTemaOscuroGrilla(dgvSocios);
+
+            // Activación del blindaje transaccional
+            SuscribirFiltrosDeSeguridad();
 
             CargarGrillaSocios();
 
@@ -47,15 +60,12 @@ namespace AsuFit.Presentacion
             // Establece el texto por defecto en el selector de planes
             if (cmbPlanes.Items.Count > 0) cmbPlanes.SelectedIndex = 0;
 
-            // Activación del blindaje transaccional
-            SuscribirFiltrosDeSeguridad();
-
             // Libera el foco inicial de los controles
             this.ActiveControl = null;
         }
         #endregion
 
-        #region 2. ESTILOS VISUALES Y COMPORTAMIENTO UI
+        #region 3. ESTILOS VISUALES Y COMPORTAMIENTO UI
         // Personaliza el dibujado de los elementos del ComboBox
         private void CmbPlanes_DrawItem(object sender, DrawItemEventArgs e)
         {
@@ -116,7 +126,14 @@ namespace AsuFit.Presentacion
             {
                 if (txt.Text != textoAyuda && txt.ForeColor == Color.Silver)
                 {
-                    string entradaUsuario = txt.Text.Replace(textoAyuda, "");
+                    string entradaUsuario = txt.Text;
+
+                    // Solo quitamos el bloque exacto del placeholder, sin destruir caracteres similares
+                    if (entradaUsuario.StartsWith(textoAyuda))
+                        entradaUsuario = entradaUsuario.Substring(textoAyuda.Length);
+                    else if (entradaUsuario.EndsWith(textoAyuda))
+                        entradaUsuario = entradaUsuario.Substring(0, entradaUsuario.Length - textoAyuda.Length);
+
                     txt.ForeColor = Color.White;
                     txt.Text = entradaUsuario;
                     txt.SelectionStart = txt.Text.Length;
@@ -166,7 +183,7 @@ namespace AsuFit.Presentacion
         }
         #endregion
 
-        #region 3. BÚSQUEDA Y CARGA DE DATOS
+        #region 4. BÚSQUEDA Y CARGA DE DATOS
         // Carga los registros de socios activos desde la base de datos
         private void CargarGrillaSocios()
         {
@@ -185,12 +202,13 @@ namespace AsuFit.Presentacion
 
             if (dgvSocios.DataSource is DataTable dt)
             {
-                dt.DefaultView.RowFilter = $"Cedula LIKE '%{textoBusqueda}%' OR Apellido LIKE '%{textoBusqueda}%' OR Nombre LIKE '%{textoBusqueda}%'";
+                string textoSeguro = textoBusqueda.Replace("'", "''");
+                dt.DefaultView.RowFilter = $"Cedula LIKE '%{textoSeguro}%' OR Apellido LIKE '%{textoSeguro}%' OR Nombre LIKE '%{textoSeguro}%'";
             }
         }
         #endregion
 
-        #region 4. GESTIÓN DE GRILLA Y FORMATO CONDICIONAL
+        #region 5. GESTIÓN DE GRILLA Y FORMATO CONDICIONAL
         // Configura propiedades de la grilla posteriores al enlace de datos
         private void dgvSocios_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
         {
@@ -259,7 +277,7 @@ namespace AsuFit.Presentacion
         }
         #endregion
 
-        #region 5. PROCESAMIENTO DE COBRO
+        #region 6. PROCESAMIENTO DE COBRO
         // Actualiza el monto a cobrar en base al plan seleccionado
         private void cmbPlanes_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -373,7 +391,7 @@ namespace AsuFit.Presentacion
         }
         #endregion
 
-        #region 6. GESTIÓN DE SEGURIDAD Y RESTRICCIONES DE ENTRADA
+        #region 7. GESTIÓN DE SEGURIDAD Y RESTRICCIONES DE ENTRADA
         private void SuscribirFiltrosDeSeguridad()
         {
             txtBuscar.KeyPress += txtAntiInyeccion_KeyPress;

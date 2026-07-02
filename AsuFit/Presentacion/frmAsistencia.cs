@@ -25,9 +25,6 @@ namespace AsuFit.Presentacion
             AplicarEscalaKiosco();
             LimpiarPantalla();
 
-            // Restricción física de longitud para Cédulas de Identidad paraguayas
-            txtCedula.MaxLength = 8;
-
             // Anulación del menú nativo de Windows (Inhabilita pegado mediante clic derecho)
             txtCedula.ContextMenuStrip = new ContextMenuStrip();
 
@@ -183,56 +180,47 @@ namespace AsuFit.Presentacion
         #endregion
 
         #region 5. LÓGICA DE NEGOCIO Y REGLAS DE ACCESO
-        // Recupera el registro del socio de la base de datos, evalúa fechas de vencimiento y audita la entrada en el historial.
+        // Delega la evaluación de acceso a la capa de Negocio y formatea la respuesta visual según el dictamen.
         private void ProcesarAcceso(string cedula)
         {
             SocioNegocio negocio = new SocioNegocio();
+            string detalleVencimiento = "";
+
             Socio socio = negocio.BuscarSocioPorCedula(cedula);
 
-            if (socio == null)
+            // Delegación de lógica algorítmica y temporal a la capa de negocio
+            int estadoAcceso = negocio.EvaluarAccesoSocio(socio, out detalleVencimiento);
+
+            if (estadoAcceso == -1)
             {
                 MostrarAlerta(Color.DarkOrange, "Socio no encontrado", "", "", "Por favor, pasá por recepción para registrarte.");
                 return;
             }
 
-            if (socio.Estado != "Activo")
-            {
-                MostrarAlerta(Color.DarkRed, "Acceso Denegado", $"{socio.Nombre} {socio.Apellido}", "", "Tu usuario se encuentra inactivo.");
-                return;
-            }
-
-            if (!socio.FechaVencimiento.HasValue)
-            {
-                MostrarAlerta(Color.Crimson, "Sin Plan Activo", $"{socio.Nombre} {socio.Apellido}", "", "No registrás membresías vigentes. Pasá por caja.");
-                return;
-            }
-
             string nombreCompleto = $"{socio.Nombre} {socio.Apellido}";
-            string fechaVenceTexto = socio.FechaVencimiento.Value.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture);
 
-            if (socio.FechaVencimiento.Value.Date >= DateTime.Now.Date)
+            if (estadoAcceso == 0)
             {
-                Asistencia nuevaAsistencia = new Asistencia();
-                nuevaAsistencia.IdSocio = socio.IdSocio;
+                MostrarAlerta(Color.DarkRed, "Acceso Denegado", nombreCompleto, socio.NombrePlan, "Tu usuario está inactivo o sin membresía vigente.");
+                return;
+            }
 
-                AsistenciaNegocio negocioAsistencia = new AsistenciaNegocio();
-                negocioAsistencia.RegistrarAsistencia(nuevaAsistencia);
+            if (estadoAcceso == -2)
+            {
+                MostrarAlerta(Color.Crimson, "Plan Vencido", nombreCompleto, socio.NombrePlan, detalleVencimiento);
+                return;
+            }
 
-                int diasRestantes = (socio.FechaVencimiento.Value.Date - DateTime.Now.Date).Days;
-                string detalleVencimiento = $"Quedan {diasRestantes} días de plan. Vence el: {fechaVenceTexto}";
+            // Registro silencioso de asistencia para accesos válidos (Estado 1 o 2)
+            negocio.RegistrarAsistencia(socio.IdSocio);
 
-                if (diasRestantes == 1)
-                {
-                    MostrarAlerta(Color.Gold, "¡Acceso Permitido! (Próximo a vencer)", nombreCompleto, socio.NombrePlan, detalleVencimiento);
-                }
-                else
-                {
-                    MostrarAlerta(Color.ForestGreen, "¡Acceso Permitido!", nombreCompleto, socio.NombrePlan, detalleVencimiento);
-                }
+            if (estadoAcceso == 2)
+            {
+                MostrarAlerta(Color.Gold, "¡Acceso Permitido! (Próximo a vencer)", nombreCompleto, socio.NombrePlan, detalleVencimiento);
             }
             else
             {
-                MostrarAlerta(Color.Crimson, "Plan Vencido", nombreCompleto, socio.NombrePlan, $"Tu plan venció el día: {fechaVenceTexto}. Pasá por caja.");
+                MostrarAlerta(Color.ForestGreen, "¡Acceso Permitido!", nombreCompleto, socio.NombrePlan, detalleVencimiento);
             }
         }
         #endregion

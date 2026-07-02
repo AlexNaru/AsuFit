@@ -323,33 +323,9 @@ namespace AsuFit.Presentacion
         // Efectúa comprobaciones paramétricas, evalúa unicidad, ejecuta el procedimiento almacenado y despacha al módulo de facturación.
         private void btnGuardar_Click(object sender, EventArgs e)
         {
-            bool faltaPlan = (socioEdicion == null && cmbPlanes.SelectedIndex <= 0);
-            string emailEntrada = ObtenerTextoReal(txtEmail);
-
-            if (string.IsNullOrWhiteSpace(ObtenerTextoReal(txtCedula)) ||
-                string.IsNullOrWhiteSpace(ObtenerTextoReal(txtNombre)) ||
-                string.IsNullOrWhiteSpace(ObtenerTextoReal(txtApellido)) ||
-                faltaPlan)
+            if (socioEdicion == null && cmbPlanes.SelectedIndex <= 0)
             {
-                string mensaje = socioEdicion == null ? "Cédula, Nombre, Apellido y Plan." : "Cédula, Nombre y Apellido.";
-                MessageBox.Show($"Por favor, completá los campos obligatorios: {mensaje}", "Atención", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
-
-            if (!string.IsNullOrWhiteSpace(emailEntrada) && !EsEmailValido(emailEntrada))
-            {
-                MessageBox.Show("El formato del correo electrónico no es válido. Ejemplo correcto: correo@gmail.com", "Sintaxis Incorrecta", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                txtEmail.Focus();
-                return;
-            }
-
-            SocioNegocio negocioSocio = new SocioNegocio();
-            int idActual = socioEdicion != null ? socioEdicion.IdSocio : 0;
-
-            if (negocioSocio.ExisteCedula(ObtenerTextoReal(txtCedula), idActual))
-            {
-                MessageBox.Show("Este número de cédula ya está registrado con otro socio.", "Cédula Duplicada", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                txtCedula.Focus();
+                MessageBox.Show("Por favor, seleccioná el Plan para el nuevo socio.", "Atención", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
@@ -357,7 +333,7 @@ namespace AsuFit.Presentacion
             nuevoSocio.Cedula = ObtenerTextoReal(txtCedula);
             nuevoSocio.Nombre = ObtenerTextoReal(txtNombre);
             nuevoSocio.Apellido = ObtenerTextoReal(txtApellido);
-            nuevoSocio.Email = string.IsNullOrWhiteSpace(emailEntrada) ? "No especificado" : emailEntrada;
+            nuevoSocio.Email = string.IsNullOrWhiteSpace(ObtenerTextoReal(txtEmail)) ? "No especificado" : ObtenerTextoReal(txtEmail);
             nuevoSocio.Ruc = ObtenerTextoReal(txtRuc);
             nuevoSocio.Telefono = ObtenerTextoReal(txtTelefono);
             nuevoSocio.FechaNacimiento = dtpFechaNacimiento.Value;
@@ -367,76 +343,49 @@ namespace AsuFit.Presentacion
             nuevoSocio.Estado = "Activo";
 
             PlanNegocio negocioPlan = new PlanNegocio();
-            Plan planInfo = null;
+            SocioNegocio negocioSocio = new SocioNegocio();
+            string mensajeError = "";
 
             if (socioEdicion != null)
             {
-                planInfo = negocioPlan.ObtenerPlanPorNombre("Plan Mensual");
-                nuevoSocio.IdPlan = planInfo != null ? planInfo.IdPlan : 1;
-            }
-            else
-            {
-                planInfo = negocioPlan.ObtenerPlanPorNombre(cmbPlanes.Text);
-                if (planInfo == null)
-                {
-                    MessageBox.Show("No se pudo encontrar la información del plan seleccionado.", "Error interno", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return;
-                }
-                nuevoSocio.IdPlan = planInfo.IdPlan;
-                nuevoSocio.FechaVencimiento = DateTime.Now.AddDays(planInfo.DuracionDias);
-            }
-
-            if (socioEdicion != null)
-            {
+                nuevoSocio.IdPlan = negocioPlan.ObtenerPlanPorNombre("Plan Mensual")?.IdPlan ?? 1;
                 nuevoSocio.IdSocio = socioEdicion.IdSocio;
-                if (negocioSocio.EditarSocio(nuevoSocio))
+
+                // Delegación con parámetro out
+                if (negocioSocio.EditarSocio(nuevoSocio, out mensajeError))
                 {
-                    AsuFit.Datos.GestorAuditoria.Registrar(usuarioActual.NombreCompleto, "Socios", "Edición", $"Se actualizaron los datos del socio: {nuevoSocio.Nombre} {nuevoSocio.Apellido} ({nuevoSocio.Cedula}).");
-                    MessageBox.Show("Los datos se actualizaron correctamente.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    AsuFit.Datos.GestorAuditoria.Registrar(usuarioActual.NombreCompleto, "Socios", "Edición", $"Se actualizaron los datos: {nuevoSocio.Nombre} ({nuevoSocio.Cedula}).");
+                    MessageBox.Show("Actualizado correctamente.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     this.Close();
                 }
+                else MessageBox.Show(mensajeError, "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
             else
             {
-                string mensajeError = "";
-                int nuevoIdSocio = negocioSocio.InsertarSocioYObtenerId(nuevoSocio, out mensajeError);
+                Plan planInfo = negocioPlan.ObtenerPlanPorNombre(cmbPlanes.Text);
+                if (planInfo == null) return;
 
-                if (nuevoIdSocio > 0)
+                nuevoSocio.IdPlan = planInfo.IdPlan;
+                nuevoSocio.FechaVencimiento = DateTime.Now.AddDays(planInfo.DuracionDias);
+
+                // Delegación pura
+                int nuevoId = negocioSocio.InsertarSocioYObtenerId(nuevoSocio, out mensajeError);
+
+                if (nuevoId > 0)
                 {
-                    AsuFit.Datos.GestorAuditoria.Registrar(usuarioActual.NombreCompleto, "Socios", "Registro", $"Se registró al nuevo socio: {nuevoSocio.Nombre} {nuevoSocio.Apellido} ({nuevoSocio.Cedula}).");
+                    AsuFit.Datos.GestorAuditoria.Registrar(usuarioActual.NombreCompleto, "Socios", "Registro", $"Registrado: {nuevoSocio.Nombre} ({nuevoSocio.Cedula}).");
 
-                    string codigoPlanArtificial = $"PLAN-{planInfo.DuracionDias}-{nuevoIdSocio}-{planInfo.IdPlan}";
-                    CarritoGlobal.AgregarItem(0, codigoPlanArtificial, "Inscripción y " + planInfo.NombrePlan, 1, planInfo.Precio, 10);
+                    CarritoGlobal.AgregarItem(0, $"PLAN-{planInfo.DuracionDias}-{nuevoId}-{planInfo.IdPlan}", "Inscripción y " + planInfo.NombrePlan, 1, planInfo.Precio, 10);
+                    if (CarritoGlobal.IdSocioPagara == null) CarritoGlobal.IdSocioPagara = nuevoId;
 
-                    if (CarritoGlobal.IdSocioPagara == null) CarritoGlobal.IdSocioPagara = nuevoIdSocio;
+                    // FIX DE CAJA: Cerramos si está abierta en fondo y abrimos limpia
+                    if (Application.OpenForms["frmCajaCobro"] is frmCajaCobro cajaAbierta) cajaAbierta.Close();
 
-                    frmCajaCobro cajaAbierta = Application.OpenForms["frmCajaCobro"] as frmCajaCobro;
-                    if (cajaAbierta != null)
-                    {
-                        cajaAbierta.WindowState = FormWindowState.Normal;
-                        cajaAbierta.BringToFront();
-                        cajaAbierta.ActualizarPantallaDesdeCarrito();
-                    }
-                    else
-                    {
-                        frmCajaCobro nuevaCaja = new frmCajaCobro(usuarioActual);
-                        // FIX ARQUITECTÓNICO: Abre la caja en modo Modal para bloquear el registro de fondo
-                        nuevaCaja.ShowDialog();
-                    }
+                    new frmCajaCobro(usuarioActual).ShowDialog();
                     LimpiarCampos();
                 }
-                else
-                {
-                    MessageBox.Show("Error al registrar el socio: " + mensajeError, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
+                else MessageBox.Show(mensajeError, "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
-        }
-
-        // Evalúa el cumplimiento estructural de formato RFC 5322 básico para prevención de correos rebotados.
-        private bool EsEmailValido(string email)
-        {
-            string patron = @"^[^@\s]+@[^@\s]+\.[^@\s]+$";
-            return Regex.IsMatch(email, patron, RegexOptions.IgnoreCase);
         }
 
         // Finaliza el ciclo de vida del proceso de diálogo liberando recursos de instancia.

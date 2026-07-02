@@ -22,6 +22,9 @@ namespace AsuFit.Presentacion
         public frmIngresoMercaderia(Usuario userLogueado)
         {
             InitializeComponent();
+
+            this.Load += new EventHandler(frmIngresoMercaderia_Load);
+
             usuarioActual = userLogueado;
             dgvProductos.AutoGenerateColumns = false;
         }
@@ -215,7 +218,14 @@ namespace AsuFit.Presentacion
             {
                 if (txt.Text != textoAyuda && txt.ForeColor == Color.Silver)
                 {
-                    string entradaUsuario = txt.Text.Replace(textoAyuda, "");
+                    string entradaUsuario = txt.Text;
+
+                    // Solo quitamos el bloque exacto del placeholder, sin destruir caracteres similares
+                    if (entradaUsuario.StartsWith(textoAyuda))
+                        entradaUsuario = entradaUsuario.Substring(textoAyuda.Length);
+                    else if (entradaUsuario.EndsWith(textoAyuda))
+                        entradaUsuario = entradaUsuario.Substring(0, entradaUsuario.Length - textoAyuda.Length);
+
                     txt.ForeColor = Color.White;
                     txt.Text = entradaUsuario;
                     txt.SelectionStart = txt.Text.Length;
@@ -303,6 +313,7 @@ namespace AsuFit.Presentacion
             }
         }
 
+        // Buscador
         private void txtBuscarProducto_TextChanged(object sender, EventArgs e)
         {
             if (dtProductos == null) return;
@@ -313,7 +324,11 @@ namespace AsuFit.Presentacion
             if (textoBusqueda == "Buscar producto en el catálogo...") textoBusqueda = "";
 
             string textoLimpio = QuitarAcentos(textoBusqueda).ToLower();
-            string filtro = "Estado = 'Activo' AND NombreBusqueda LIKE '%" + textoLimpio + "%'";
+
+            // Escape de comillas para blindar el DataView contra excepciones sintácticas
+            string textoSeguro = textoLimpio.Replace("'", "''");
+
+            string filtro = "Estado = 'Activo' AND NombreBusqueda LIKE '%" + textoSeguro + "%'";
             (dgvProductos.DataSource as DataTable).DefaultView.RowFilter = filtro;
         }
 
@@ -346,9 +361,9 @@ namespace AsuFit.Presentacion
 
                 if (System.IO.File.Exists(rutaFoto))
                 {
-                    using (System.IO.FileStream fs = new System.IO.FileStream(rutaFoto, System.IO.FileMode.Open, System.IO.FileAccess.Read))
+                    using (Image imgTemp = Image.FromFile(rutaFoto))
                     {
-                        picProducto.Image = Image.FromStream(fs);
+                        picProducto.Image = new Bitmap(imgTemp);
                     }
                 }
                 else
@@ -478,8 +493,8 @@ namespace AsuFit.Presentacion
             try
             {
                 int idProducto = Convert.ToInt32(txtIdProductoSeleccionado.Text);
-                int cantidad = Convert.ToInt32(txtCantidadIngreso.Text);
-                decimal costoTotal = Convert.ToDecimal(txtCostoTotal.Text);
+                int cantidad = Convert.ToInt32(txtCantidadIngreso.Text.Replace(".", "").Trim());
+                decimal costoTotal = Convert.ToDecimal(txtCostoTotal.Text.Replace(".", "").Trim());
                 int idProveedorReal = Convert.ToInt32(cmbProveedores.SelectedValue);
 
                 bool exito = negocioIngreso.RegistrarIngreso(idProveedorReal, idProducto, cantidad, costoTotal, DateTime.Now, "Ingreso desde sistema");
@@ -572,12 +587,35 @@ namespace AsuFit.Presentacion
             }
         }
 
-        // Invalida combinaciones de teclado orientadas a la inserción masiva desde el portapapeles.
+        // Intercepta el pegado (Ctrl+V), sanitiza el contenido del portapapeles y lo inyecta de forma segura.
         private void BloquearPegado_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.Control && e.KeyCode == Keys.V || e.Shift && e.KeyCode == Keys.Insert)
             {
-                e.SuppressKeyPress = true;
+                e.SuppressKeyPress = true; // Invalida el pegado nativo (inseguro) de Windows
+
+                if (sender is TextBox txt && Clipboard.ContainsText())
+                {
+                    string textoPegado = Clipboard.GetText();
+
+                    // 1. Sanitización estricta: Elimina comillas, punto y coma, y saltos de línea
+                    textoPegado = textoPegado.Replace("'", "").Replace("\"", "").Replace(";", "").Replace("\r", "").Replace("\n", "");
+
+                    // 2. Control de Desbordamiento de Memoria (Respeta tu MaxLength)
+                    int limite = txt.MaxLength > 0 ? txt.MaxLength : 32767;
+                    int espacioDisponible = limite - (txt.Text.Length - txt.SelectionLength);
+
+                    if (espacioDisponible > 0)
+                    {
+                        if (textoPegado.Length > espacioDisponible)
+                        {
+                            textoPegado = textoPegado.Substring(0, espacioDisponible);
+                        }
+
+                        // 3. Inyección segura en la posición exacta del cursor
+                        txt.SelectedText = textoPegado;
+                    }
+                }
             }
         }
 

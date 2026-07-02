@@ -28,8 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
             this.dgvGastos = new System.Windows.Forms.DataGridView();
             this.colGastoId = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colGastoDescripcion = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -100,8 +100,8 @@
             // colGastoMonto
             // 
             this.colGastoMonto.DataPropertyName = "Monto";
-            dataGridViewCellStyle1.Format = "N0";
-            this.colGastoMonto.DefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle7.Format = "N0";
+            this.colGastoMonto.DefaultCellStyle = dataGridViewCellStyle7;
             this.colGastoMonto.HeaderText = "Monto";
             this.colGastoMonto.MinimumWidth = 8;
             this.colGastoMonto.Name = "colGastoMonto";
@@ -110,8 +110,8 @@
             // colGastoFecha
             // 
             this.colGastoFecha.DataPropertyName = "FechaGasto";
-            dataGridViewCellStyle2.Format = "dd/MM/yyyy HH:mm";
-            this.colGastoFecha.DefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle8.Format = "dd/MM/yyyy HH:mm";
+            this.colGastoFecha.DefaultCellStyle = dataGridViewCellStyle8;
             this.colGastoFecha.HeaderText = "Fecha";
             this.colGastoFecha.MinimumWidth = 8;
             this.colGastoFecha.Name = "colGastoFecha";
@@ -145,9 +145,8 @@
             this.txtMonto.ForeColor = System.Drawing.Color.White;
             this.txtMonto.Location = new System.Drawing.Point(323, 157);
             this.txtMonto.Margin = new System.Windows.Forms.Padding(2);
-            this.txtMonto.MaxLength = 10;
+            this.txtMonto.MaxLength = 20;
             this.txtMonto.Name = "txtMonto";
-            this.txtMonto.ShortcutsEnabled = false;
             this.txtMonto.Size = new System.Drawing.Size(91, 20);
             this.txtMonto.TabIndex = 2;
             // 
