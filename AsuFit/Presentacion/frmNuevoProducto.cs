@@ -42,6 +42,7 @@ namespace AsuFit.Presentacion
             cmbIva.DropDownClosed += QuitarFocoCombo_DropDownClosed;
             cmbCategoria.DropDownClosed += QuitarFocoCombo_DropDownClosed;
 
+            SuscribirFiltrosDeSeguridad();
             this.ActiveControl = null;
         }
 
@@ -67,6 +68,8 @@ namespace AsuFit.Presentacion
         private void ConfigurarValoresPorDefecto()
         {
             txtStock.Text = "0";
+
+            if (txtStockMinimo != null) txtStockMinimo.Text = "0";
 
             if (cmbIva.Items.Count > 0)
             {
@@ -176,6 +179,7 @@ namespace AsuFit.Presentacion
                 objProducto.Categoria = cmbCategoria.Text;
                 objProducto.PrecioVenta = Convert.ToDecimal(txtPrecio.Text);
                 objProducto.StockActual = string.IsNullOrWhiteSpace(txtStock.Text) ? 0 : Convert.ToInt32(txtStock.Text);
+                objProducto.StockMinimo = string.IsNullOrWhiteSpace(txtStockMinimo.Text) ? 0 : Convert.ToInt32(txtStockMinimo.Text);
                 objProducto.IdProveedor = Convert.ToInt32(cmbProveedor.SelectedValue);
                 objProducto.PorcentajeIva = string.IsNullOrWhiteSpace(cmbIva.Text) ? 10 : Convert.ToInt32(cmbIva.Text);
 
@@ -227,6 +231,83 @@ namespace AsuFit.Presentacion
             // Solo permite números y teclas de control
             if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar)) e.Handled = true;
         }
+
+        private void txtStockMinimo_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            // Solo permite números y teclas de control
+            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar)) e.Handled = true;
+        }
+        #endregion
+
+        #region 6. GESTIÓN DE SEGURIDAD Y RESTRICCIONES DE ENTRADA
+
+        // Suscribe programáticamente todos los controles a sus filtros y bloqueos de seguridad.
+        private void SuscribirFiltrosDeSeguridad()
+        {
+            txtCodigoBarras.KeyPress += txtAntiInyeccion_KeyPress;
+            txtNombre.KeyPress += txtAntiInyeccion_KeyPress;
+
+            ContextMenuStrip menuVacio = new ContextMenuStrip();
+
+            foreach (Control contenedor in this.Controls)
+            {
+                AsignarBloqueosRecursivo(contenedor, menuVacio);
+            }
+        }
+
+        // Busca todas las cajas de texto en cualquier nivel de anidamiento visual para aplicar contención.
+        private void AsignarBloqueosRecursivo(Control contenedor, ContextMenuStrip menuVacio)
+        {
+            if (contenedor is TextBox txt)
+            {
+                txt.KeyDown += PegadoSeguro_KeyDown;
+                txt.ContextMenuStrip = menuVacio;
+            }
+
+            foreach (Control hijo in contenedor.Controls)
+            {
+                AsignarBloqueosRecursivo(hijo, menuVacio);
+            }
+        }
+
+        // Intercepta el pegado rápido (Ctrl+V), sanitiza el contenido del portapapeles y lo inyecta de forma segura.
+        private void PegadoSeguro_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Control && e.KeyCode == Keys.V || e.Shift && e.KeyCode == Keys.Insert)
+            {
+                e.SuppressKeyPress = true;
+
+                if (sender is TextBox txt && Clipboard.ContainsText())
+                {
+                    string textoPegado = Clipboard.GetText();
+
+                    textoPegado = textoPegado.Replace("'", "").Replace("\"", "").Replace(";", "").Replace("\r", "").Replace("\n", "");
+
+                    int limite = txt.MaxLength > 0 ? txt.MaxLength : 32767;
+                    int espacioDisponible = limite - (txt.Text.Length - txt.SelectionLength);
+
+                    if (espacioDisponible > 0)
+                    {
+                        if (textoPegado.Length > espacioDisponible)
+                        {
+                            textoPegado = textoPegado.Substring(0, espacioDisponible);
+                        }
+
+                        txt.SelectedText = textoPegado;
+                    }
+                }
+            }
+        }
+
+        // Neutraliza en tiempo real caracteres reservados de T-SQL para mitigar vulnerabilidades.
+        private void txtAntiInyeccion_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar == '\'' || e.KeyChar == '"' || e.KeyChar == ';')
+            {
+                e.Handled = true;
+            }
+        }
+
         #endregion
     }
 }

@@ -458,6 +458,7 @@ namespace AsuFit.Presentacion
             flpCatalogo.Controls.Clear();
 
             float escalaGlobal = Properties.Settings.Default.EscalaInterfaz;
+            float tamanoTexto = (escalaGlobal > 1.0f) ? 11.5f : 9f;
 
             foreach (DataRow row in dtCatalogo.Rows)
             {
@@ -487,7 +488,7 @@ namespace AsuFit.Presentacion
                 Label lblNombre = new Label();
                 lblNombre.Text = row["Nombre"].ToString();
                 lblNombre.ForeColor = Color.White;
-                lblNombre.Font = new Font("Segoe UI", 9, FontStyle.Regular);
+                lblNombre.Font = new Font("Segoe UI", (escalaGlobal > 1.0f) ? 10f : 9f, FontStyle.Regular);
                 lblNombre.Location = new Point(10, 132);
                 lblNombre.AutoSize = false;
                 lblNombre.Size = new Size(160, 32);
@@ -495,14 +496,14 @@ namespace AsuFit.Presentacion
                 Label lblPrecio = new Label();
                 lblPrecio.Text = "Gs. " + Convert.ToDecimal(row["PrecioVenta"]).ToString("N0");
                 lblPrecio.ForeColor = Color.White;
-                lblPrecio.Font = new Font("Segoe UI", 12, FontStyle.Bold);
-                lblPrecio.Location = new Point(10, 166);
+                lblPrecio.Font = new Font("Segoe UI", (escalaGlobal > 1.0f) ? 12f : 9f, FontStyle.Bold);    
+                lblPrecio.Location = new Point(10, (escalaGlobal > 1.0f) ? 170 : 171);
                 lblPrecio.AutoSize = true;
 
                 Label lblStock = new Label();
                 lblStock.Text = "Stock: " + row["StockActual"].ToString();
                 lblStock.ForeColor = Color.LightGray;
-                lblStock.Font = new Font("Segoe UI", 9, FontStyle.Regular);
+                lblStock.Font = new Font("Segoe UI", tamanoTexto, FontStyle.Regular);
                 lblStock.Location = new Point(115, 171);
                 lblStock.AutoSize = true;
 

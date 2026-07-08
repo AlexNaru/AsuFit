@@ -28,9 +28,9 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
             this.panel1 = new System.Windows.Forms.Panel();
             this.label8 = new System.Windows.Forms.Label();
             this.cmbIva = new System.Windows.Forms.ComboBox();
@@ -70,6 +70,8 @@
             this.colProductoEstado = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colProductoIdProveedor = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.label9 = new System.Windows.Forms.Label();
+            this.txtStockMinimo = new System.Windows.Forms.TextBox();
+            this.label = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picFoto)).BeginInit();
             this.panel2.SuspendLayout();
@@ -79,6 +81,8 @@
             // panel1
             // 
             this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel1.Controls.Add(this.label);
+            this.panel1.Controls.Add(this.txtStockMinimo);
             this.panel1.Controls.Add(this.label8);
             this.panel1.Controls.Add(this.cmbIva);
             this.panel1.Controls.Add(this.label7);
@@ -420,14 +424,14 @@
             this.dgvProductos.AllowUserToAddRows = false;
             this.dgvProductos.AllowUserToResizeColumns = false;
             this.dgvProductos.AllowUserToResizeRows = false;
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(39)))), ((int)(((byte)(47)))));
-            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dgvProductos.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle4.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(39)))), ((int)(((byte)(47)))));
+            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dgvProductos.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle4;
             this.dgvProductos.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvProductos.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.colProductoId,
@@ -488,8 +492,8 @@
             // colProductoPrecioCompra
             // 
             this.colProductoPrecioCompra.DataPropertyName = "PrecioCompra";
-            dataGridViewCellStyle2.Format = "N0";
-            this.colProductoPrecioCompra.DefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle5.Format = "N0";
+            this.colProductoPrecioCompra.DefaultCellStyle = dataGridViewCellStyle5;
             this.colProductoPrecioCompra.HeaderText = "Precio Compra";
             this.colProductoPrecioCompra.MinimumWidth = 8;
             this.colProductoPrecioCompra.Name = "colProductoPrecioCompra";
@@ -498,8 +502,8 @@
             // colProductoPrecioVenta
             // 
             this.colProductoPrecioVenta.DataPropertyName = "PrecioVenta";
-            dataGridViewCellStyle3.Format = "N0";
-            this.colProductoPrecioVenta.DefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle6.Format = "N0";
+            this.colProductoPrecioVenta.DefaultCellStyle = dataGridViewCellStyle6;
             this.colProductoPrecioVenta.HeaderText = "Precio Venta";
             this.colProductoPrecioVenta.MinimumWidth = 8;
             this.colProductoPrecioVenta.Name = "colProductoPrecioVenta";
@@ -564,6 +568,29 @@
             this.label9.Size = new System.Drawing.Size(144, 13);
             this.label9.TabIndex = 24;
             this.label9.Text = "GESTIÓN DE PRODUCTOS";
+            // 
+            // txtStockMinimo
+            // 
+            this.txtStockMinimo.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(39)))), ((int)(((byte)(47)))));
+            this.txtStockMinimo.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.txtStockMinimo.ForeColor = System.Drawing.Color.White;
+            this.txtStockMinimo.Location = new System.Drawing.Point(140, 309);
+            this.txtStockMinimo.Margin = new System.Windows.Forms.Padding(2);
+            this.txtStockMinimo.MaxLength = 10;
+            this.txtStockMinimo.Name = "txtStockMinimo";
+            this.txtStockMinimo.Size = new System.Drawing.Size(68, 20);
+            this.txtStockMinimo.TabIndex = 44;
+            // 
+            // label
+            // 
+            this.label.AutoSize = true;
+            this.label.ForeColor = System.Drawing.Color.White;
+            this.label.Location = new System.Drawing.Point(137, 294);
+            this.label.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label.Name = "label";
+            this.label.Size = new System.Drawing.Size(74, 13);
+            this.label.TabIndex = 45;
+            this.label.Text = "Stock Minimo:";
             // 
             // frmGestionProductos
             // 
@@ -630,5 +657,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn colProductoIva;
         private System.Windows.Forms.DataGridViewTextBoxColumn colProductoEstado;
         private System.Windows.Forms.DataGridViewTextBoxColumn colProductoIdProveedor;
+        private System.Windows.Forms.Label label;
+        private System.Windows.Forms.TextBox txtStockMinimo;
     }
 }

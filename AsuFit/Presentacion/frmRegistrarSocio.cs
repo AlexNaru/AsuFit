@@ -1,6 +1,7 @@
 ﻿using AsuFit.Entidades;
 using AsuFit.Negocio;
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
@@ -47,16 +48,14 @@ namespace AsuFit.Presentacion
 
             CargarDatosEnPantalla();
         }
+
+
         #endregion
 
-        #region 2. INICIALIZACIÓN Y SISTEMA DE PLACEHOLDERS
+        #region #region 2. INICIALIZACIÓN Y CARGA DE DATOS
         // Orquesta la configuración geométrica, límites lógicos de entrada y directrices de UI al renderizar la vista.
         private void frmRegistrarSocio_Load(object sender, EventArgs e)
         {
-            txtCedula.MaxLength = 8;
-            txtRuc.MaxLength = 15;
-            txtTelefono.MaxLength = 20;
-            txtTelefonoEmergencia.MaxLength = 20;
 
             dtpFechaNacimiento.MaxDate = DateTime.Now.AddYears(-14);
             dtpFechaNacimiento.MinDate = DateTime.Now.AddYears(-100);
@@ -68,12 +67,35 @@ namespace AsuFit.Presentacion
 
             txtFechaNacimiento.Text = dtpFechaNacimiento.Value.ToShortDateString();
 
+            CargarComboboxPlanes();
             ConfigurarTextosDeAyuda();
             SuscribirFiltrosDeSeguridad();
 
-            cmbPlanes.SelectedIndex = 0;
+            if (socioEdicion != null)
+            {
+                CargarDatosEnPantalla();
+            }
+            else
+            {
+                cmbPlanes.SelectedIndex = 0;
+            }
 
             this.ActiveControl = txtCedula;
+        }
+
+        
+        // Consulta el catálogo de planes en la capa de negocio y enlaza la colección de objetos al control de interfaz.
+        private void CargarComboboxPlanes()
+        {
+            PlanNegocio negocioPlan = new PlanNegocio();
+            List<Plan> listaPlanes = negocioPlan.ListarPlanes("Activo");
+
+            Plan planPorDefecto = new Plan { IdPlan = 0, NombrePlan = "-- Seleccione un Plan --", DuracionDias = 0, Precio = 0 };
+            listaPlanes.Insert(0, planPorDefecto);
+
+            cmbPlanes.DataSource = listaPlanes;
+            cmbPlanes.DisplayMember = "NombrePlan";
+            cmbPlanes.ValueMember = "IdPlan";
         }
 
         // Centraliza la asignación de descriptores visuales interactivos para los campos de captura de datos.
@@ -142,7 +164,7 @@ namespace AsuFit.Presentacion
             return txt.Text.Trim();
         }
 
-        // Vuelca la estructura de la entidad en memoria hacia los controles correspondientes, aplicando contraste de edición.
+        // Despliega los atributos de la entidad sobre los controles de la vista, seleccionando el plan mediante su identificador lógico.
         private void CargarDatosEnPantalla()
         {
             txtCedula.Text = socioEdicion.Cedula;
@@ -171,7 +193,7 @@ namespace AsuFit.Presentacion
             txtTelefonoEmergencia.Text = socioEdicion.TelefonoEmergencia;
             txtTelefonoEmergencia.ForeColor = Color.White;
 
-            cmbPlanes.Text = "Plan Mensual";
+            cmbPlanes.SelectedValue = socioEdicion.IdPlan;
         }
         #endregion
 
@@ -362,20 +384,28 @@ namespace AsuFit.Presentacion
             }
             else
             {
-                Plan planInfo = negocioPlan.ObtenerPlanPorNombre(cmbPlanes.Text);
-                if (planInfo == null) return;
+                // Obtenemos el objeto Plan completo desde la selección del ComboBox
+                Plan planSeleccionado = cmbPlanes.SelectedItem as Plan;
 
-                nuevoSocio.IdPlan = planInfo.IdPlan;
-                nuevoSocio.FechaVencimiento = DateTime.Now.AddDays(planInfo.DuracionDias);
+                if (planSeleccionado == null || planSeleccionado.IdPlan == 0)
+                {
+                    MessageBox.Show("Por favor, seleccione un plan válido.", "Error de integridad", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                nuevoSocio.IdPlan = planSeleccionado.IdPlan;
+                nuevoSocio.FechaVencimiento = DateTime.Now.AddDays(planSeleccionado.DuracionDias);
 
                 // Delegación pura
                 int nuevoId = negocioSocio.InsertarSocioYObtenerId(nuevoSocio, out mensajeError);
 
                 if (nuevoId > 0)
                 {
-                    AsuFit.Datos.GestorAuditoria.Registrar(usuarioActual.NombreCompleto, "Socios", "Registro", $"Registrado: {nuevoSocio.Nombre} ({nuevoSocio.Cedula}).");
+                    // Auditoría mejorada utilizando la variable planSeleccionado
+                    AsuFit.Datos.GestorAuditoria.Registrar(usuarioActual.NombreCompleto, "Socios", "Alta Transaccional", $"Se registró al socio {nuevoSocio.Nombre} {nuevoSocio.Apellido} (CI: {nuevoSocio.Cedula}) bajo el identificador interno #{nuevoId}, asignado al plan '{planSeleccionado.NombrePlan}'.");
 
-                    CarritoGlobal.AgregarItem(0, $"PLAN-{planInfo.DuracionDias}-{nuevoId}-{planInfo.IdPlan}", "Inscripción y " + planInfo.NombrePlan, 1, planInfo.Precio, 10);
+                    CarritoGlobal.AgregarItem(0, $"PLAN-{planSeleccionado.DuracionDias}-{nuevoId}-{planSeleccionado.IdPlan}", "Inscripción y " + planSeleccionado.NombrePlan, 1, planSeleccionado.Precio, 10);
+
                     if (CarritoGlobal.IdSocioPagara == null) CarritoGlobal.IdSocioPagara = nuevoId;
 
                     // FIX DE CAJA: Cerramos si está abierta en fondo y abrimos limpia

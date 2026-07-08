@@ -198,6 +198,12 @@
     <Compile Include="Presentacion\frmIngresoMercaderia.Designer.cs">
       <DependentUpon>frmIngresoMercaderia.cs</DependentUpon>
     </Compile>
+    <Compile Include="Presentacion\frmIngresoMercaderiaHistorial.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Presentacion\frmIngresoMercaderiaHistorial.Designer.cs">
+      <DependentUpon>frmIngresoMercaderiaHistorial.cs</DependentUpon>
+    </Compile>
     <Compile Include="Presentacion\frmInicio.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -340,6 +346,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Presentacion\frmIngresoMercaderia.resx">
       <DependentUpon>frmIngresoMercaderia.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Presentacion\frmIngresoMercaderiaHistorial.resx">
+      <DependentUpon>frmIngresoMercaderiaHistorial.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Presentacion\frmInicio.resx">
       <DependentUpon>frmInicio.cs</DependentUpon>

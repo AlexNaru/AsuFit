@@ -12,28 +12,32 @@ namespace AsuFit.Presentacion
         #region 1. VARIABLES GLOBALES Y CONSTRUCTORES
         private Usuario usuarioAEditar = null;
         private bool puedeGuardar = false;
+        private Usuario usuarioActual;
 
         // Inicializa el formulario en contexto de inserción de un nuevo registro para el flujo principal.
-        public frmRegistrarUsuario()
+        public frmRegistrarUsuario(Usuario userLogueado)
         {
             InitializeComponent();
+            usuarioActual = userLogueado;
             btnCancelar.Visible = false;
             lblPreguntaSeguridad.Text = "¿Palabra o numero de seguridad?";
         }
 
         // Inicializa el formulario en modo de diálogo modal, exponiendo controles de cancelación.
-        public frmRegistrarUsuario(bool esVentanaEmergente)
+        public frmRegistrarUsuario(bool esVentanaEmergente, Usuario userLogueado)
         {
             InitializeComponent();
+            usuarioActual = userLogueado;
             btnCancelar.Visible = true;
             lblPreguntaSeguridad.Text = "¿Palabra o numero de seguridad?";
         }
 
         // Inicializa el formulario en contexto de modificación, adaptando la interfaz para la edición de una entidad existente.
-        public frmRegistrarUsuario(Usuario usuarioAEditar)
+        public frmRegistrarUsuario(Usuario usuarioAEditar, Usuario userLogueado)
         {
             InitializeComponent();
             this.usuarioAEditar = usuarioAEditar;
+            usuarioActual = userLogueado;
             btnCancelar.Visible = true;
             btnGuardar.Text = "ACTUALIZAR DATOS";
             lblPreguntaSeguridad.Text = "¿Palabra o numero de seguridad?";
@@ -351,6 +355,7 @@ namespace AsuFit.Presentacion
 
                 if (exito)
                 {
+                    AsuFit.Datos.GestorAuditoria.Registrar(usuarioActual.NombreCompleto, "Usuarios", "Registro", $"Se registró un nuevo usuario en el sistema: '{nuevo.Username}'.");
                     MessageBox.Show("¡Usuario registrado con éxito!", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     if (this.Modal) this.Close();
                     else
@@ -381,6 +386,7 @@ namespace AsuFit.Presentacion
 
                 if (exito)
                 {
+                    AsuFit.Datos.GestorAuditoria.Registrar(usuarioActual.NombreCompleto, "Usuarios", "Edición", $"Se actualizaron los datos del usuario '{txtUsername.Text}'.");
                     MessageBox.Show("Usuario actualizado con éxito.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     this.Close();
                 }

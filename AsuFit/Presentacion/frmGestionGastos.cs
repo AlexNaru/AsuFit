@@ -1,15 +1,19 @@
-﻿using System;
+﻿using AsuFit.Entidades;
+using AsuFit.Negocio;
+using System;
+using System.Data;
 using System.Drawing;
 using System.Windows.Forms;
-using AsuFit.Entidades;
-using AsuFit.Negocio;
 
 namespace AsuFit.Presentacion
 {
     public partial class frmGestionGastos : Form
     {
         #region 1. VARIABLES GLOBALES Y CONSTRUCTOR
+
         private Usuario usuarioActual;
+        // Se migra el contenedor de persistencia a una colección tipada para coincidir con la Capa de Negocio
+        private System.Collections.Generic.List<Gasto> dtGastos;
 
         public frmGestionGastos(Usuario userLogueado)
         {
@@ -161,12 +165,34 @@ namespace AsuFit.Presentacion
         #endregion
 
         #region 3. INICIALIZACIÓN Y CARGA DE DATOS
+        // Orquesta el montaje inicial estableciendo el rango de fechas al mes en curso y poblando listas desplegables.
         private void frmGestionGastos_Load(object sender, EventArgs e)
         {
+            dtpDesde.Value = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
+            dtpHasta.Value = DateTime.Now.Date;
+
+            // Sincroniza visualmente las cajas de texto con los valores iniciales de los calendarios
+            if (txtDesde != null) txtDesde.Text = dtpDesde.Value.ToShortDateString();
+            if (txtHasta != null) txtHasta.Text = dtpHasta.Value.ToShortDateString();
+
+            if (cmbFiltroTipo != null)
+            {
+                cmbFiltroTipo.Items.Clear();
+                cmbFiltroTipo.Items.Add("Todos");
+                cmbFiltroTipo.Items.Add("Servicios (Luz/Agua)");
+                cmbFiltroTipo.Items.Add("Mantenimiento/Limpieza");
+                cmbFiltroTipo.Items.Add("Insumos");
+                cmbFiltroTipo.Items.Add("Otros");
+                cmbFiltroTipo.SelectedIndex = 0;
+                cmbFiltroTipo.DropDownStyle = ComboBoxStyle.DropDownList;
+
+                cmbFiltroTipo.DropDownClosed += QuitarFocoCombo_DropDownClosed;
+            }
+
+            AplicarPlaceholder(txtBuscar, "Buscar por descripción...");
             AplicarPlaceholder(txtDescripcion, "Ej: Pago de internet, insumos...");
             AplicarPlaceholder(txtMonto, "Ej: 150000");
 
-            // Sincroniza el primer ítem de la lista si el control posee elementos lícitos
             if (cmbCategoria != null)
             {
                 cmbCategoria.DropDownClosed += QuitarFocoCombo_DropDownClosed;
@@ -181,15 +207,15 @@ namespace AsuFit.Presentacion
             this.ActiveControl = null;
         }
 
+        // Recupera el historial completo de la base de datos y lo almacena en memoria para filtrados rápidos.
         private void CargarGrillaGastos()
         {
             try
             {
                 GastoNegocio negocio = new GastoNegocio();
-                dgvGastos.DataSource = negocio.ListarGastos();
+                dtGastos = negocio.ListarGastos();
 
-                dgvGastos.ClearSelection();
-                dgvGastos.CurrentCell = null;
+                AplicarFiltrosGastos();
             }
             catch (Exception ex)
             {
@@ -198,7 +224,65 @@ namespace AsuFit.Presentacion
         }
         #endregion
 
-        #region 4. SECCIÓN SUPERIOR: GRILLA DE GASTOS
+        #region 4. SECCIÓN SUPERIOR: FILTROS Y GRILLA DE GASTOS
+
+        // Procesa la colección de objetos en memoria cruzando variables de fecha, categoría y texto para actualizar la grilla.
+        private void AplicarFiltrosGastos()
+        {
+            if (dtGastos == null) return;
+
+            // Creamos un DataTable virtual para estructurar la salida hacia el DataGridView
+            DataTable dtFiltrado = new DataTable();
+            dtFiltrado.Columns.Add("Descripcion");
+            dtFiltrado.Columns.Add("Categoria");
+            dtFiltrado.Columns.Add("Monto", typeof(decimal));
+            dtFiltrado.Columns.Add("FechaGasto", typeof(DateTime));
+            dtFiltrado.Columns.Add("UsuarioRegistra");
+
+            decimal totalGastado = 0;
+
+            string busqueda = txtBuscar.Text == (string)txtBuscar.Tag ? "" : txtBuscar.Text.Trim().ToLower();
+            string tipoFiltro = cmbFiltroTipo.Text;
+
+            // Itera directamente sobre la lista de entidades sanitizadas por la Capa de Negocio
+            foreach (Gasto g in dtGastos)
+            {
+                if (g.FechaGasto.Date >= dtpDesde.Value.Date && g.FechaGasto.Date <= dtpHasta.Value.Date)
+                {
+                    bool cumpleTipo = (tipoFiltro == "Todos" || g.Categoria == tipoFiltro);
+                    bool cumpleBusqueda = string.IsNullOrEmpty(busqueda) || g.Descripcion.ToLower().Contains(busqueda);
+
+                    if (cumpleTipo && cumpleBusqueda)
+                    {
+                        dtFiltrado.Rows.Add(g.Descripcion, g.Categoria, g.Monto, g.FechaGasto, g.UsuarioRegistra);
+                        totalGastado += g.Monto;
+                    }
+                }
+            }
+
+            dgvGastos.DataSource = dtFiltrado;
+
+            if (lblGastosEncontrados != null) lblGastosEncontrados.Text = "Gastos Encontrados: " + dtFiltrado.Rows.Count.ToString();
+            if (lblTotalGastado != null) lblTotalGastado.Text = "TOTAL GASTADO: Gs. " + totalGastado.ToString("N0");
+
+            dgvGastos.ClearSelection();
+            dgvGastos.CurrentCell = null;
+        }
+
+        private void dtpDesde_ValueChanged(object sender, EventArgs e)
+        {
+            if (txtDesde != null) txtDesde.Text = dtpDesde.Value.ToShortDateString();
+            AplicarFiltrosGastos();
+        }
+
+        private void dtpHasta_ValueChanged(object sender, EventArgs e)
+        {
+            if (txtHasta != null) txtHasta.Text = dtpHasta.Value.ToShortDateString();
+            AplicarFiltrosGastos();
+        }
+        private void txtBuscar_TextChanged(object sender, EventArgs e) { AplicarFiltrosGastos(); }
+        private void cmbFiltroTipo_SelectedIndexChanged(object sender, EventArgs e) { AplicarFiltrosGastos(); }
+
         private void dgvGastos_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
         {
             dgvGastos.ClearSelection();
@@ -210,6 +294,7 @@ namespace AsuFit.Presentacion
             dgvGastos.ClearSelection();
             dgvGastos.CurrentCell = null;
         }
+
         #endregion
 
         #region 5. SECCIÓN INFERIOR: REGISTRO DE NUEVO GASTO
@@ -267,11 +352,14 @@ namespace AsuFit.Presentacion
         #endregion
 
         #region 6. GESTIÓN DE SEGURIDAD Y RESTRICCIONES DE ENTRADA
+
         // Suscribe programáticamente los vectores de captura a las directivas de sanitización financiera.
         private void SuscribirFiltrosDeSeguridad()
         {
             txtMonto.KeyPress += txtSoloNumeros_KeyPress;
             txtDescripcion.KeyPress += txtAntiInyeccion_KeyPress;
+
+            if (txtBuscar != null) txtBuscar.KeyPress += txtAntiInyeccion_KeyPress;
 
             ContextMenuStrip menuVacio = new ContextMenuStrip();
             foreach (Control contenedor in this.Controls)
@@ -298,16 +386,14 @@ namespace AsuFit.Presentacion
         {
             if (e.Control && e.KeyCode == Keys.V || e.Shift && e.KeyCode == Keys.Insert)
             {
-                e.SuppressKeyPress = true; // Invalida el pegado nativo (inseguro) de Windows
+                e.SuppressKeyPress = true;
 
                 if (sender is TextBox txt && Clipboard.ContainsText())
                 {
                     string textoPegado = Clipboard.GetText();
 
-                    // Sanitización estricta: Elimina comillas, punto y coma, y saltos de línea
                     textoPegado = textoPegado.Replace("'", "").Replace("\"", "").Replace(";", "").Replace("\r", "").Replace("\n", "");
 
-                    // Control de Desbordamiento de Memoria
                     int limite = txt.MaxLength > 0 ? txt.MaxLength : 32767;
                     int espacioDisponible = limite - (txt.Text.Length - txt.SelectionLength);
 
@@ -318,14 +404,12 @@ namespace AsuFit.Presentacion
                             textoPegado = textoPegado.Substring(0, espacioDisponible);
                         }
 
-                        // Inyección segura en la posición exacta del cursor
                         txt.SelectedText = textoPegado;
                     }
                 }
             }
         }
 
-        // Valida la entrada del usuario permitiendo exclusivamente dígitos numéricos, puntos separadores de miles y caracteres de control.
         private void txtSoloNumeros_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar) && e.KeyChar != '.')
@@ -341,6 +425,7 @@ namespace AsuFit.Presentacion
                 e.Handled = true;
             }
         }
+
         #endregion
     }
 }

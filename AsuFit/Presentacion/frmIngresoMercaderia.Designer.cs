@@ -84,6 +84,7 @@
             this.txtResumenCantidad = new System.Windows.Forms.TextBox();
             this.txtResumenProducto = new System.Windows.Forms.TextBox();
             this.txtResumenProveedor = new System.Windows.Forms.TextBox();
+            this.btnHistorialIngresos = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dgvProductos)).BeginInit();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
@@ -468,6 +469,7 @@
             // panel2
             // 
             this.panel2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel2.Controls.Add(this.btnHistorialIngresos);
             this.panel2.Controls.Add(this.lblProveedorProducto);
             this.panel2.Controls.Add(this.lblDetalleStockMinimo);
             this.panel2.Controls.Add(this.lblDetalleProducto);
@@ -673,6 +675,17 @@
             this.txtResumenProveedor.Size = new System.Drawing.Size(158, 20);
             this.txtResumenProveedor.TabIndex = 21;
             // 
+            // btnHistorialIngresos
+            // 
+            this.btnHistorialIngresos.Location = new System.Drawing.Point(80, 370);
+            this.btnHistorialIngresos.Margin = new System.Windows.Forms.Padding(2);
+            this.btnHistorialIngresos.Name = "btnHistorialIngresos";
+            this.btnHistorialIngresos.Size = new System.Drawing.Size(176, 22);
+            this.btnHistorialIngresos.TabIndex = 23;
+            this.btnHistorialIngresos.Text = "HISTORIAL DE INGRESOS";
+            this.btnHistorialIngresos.UseVisualStyleBackColor = true;
+            this.btnHistorialIngresos.Click += new System.EventHandler(this.btnHistorialIngresos_Click);
+            // 
             // frmIngresoMercaderia
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -753,5 +766,6 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn colIngresoStockMin;
         private System.Windows.Forms.DataGridViewTextBoxColumn colIngresoProveedor;
         private System.Windows.Forms.DataGridViewTextBoxColumn colIngresoIva;
+        private System.Windows.Forms.Button btnHistorialIngresos;
     }
 }

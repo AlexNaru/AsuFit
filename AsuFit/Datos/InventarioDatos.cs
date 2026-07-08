@@ -64,19 +64,19 @@ namespace AsuFit.Datos
             }
         }
 
-        // Persiste los datos de un producto (Nuevo o Edición).
+        // Persiste los datos de un producto (Nuevo o Edición) incluyendo la configuración de stock mínimo.
         public bool GuardarProducto(Producto obj)
         {
             using (SqlConnection oConexion = Conexion.ObtenerConexion())
             {
                 oConexion.Open();
                 string query = (obj.IdProducto == 0)
-                    ? @"INSERT INTO Productos (CodigoBarras, Nombre, IdCategoria, PrecioVenta, PrecioCompra, StockActual, Estado, IdProveedor, PorcentajeIva) 
-                      VALUES (@Codigo, @Nombre, (SELECT IdCategoria FROM CategoriasProducto WHERE Descripcion = @Categoria), @Precio, 0, @Stock, 'Activo', @IdProveedor, @PorcentajeIva)"
+                    ? @"INSERT INTO Productos (CodigoBarras, Nombre, IdCategoria, PrecioVenta, PrecioCompra, StockActual, StockMinimo, Estado, IdProveedor, PorcentajeIva) 
+              VALUES (@Codigo, @Nombre, (SELECT IdCategoria FROM CategoriasProducto WHERE Descripcion = @Categoria), @Precio, 0, @Stock, @StockMinimo, 'Activo', @IdProveedor, @PorcentajeIva)"
                     : @"UPDATE Productos SET CodigoBarras = @Codigo, Nombre = @Nombre, 
-                      IdCategoria = (SELECT IdCategoria FROM CategoriasProducto WHERE Descripcion = @Categoria), 
-                      PrecioVenta = @Precio, StockActual = @Stock, IdProveedor = @IdProveedor, PorcentajeIva = @PorcentajeIva
-                      WHERE IdProducto = @IdProducto";
+              IdCategoria = (SELECT IdCategoria FROM CategoriasProducto WHERE Descripcion = @Categoria), 
+              PrecioVenta = @Precio, StockActual = @Stock, StockMinimo = @StockMinimo, IdProveedor = @IdProveedor, PorcentajeIva = @PorcentajeIva
+              WHERE IdProducto = @IdProducto";
 
                 SqlCommand cmd = new SqlCommand(query, oConexion);
                 cmd.Parameters.AddWithValue("@IdProducto", obj.IdProducto);
@@ -85,6 +85,7 @@ namespace AsuFit.Datos
                 cmd.Parameters.AddWithValue("@Categoria", obj.Categoria);
                 cmd.Parameters.AddWithValue("@Precio", obj.PrecioVenta);
                 cmd.Parameters.AddWithValue("@Stock", obj.StockActual);
+                cmd.Parameters.AddWithValue("@StockMinimo", obj.StockMinimo);
                 cmd.Parameters.AddWithValue("@IdProveedor", obj.IdProveedor);
                 cmd.Parameters.AddWithValue("@PorcentajeIva", obj.PorcentajeIva);
 
@@ -152,6 +153,44 @@ namespace AsuFit.Datos
                 }
             }
         }
+        #endregion
+
+        #region CONSULTAS HISTÓRICAS DE AUDITORÍA
+
+        // Extrae el registro cronológico de ingresos de mercadería cruzando los rangos de fechas y filtros de texto.
+        public DataTable ObtenerHistorialCompras(DateTime fechaDesde, DateTime fechaHasta, string textoBusqueda)
+        {
+            DataTable dt = new DataTable();
+            using (SqlConnection oConexion = Conexion.ObtenerConexion())
+            {
+                try
+                {
+                    string query = @"
+                        SELECT 
+                            i.IdIngreso AS [N° Operación], 
+                            i.FechaIngreso AS [Fecha], 
+                            ISNULL(p.Nombre, 'Proveedor Desconocido') AS [Proveedor], 
+                            i.CostoTotal AS [CostoTotal]
+                        FROM IngresosMercaderia i
+                        LEFT JOIN Proveedores p ON i.IdProveedor = p.IdProveedor
+                        WHERE CAST(i.FechaIngreso AS DATE) >= @Desde 
+                          AND CAST(i.FechaIngreso AS DATE) <= @Hasta
+                          AND (p.Nombre LIKE '%' + @Busqueda + '%' OR i.Observaciones LIKE '%' + @Busqueda + '%')
+                        ORDER BY i.FechaIngreso DESC";
+
+                    SqlCommand cmd = new SqlCommand(query, oConexion);
+                    cmd.Parameters.AddWithValue("@Desde", fechaDesde);
+                    cmd.Parameters.AddWithValue("@Hasta", fechaHasta);
+                    cmd.Parameters.AddWithValue("@Busqueda", textoBusqueda);
+
+                    SqlDataAdapter da = new SqlDataAdapter(cmd);
+                    da.Fill(dt);
+                }
+                catch (Exception) { throw; }
+            }
+            return dt;
+        }
+
         #endregion
     }
 }

@@ -1,5 +1,6 @@
 ﻿using AsuFit.Datos;
 using AsuFit.Entidades;
+using System;
 using System.Data;
 
 namespace AsuFit.Negocio
@@ -39,6 +40,12 @@ namespace AsuFit.Negocio
                 return dv.ToTable();
             }
             return null;
+        }
+
+        // Recupera el flujo histórico de compras desde la capa de persistencia aplicando criterios de fecha y texto.
+        public DataTable ObtenerHistorialCompras(DateTime fechaDesde, DateTime fechaHasta, string textoBusqueda)
+        {
+            return objDatos.ObtenerHistorialCompras(fechaDesde, fechaHasta, textoBusqueda);
         }
         #endregion
 

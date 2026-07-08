@@ -194,6 +194,17 @@ namespace AsuFit.Presentacion
             VincularClicDeseleccion(this);
 
             this.ActiveControl = null;
+
+            // Suscripción al evento de finalización de carga para suprimir el foco automático del sistema
+            this.Shown += new EventHandler(frmHistorialTransacciones_Shown);
+        }
+
+        // Intercepta la finalización del renderizado visual para limpiar selecciones y focos automáticos sobre los controles de entrada.
+        private void frmHistorialTransacciones_Shown(object sender, EventArgs e)
+        {
+            // Libera cualquier control que Windows haya seleccionado por defecto (como el ComboBox)
+            this.ActiveControl = null;
+            dgvVentas.ClearSelection();
         }
         #endregion
 

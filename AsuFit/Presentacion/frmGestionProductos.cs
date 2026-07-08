@@ -70,6 +70,7 @@ namespace AsuFit.Presentacion
             AplicarPlaceholder(txtNombre, "Ej: Energizante...");
             AplicarPlaceholder(txtPrecio, "0");
             AplicarPlaceholder(txtStock, "0");
+            AplicarPlaceholder(txtStockMinimo, "0");
         }
 
         // Gestiona el comportamiento de la marca de agua con desvanecimiento dinámico estilo AsuFit
@@ -345,6 +346,9 @@ namespace AsuFit.Presentacion
                 txtStock.ForeColor = Color.White;
                 txtStock.Text = fila.Cells["colProductoStock"].Value.ToString();
 
+                txtStockMinimo.ForeColor = Color.White;
+                txtStockMinimo.Text = fila.Cells["colProductoStockMin"].Value.ToString();
+
                 if (fila.Cells["colProductoProveedor"].Value != DBNull.Value && fila.Cells["colProductoProveedor"].Value != null)
                 {
                     cmbProveedor.Text = fila.Cells["colProductoProveedor"].Value.ToString();
@@ -448,6 +452,7 @@ namespace AsuFit.Presentacion
             string nombreReal = ObtenerTextoReal(txtNombre);
             string precioReal = ObtenerTextoReal(txtPrecio);
             string stockReal = ObtenerTextoReal(txtStock);
+            string stockMinimoReal = ObtenerTextoReal(txtStockMinimo);
 
             if (string.IsNullOrWhiteSpace(nombreReal) || string.IsNullOrWhiteSpace(precioReal))
             {
@@ -464,6 +469,7 @@ namespace AsuFit.Presentacion
                 objProducto.Categoria = cmbCategoria.Text;
                 objProducto.PrecioVenta = Convert.ToDecimal(precioReal);
                 objProducto.StockActual = string.IsNullOrWhiteSpace(stockReal) ? 0 : Convert.ToInt32(stockReal);
+                objProducto.StockMinimo = string.IsNullOrWhiteSpace(stockMinimoReal) ? 0 : Convert.ToInt32(stockMinimoReal);
 
                 if (cmbProveedor.SelectedValue != null)
                 {
@@ -576,6 +582,7 @@ namespace AsuFit.Presentacion
 
             txtPrecio.Clear();
             txtStock.Clear();
+            txtStockMinimo.Clear();
             picFoto.Image = null;
             rutaFotoOrigen = "";
 
@@ -605,6 +612,7 @@ namespace AsuFit.Presentacion
 
             txtNombre.KeyPress += txtAntiInyeccion_KeyPress;
             txtBuscarProducto.KeyPress += txtAntiInyeccion_KeyPress;
+            txtStockMinimo.KeyPress += txtSoloNumeros_KeyPress;
 
             // 2. Anulación del menú contextual nativo de Windows (Clic derecho)
             ContextMenuStrip menuVacio = new ContextMenuStrip();

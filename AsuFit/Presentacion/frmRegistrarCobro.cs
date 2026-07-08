@@ -2,6 +2,7 @@
 using AsuFit.Entidades;
 using AsuFit.Negocio;
 using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Drawing;
 using System.Windows.Forms;
@@ -53,20 +54,32 @@ namespace AsuFit.Presentacion
             SuscribirFiltrosDeSeguridad();
 
             CargarGrillaSocios();
+            CargarComboboxPlanes();
 
             // Configura el texto de sugerencia en el buscador
             AplicarPlaceholder(txtBuscar, "Buscar por Cédula, Nombre o Apellido...");
 
-            // Establece el texto por defecto en el selector de planes
-            if (cmbPlanes.Items.Count > 0) cmbPlanes.SelectedIndex = 0;
-
             // Libera el foco inicial de los controles
             this.ActiveControl = null;
+        }
+
+        // Consulta el catálogo de planes en la capa de negocio y enlaza la colección de objetos al control de interfaz.
+        private void CargarComboboxPlanes()
+        {
+            PlanNegocio negocioPlan = new PlanNegocio();
+            List<Plan> listaPlanes = negocioPlan.ListarPlanes("Activo");
+
+            Plan planPorDefecto = new Plan { IdPlan = 0, NombrePlan = "--- Seleccionar Plan ---", DuracionDias = 0, Precio = 0 };
+            listaPlanes.Insert(0, planPorDefecto);
+
+            cmbPlanes.DataSource = listaPlanes;
+            cmbPlanes.DisplayMember = "NombrePlan";
+            cmbPlanes.ValueMember = "IdPlan";
         }
         #endregion
 
         #region 3. ESTILOS VISUALES Y COMPORTAMIENTO UI
-        // Personaliza el dibujado de los elementos del ComboBox
+        // Personaliza el dibujado de los elementos del ComboBox extrayendo el atributo visible del objeto enlazado.
         private void CmbPlanes_DrawItem(object sender, DrawItemEventArgs e)
         {
             if (e.Index < 0) return;
@@ -76,8 +89,11 @@ namespace AsuFit.Presentacion
             Color bgColor = isSelected ? Color.FromArgb(0, 229, 255) : Color.FromArgb(35, 39, 47);
             Color txtColor = isSelected ? Color.Black : Color.White;
 
+            Plan planEnlazado = combo.Items[e.Index] as Plan;
+            string textoAMostrar = planEnlazado != null ? planEnlazado.NombrePlan : combo.Items[e.Index].ToString();
+
             e.Graphics.FillRectangle(new SolidBrush(bgColor), e.Bounds);
-            e.Graphics.DrawString(combo.Items[e.Index].ToString(), e.Font, new SolidBrush(txtColor), e.Bounds, StringFormat.GenericDefault);
+            e.Graphics.DrawString(textoAMostrar, e.Font, new SolidBrush(txtColor), e.Bounds, StringFormat.GenericDefault);
         }
 
         // Gestiona el comportamiento de la marca de agua con desvanecimiento dinámico estilo AsuFit
@@ -278,7 +294,7 @@ namespace AsuFit.Presentacion
         #endregion
 
         #region 6. PROCESAMIENTO DE COBRO
-        // Actualiza el monto a cobrar en base al plan seleccionado
+        // Actualiza el monto a cobrar proyectando la propiedad financiera del objeto plan seleccionado en memoria.
         private void cmbPlanes_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (cmbPlanes.SelectedIndex <= 0)
@@ -288,23 +304,22 @@ namespace AsuFit.Presentacion
                 return;
             }
 
-            PlanNegocio negocioPlan = new PlanNegocio();
-            Plan planInfo = negocioPlan.ObtenerPlanPorNombre(cmbPlanes.Text);
+            Plan planSeleccionado = cmbPlanes.SelectedItem as Plan;
 
-            if (planInfo != null)
+            if (planSeleccionado != null && planSeleccionado.IdPlan > 0)
             {
-                txtMonto.Text = planInfo.Precio.ToString("N0");
-                diasPlanSeleccionado = planInfo.DuracionDias;
+                txtMonto.Text = planSeleccionado.Precio.ToString("N0");
+                diasPlanSeleccionado = planSeleccionado.DuracionDias;
             }
         }
 
-        // Libera el foco tras la selección para evitar el resaltado nativo de Windows
+        // Libera el foco tras la selección para evitar el resaltado nativo de Windows.
         private void cmbPlanes_DropDownClosed(object sender, EventArgs e)
         {
             this.BeginInvoke(new Action(() => this.ActiveControl = null));
         }
 
-        // Integra la solicitud de cobro con el Carrito Global y transfiere al módulo de Caja
+        // Integra la solicitud de cobro con el Carrito Global utilizando referencias en memoria y transfiere al módulo de Caja.
         private void btnCobrar_Click(object sender, EventArgs e)
         {
             if (idSocioSeleccionado == 0)
@@ -313,13 +328,14 @@ namespace AsuFit.Presentacion
                 return;
             }
 
-            if (cmbPlanes.SelectedIndex <= 0 || string.IsNullOrWhiteSpace(txtMonto.Text))
+            Plan planSeleccionado = cmbPlanes.SelectedItem as Plan;
+
+            if (planSeleccionado == null || planSeleccionado.IdPlan == 0)
             {
                 MessageBox.Show("Por favor, seleccione un Plan válido.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
-            // Verificación de colisiones en el Carrito Global
             if (CarritoGlobal.Detalles.Rows.Count > 0 && CarritoGlobal.IdSocioPagara != null && CarritoGlobal.IdSocioPagara != idSocioSeleccionado)
             {
                 DialogResult respuesta = MessageBox.Show(
@@ -333,18 +349,12 @@ namespace AsuFit.Presentacion
                 CarritoGlobal.IdSocioPagara = idSocioSeleccionado;
             }
 
-            PlanNegocio negocioPlan = new PlanNegocio();
-            Plan planInfo = negocioPlan.ObtenerPlanPorNombre(cmbPlanes.Text);
-            if (planInfo == null) return;
+            decimal monto = planSeleccionado.Precio;
+            string conceptoPlan = "Renovación: " + planSeleccionado.NombrePlan;
 
-            decimal monto = Convert.ToDecimal(txtMonto.Text.Replace(".", ""));
-            string conceptoPlan = "Renovación: " + cmbPlanes.Text;
-
-            // Formato estándar de codificación para procesamientos en caja
-            string codigoPlanArtificial = $"PLAN-{planInfo.DuracionDias}-{idSocioSeleccionado}-{planInfo.IdPlan}";
+            string codigoPlanArtificial = $"PLAN-{planSeleccionado.DuracionDias}-{idSocioSeleccionado}-{planSeleccionado.IdPlan}";
             CarritoGlobal.AgregarItem(0, codigoPlanArtificial, conceptoPlan, 1, monto, 10);
 
-            // Gestión de transición de interfaz hacia la Caja
             frmCajaCobro cajaAbierta = Application.OpenForms["frmCajaCobro"] as frmCajaCobro;
             if (cajaAbierta != null)
             {
@@ -360,7 +370,6 @@ namespace AsuFit.Presentacion
                 nuevaCaja.Show();
             }
 
-            // Restablecimiento del estado actual
             idSocioSeleccionado = 0;
             txtMonto.Clear();
             cmbPlanes.SelectedIndex = 0;

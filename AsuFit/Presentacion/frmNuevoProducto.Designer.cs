@@ -49,6 +49,8 @@
             this.txtCodigoBarras = new System.Windows.Forms.TextBox();
             this.btnSubirFoto = new System.Windows.Forms.Button();
             this.picProducto = new System.Windows.Forms.PictureBox();
+            this.label = new System.Windows.Forms.Label();
+            this.txtStockMinimo = new System.Windows.Forms.TextBox();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picProducto)).BeginInit();
             this.SuspendLayout();
@@ -56,6 +58,8 @@
             // panel1
             // 
             this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel1.Controls.Add(this.txtStockMinimo);
+            this.panel1.Controls.Add(this.label);
             this.panel1.Controls.Add(this.label8);
             this.panel1.Controls.Add(this.cmbIva);
             this.panel1.Controls.Add(this.label7);
@@ -77,7 +81,7 @@
             this.panel1.Controls.Add(this.btnSubirFoto);
             this.panel1.Controls.Add(this.picProducto);
             this.panel1.Location = new System.Drawing.Point(16, 15);
-            this.panel1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.panel1.Margin = new System.Windows.Forms.Padding(2);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(232, 455);
             this.panel1.TabIndex = 23;
@@ -101,7 +105,7 @@
             "5",
             "0"});
             this.cmbIva.Location = new System.Drawing.Point(140, 260);
-            this.cmbIva.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.cmbIva.Margin = new System.Windows.Forms.Padding(2);
             this.cmbIva.Name = "cmbIva";
             this.cmbIva.Size = new System.Drawing.Size(82, 21);
             this.cmbIva.TabIndex = 40;
@@ -121,7 +125,7 @@
             this.cmbProveedor.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbProveedor.FormattingEnabled = true;
             this.cmbProveedor.Location = new System.Drawing.Point(140, 215);
-            this.cmbProveedor.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.cmbProveedor.Margin = new System.Windows.Forms.Padding(2);
             this.cmbProveedor.Name = "cmbProveedor";
             this.cmbProveedor.Size = new System.Drawing.Size(82, 21);
             this.cmbProveedor.TabIndex = 38;
@@ -141,7 +145,7 @@
             // 
             this.txtId.Enabled = false;
             this.txtId.Location = new System.Drawing.Point(140, 161);
-            this.txtId.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.txtId.Margin = new System.Windows.Forms.Padding(2);
             this.txtId.Name = "txtId";
             this.txtId.ReadOnly = true;
             this.txtId.Size = new System.Drawing.Size(68, 20);
@@ -201,7 +205,7 @@
             // btnGuardar
             // 
             this.btnGuardar.Location = new System.Drawing.Point(127, 393);
-            this.btnGuardar.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btnGuardar.Margin = new System.Windows.Forms.Padding(2);
             this.btnGuardar.Name = "btnGuardar";
             this.btnGuardar.Size = new System.Drawing.Size(93, 25);
             this.btnGuardar.TabIndex = 30;
@@ -212,7 +216,7 @@
             // btnCancelar
             // 
             this.btnCancelar.Location = new System.Drawing.Point(11, 393);
-            this.btnCancelar.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btnCancelar.Margin = new System.Windows.Forms.Padding(2);
             this.btnCancelar.Name = "btnCancelar";
             this.btnCancelar.Size = new System.Drawing.Size(93, 25);
             this.btnCancelar.TabIndex = 29;
@@ -222,8 +226,9 @@
             // 
             // txtStock
             // 
+            this.txtStock.Enabled = false;
             this.txtStock.Location = new System.Drawing.Point(11, 356);
-            this.txtStock.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.txtStock.Margin = new System.Windows.Forms.Padding(2);
             this.txtStock.Name = "txtStock";
             this.txtStock.Size = new System.Drawing.Size(68, 20);
             this.txtStock.TabIndex = 28;
@@ -232,7 +237,7 @@
             // txtPrecio
             // 
             this.txtPrecio.Location = new System.Drawing.Point(11, 309);
-            this.txtPrecio.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.txtPrecio.Margin = new System.Windows.Forms.Padding(2);
             this.txtPrecio.Name = "txtPrecio";
             this.txtPrecio.Size = new System.Drawing.Size(68, 20);
             this.txtPrecio.TabIndex = 27;
@@ -241,7 +246,7 @@
             // txtNombre
             // 
             this.txtNombre.Location = new System.Drawing.Point(11, 215);
-            this.txtNombre.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.txtNombre.Margin = new System.Windows.Forms.Padding(2);
             this.txtNombre.Name = "txtNombre";
             this.txtNombre.Size = new System.Drawing.Size(68, 20);
             this.txtNombre.TabIndex = 26;
@@ -259,7 +264,7 @@
             "Bebidas",
             "Snacks"});
             this.cmbCategoria.Location = new System.Drawing.Point(11, 260);
-            this.cmbCategoria.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.cmbCategoria.Margin = new System.Windows.Forms.Padding(2);
             this.cmbCategoria.Name = "cmbCategoria";
             this.cmbCategoria.Size = new System.Drawing.Size(82, 21);
             this.cmbCategoria.TabIndex = 25;
@@ -267,7 +272,7 @@
             // txtCodigoBarras
             // 
             this.txtCodigoBarras.Location = new System.Drawing.Point(11, 161);
-            this.txtCodigoBarras.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.txtCodigoBarras.Margin = new System.Windows.Forms.Padding(2);
             this.txtCodigoBarras.Name = "txtCodigoBarras";
             this.txtCodigoBarras.Size = new System.Drawing.Size(68, 20);
             this.txtCodigoBarras.TabIndex = 24;
@@ -275,7 +280,7 @@
             // btnSubirFoto
             // 
             this.btnSubirFoto.Location = new System.Drawing.Point(11, 109);
-            this.btnSubirFoto.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btnSubirFoto.Margin = new System.Windows.Forms.Padding(2);
             this.btnSubirFoto.Name = "btnSubirFoto";
             this.btnSubirFoto.Size = new System.Drawing.Size(93, 25);
             this.btnSubirFoto.TabIndex = 23;
@@ -287,12 +292,32 @@
             // 
             this.picProducto.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.picProducto.Location = new System.Drawing.Point(11, 17);
-            this.picProducto.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.picProducto.Margin = new System.Windows.Forms.Padding(2);
             this.picProducto.Name = "picProducto";
             this.picProducto.Size = new System.Drawing.Size(94, 72);
             this.picProducto.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.picProducto.TabIndex = 22;
             this.picProducto.TabStop = false;
+            // 
+            // label
+            // 
+            this.label.AutoSize = true;
+            this.label.ForeColor = System.Drawing.Color.Black;
+            this.label.Location = new System.Drawing.Point(137, 294);
+            this.label.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label.Name = "label";
+            this.label.Size = new System.Drawing.Size(74, 13);
+            this.label.TabIndex = 46;
+            this.label.Text = "Stock Minimo:";
+            // 
+            // txtStockMinimo
+            // 
+            this.txtStockMinimo.Location = new System.Drawing.Point(140, 309);
+            this.txtStockMinimo.Margin = new System.Windows.Forms.Padding(2);
+            this.txtStockMinimo.Name = "txtStockMinimo";
+            this.txtStockMinimo.Size = new System.Drawing.Size(68, 20);
+            this.txtStockMinimo.TabIndex = 47;
+            this.txtStockMinimo.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtStockMinimo_KeyPress);
             // 
             // frmNuevoProducto
             // 
@@ -300,7 +325,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(263, 476);
             this.Controls.Add(this.panel1);
-            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.Margin = new System.Windows.Forms.Padding(2);
             this.MaximizeBox = false;
             this.Name = "frmNuevoProducto";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
@@ -336,5 +361,7 @@
         private System.Windows.Forms.PictureBox picProducto;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.ComboBox cmbIva;
+        private System.Windows.Forms.TextBox txtStockMinimo;
+        private System.Windows.Forms.Label label;
     }
 }

@@ -123,6 +123,7 @@
             this.lblIngresos.Size = new System.Drawing.Size(14, 13);
             this.lblIngresos.TabIndex = 3;
             this.lblIngresos.Text = "0";
+            this.lblIngresos.Click += new System.EventHandler(this.lblIngresos_Click);
             // 
             // lblTituloVencimientos
             // 

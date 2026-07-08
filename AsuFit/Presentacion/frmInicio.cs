@@ -243,5 +243,65 @@ namespace AsuFit.Presentacion
             dgv.DefaultCellStyle.SelectionForeColor = Color.Black;
         }
         #endregion
+
+        #region 7. MÉTODOS AUXILIARES DE FORMULARIO EMERGENTE
+
+        // Configura la escala, fuente y posición del formulario emergente respetando las dimensiones del Dashboard contenedor
+        private void PrepararFormularioComoDashboard(Form frm)
+        {
+            float escalaActual = Properties.Settings.Default.EscalaInterfaz;
+
+            frm.Scale(new SizeF(escalaActual, escalaActual));
+            AjustarFuentes(frm);
+
+            frm.StartPosition = FormStartPosition.Manual;
+
+            if (this.Parent != null)
+            {
+                Point posicionPanelAbsoluta = this.Parent.PointToScreen(Point.Empty);
+                int x = posicionPanelAbsoluta.X + (this.Parent.Width - frm.Width) / 2;
+                int y = posicionPanelAbsoluta.Y + (this.Parent.Height - frm.Height) / 2;
+
+                frm.Location = new Point(x > 0 ? x : 0, y > 0 ? y : 0);
+            }
+            else
+            {
+                frm.StartPosition = FormStartPosition.CenterParent;
+            }
+        }
+
+        // Ajusta recursivamente el tamaño de fuente utilizando la configuración dinámica del sistema
+        private void AjustarFuentes(Control contenedor)
+        {
+            float fuenteActual = Properties.Settings.Default.TamanoFuente;
+
+            foreach (Control c in contenedor.Controls)
+            {
+                if (c is TextBox || c is ComboBox || c is Label || c is DataGridView)
+                {
+                    c.Font = new Font("Segoe UI", fuenteActual, c.Font.Style);
+                }
+                else if (c.HasChildren)
+                {
+                    AjustarFuentes(c);
+                }
+            }
+        }
+
+        #endregion
+
+        #region 8. NAVEGACIÓN ANALÍTICA (DRILL-DOWN)
+
+        // Intercepta el clic sobre el indicador de ingresos para instanciar y desplegar la vista detallada de transacciones.
+        private void lblIngresos_Click(object sender, EventArgs e)
+        {
+            frmHistorialTransacciones frmHistorial = new frmHistorialTransacciones();
+
+            PrepararFormularioComoDashboard(frmHistorial);
+
+            frmHistorial.ShowDialog();
+        }
+
+        #endregion
     }
 }

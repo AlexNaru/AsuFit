@@ -314,17 +314,18 @@ namespace AsuFit.Presentacion
         #endregion
 
         #region 7. SECCIÓN INFERIOR: ACCIONES DE GESTIÓN
+        // Despliega el formulario de registro en estado limpio y transfiere el contexto de sesión actual.
         private void btnNuevo_Click(object sender, EventArgs e)
         {
-            frmRegistrarUsuario frm = new frmRegistrarUsuario(true);
+            frmRegistrarUsuario frm = new frmRegistrarUsuario(true, usuarioActual);
 
-            // Centrado y escalado perfecto
             PrepararFormularioComoDashboard(frm);
 
             frm.ShowDialog();
             RecargarGrilla();
         }
 
+        // Proyecta la entidad seleccionada hacia el formulario de mutación, manteniendo el rastro de auditoría.
         private void btnEditar_Click(object sender, EventArgs e)
         {
             if (idUsuarioSeleccionado > 0)
@@ -339,9 +340,8 @@ namespace AsuFit.Presentacion
                     Estado = dgvUsuarios.CurrentRow.Cells["colUsuarioEstado"].Value.ToString()
                 };
 
-                frmRegistrarUsuario frm = new frmRegistrarUsuario(userSeleccionado);
+                frmRegistrarUsuario frm = new frmRegistrarUsuario(userSeleccionado, usuarioActual);
 
-                // Centrado y escalado perfecto
                 PrepararFormularioComoDashboard(frm);
 
                 frm.ShowDialog();
@@ -353,6 +353,7 @@ namespace AsuFit.Presentacion
             }
         }
 
+        // Alterna el estado del usuario seleccionado y registra la acción en la auditoría.
         private void btnEstado_Click(object sender, EventArgs e)
         {
             if (idUsuarioSeleccionado > 0)

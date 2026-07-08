@@ -273,11 +273,12 @@ namespace AsuFit.Presentacion
             }
         }
 
+        // Ajusta recursivamente el tamaño de fuente en los componentes del pop-up, incluyendo estructuras de datos complejas.
         private void AjustarFuentesPopup(Control contenedor, float fuente)
         {
             foreach (Control c in contenedor.Controls)
             {
-                if (c is TextBox || c is ComboBox || c is Label || c is NumericUpDown || c is Button)
+                if (c is TextBox || c is ComboBox || c is Label || c is NumericUpDown || c is Button || c is DataGridView)
                 {
                     if (c is Button) c.Font = new Font("Segoe UI", fuente, FontStyle.Bold);
                     else c.Font = new Font("Segoe UI", fuente, c.Font.Style);
@@ -421,6 +422,16 @@ namespace AsuFit.Presentacion
         #endregion
 
         #region 6. SECCIÓN CENTRAL Y DERECHA: DETALLES, RESUMEN Y CÁLCULOS
+        // Intercepta el evento de acción para instanciar y desplegar la vista histórica aplicando la escala del contenedor base.
+        private void btnHistorialIngresos_Click(object sender, EventArgs e)
+        {
+            frmIngresoMercaderiaHistorial frmHistorial = new frmIngresoMercaderiaHistorial();
+
+            PrepararFormularioComoDashboard(frmHistorial);
+
+            frmHistorial.ShowDialog();
+        }
+
         private void ActualizarResumen()
         {
             int cantidad = 0;
@@ -513,6 +524,11 @@ namespace AsuFit.Presentacion
             }
         }
 
+        private void btnCancelar_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+
         private void btnLimpiar_Click(object sender, EventArgs e)
         {
             txtIdProductoSeleccionado.Clear();
@@ -541,11 +557,6 @@ namespace AsuFit.Presentacion
             txtBuscarProducto.Text = "";
             txtBuscarProducto.Focus(); // Para forzar el evento Leave y que dibuje el color Silver
             this.ActiveControl = null;
-        }
-
-        private void btnCancelar_Click(object sender, EventArgs e)
-        {
-            this.Close();
         }
 
         private void LimpiarSeleccion_Click(object sender, EventArgs e)

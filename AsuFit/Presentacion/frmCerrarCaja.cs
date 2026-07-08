@@ -178,6 +178,7 @@ namespace AsuFit.Presentacion
 
                     if (exito)
                     {
+                        AsuFit.Datos.GestorAuditoria.Registrar(nombreCajero, "Caja", "Cierre de Turno", $"Se ejecutó el cierre de turno. Esperado: Gs. {totalEsperado:N0} | Rendido: Gs. {montoContado:N0} | Descuadre: Gs. {diferencia:N0}.");
                         frmResumenArqueo frmResumen = new frmResumenArqueo(idTurno, nombreCajero, fechaApertura, ingTrans, ingEfectivo, fondoInicial, gastos, totalEsperado, montoContado, diferencia);
                         frmResumen.ShowDialog(this);
 

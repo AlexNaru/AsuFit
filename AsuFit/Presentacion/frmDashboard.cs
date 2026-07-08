@@ -66,7 +66,6 @@ namespace AsuFit.Presentacion
 
                 // CAJA Y FINANZAS
                 btnHistorialTransacciones.Visible = false; // No ve el historial de otros días
-                btnGestionGastos.Visible = false; // No ve gastos de luz, alquiler, etc.
                 btnReportesEstadísticas.Visible = false; // No ve las ganancias totales
 
                 // SEGURIDAD Y CONTROL (No pueden crear ni auditar usuarios)
@@ -104,7 +103,7 @@ namespace AsuFit.Presentacion
 
                 if (resultado == DialogResult.Yes)
                 {
-                    AsuFit.Datos.GestorAuditoria.Registrar(usuarioActual.NombreCompleto, "Seguridad", "Cierre de Sistema", "Cierre desde la X.");
+                    AsuFit.Datos.GestorAuditoria.Registrar(usuarioActual.NombreCompleto, "Seguridad", "Cierre de Sistema", "El usuario finalizó la ejecución de la aplicación.");
                     Application.ExitThread();
                 }
                 else
@@ -505,7 +504,7 @@ namespace AsuFit.Presentacion
         private void btnRegistrarUsuario_Click(object sender, EventArgs e)
         {
             ResaltarBoton(sender);
-            AbrirFormularioHijo(new frmRegistrarUsuario());
+            AbrirFormularioHijo(new frmRegistrarUsuario(usuarioActual));
         }
 
         private void btnGestionUsuarios_Click(object sender, EventArgs e)
@@ -533,7 +532,7 @@ namespace AsuFit.Presentacion
 
             if (resultado == DialogResult.Yes)
             {
-                AsuFit.Datos.GestorAuditoria.Registrar(usuarioActual.NombreCompleto, "Seguridad", "Cierre de Sesión", "Cierre normal.");
+                AsuFit.Datos.GestorAuditoria.Registrar(usuarioActual.NombreCompleto, "Seguridad", "Cierre de Sesión", "El usuario cerró su sesión correctamente.");
 
                 Form ventanaAsistencia = null;
                 foreach (Form formulario in Application.OpenForms)

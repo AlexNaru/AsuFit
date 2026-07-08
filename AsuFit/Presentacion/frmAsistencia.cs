@@ -67,28 +67,30 @@ namespace AsuFit.Presentacion
         #endregion
 
         #region 3. GESTIÓN VISUAL DE ALERTAS Y ESTADOS
-        // Muestra una alerta temporal de color en pantalla completa, bloquea el teclado y detalla la validación de acceso al usuario.
-        private async void MostrarAlerta(Color colorFondo, string mensaje, string nombre, string plan, string vencimiento)
+        // Muestra una alerta temporal utilizando tipografía de acento sobre fondo oscuro, manteniendo la estética premium.
+        private async void MostrarAlerta(Color colorEstado, string mensaje, string nombre, string plan, string vencimiento)
         {
             txtCedula.Enabled = false;
             txtCedula.Visible = false;
 
-            pnlEstado.BackColor = colorFondo;
+            // MANTENEMOS EL FONDO OSCURO SIEMPRE
+            pnlEstado.BackColor = Color.FromArgb(35, 39, 47);
 
-            Color colorTexto = (colorFondo == Color.Gold || colorFondo == Color.Yellow) ? Color.Black : Color.White;
-
+            // 1. TÍTULO: Usa el color de la alerta (Verde, Rojo, etc.)
             lblMensaje.Text = mensaje.ToUpper();
-            lblMensaje.ForeColor = colorTexto;
+            lblMensaje.ForeColor = colorEstado;
             lblMensaje.Visible = true;
 
+            // 2. NOMBRE: Blanco puro para destacar a la persona
             lblNombre.Text = nombre.ToUpper();
-            lblNombre.ForeColor = colorTexto;
+            lblNombre.ForeColor = Color.White;
             lblNombre.Visible = true;
 
+            // 3. PLAN: Gris plata
             if (!string.IsNullOrEmpty(plan))
             {
                 lblTipoPlan.Text = "PLAN: " + plan.ToUpper();
-                lblTipoPlan.ForeColor = colorTexto;
+                lblTipoPlan.ForeColor = Color.Silver;
                 lblTipoPlan.Visible = true;
             }
             else
@@ -96,8 +98,9 @@ namespace AsuFit.Presentacion
                 lblTipoPlan.Visible = false;
             }
 
+            // 4. VENCIMIENTO: Gris plata
             lblVencimiento.Text = vencimiento;
-            lblVencimiento.ForeColor = colorTexto;
+            lblVencimiento.ForeColor = Color.Silver;
             lblVencimiento.Visible = true;
 
             CentrarControles();
@@ -125,7 +128,7 @@ namespace AsuFit.Presentacion
             lblTipoPlan.Text = "";
             lblTipoPlan.Visible = false;
 
-            lblVencimiento.Text = "Ingresá tu número de cédula y presioná ENTER";
+            lblVencimiento.Text = "Ingresa tu número de cédula y presiona ENTER";
             lblVencimiento.ForeColor = Color.Silver;
             lblVencimiento.Visible = true;
 

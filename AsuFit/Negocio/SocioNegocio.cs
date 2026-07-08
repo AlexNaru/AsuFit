@@ -161,7 +161,7 @@ namespace AsuFit.Negocio
             if (socio.Estado != "Activo" || !socio.FechaVencimiento.HasValue) return 0; // Inactivo o sin plan
 
             int diasRestantes = (socio.FechaVencimiento.Value.Date - DateTime.Now.Date).Days;
-            string fechaVenceTexto = socio.FechaVencimiento.Value.ToString("dd/MM/yyyy");
+            string fechaVenceTexto = socio.FechaVencimiento.Value.ToString("dd'/'MM'/'yyyy");
 
             if (diasRestantes >= 0)
             {

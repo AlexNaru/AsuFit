@@ -1,8 +1,10 @@
-﻿using System;
-using System.Drawing;
-using System.Windows.Forms;
+﻿using AsuFit.Entidades;
 using AsuFit.Negocio;
-using AsuFit.Entidades;
+using System;
+using System.Diagnostics;
+using System.Drawing;
+using System.Security.Cryptography;
+using System.Windows.Forms;
 
 namespace AsuFit.Presentacion
 {
@@ -134,7 +136,7 @@ namespace AsuFit.Presentacion
         }
         #endregion
 
-        // 3. ACCIONES
+        // Procesa la apertura transaccional de un nuevo turno de caja, validando el fondo inicial y registrando el evento en la auditoría del sistema.
         private void btnCancelar_Click(object sender, EventArgs e)
         {
             this.DialogResult = DialogResult.Cancel;
@@ -167,6 +169,7 @@ namespace AsuFit.Presentacion
 
                 if (exito)
                 {
+                    AsuFit.Datos.GestorAuditoria.Registrar(usuarioActual.NombreCompleto, "Caja", "Apertura de Turno", $"Se aperturó un nuevo turno de caja con un fondo inicial declarado de Gs. {fondoInicial:N0}.");
                     MensajeAsuFit.Mostrar(this, "¡Turno iniciado con éxito! La caja ya está abierta.", "Caja Abierta", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     this.DialogResult = DialogResult.OK;
                     this.Close();

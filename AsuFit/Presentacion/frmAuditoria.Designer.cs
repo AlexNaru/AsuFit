@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.btnAbrirHistorial = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
@@ -42,14 +42,14 @@
             this.label4 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.dgvAuditoria = new System.Windows.Forms.DataGridView();
+            this.txtBuscar = new System.Windows.Forms.TextBox();
+            this.cmbFiltroModulo = new System.Windows.Forms.ComboBox();
+            this.label3 = new System.Windows.Forms.Label();
             this.colAuditoriaFecha = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colAuditoriaUsuario = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colAuditoriaModulo = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colAuditoriaAccion = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colAuditoriaDetalle = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.txtBuscar = new System.Windows.Forms.TextBox();
-            this.cmbFiltroModulo = new System.Windows.Forms.ComboBox();
-            this.label3 = new System.Windows.Forms.Label();
             this.tabPage1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage4.SuspendLayout();
@@ -111,7 +111,7 @@
             this.tabControl1.Margin = new System.Windows.Forms.Padding(2);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(795, 234);
+            this.tabControl1.Size = new System.Drawing.Size(884, 234);
             this.tabControl1.TabIndex = 0;
             // 
             // tabPage4
@@ -130,7 +130,7 @@
             this.tabPage4.Margin = new System.Windows.Forms.Padding(2);
             this.tabPage4.Name = "tabPage4";
             this.tabPage4.Padding = new System.Windows.Forms.Padding(2);
-            this.tabPage4.Size = new System.Drawing.Size(787, 208);
+            this.tabPage4.Size = new System.Drawing.Size(876, 208);
             this.tabPage4.TabIndex = 1;
             this.tabPage4.Text = "Log del Sistema";
             this.tabPage4.UseVisualStyleBackColor = true;
@@ -212,46 +212,9 @@
             this.dgvAuditoria.RowHeadersVisible = false;
             this.dgvAuditoria.RowHeadersWidth = 62;
             this.dgvAuditoria.RowTemplate.Height = 28;
-            this.dgvAuditoria.Size = new System.Drawing.Size(772, 160);
+            this.dgvAuditoria.Size = new System.Drawing.Size(867, 160);
             this.dgvAuditoria.TabIndex = 2;
             this.dgvAuditoria.DataBindingComplete += new System.Windows.Forms.DataGridViewBindingCompleteEventHandler(this.dgvAuditoria_DataBindingComplete);
-            // 
-            // colAuditoriaFecha
-            // 
-            this.colAuditoriaFecha.DataPropertyName = "FechaHora";
-            dataGridViewCellStyle1.Format = "dd/MM/yyyy HH:mm";
-            this.colAuditoriaFecha.DefaultCellStyle = dataGridViewCellStyle1;
-            this.colAuditoriaFecha.HeaderText = "Fecha y Hora";
-            this.colAuditoriaFecha.MinimumWidth = 8;
-            this.colAuditoriaFecha.Name = "colAuditoriaFecha";
-            // 
-            // colAuditoriaUsuario
-            // 
-            this.colAuditoriaUsuario.DataPropertyName = "Usuario";
-            this.colAuditoriaUsuario.HeaderText = "Usuario";
-            this.colAuditoriaUsuario.MinimumWidth = 8;
-            this.colAuditoriaUsuario.Name = "colAuditoriaUsuario";
-            // 
-            // colAuditoriaModulo
-            // 
-            this.colAuditoriaModulo.DataPropertyName = "Modulo";
-            this.colAuditoriaModulo.HeaderText = "Módulo";
-            this.colAuditoriaModulo.MinimumWidth = 8;
-            this.colAuditoriaModulo.Name = "colAuditoriaModulo";
-            // 
-            // colAuditoriaAccion
-            // 
-            this.colAuditoriaAccion.DataPropertyName = "Accion";
-            this.colAuditoriaAccion.HeaderText = "Acción";
-            this.colAuditoriaAccion.MinimumWidth = 8;
-            this.colAuditoriaAccion.Name = "colAuditoriaAccion";
-            // 
-            // colAuditoriaDetalle
-            // 
-            this.colAuditoriaDetalle.DataPropertyName = "Detalle";
-            this.colAuditoriaDetalle.HeaderText = "Detalle";
-            this.colAuditoriaDetalle.MinimumWidth = 8;
-            this.colAuditoriaDetalle.Name = "colAuditoriaDetalle";
             // 
             // txtBuscar
             // 
@@ -299,11 +262,53 @@
             this.label3.TabIndex = 0;
             this.label3.Text = "Filtrar por Módulo:";
             // 
+            // colAuditoriaFecha
+            // 
+            this.colAuditoriaFecha.DataPropertyName = "FechaHora";
+            dataGridViewCellStyle6.Format = "dd/MM/yyyy HH:mm";
+            this.colAuditoriaFecha.DefaultCellStyle = dataGridViewCellStyle6;
+            this.colAuditoriaFecha.FillWeight = 15F;
+            this.colAuditoriaFecha.HeaderText = "Fecha y Hora";
+            this.colAuditoriaFecha.MinimumWidth = 8;
+            this.colAuditoriaFecha.Name = "colAuditoriaFecha";
+            // 
+            // colAuditoriaUsuario
+            // 
+            this.colAuditoriaUsuario.DataPropertyName = "Usuario";
+            this.colAuditoriaUsuario.FillWeight = 15F;
+            this.colAuditoriaUsuario.HeaderText = "Usuario";
+            this.colAuditoriaUsuario.MinimumWidth = 8;
+            this.colAuditoriaUsuario.Name = "colAuditoriaUsuario";
+            // 
+            // colAuditoriaModulo
+            // 
+            this.colAuditoriaModulo.DataPropertyName = "Modulo";
+            this.colAuditoriaModulo.FillWeight = 10F;
+            this.colAuditoriaModulo.HeaderText = "Módulo";
+            this.colAuditoriaModulo.MinimumWidth = 8;
+            this.colAuditoriaModulo.Name = "colAuditoriaModulo";
+            // 
+            // colAuditoriaAccion
+            // 
+            this.colAuditoriaAccion.DataPropertyName = "Accion";
+            this.colAuditoriaAccion.FillWeight = 15F;
+            this.colAuditoriaAccion.HeaderText = "Acción";
+            this.colAuditoriaAccion.MinimumWidth = 8;
+            this.colAuditoriaAccion.Name = "colAuditoriaAccion";
+            // 
+            // colAuditoriaDetalle
+            // 
+            this.colAuditoriaDetalle.DataPropertyName = "Detalle";
+            this.colAuditoriaDetalle.FillWeight = 45F;
+            this.colAuditoriaDetalle.HeaderText = "Detalle";
+            this.colAuditoriaDetalle.MinimumWidth = 8;
+            this.colAuditoriaDetalle.Name = "colAuditoriaDetalle";
+            // 
             // frmAuditoria
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(795, 234);
+            this.ClientSize = new System.Drawing.Size(884, 234);
             this.Controls.Add(this.tabControl1);
             this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "frmAuditoria";
@@ -331,16 +336,16 @@
         private System.Windows.Forms.TextBox txtBuscar;
         private System.Windows.Forms.ComboBox cmbFiltroModulo;
         private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.DataGridViewTextBoxColumn colAuditoriaFecha;
-        private System.Windows.Forms.DataGridViewTextBoxColumn colAuditoriaUsuario;
-        private System.Windows.Forms.DataGridViewTextBoxColumn colAuditoriaModulo;
-        private System.Windows.Forms.DataGridViewTextBoxColumn colAuditoriaAccion;
-        private System.Windows.Forms.DataGridViewTextBoxColumn colAuditoriaDetalle;
         private System.Windows.Forms.DateTimePicker dtpHasta;
         private System.Windows.Forms.TextBox txtHasta;
         private System.Windows.Forms.DateTimePicker dtpDesde;
         private System.Windows.Forms.TextBox txtDesde;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colAuditoriaFecha;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colAuditoriaUsuario;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colAuditoriaModulo;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colAuditoriaAccion;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colAuditoriaDetalle;
     }
 }
