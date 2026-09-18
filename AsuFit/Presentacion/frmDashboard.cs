@@ -116,7 +116,7 @@ namespace AsuFit.Presentacion
                 {
                     AsuFit.Datos.GestorAuditoria.Registrar(usuarioActual.NombreCompleto, "Seguridad", "Cierre de Sistema", "El usuario finalizó la ejecución de la aplicación.");
                     Environment.Exit(0);
-                }
+                } 
                 else
                 {
                     e.Cancel = true;
