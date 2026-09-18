@@ -97,6 +97,7 @@ namespace AsuFit.Presentacion
         }
 
         // Intercepta la petición de cierre del sistema operativo o sesión y evalúa la integridad del turno de caja antes de liberar los recursos.
+        // Utiliza Environment.Exit para forzar la finalización del proceso y evitar recursividad en la colección de formularios.
         private void frmDashboard_FormClosing(object sender, FormClosingEventArgs e)
         {
             AsuFit.Negocio.ArqueoNegocio negocioArqueo = new AsuFit.Negocio.ArqueoNegocio();
@@ -114,7 +115,7 @@ namespace AsuFit.Presentacion
                 if (resultado == DialogResult.Yes)
                 {
                     AsuFit.Datos.GestorAuditoria.Registrar(usuarioActual.NombreCompleto, "Seguridad", "Cierre de Sistema", "El usuario finalizó la ejecución de la aplicación.");
-                    Application.Exit();
+                    Environment.Exit(0);
                 }
                 else
                 {
