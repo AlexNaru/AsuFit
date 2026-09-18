@@ -26,7 +26,7 @@ namespace AsuFit.Datos
             return dt;
         }
 
-        // Recupera el listado completo de productos con datos de proveedores y categorías.
+        // Recupera el listado completo de productos activos con datos de proveedores y categorías.
         public DataTable ListarProductos()
         {
             DataTable dt = new DataTable();
@@ -39,7 +39,32 @@ namespace AsuFit.Datos
                                             p.IdProveedor, pr.Nombre AS Proveedor, p.PorcentajeIva 
                                      FROM Productos p
                                      INNER JOIN CategoriasProducto c ON p.IdCategoria = c.IdCategoria
-                                     LEFT JOIN Proveedores pr ON p.IdProveedor = pr.IdProveedor";
+                                     LEFT JOIN Proveedores pr ON p.IdProveedor = pr.IdProveedor
+                                     WHERE p.Estado = 'Activo'
+                                     ORDER BY p.Nombre ASC";
+                    SqlDataAdapter da = new SqlDataAdapter(query, oConexion);
+                    da.Fill(dt);
+                }
+                catch (Exception) { throw; }
+            }
+            return dt;
+        }
+
+        // Recupera el listado completo de productos (Activos e Inactivos) para la pantalla de auditoría y gestión administrativa.
+        public DataTable ListarTodosLosProductos()
+        {
+            DataTable dt = new DataTable();
+            using (SqlConnection oConexion = Conexion.ObtenerConexion())
+            {
+                try
+                {
+                    string query = @"SELECT p.IdProducto, p.CodigoBarras, p.Nombre, c.Descripcion AS Categoria, 
+                                            p.PrecioCompra, p.PrecioVenta, p.StockActual, p.StockMinimo, p.Estado,
+                                            p.IdProveedor, pr.Nombre AS Proveedor, p.PorcentajeIva 
+                                     FROM Productos p
+                                     INNER JOIN CategoriasProducto c ON p.IdCategoria = c.IdCategoria
+                                     LEFT JOIN Proveedores pr ON p.IdProveedor = pr.IdProveedor
+                                     ORDER BY p.Nombre ASC";
                     SqlDataAdapter da = new SqlDataAdapter(query, oConexion);
                     da.Fill(dt);
                 }

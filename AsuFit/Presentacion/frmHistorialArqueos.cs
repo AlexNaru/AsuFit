@@ -187,7 +187,7 @@ namespace AsuFit.Presentacion
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error al cargar el historial: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MensajeAsuFit.Mostrar("Error al cargar el historial: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -218,7 +218,7 @@ namespace AsuFit.Presentacion
         {
             if (dgvArqueos.CurrentRow == null)
             {
-                MessageBox.Show("Por favor, selecciona un arqueo de la lista.", "Atención", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MensajeAsuFit.Mostrar("Por favor, selecciona un arqueo de la lista.", "Atención", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
@@ -232,11 +232,11 @@ namespace AsuFit.Presentacion
                 string rutaCompleta = System.IO.Path.Combine(rutaDescargas, nombreArchivo);
 
                 if (System.IO.File.Exists(rutaCompleta)) System.Diagnostics.Process.Start(rutaCompleta);
-                else MessageBox.Show($"No se encontró el archivo PDF para este arqueo en la ruta:\n{rutaCompleta}", "Archivo no encontrado", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                else MensajeAsuFit.Mostrar($"No se encontró el archivo PDF para este arqueo en la ruta:\n{rutaCompleta}", "Archivo no encontrado", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             else
             {
-                MessageBox.Show("Este turno aún se encuentra ABIERTO.", "Turno en curso", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MensajeAsuFit.Mostrar("Este turno aún se encuentra ABIERTO.", "Turno en curso", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
         #endregion

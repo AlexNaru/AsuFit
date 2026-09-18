@@ -105,7 +105,7 @@ namespace AsuFit.Presentacion
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error al cargar el historial de compras: " + ex.Message, "Error Crítico", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MensajeAsuFit.Mostrar("Error al cargar el historial de compras: " + ex.Message, "Error Crítico", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 

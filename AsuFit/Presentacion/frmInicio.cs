@@ -87,19 +87,21 @@ namespace AsuFit.Presentacion
         #endregion
 
         #region 4. MÓDULO DE INVENTARIO
-        // Recupera los conjuntos de datos del inventario y los enlaza a sus respectivas grillas de visualización.
+        // Recupera los conjuntos de datos del inventario, los enlaza a sus respectivas grillas y actualiza los indicadores numéricos en pantalla.
         private void CargarTablasInventario()
         {
             DataTable dtTodos = negocioInventario.ListarProductosBasico();
             if (dtTodos != null)
             {
                 dgvProductosStock.DataSource = dtTodos;
+                lblTotalProductos.Text = dtTodos.Rows.Count.ToString();
             }
 
             DataTable dtBajo = negocioInventario.ListarProductosStockBajo();
             if (dtBajo != null)
             {
                 dgvProductosStockBajo.DataSource = dtBajo;
+                lblStockBajo.Text = dtBajo.Rows.Count.ToString();
             }
         }
 
@@ -162,7 +164,7 @@ namespace AsuFit.Presentacion
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error al cargar los vencimientos: " + ex.Message, "Error de Sistema", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MensajeAsuFit.Mostrar("Error al cargar los vencimientos: " + ex.Message, "Error de Sistema", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 

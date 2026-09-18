@@ -219,7 +219,7 @@ namespace AsuFit.Presentacion
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error al cargar gastos: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MensajeAsuFit.Mostrar("Error al cargar gastos: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
         #endregion
@@ -300,12 +300,19 @@ namespace AsuFit.Presentacion
         #region 5. SECCIÓN INFERIOR: REGISTRO DE NUEVO GASTO
         private void btnGuardar_Click(object sender, EventArgs e)
         {
+            ArqueoNegocio negocioArqueo = new ArqueoNegocio();
+            if (!negocioArqueo.VerificarCajaAbierta())
+            {
+                MensajeAsuFit.Mostrar("Operación denegada. Debes realizar la apertura de caja para procesar transacciones financieras.", "Caja Cerrada", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
             string descripcionReal = ObtenerTextoReal(txtDescripcion);
             string montoReal = ObtenerTextoReal(txtMonto);
 
             if (string.IsNullOrWhiteSpace(descripcionReal) || string.IsNullOrWhiteSpace(montoReal) || cmbCategoria.SelectedIndex == 0)
             {
-                MessageBox.Show("Por favor, complete todos los campos antes de guardar.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MensajeAsuFit.Mostrar("Por favor, complete todos los campos antes de guardar.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
@@ -327,7 +334,7 @@ namespace AsuFit.Presentacion
                     // Invocación a la auditoría especificando la ruta completa para evitar importar la capa de Datos
                     AsuFit.Datos.GestorAuditoria.Registrar("Admin", "Gastos", "Registro", $"Gasto de Gs. {nuevoGasto.Monto:N0} en {nuevoGasto.Categoria}.");
 
-                    MessageBox.Show("Gasto registrado correctamente en la caja.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MensajeAsuFit.Mostrar("Gasto registrado correctamente en la caja.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                     txtDescripcion.Clear();
                     txtMonto.Clear();
@@ -341,12 +348,12 @@ namespace AsuFit.Presentacion
                 }
                 else
                 {
-                    MessageBox.Show(mensaje, "Atención", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MensajeAsuFit.Mostrar(mensaje, "Atención", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
             }
             catch (FormatException)
             {
-                MessageBox.Show("Por favor, ingresá un monto numérico válido.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MensajeAsuFit.Mostrar("Por favor, ingresá un monto numérico válido.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
         #endregion

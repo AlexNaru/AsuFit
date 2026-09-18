@@ -114,7 +114,7 @@ namespace AsuFit.Presentacion
                 string.IsNullOrWhiteSpace(txtPrecio.Text) ||
                 string.IsNullOrWhiteSpace(txtDuracionDias.Text))
             {
-                MessageBox.Show("Por favor, complete todos los campos.", "Aviso de Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MensajeAsuFit.Mostrar("Por favor, complete todos los campos.", "Aviso de Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
@@ -138,7 +138,7 @@ namespace AsuFit.Presentacion
                     if (exito)
                     {
                         GestorAuditoria.Registrar(usuarioActual.NombreCompleto, "Planes", "Nuevo Plan", $"Creó el plan '{nuevoPlan.NombrePlan}' por Gs. {nuevoPlan.Precio:N0}.");
-                        MessageBox.Show("¡Plan guardado con éxito!", "Operación Exitosa", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        MensajeAsuFit.Mostrar("¡Plan guardado con éxito!", "Operación Exitosa", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         this.Close();
                     }
                 }
@@ -153,23 +153,23 @@ namespace AsuFit.Presentacion
                     if (exito)
                     {
                         GestorAuditoria.Registrar(usuarioActual.NombreCompleto, "Planes", "Edición", $"Modificó el plan '{planAEditar.NombrePlan}'.");
-                        MessageBox.Show("¡Plan editado con éxito!", "Operación Exitosa", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        MensajeAsuFit.Mostrar("¡Plan editado con éxito!", "Operación Exitosa", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         this.Close();
                     }
                 }
 
                 if (!exito)
                 {
-                    MessageBox.Show(mensaje, "Conflicto de Regla de Negocio", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MensajeAsuFit.Mostrar(mensaje, "Conflicto de Regla de Negocio", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
             }
             catch (FormatException)
             {
-                MessageBox.Show("Los campos 'Precio' y 'Duración' admiten únicamente valores numéricos enteros.", "Error de Formato", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MensajeAsuFit.Mostrar("Los campos 'Precio' y 'Duración' admiten únicamente valores numéricos enteros.", "Error de Formato", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Ocurrió un error inesperado en el sistema: " + ex.Message, "Excepción Crítica", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MensajeAsuFit.Mostrar("Ocurrió un error inesperado en el sistema: " + ex.Message, "Excepción Crítica", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 

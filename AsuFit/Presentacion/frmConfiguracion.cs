@@ -84,7 +84,7 @@ namespace AsuFit.Presentacion
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error al cargar la configuración: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MensajeAsuFit.Mostrar("Error al cargar la configuración: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
         #endregion
@@ -199,12 +199,12 @@ namespace AsuFit.Presentacion
                 if (negocio.ActualizarDatosGenerales(obj))
                 {
                     GestorAuditoria.Registrar(usuarioActual.NombreCompleto, "Configuración", "Actualización General", "Se modificaron los datos generales de la empresa o el logo.");
-                    MessageBox.Show("¡Configuración guardada correctamente!", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MensajeAsuFit.Mostrar("¡Configuración guardada correctamente!", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error al guardar: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MensajeAsuFit.Mostrar("Error al guardar: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
         #endregion
@@ -214,7 +214,7 @@ namespace AsuFit.Presentacion
         {
             if (string.IsNullOrWhiteSpace(txtCorreoEmisor.Text) || string.IsNullOrWhiteSpace(txtContrasenaCorreo.Text))
             {
-                MessageBox.Show("Por favor, completá el correo y la contraseña antes de hacer la prueba.", "Datos incompletos", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MensajeAsuFit.Mostrar("Por favor, completá el correo y la contraseña antes de hacer la prueba.", "Datos incompletos", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
@@ -224,12 +224,12 @@ namespace AsuFit.Presentacion
                 negocio.ProbarConexionCorreo(txtCorreoEmisor.Text.Trim(), txtContrasenaCorreo.Text.Trim());
                 Cursor.Current = Cursors.Default;
 
-                MessageBox.Show("¡Conexión exitosa!\n\nTe hemos enviado un correo de prueba a tu bandeja de entrada. Por favor, revisalo para confirmar.", "Prueba Superada", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MensajeAsuFit.Mostrar("¡Conexión exitosa!\n\nTe hemos enviado un correo de prueba a tu bandeja de entrada. Por favor, revisalo para confirmar.", "Prueba Superada", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (Exception ex)
             {
                 Cursor.Current = Cursors.Default;
-                MessageBox.Show("Error al conectar con el correo. Verifica que tu contraseña de aplicación sea correcta y no tenga espacios de más.\n\nDetalle técnico: " + ex.Message, "Error de Conexión", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MensajeAsuFit.Mostrar("Error al conectar con el correo. Verifica que tu contraseña de aplicación sea correcta y no tenga espacios de más.\n\nDetalle técnico: " + ex.Message, "Error de Conexión", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -246,18 +246,18 @@ namespace AsuFit.Presentacion
                 if (negocio.ActualizarNotificaciones(obj))
                 {
                     GestorAuditoria.Registrar(usuarioActual.NombreCompleto, "Configuración", "Actualización", "Se cambiaron los parámetros de envío de correos.");
-                    MessageBox.Show("¡Configuración de correos y avisos guardada correctamente!", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MensajeAsuFit.Mostrar("¡Configuración de correos y avisos guardada correctamente!", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error al guardar las notificaciones: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MensajeAsuFit.Mostrar("Error al guardar las notificaciones: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
         private void btnCancelarNotificaciones_Click(object sender, EventArgs e)
         {
-            DialogResult resultado = MessageBox.Show("¿Estás seguro de que deseas cancelar? Se perderán los cambios no guardados.", "Cancelar", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            DialogResult resultado = MensajeAsuFit.Mostrar("¿Estás seguro de que deseas cancelar? Se perderán los cambios no guardados.", "Cancelar", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
             if (resultado == DialogResult.Yes)
             {
@@ -290,7 +290,7 @@ namespace AsuFit.Presentacion
         {
             if (string.IsNullOrWhiteSpace(txtRutaDestino.Text))
             {
-                MessageBox.Show("Por favor, seleccioná una carpeta de destino usando el botón Examinar.", "Atención", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MensajeAsuFit.Mostrar("Por favor, seleccioná una carpeta de destino usando el botón Examinar.", "Atención", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
@@ -335,11 +335,11 @@ namespace AsuFit.Presentacion
                 string fechaFormateada = obj.FechaUltimoBackup.ToString("dd/MM/yyyy HH:mm") + " hs";
                 lblUltimoRespaldo.Text = "Último respaldo realizado: " + fechaFormateada;
 
-                MessageBox.Show($"¡Copia de seguridad generada con éxito!\n\nSe guardó en:\n{rutaCompleta}", "Respaldo Exitoso", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MensajeAsuFit.Mostrar($"¡Copia de seguridad generada con éxito!\n\nSe guardó en:\n{rutaCompleta}", "Respaldo Exitoso", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Ocurrió un error al intentar generar la copia de seguridad:\n\n" + ex.Message, "Error Crítico", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MensajeAsuFit.Mostrar("Ocurrió un error al intentar generar la copia de seguridad:\n\n" + ex.Message, "Error Crítico", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 CargarConfiguracion();
             }
             finally

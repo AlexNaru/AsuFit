@@ -28,7 +28,7 @@ namespace AsuFit.Reportes
                 Font fuenteNormal = FontFactory.GetFont(FontFactory.HELVETICA, 7);
                 Font fuenteNegrita = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 7);
 
-                Paragraph cabeceraGym = new Paragraph("ASUFIT GYM\nR.U.C.: XXXXXXXX-X\n", fuenteNormal);
+                Paragraph cabeceraGym = new Paragraph("AsuFit\nR.U.C.: XXXXXXXX-X\n", fuenteNormal);
                 cabeceraGym.Alignment = Element.ALIGN_CENTER;
                 doc.Add(cabeceraGym);
 
@@ -189,7 +189,7 @@ namespace AsuFit.Reportes
                 doc.Add(pie);
 
                 // CÓDIGO QR EN EL TICKET (CENTRADO)
-                string datosQr = $"Comprobante Nro. {nroTicket} - AsuFit GYM - Total: Gs. {total.ToString("N0")}";
+                string datosQr = $"Comprobante Nro. {nroTicket} - AsuFit - Total: Gs. {total.ToString("N0")}";
                 BarcodeQRCode qrCode = new BarcodeQRCode(datosQr, 100, 100, null);
                 Image imgQr = qrCode.GetImage();
                 imgQr.ScaleAbsolute(70, 70);
@@ -239,7 +239,7 @@ namespace AsuFit.Reportes
                 celdaEmpresa.BorderColor = colorBorde;
                 celdaEmpresa.Padding = 10f;
                 celdaEmpresa.HorizontalAlignment = Element.ALIGN_CENTER;
-                celdaEmpresa.AddElement(new Paragraph("ASUFIT GYM", fuenteTitulo) { Alignment = Element.ALIGN_CENTER });
+                celdaEmpresa.AddElement(new Paragraph("AsuFit", fuenteTitulo) { Alignment = Element.ALIGN_CENTER });
                 celdaEmpresa.AddElement(new Paragraph("Av. 123 esq. Calle 123", fuenteNormal) { Alignment = Element.ALIGN_CENTER });
                 celdaEmpresa.AddElement(new Paragraph("Tel.: (021) xxx xxx", fuenteNormal) { Alignment = Element.ALIGN_CENTER });
                 celdaEmpresa.AddElement(new Paragraph("www.asufitgym.com.py", fuenteNormal) { Alignment = Element.ALIGN_CENTER });
@@ -394,7 +394,7 @@ namespace AsuFit.Reportes
                 doc.Add(tablaDetalles);
 
                 // CÓDIGO QR TIPO "KUATIA" PARA LA FACTURA
-                string datosQrFac = $"Factura Nro. {nroFactura} - AsuFit GYM - Total: Gs. {total.ToString("N0")} - Cliente: {cliente} - RUC: {ruc}";
+                string datosQrFac = $"Factura Nro. {nroFactura} - AsuFit - Total: Gs. {total.ToString("N0")} - Cliente: {cliente} - RUC: {ruc}";
                 BarcodeQRCode qrCodeFac = new BarcodeQRCode(datosQrFac, 100, 100, null);
                 Image imgQrFac = qrCodeFac.GetImage();
                 imgQrFac.ScaleAbsolute(90, 90);
@@ -431,7 +431,7 @@ namespace AsuFit.Reportes
                 Font fuenteNormal = FontFactory.GetFont(FontFactory.HELVETICA, 8);
                 Font fuenteNegrita = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 8);
 
-                Paragraph cabeceraGym = new Paragraph("ASUFIT GYM\nREPORTE DE ARQUEO DE CAJA\n\n", fuenteTitulo);
+                Paragraph cabeceraGym = new Paragraph("AsuFit\nREPORTE DE ARQUEO DE CAJA\n\n", fuenteTitulo);
                 cabeceraGym.Alignment = Element.ALIGN_CENTER;
                 doc.Add(cabeceraGym);
 

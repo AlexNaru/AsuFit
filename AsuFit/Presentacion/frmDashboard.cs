@@ -30,10 +30,12 @@ namespace AsuFit.Presentacion
             AjustarLetraMenu(this);
 
             // 1. Mostramos el ROL, forzamos letra blanca y agregamos el ÍCONO 👤
+            // Establece el color de la fuente y asigna dinámicamente la identidad del operador autenticado a la interfaz.
             btnUsuario.ForeColor = Color.White;
+            btnUsuario.Text = $"👤 {usuarioActual.NombreCompleto}";
+
             // Hace que el reloj tome la fuente dinámica del sistema y le suma 2 puntos para que destaque en negrita
             lblFechaHora.Font = new Font("Segoe UI", Properties.Settings.Default.TamanoFuente + 2f, FontStyle.Bold);
-            btnUsuario.Text = $"👤 {usuarioActual.NombreCompleto}";
 
             if (lblFechaHora != null)
             {
@@ -88,23 +90,31 @@ namespace AsuFit.Presentacion
 
             this.Shown += (s, ev) =>
             {
-                MessageBox.Show($"¡Bienvenido a AsuFit, {usuarioActual.NombreCompleto}!",
+                MensajeAsuFit.Mostrar($"¡Bienvenido a AsuFit, {usuarioActual.NombreCompleto}!",
                                 "Acceso Concedido", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 btnInicio.PerformClick();
             };
         }
 
+        // Intercepta la petición de cierre del sistema operativo o sesión y evalúa la integridad del turno de caja antes de liberar los recursos.
         private void frmDashboard_FormClosing(object sender, FormClosingEventArgs e)
         {
+            AsuFit.Negocio.ArqueoNegocio negocioArqueo = new AsuFit.Negocio.ArqueoNegocio();
+            if (negocioArqueo.VerificarCajaAbierta())
+            {
+                AsuFit.Presentacion.MensajeAsuFit.Mostrar("No se puede cerrar el sistema ni la sesión porque existe un turno de caja abierto. Proceda a realizar el Arqueo de Caja correspondiente.", "Operación Denegada", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                e.Cancel = true;
+                return;
+            }
+
             if (!_cerrandoParaLogOut)
             {
-                DialogResult resultado = MessageBox.Show("¿Está seguro de que desea salir del sistema AsuFit?",
-                    "Confirmar Salida", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                DialogResult resultado = MensajeAsuFit.Mostrar("¿Está seguro de que desea salir del sistema AsuFit?", "Confirmar Salida", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
 
                 if (resultado == DialogResult.Yes)
                 {
                     AsuFit.Datos.GestorAuditoria.Registrar(usuarioActual.NombreCompleto, "Seguridad", "Cierre de Sistema", "El usuario finalizó la ejecución de la aplicación.");
-                    Application.ExitThread();
+                    Application.Exit();
                 }
                 else
                 {
@@ -167,7 +177,7 @@ namespace AsuFit.Presentacion
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error al cargar Notificaciones: " + ex.Message, "Alerta", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MensajeAsuFit.Mostrar("Error al cargar Notificaciones: " + ex.Message, "Alerta", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -192,7 +202,7 @@ namespace AsuFit.Presentacion
             ToolStripMenuItem btnCambiarPass = CrearItemMenu("🔑 Cambiar Contraseña / Perfil");
             btnCambiarPass.Click += (s, e) => {
 
-                frmRegistrarUsuario frmEdicion = new frmRegistrarUsuario(usuarioActual);
+                frmRegistrarUsuario frmEdicion = new frmRegistrarUsuario(usuarioActual, usuarioActual);
                 float escalaActual = Properties.Settings.Default.EscalaInterfaz;
                 frmEdicion.Scale(new SizeF(escalaActual, escalaActual));
                 frmEdicion.StartPosition = FormStartPosition.CenterParent;
@@ -527,7 +537,7 @@ namespace AsuFit.Presentacion
 
         private void btnCerrarSesion_Click(object sender, EventArgs e)
         {
-            DialogResult resultado = MessageBox.Show("¿Está seguro de que desea cerrar la sesión actual?",
+            DialogResult resultado = MensajeAsuFit.Mostrar("¿Está seguro de que desea cerrar la sesión actual?",
                 "Cerrar Sesión", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
             if (resultado == DialogResult.Yes)

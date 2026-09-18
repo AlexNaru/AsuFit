@@ -55,7 +55,7 @@ namespace AsuFit.Presentacion
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error de Base de Datos: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MensajeAsuFit.Mostrar("Error de Base de Datos: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
         #endregion
@@ -298,7 +298,7 @@ namespace AsuFit.Presentacion
         {
             if (string.IsNullOrWhiteSpace(txtNombre.Text) || string.IsNullOrWhiteSpace(txtRuc.Text))
             {
-                MessageBox.Show("El Nombre y el RUC son campos obligatorios.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MensajeAsuFit.Mostrar("El Nombre y el RUC son campos obligatorios.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
@@ -323,19 +323,19 @@ namespace AsuFit.Presentacion
                 {
                     string accion = objProveedor.IdProveedor == 0 ? "Alta" : "Edición";
                     GestorAuditoria.Registrar(usuarioActual.NombreCompleto, "Proveedores", accion, $"Se gestionó al proveedor '{objProveedor.Nombre}'.");
-                    MessageBox.Show("Proveedor guardado correctamente.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MensajeAsuFit.Mostrar("Proveedor guardado correctamente.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                     LimpiarFormulario();
                     CargarGrilla();
                 }
                 else
                 {
-                    MessageBox.Show(mensajeError, "Aviso de Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MensajeAsuFit.Mostrar(mensajeError, "Aviso de Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error al guardar: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MensajeAsuFit.Mostrar("Error al guardar: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -343,7 +343,7 @@ namespace AsuFit.Presentacion
         {
             if (string.IsNullOrWhiteSpace(txtId.Text))
             {
-                MessageBox.Show("Por favor, seleccione un proveedor de la lista primero.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MensajeAsuFit.Mostrar("Por favor, seleccione un proveedor de la lista primero.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
@@ -355,14 +355,14 @@ namespace AsuFit.Presentacion
                 if (negocio.CambiarEstado(idProveedor, nuevoEstadoTexto))
                 {
                     GestorAuditoria.Registrar(usuarioActual.NombreCompleto, "Proveedores", "Cambio de Estado", $"Estado del proveedor ID {idProveedor} a {nuevoEstadoTexto}.");
-                    MessageBox.Show($"El estado del proveedor ha sido cambiado a: {nuevoEstadoTexto}.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MensajeAsuFit.Mostrar($"El estado del proveedor ha sido cambiado a: {nuevoEstadoTexto}.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     LimpiarFormulario();
                     CargarGrilla();
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error al cambiar el estado: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MensajeAsuFit.Mostrar("Error al cambiar el estado: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 

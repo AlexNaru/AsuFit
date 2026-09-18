@@ -322,9 +322,16 @@ namespace AsuFit.Presentacion
         // Integra la solicitud de cobro con el Carrito Global utilizando referencias en memoria y transfiere al módulo de Caja.
         private void btnCobrar_Click(object sender, EventArgs e)
         {
+            ArqueoNegocio negocioArqueo = new ArqueoNegocio();
+            if (!negocioArqueo.VerificarCajaAbierta())
+            {
+                MensajeAsuFit.Mostrar("Operación denegada. Debes realizar la apertura de caja para procesar transacciones financieras.", "Caja Cerrada", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
             if (idSocioSeleccionado == 0)
             {
-                MessageBox.Show("Por favor, seleccione un socio de la tabla para registrar el cobro.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MensajeAsuFit.Mostrar("Por favor, seleccione un socio de la tabla para registrar el cobro.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
@@ -332,13 +339,13 @@ namespace AsuFit.Presentacion
 
             if (planSeleccionado == null || planSeleccionado.IdPlan == 0)
             {
-                MessageBox.Show("Por favor, seleccione un Plan válido.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MensajeAsuFit.Mostrar("Por favor, seleccione un Plan válido.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
             if (CarritoGlobal.Detalles.Rows.Count > 0 && CarritoGlobal.IdSocioPagara != null && CarritoGlobal.IdSocioPagara != idSocioSeleccionado)
             {
-                DialogResult respuesta = MessageBox.Show(
+                DialogResult respuesta = MensajeAsuFit.Mostrar(
                     "Ya hay conceptos en la caja a nombre de otro socio.\n\n¿Deseas agregar esta mensualidad para cobrar ambos planes juntos en el mismo ticket?\n(La factura saldrá a nombre del primer socio, pero ambos serán renovados en el sistema).",
                     "Cobro Múltiple Detectado", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 

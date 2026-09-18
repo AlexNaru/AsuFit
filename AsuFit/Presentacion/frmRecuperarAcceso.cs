@@ -172,7 +172,7 @@ namespace AsuFit.Presentacion
         {
             if (!usuarioVerificado)
             {
-                MessageBox.Show("Por favor, ingresá primero un nombre de usuario válido.", "Acceso restringido", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MensajeAsuFit.Mostrar("Por favor, ingresá primero un nombre de usuario válido.", "Acceso restringido", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 txtUsuarioRecuperar.Focus();
             }
         }
@@ -182,7 +182,7 @@ namespace AsuFit.Presentacion
         {
             if (!usuarioVerificado)
             {
-                MessageBox.Show("Por favor, ingresá primero un nombre de usuario válido.", "Acceso restringido", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MensajeAsuFit.Mostrar("Por favor, ingresá primero un nombre de usuario válido.", "Acceso restringido", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 txtUsuarioRecuperar.Focus();
             }
         }
@@ -192,7 +192,7 @@ namespace AsuFit.Presentacion
         {
             if (!usuarioVerificado)
             {
-                MessageBox.Show("Por favor, ingresá primero un nombre de usuario válido.", "Acceso restringido", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MensajeAsuFit.Mostrar("Por favor, ingresá primero un nombre de usuario válido.", "Acceso restringido", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 txtUsuarioRecuperar.Focus();
             }
         }
@@ -247,7 +247,7 @@ namespace AsuFit.Presentacion
 
             if (string.IsNullOrWhiteSpace(username))
             {
-                MessageBox.Show("Debes ingresar el nombre de usuario.", "Campo Requerido", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MensajeAsuFit.Mostrar("Debes ingresar el nombre de usuario.", "Campo Requerido", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 txtUsuarioRecuperar.Focus();
                 return;
             }
@@ -264,7 +264,7 @@ namespace AsuFit.Presentacion
             {
                 usuarioVerificado = false;
                 lblPreguntaSeguridad.Text = "¿Palabra o número de seguridad?";
-                MessageBox.Show("El usuario no existe o se encuentra inactivo.", "Error de Búsqueda", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MensajeAsuFit.Mostrar("El usuario no existe o se encuentra inactivo.", "Error de Búsqueda", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 txtUsuarioRecuperar.Focus();
             }
         }
@@ -274,7 +274,7 @@ namespace AsuFit.Presentacion
         {
             if (!usuarioVerificado)
             {
-                MessageBox.Show("Debes identificar un usuario antes de continuar.", "Validación", MessageBoxButtons.OK, MessageBoxIcon.Hand);
+                MensajeAsuFit.Mostrar("Debes identificar un usuario antes de continuar.", "Validación", MessageBoxButtons.OK, MessageBoxIcon.Hand);
                 txtUsuarioRecuperar.Focus();
                 return;
             }
@@ -286,13 +286,13 @@ namespace AsuFit.Presentacion
 
             if (string.IsNullOrWhiteSpace(respuesta) || string.IsNullOrWhiteSpace(nuevaClave) || string.IsNullOrWhiteSpace(confirmarClave))
             {
-                MessageBox.Show("Todos los campos de seguridad son obligatorios.", "Datos faltantes", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MensajeAsuFit.Mostrar("Todos los campos de seguridad son obligatorios.", "Datos faltantes", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
             if (nuevaClave != confirmarClave)
             {
-                MessageBox.Show("Las nuevas contraseñas no coinciden entre sí.", "Error de Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MensajeAsuFit.Mostrar("Las nuevas contraseñas no coinciden entre sí.", "Error de Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 txtConfirmarClave.Focus();
                 return;
             }
@@ -304,12 +304,12 @@ namespace AsuFit.Presentacion
 
             if (exito)
             {
-                MessageBox.Show("La contraseña ha sido actualizada con éxito.", "Operación Exitosa", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MensajeAsuFit.Mostrar("La contraseña ha sido actualizada con éxito.", "Operación Exitosa", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 this.Close();
             }
             else
             {
-                MessageBox.Show("La respuesta de seguridad proporcionada es incorrecta.", "Fallo de Validación", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MensajeAsuFit.Mostrar("La respuesta de seguridad proporcionada es incorrecta.", "Fallo de Validación", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 txtRespuesta.Clear();
                 txtRespuesta.Focus();
             }

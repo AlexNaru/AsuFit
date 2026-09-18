@@ -53,7 +53,7 @@ namespace AsuFit.Presentacion
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error al cargar la lista de planes: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MensajeAsuFit.Mostrar("Error al cargar la lista de planes: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
         #endregion
@@ -226,7 +226,7 @@ namespace AsuFit.Presentacion
             }
             else
             {
-                MessageBox.Show("Por favor, seleccioná un plan de la tabla haciendo clic en la fila.", "Atención", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MensajeAsuFit.Mostrar("Por favor, seleccioná un plan de la tabla haciendo clic en la fila.", "Atención", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
 
@@ -234,13 +234,13 @@ namespace AsuFit.Presentacion
         {
             if (idPlanSeleccionado == 0)
             {
-                MessageBox.Show("Por favor, seleccioná un plan de la tabla primero.", "Atención", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MensajeAsuFit.Mostrar("Por favor, seleccioná un plan de la tabla primero.", "Atención", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
             string nuevoEstado = chkMostrarInactivos.Checked ? "Activo" : "Inactivo";
 
-            DialogResult pregunta = MessageBox.Show($"¿Está seguro que desea cambiar el estado de este plan a {nuevoEstado}?", "Confirmar", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            DialogResult pregunta = MensajeAsuFit.Mostrar($"¿Está seguro que desea cambiar el estado de este plan a {nuevoEstado}?", "Confirmar", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
             if (pregunta == DialogResult.Yes)
             {
@@ -250,12 +250,12 @@ namespace AsuFit.Presentacion
                 if (negocio.CambiarEstadoPlan(idPlanSeleccionado, nuevoEstado, out mensaje))
                 {
                     GestorAuditoria.Registrar(usuarioActual.NombreCompleto, "Planes", "Cambio de Estado", $"Se cambió el estado del plan ID {idPlanSeleccionado} a {nuevoEstado}.");
-                    MessageBox.Show("El estado del plan fue actualizado.", "Listo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MensajeAsuFit.Mostrar("El estado del plan fue actualizado.", "Listo", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     CargarGrilla();
                 }
                 else
                 {
-                    MessageBox.Show(mensaje, "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MensajeAsuFit.Mostrar(mensaje, "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
             }
         }

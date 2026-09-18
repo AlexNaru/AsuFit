@@ -164,7 +164,7 @@ namespace AsuFit.Presentacion
             return txt.Text.Trim();
         }
 
-        // Despliega los atributos de la entidad sobre los controles de la vista, seleccionando el plan mediante su identificador lógico.
+        // Despliega los atributos de la entidad sobre los controles de la vista, aplicando sanitización de límites temporales.
         private void CargarDatosEnPantalla()
         {
             txtCedula.Text = socioEdicion.Cedula;
@@ -185,7 +185,18 @@ namespace AsuFit.Presentacion
             txtTelefono.Text = socioEdicion.Telefono;
             txtTelefono.ForeColor = Color.White;
 
-            dtpFechaNacimiento.Value = socioEdicion.FechaNacimiento;
+            if (socioEdicion.FechaNacimiento < dtpFechaNacimiento.MinDate)
+            {
+                dtpFechaNacimiento.Value = dtpFechaNacimiento.MinDate;
+            }
+            else if (socioEdicion.FechaNacimiento > dtpFechaNacimiento.MaxDate)
+            {
+                dtpFechaNacimiento.Value = dtpFechaNacimiento.MaxDate;
+            }
+            else
+            {
+                dtpFechaNacimiento.Value = socioEdicion.FechaNacimiento;
+            }
 
             txtContactoEmergencia.Text = socioEdicion.NombreContactoEmergencia;
             txtContactoEmergencia.ForeColor = Color.White;
@@ -306,7 +317,7 @@ namespace AsuFit.Presentacion
                     if (txtActivo.Name != "txtEmail" && txtActivo.Name != "txtContactoEmergencia" &&
                         txtActivo.Name != "txtTelefonoEmergencia" && txtActivo.Name != "txtRuc")
                     {
-                        MessageBox.Show("Este campo no puede estar vacío.", "Campo requerido", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        MensajeAsuFit.Mostrar("Este campo no puede estar vacío.", "Campo requerido", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                         return;
                     }
                 }
@@ -345,9 +356,16 @@ namespace AsuFit.Presentacion
         // Efectúa comprobaciones paramétricas, evalúa unicidad, ejecuta el procedimiento almacenado y despacha al módulo de facturación.
         private void btnGuardar_Click(object sender, EventArgs e)
         {
+            ArqueoNegocio negocioArqueo = new ArqueoNegocio();
+            if (!negocioArqueo.VerificarCajaAbierta())
+            {
+                MensajeAsuFit.Mostrar("Operación denegada. Debes realizar la apertura de caja para procesar transacciones financieras.", "Caja Cerrada", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
             if (socioEdicion == null && cmbPlanes.SelectedIndex <= 0)
             {
-                MessageBox.Show("Por favor, seleccioná el Plan para el nuevo socio.", "Atención", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MensajeAsuFit.Mostrar("Por favor, seleccioná el Plan para el nuevo socio.", "Atención", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
@@ -377,10 +395,10 @@ namespace AsuFit.Presentacion
                 if (negocioSocio.EditarSocio(nuevoSocio, out mensajeError))
                 {
                     AsuFit.Datos.GestorAuditoria.Registrar(usuarioActual.NombreCompleto, "Socios", "Edición", $"Se actualizaron los datos: {nuevoSocio.Nombre} ({nuevoSocio.Cedula}).");
-                    MessageBox.Show("Actualizado correctamente.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MensajeAsuFit.Mostrar("Actualizado correctamente.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     this.Close();
                 }
-                else MessageBox.Show(mensajeError, "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                else MensajeAsuFit.Mostrar(mensajeError, "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
             else
             {
@@ -389,7 +407,7 @@ namespace AsuFit.Presentacion
 
                 if (planSeleccionado == null || planSeleccionado.IdPlan == 0)
                 {
-                    MessageBox.Show("Por favor, seleccione un plan válido.", "Error de integridad", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MensajeAsuFit.Mostrar("Por favor, seleccione un plan válido.", "Error de integridad", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
 
@@ -408,13 +426,28 @@ namespace AsuFit.Presentacion
 
                     if (CarritoGlobal.IdSocioPagara == null) CarritoGlobal.IdSocioPagara = nuevoId;
 
-                    // FIX DE CAJA: Cerramos si está abierta en fondo y abrimos limpia
                     if (Application.OpenForms["frmCajaCobro"] is frmCajaCobro cajaAbierta) cajaAbierta.Close();
 
-                    new frmCajaCobro(usuarioActual).ShowDialog();
+                    // Instancia el formulario de cobro y calcula sus coordenadas para anclarlo al centro geométrico del panel contenedor
+                    frmCajaCobro frmCaja = new frmCajaCobro(usuarioActual);
+                    frmCaja.StartPosition = FormStartPosition.Manual;
+
+                    if (this.Parent != null)
+                    {
+                        Point posAbsoluta = this.Parent.PointToScreen(Point.Empty);
+                        int x = posAbsoluta.X + (this.Parent.Width - frmCaja.Width) / 2;
+                        int y = posAbsoluta.Y + (this.Parent.Height - frmCaja.Height) / 2;
+                        frmCaja.Location = new Point(x > 0 ? x : 0, y > 0 ? y : 0);
+                    }
+                    else
+                    {
+                        frmCaja.StartPosition = FormStartPosition.CenterParent;
+                    }
+
+                    frmCaja.ShowDialog();
                     LimpiarCampos();
                 }
-                else MessageBox.Show(mensajeError, "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                else MensajeAsuFit.Mostrar(mensajeError, "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
 

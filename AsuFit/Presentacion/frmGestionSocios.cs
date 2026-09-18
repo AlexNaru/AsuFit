@@ -341,12 +341,12 @@ namespace AsuFit.Presentacion
                 }
                 else
                 {
-                    MessageBox.Show("Por favor, seleccioná un socio de la tabla haciendo clic en la fila.", "Atención", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MensajeAsuFit.Mostrar("Por favor, seleccioná un socio de la tabla haciendo clic en la fila.", "Atención", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error al capturar el socio: " + ex.Message, "Error interno", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MensajeAsuFit.Mostrar("Error al capturar el socio: " + ex.Message, "Error interno", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -355,7 +355,7 @@ namespace AsuFit.Presentacion
         {
             if (idSocioSeleccionado == 0)
             {
-                MessageBox.Show("Por favor, seleccioná un socio de la tabla primero.", "Atención", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MensajeAsuFit.Mostrar("Por favor, seleccioná un socio de la tabla primero.", "Atención", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
@@ -366,14 +366,14 @@ namespace AsuFit.Presentacion
             string nombre = dgvSocios.CurrentRow.Cells[colNombre].Value?.ToString();
             string nuevoEstado = (estadoActual == "Activo") ? "Inactivo" : "Activo";
 
-            DialogResult pregunta = MessageBox.Show($"¿Cambiar el estado de {nombre} a {nuevoEstado}?", "Confirmar", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            DialogResult pregunta = MensajeAsuFit.Mostrar($"¿Cambiar el estado de {nombre} a {nuevoEstado}?", "Confirmar", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             if (pregunta == DialogResult.Yes)
             {
                 SocioNegocio negocio = new SocioNegocio();
                 if (negocio.CambiarEstadoSocio(idSocioSeleccionado, nuevoEstado))
                 {
                     AsuFit.Datos.GestorAuditoria.Registrar(usuarioActual.NombreCompleto, "Socios", "Cambio de Estado", $"Se cambió el estado del socio '{nombre}' a {nuevoEstado}.");
-                    MessageBox.Show("Estado actualizado con éxito.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MensajeAsuFit.Mostrar("Estado actualizado con éxito.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     CargarGrilla();
                 }
             }

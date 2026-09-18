@@ -72,7 +72,7 @@ namespace AsuFit.Datos
                 }
                 catch (Exception ex)
                 {
-                    System.Windows.Forms.MessageBox.Show("Error Técnico SQL al buscar plan: " + ex.Message);
+                    AsuFit.Presentacion.MensajeAsuFit.Mostrar("Error Técnico SQL al buscar plan: " + ex.Message);
                 }
             }
             return objPlan;

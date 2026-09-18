@@ -23,6 +23,12 @@ namespace AsuFit.Negocio
             return objDatos.ListarProductos();
         }
 
+        // Expone el listado histórico y administrativo de inventario sin filtros de estado lógico.
+        public DataTable ListarTodosLosProductos()
+        {
+            return objDatos.ListarTodosLosProductos();
+        }
+
         // Obtiene la lista básica de productos para operaciones simples.
         public DataTable ListarProductosBasico()
         {

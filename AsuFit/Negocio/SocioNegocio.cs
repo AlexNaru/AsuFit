@@ -11,6 +11,7 @@ namespace AsuFit.Negocio
     // Orquesta las reglas de negocio para la gestión y control de los socios.
     public class SocioNegocio
     {
+        // Instancia de la capa de datos para interactuar con la base de datos.
         private SocioDatos objSocioDatos = new SocioDatos();
 
         #region CONSULTAS Y BÚSQUEDAS
@@ -53,18 +54,21 @@ namespace AsuFit.Negocio
         {
             mensaje = string.Empty;
 
+            // Si el correo electrónico no es válido, se retorna un mensaje de error.
             if (string.IsNullOrWhiteSpace(objSocio.Cedula))
             {
                 mensaje = "El número de Cédula es obligatorio para registrar al socio.";
                 return false;
             }
 
+            // Si el correo electrónico no es válido, se retorna un mensaje de error.
             if (string.IsNullOrWhiteSpace(objSocio.Nombre) || string.IsNullOrWhiteSpace(objSocio.Apellido))
             {
                 mensaje = "El nombre y el apellido no pueden estar vacíos.";
                 return false;
             }
 
+            // Si el correo electrónico no es válido, se retorna un mensaje de error.
             if (objSocio.IdPlan <= 0)
             {
                 mensaje = "Debe seleccionar un plan válido para el socio.";
@@ -216,7 +220,7 @@ namespace AsuFit.Negocio
                             DateTime fechaVence = Convert.ToDateTime(row["FechaVencimiento"]);
 
                             MailMessage correo = new MailMessage();
-                            correo.From = new MailAddress(correoGym, "AsuFit GYM");
+                            correo.From = new MailAddress(correoGym, "AsuFit");
                             correo.To.Add(emailDestino);
 
                             string diaTexto = (dias == 0) ? "HOY" : ((dias == avisoCercano) ? "MAÑANA" : $"en {dias} días");
@@ -225,7 +229,7 @@ namespace AsuFit.Negocio
                             System.Globalization.CultureInfo idiomaEspanol = new System.Globalization.CultureInfo("es-ES");
                             string fechaNatural = fechaVence.ToString("dddd d 'de' MMMM", idiomaEspanol);
 
-                            correo.Body = $"Hola {nombre},\n\nTe recordamos que tu membresía en AsuFit Gym vence el {fechaNatural}.\n\n¡Te esperamos en la recepción para renovar y seguir entrenando con todo!\n\nSaludos,\nEl equipo de AsuFit Gym";
+                            correo.Body = $"Hola {nombre},\n\nTe recordamos que tu membresía en AsuFit vence el {fechaNatural}.\n\n¡Te esperamos en la recepción para renovar y seguir entrenando con todo!\n\nSaludos,\nEl equipo de AsuFit";
                             correo.IsBodyHtml = false;
 
                             try

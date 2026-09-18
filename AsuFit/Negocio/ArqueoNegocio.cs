@@ -25,6 +25,12 @@ namespace AsuFit.Negocio
         #endregion
 
         #region CONSULTAS Y REPORTES
+        // Expone la validación de estado operativo de la caja hacia las capas de presentación.
+        public bool VerificarCajaAbierta()
+        {
+            return datos.VerificarCajaAbierta();
+        }
+
         // Verifica y recupera el turno de caja abierto para un usuario.
         public DataTable ObtenerTurnoAbierto(int idUsuario)
         {

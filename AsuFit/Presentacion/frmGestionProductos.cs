@@ -228,7 +228,7 @@ namespace AsuFit.Presentacion
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error al cargar proveedores: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MensajeAsuFit.Mostrar("Error al cargar proveedores: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -274,7 +274,7 @@ namespace AsuFit.Presentacion
         #region 4. BÚSQUEDA Y GESTIÓN DE GRILLA
         private void CargarGrilla()
         {
-            dtProductos = negocio.ListarProductos();
+            dtProductos = negocio.ListarTodosLosProductos();
 
             if (dtProductos != null)
             {
@@ -422,7 +422,7 @@ namespace AsuFit.Presentacion
         {
             if (string.IsNullOrWhiteSpace(ObtenerTextoReal(txtCodigo)))
             {
-                MessageBox.Show("Por favor, ingrese primero el Código de Barras.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MensajeAsuFit.Mostrar("Por favor, ingrese primero el Código de Barras.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
@@ -441,7 +441,7 @@ namespace AsuFit.Presentacion
                 }
                 catch (OutOfMemoryException)
                 {
-                    MessageBox.Show("El formato de esta imagen no es compatible o el archivo está dañado. Intente con otra imagen.", "Error de formato", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MensajeAsuFit.Mostrar("El formato de esta imagen no es compatible o el archivo está dañado. Intente con otra imagen.", "Error de formato", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     rutaFotoOrigen = "";
                 }
             }
@@ -456,7 +456,7 @@ namespace AsuFit.Presentacion
 
             if (string.IsNullOrWhiteSpace(nombreReal) || string.IsNullOrWhiteSpace(precioReal))
             {
-                MessageBox.Show("El Nombre y el Precio son campos obligatorios.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MensajeAsuFit.Mostrar("El Nombre y el Precio son campos obligatorios.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
@@ -507,23 +507,23 @@ namespace AsuFit.Presentacion
                         File.Copy(rutaFotoOrigen, rutaDestino);
                     }
 
-                    MessageBox.Show("Producto guardado correctamente.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MensajeAsuFit.Mostrar("Producto guardado correctamente.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                     LimpiarFormulario();
                     CargarGrilla();
                 }
                 else
                 {
-                    MessageBox.Show("No se pudo guardar el producto.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MensajeAsuFit.Mostrar("No se pudo guardar el producto.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
             catch (FormatException)
             {
-                MessageBox.Show("Por favor, ingresá solo números válidos en Precio y Stock.", "Error de Formato", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MensajeAsuFit.Mostrar("Por favor, ingresá solo números válidos en Precio y Stock.", "Error de Formato", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error al guardar: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MensajeAsuFit.Mostrar("Error al guardar: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -531,7 +531,7 @@ namespace AsuFit.Presentacion
         {
             if (txtId.Text == "")
             {
-                MessageBox.Show("Seleccione un producto de la grilla primero.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MensajeAsuFit.Mostrar("Seleccione un producto de la grilla primero.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
@@ -543,7 +543,7 @@ namespace AsuFit.Presentacion
                 string nuevoEstado = estadoActual == "Activo" ? "Inactivo" : "Activo";
                 string mensaje = estadoActual == "Activo" ? "¿Desea dar de baja (desactivar) este producto?" : "¿Desea reactivar este producto?";
 
-                DialogResult result = MessageBox.Show(mensaje, "Confirmar Cambio", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                DialogResult result = MensajeAsuFit.Mostrar(mensaje, "Confirmar Cambio", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
                 if (result == DialogResult.Yes)
                 {
@@ -552,7 +552,7 @@ namespace AsuFit.Presentacion
                     if (exito)
                     {
                         GestorAuditoria.Registrar(usuarioActual.NombreCompleto, "Inventario", "Cambio de Estado", $"Cambió el estado del producto ID {id} a {nuevoEstado}.");
-                        MessageBox.Show($"El estado del producto se cambió a: {nuevoEstado}", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        MensajeAsuFit.Mostrar($"El estado del producto se cambió a: {nuevoEstado}", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         LimpiarFormulario();
                         CargarGrilla();
                     }
@@ -560,7 +560,7 @@ namespace AsuFit.Presentacion
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error al cambiar estado: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MensajeAsuFit.Mostrar("Error al cambiar estado: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 

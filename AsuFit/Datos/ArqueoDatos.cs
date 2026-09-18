@@ -71,6 +71,22 @@ namespace AsuFit.Datos
         #endregion
 
         #region CONSULTAS Y REPORTES
+        // Verifica a nivel global en la base de datos si existe al menos un turno de caja con estado operativo abierto.
+        public bool VerificarCajaAbierta()
+        {
+            using (SqlConnection oConexion = Conexion.ObtenerConexion())
+            {
+                try
+                {
+                    string query = "SELECT COUNT(*) FROM TurnosCaja WHERE Estado = 'Abierta'";
+                    SqlCommand cmd = new SqlCommand(query, oConexion);
+                    oConexion.Open();
+                    return Convert.ToInt32(cmd.ExecuteScalar()) > 0;
+                }
+                catch (Exception) { return false; }
+            }
+        }
+
         // Valida la existencia de un turno de caja activo para el usuario proporcionado.
         public DataTable ObtenerTurnoAbierto(int idUsuario)
         {

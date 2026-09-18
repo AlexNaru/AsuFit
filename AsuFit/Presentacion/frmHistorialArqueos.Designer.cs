@@ -28,10 +28,10 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle13 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle14 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle15 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle16 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle9 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle10 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle11 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle12 = new System.Windows.Forms.DataGridViewCellStyle();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
@@ -96,7 +96,7 @@
             this.colArqueoCajero,
             this.colArqueoEstado});
             this.dgvArqueos.Location = new System.Drawing.Point(11, 67);
-            this.dgvArqueos.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.dgvArqueos.Margin = new System.Windows.Forms.Padding(2);
             this.dgvArqueos.MultiSelect = false;
             this.dgvArqueos.Name = "dgvArqueos";
             this.dgvArqueos.ReadOnly = true;
@@ -119,8 +119,8 @@
             // colArqueoFecha
             // 
             this.colArqueoFecha.DataPropertyName = "FechaHora";
-            dataGridViewCellStyle13.Format = "dd/MM/yyyy HH:mm";
-            this.colArqueoFecha.DefaultCellStyle = dataGridViewCellStyle13;
+            dataGridViewCellStyle9.Format = "dd/MM/yyyy HH:mm";
+            this.colArqueoFecha.DefaultCellStyle = dataGridViewCellStyle9;
             this.colArqueoFecha.HeaderText = "Fecha y Hora";
             this.colArqueoFecha.MinimumWidth = 8;
             this.colArqueoFecha.Name = "colArqueoFecha";
@@ -129,8 +129,8 @@
             // colArqueoIngresos
             // 
             this.colArqueoIngresos.DataPropertyName = "TotalIngresosSistema";
-            dataGridViewCellStyle14.Format = "N0";
-            this.colArqueoIngresos.DefaultCellStyle = dataGridViewCellStyle14;
+            dataGridViewCellStyle10.Format = "N0";
+            this.colArqueoIngresos.DefaultCellStyle = dataGridViewCellStyle10;
             this.colArqueoIngresos.HeaderText = "Total Ingresos";
             this.colArqueoIngresos.MinimumWidth = 8;
             this.colArqueoIngresos.Name = "colArqueoIngresos";
@@ -139,8 +139,8 @@
             // colArqueoEfectivo
             // 
             this.colArqueoEfectivo.DataPropertyName = "EfectivoDeclarado";
-            dataGridViewCellStyle15.Format = "N0";
-            this.colArqueoEfectivo.DefaultCellStyle = dataGridViewCellStyle15;
+            dataGridViewCellStyle11.Format = "N0";
+            this.colArqueoEfectivo.DefaultCellStyle = dataGridViewCellStyle11;
             this.colArqueoEfectivo.HeaderText = "Efectivo Declarado";
             this.colArqueoEfectivo.MinimumWidth = 8;
             this.colArqueoEfectivo.Name = "colArqueoEfectivo";
@@ -149,8 +149,8 @@
             // colArqueoDiferencia
             // 
             this.colArqueoDiferencia.DataPropertyName = "Diferencia";
-            dataGridViewCellStyle16.Format = "N0";
-            this.colArqueoDiferencia.DefaultCellStyle = dataGridViewCellStyle16;
+            dataGridViewCellStyle12.Format = "N0";
+            this.colArqueoDiferencia.DefaultCellStyle = dataGridViewCellStyle12;
             this.colArqueoDiferencia.HeaderText = "Diferencia";
             this.colArqueoDiferencia.MinimumWidth = 8;
             this.colArqueoDiferencia.Name = "colArqueoDiferencia";
@@ -185,7 +185,7 @@
             // btnVerPDF
             // 
             this.btnVerPDF.Location = new System.Drawing.Point(131, 261);
-            this.btnVerPDF.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btnVerPDF.Margin = new System.Windows.Forms.Padding(2);
             this.btnVerPDF.Name = "btnVerPDF";
             this.btnVerPDF.Size = new System.Drawing.Size(147, 25);
             this.btnVerPDF.TabIndex = 48;
@@ -196,10 +196,10 @@
             // dtpDesde
             // 
             this.dtpDesde.Format = System.Windows.Forms.DateTimePickerFormat.Short;
-            this.dtpDesde.Location = new System.Drawing.Point(141, 32);
+            this.dtpDesde.Location = new System.Drawing.Point(144, 32);
             this.dtpDesde.Margin = new System.Windows.Forms.Padding(2);
             this.dtpDesde.Name = "dtpDesde";
-            this.dtpDesde.Size = new System.Drawing.Size(15, 20);
+            this.dtpDesde.Size = new System.Drawing.Size(12, 20);
             this.dtpDesde.TabIndex = 49;
             // 
             // txtDesde
@@ -216,10 +216,10 @@
             // dtpHasta
             // 
             this.dtpHasta.Format = System.Windows.Forms.DateTimePickerFormat.Short;
-            this.dtpHasta.Location = new System.Drawing.Point(370, 32);
+            this.dtpHasta.Location = new System.Drawing.Point(373, 32);
             this.dtpHasta.Margin = new System.Windows.Forms.Padding(2);
             this.dtpHasta.Name = "dtpHasta";
-            this.dtpHasta.Size = new System.Drawing.Size(15, 20);
+            this.dtpHasta.Size = new System.Drawing.Size(12, 20);
             this.dtpHasta.TabIndex = 51;
             // 
             // txtHasta
@@ -248,7 +248,7 @@
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label1);
-            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "frmHistorialArqueos";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "frmHistorialArqueos";

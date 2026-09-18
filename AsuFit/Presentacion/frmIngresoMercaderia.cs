@@ -62,7 +62,7 @@ namespace AsuFit.Presentacion
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error al cargar proveedores: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MensajeAsuFit.Mostrar("Error al cargar proveedores: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -489,15 +489,22 @@ namespace AsuFit.Presentacion
         #region 7. ACCIONES INFERIORES: CONFIRMAR Y LIMPIAR
         private void btnConfirmarIngreso_Click(object sender, EventArgs e)
         {
+            ArqueoNegocio negocioArqueo = new ArqueoNegocio();
+            if (!negocioArqueo.VerificarCajaAbierta())
+            {
+                MensajeAsuFit.Mostrar("Operación denegada. Debes realizar la apertura de caja para procesar transacciones financieras.", "Caja Cerrada", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
             if (txtIdProductoSeleccionado.Text == "")
             {
-                MessageBox.Show("Por favor, seleccione un producto de la lista primero.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MensajeAsuFit.Mostrar("Por favor, seleccione un producto de la lista primero.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
             if (string.IsNullOrWhiteSpace(txtCantidadIngreso.Text) || string.IsNullOrWhiteSpace(txtCostoTotal.Text) || cmbProveedores.SelectedIndex == -1)
             {
-                MessageBox.Show("Por favor, ingrese la cantidad, el costo total y seleccione un proveedor.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MensajeAsuFit.Mostrar("Por favor, ingrese la cantidad, el costo total y seleccione un proveedor.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
@@ -513,14 +520,14 @@ namespace AsuFit.Presentacion
                 if (exito)
                 {
                     GestorAuditoria.Registrar(usuarioActual.NombreCompleto, "Inventario", "Ingreso de Mercadería", $"Ingresaron {cantidad} unid. de producto ID {idProducto} (Prov: {cmbProveedores.Text}).");
-                    MessageBox.Show("¡Mercadería ingresada y stock actualizado correctamente!", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MensajeAsuFit.Mostrar("¡Mercadería ingresada y stock actualizado correctamente!", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     btnLimpiar_Click(null, null);
                     CargarGrilla();
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error al actualizar stock: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MensajeAsuFit.Mostrar("Error al actualizar stock: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 

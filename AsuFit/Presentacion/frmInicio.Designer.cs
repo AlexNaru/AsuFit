@@ -72,6 +72,8 @@
             this.colBajoNombre = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colBajoActual = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.label8 = new System.Windows.Forms.Label();
+            this.lblTotalProductos = new System.Windows.Forms.Label();
+            this.lblStockBajo = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dgvVencimientos)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvVencidos)).BeginInit();
             this.panel1.SuspendLayout();
@@ -227,7 +229,7 @@
             // 
             this.lblProximosVencimientos.AutoSize = true;
             this.lblProximosVencimientos.ForeColor = System.Drawing.Color.White;
-            this.lblProximosVencimientos.Location = new System.Drawing.Point(137, 8);
+            this.lblProximosVencimientos.Location = new System.Drawing.Point(136, 8);
             this.lblProximosVencimientos.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblProximosVencimientos.Name = "lblProximosVencimientos";
             this.lblProximosVencimientos.Size = new System.Drawing.Size(13, 13);
@@ -300,7 +302,7 @@
             // 
             this.lblVencimientos.AutoSize = true;
             this.lblVencimientos.ForeColor = System.Drawing.Color.White;
-            this.lblVencimientos.Location = new System.Drawing.Point(70, 8);
+            this.lblVencimientos.Location = new System.Drawing.Point(71, 8);
             this.lblVencimientos.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblVencimientos.Name = "lblVencimientos";
             this.lblVencimientos.Size = new System.Drawing.Size(13, 13);
@@ -469,6 +471,7 @@
             // panel8
             // 
             this.panel8.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(39)))), ((int)(((byte)(47)))));
+            this.panel8.Controls.Add(this.lblTotalProductos);
             this.panel8.Controls.Add(this.dgvProductosStock);
             this.panel8.Controls.Add(this.label6);
             this.panel8.Location = new System.Drawing.Point(473, 2);
@@ -533,6 +536,7 @@
             // panel9
             // 
             this.panel9.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(39)))), ((int)(((byte)(47)))));
+            this.panel9.Controls.Add(this.lblStockBajo);
             this.panel9.Controls.Add(this.dgvProductosStockBajo);
             this.panel9.Controls.Add(this.label8);
             this.panel9.Location = new System.Drawing.Point(473, 144);
@@ -594,6 +598,28 @@
             this.label8.Size = new System.Drawing.Size(134, 13);
             this.label8.TabIndex = 13;
             this.label8.Text = "Productos con Stock Bajo:";
+            // 
+            // lblTotalProductos
+            // 
+            this.lblTotalProductos.AutoSize = true;
+            this.lblTotalProductos.ForeColor = System.Drawing.Color.White;
+            this.lblTotalProductos.Location = new System.Drawing.Point(124, 7);
+            this.lblTotalProductos.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.lblTotalProductos.Name = "lblTotalProductos";
+            this.lblTotalProductos.Size = new System.Drawing.Size(13, 13);
+            this.lblTotalProductos.TabIndex = 15;
+            this.lblTotalProductos.Text = "0";
+            // 
+            // lblStockBajo
+            // 
+            this.lblStockBajo.AutoSize = true;
+            this.lblStockBajo.ForeColor = System.Drawing.Color.White;
+            this.lblStockBajo.Location = new System.Drawing.Point(151, 8);
+            this.lblStockBajo.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.lblStockBajo.Name = "lblStockBajo";
+            this.lblStockBajo.Size = new System.Drawing.Size(13, 13);
+            this.lblStockBajo.TabIndex = 15;
+            this.lblStockBajo.Text = "0";
             // 
             // frmInicio
             // 
@@ -685,5 +711,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn colBajoActual;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.Label lblTotalProductos;
+        private System.Windows.Forms.Label lblStockBajo;
     }
 }

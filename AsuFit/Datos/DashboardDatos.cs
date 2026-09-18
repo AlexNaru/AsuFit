@@ -40,7 +40,7 @@ namespace AsuFit.Datos
                     SqlCommand cmd3 = new SqlCommand(queryEgresos, oConexion);
                     egresos = Convert.ToDecimal(cmd3.ExecuteScalar());
 
-                    SqlCommand cmd4 = new SqlCommand("SELECT COUNT(*) FROM Socios WHERE FechaVencimiento BETWEEN GETDATE() AND DATEADD(day, 7, GETDATE())", oConexion);
+                    SqlCommand cmd4 = new SqlCommand("SELECT COUNT(*) FROM Socios WHERE FechaVencimiento BETWEEN GETDATE() AND DATEADD(day, 7, GETDATE()) AND Estado = 'Activo'", oConexion);
                     vencimientos = Convert.ToInt32(cmd4.ExecuteScalar());
                 }
                 catch (Exception)

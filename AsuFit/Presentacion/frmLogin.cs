@@ -90,7 +90,7 @@ namespace AsuFit.Presentacion
 
                 if (string.IsNullOrWhiteSpace(txtUsername.Text))
                 {
-                    MessageBox.Show("El campo de usuario no puede estar vacío.", "Atención", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MensajeAsuFit.Mostrar("El campo de usuario no puede estar vacío.", "Atención", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
                 else
                 {
@@ -106,7 +106,7 @@ namespace AsuFit.Presentacion
         {
             if (string.IsNullOrWhiteSpace(txtUsername.Text))
             {
-                MessageBox.Show("Por favor, ingresá primero tu usuario.", "Atención", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MensajeAsuFit.Mostrar("Por favor, ingresá primero tu usuario.", "Atención", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 txtUsername.Focus();
             }
         }
@@ -147,14 +147,14 @@ namespace AsuFit.Presentacion
 
             if (string.IsNullOrWhiteSpace(txtUsername.Text))
             {
-                MessageBox.Show("Debes ingresar tu usuario.", "Datos incompletos", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MensajeAsuFit.Mostrar("Debes ingresar tu usuario.", "Datos incompletos", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 txtUsername.Focus();
                 return;
             }
 
             if (string.IsNullOrWhiteSpace(txtPassword.Text))
             {
-                MessageBox.Show("Falta ingresar la contraseña.", "Datos incompletos", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MensajeAsuFit.Mostrar("Falta ingresar la contraseña.", "Datos incompletos", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 txtPassword.Focus();
                 return;
             }
@@ -188,7 +188,7 @@ namespace AsuFit.Presentacion
 
                     if (intentosFallidos >= 3)
                     {
-                        MessageBox.Show("Has superado el límite de 3 intentos fallidos por razones de seguridad. El sistema se cerrará.",
+                        MensajeAsuFit.Mostrar("Has superado el límite de 3 intentos fallidos por razones de seguridad. El sistema se cerrará.",
                                         "Alerta de Seguridad", MessageBoxButtons.OK, MessageBoxIcon.Stop);
 
                         GestorAuditoria.Registrar("Desconocido", "Seguridad", "Intento de Intrusión", $"Múltiples fallos con usuario: {txtUsername.Text.Trim()}");
@@ -197,7 +197,7 @@ namespace AsuFit.Presentacion
                     }
 
                     int intentosRestantes = 3 - intentosFallidos;
-                    MessageBox.Show($"Usuario o contraseña incorrectos, o el usuario está Inactivo.\n\nTe quedan {intentosRestantes} intentos.",
+                    MensajeAsuFit.Mostrar($"Usuario o contraseña incorrectos, o el usuario está Inactivo.\n\nTe quedan {intentosRestantes} intentos.",
                                     "Error de Acceso", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
                     txtPassword.Clear();
@@ -210,7 +210,7 @@ namespace AsuFit.Presentacion
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error de conexión con el servidor. Por favor, verifica tu red.\n\nDetalle técnico: " + ex.Message,
+                MensajeAsuFit.Mostrar("Error de conexión con el servidor. Por favor, verifica tu red.\n\nDetalle técnico: " + ex.Message,
                                 "Error de Red", MessageBoxButtons.OK, MessageBoxIcon.Warning);
 
                 iniciandoSesion = false;

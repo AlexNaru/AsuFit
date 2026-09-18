@@ -250,7 +250,9 @@ namespace AsuFit.Presentacion
             }
         }
 
-        // Consulta en la base de datos la existencia del cliente y formatea los resultados.
+        // Consulta en la base de datos la existencia del cliente mediante su documento de identidad.
+        // Formatea y proyecta los resultados en la interfaz de usuario, y persiste la entidad 
+        // en el estado global (CarritoGlobal) para evitar la pérdida de contexto transaccional.
         private void btnBuscarCliente_Click(object sender, EventArgs e)
         {
             if (string.IsNullOrWhiteSpace(txtBusquedaCliente.Text)) return;
@@ -264,14 +266,18 @@ namespace AsuFit.Presentacion
                 txtRucCliente.Text = string.IsNullOrWhiteSpace(socio.Ruc) ? "Sin RUC" : socio.Ruc;
                 correoClienteActual = socio.Email;
                 idClienteActual = socio.IdSocio;
+
+                CarritoGlobal.IdSocioPagara = socio.IdSocio;
             }
             else
             {
-                MessageBox.Show("No se encontró ningún socio con ese documento. Se registrará como cliente ocasional.", "Búsqueda", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MensajeAsuFit.Mostrar("No se encontró ningún socio con ese documento. Se registrará como cliente ocasional.", "Búsqueda", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 txtNombreCliente.Text = "Cliente Ocasional";
                 txtRucCliente.Text = "Sin RUC";
                 correoClienteActual = "";
                 idClienteActual = null;
+
+                CarritoGlobal.IdSocioPagara = null;
             }
         }
 
@@ -301,7 +307,7 @@ namespace AsuFit.Presentacion
         // Descarta la venta en curso y limpia el estado global del sistema.
         private void btnCancelar_Click(object sender, EventArgs e)
         {
-            DialogResult respuesta = MessageBox.Show("¿Estás seguro de que deseas cancelar esta operación y vaciar el carrito?", "Cancelar Venta", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            DialogResult respuesta = MensajeAsuFit.Mostrar("¿Estás seguro de que deseas cancelar esta operación y vaciar el carrito?", "Cancelar Venta", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             if (respuesta == DialogResult.Yes)
             {
                 CarritoGlobal.LimpiarCarrito();
@@ -339,13 +345,13 @@ namespace AsuFit.Presentacion
 
             if (carritoDetalles == null || carritoDetalles.Rows.Count == 0)
             {
-                MessageBox.Show("No hay productos o mensualidades para cobrar.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MensajeAsuFit.Mostrar("No hay productos o mensualidades para cobrar.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
             if (cmbMetodoPago.SelectedIndex == -1)
             {
-                MessageBox.Show("Por favor, seleccione un Método de Pago.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MensajeAsuFit.Mostrar("Por favor, seleccione un Método de Pago.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 cmbMetodoPago.Focus();
                 return;
             }
@@ -355,7 +361,7 @@ namespace AsuFit.Presentacion
 
             if (tipoComprobante == "Factura" && (txtRucCliente.Text == "Sin RUC" || string.IsNullOrWhiteSpace(txtRucCliente.Text)))
             {
-                MessageBox.Show("Para emitir una Factura legal, debe buscar un cliente que tenga un RUC registrado.", "Datos Incompletos", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MensajeAsuFit.Mostrar("Para emitir una Factura legal, debe buscar un cliente que tenga un RUC registrado.", "Datos Incompletos", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 txtBusquedaCliente.Focus();
                 return;
             }
@@ -366,14 +372,14 @@ namespace AsuFit.Presentacion
                 {
                     if (recibido < totalAPagar)
                     {
-                        MessageBox.Show("El monto recibido es menor al total a cobrar.", "Dinero Insuficiente", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        MensajeAsuFit.Mostrar("El monto recibido es menor al total a cobrar.", "Dinero Insuficiente", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                         txtMontoRecibido.Focus();
                         return;
                     }
                 }
                 else
                 {
-                    MessageBox.Show("Por favor, ingrese un monto válido en la casilla 'Monto Recibido'.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MensajeAsuFit.Mostrar("Por favor, ingrese un monto válido en la casilla 'Monto Recibido'.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     txtMontoRecibido.Focus();
                     return;
                 }
@@ -458,20 +464,20 @@ namespace AsuFit.Presentacion
                     frmPuntoVenta inventario = Application.OpenForms["frmPuntoVenta"] as frmPuntoVenta;
                     if (inventario != null) inventario.LimpiarGrillaVisual();
 
-                    MessageBox.Show($"¡Venta N° {idNuevaVenta} registrada con éxito!", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MensajeAsuFit.Mostrar($"¡Venta N° {idNuevaVenta} registrada con éxito!", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                     this.DialogResult = DialogResult.OK;
                     this.Close();
                 }
                 else
                 {
-                    MessageBox.Show("Error crítico al procesar la venta: \n" + mensajeError, "Error de BD", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MensajeAsuFit.Mostrar("Error crítico al procesar la venta: \n" + mensajeError, "Error de BD", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     RevertirBotonConfirmar();
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Ocurrió un error inesperado: " + ex.Message, "Error Interno", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MensajeAsuFit.Mostrar("Ocurrió un error inesperado: " + ex.Message, "Error Interno", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 RevertirBotonConfirmar();
             }
         }
@@ -489,7 +495,7 @@ namespace AsuFit.Presentacion
             try
             {
                 ConfiguracionNegocio negocioConfig = new ConfiguracionNegocio();
-                string nombreGym = "AsuFit GYM";
+                string nombreGym = "AsuFit";
 
                 Configuracion config = negocioConfig.ObtenerConfiguracion();
                 if (config != null && !string.IsNullOrWhiteSpace(config.NombreGimnasio))
@@ -517,7 +523,7 @@ namespace AsuFit.Presentacion
             }
             catch (Exception ex)
             {
-                MessageBox.Show("La venta se registró correctamente, pero hubo un problema al enviar el correo automático: " + ex.Message, "Aviso de Correo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MensajeAsuFit.Mostrar("La venta se registró correctamente, pero hubo un problema al enviar el correo automático: " + ex.Message, "Aviso de Correo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
         #endregion

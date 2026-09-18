@@ -349,7 +349,7 @@ namespace AsuFit.Presentacion
             }
             else
             {
-                MessageBox.Show("Por favor, seleccioná el usuario que querés editar.", "Atención", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MensajeAsuFit.Mostrar("Por favor, seleccioná el usuario que querés editar.", "Atención", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
 
@@ -364,7 +364,7 @@ namespace AsuFit.Presentacion
 
                 string nuevoEstado = estadoActual == "Activo" ? "Inactivo" : "Activo";
 
-                DialogResult pregunta = MessageBox.Show($"¿Estás seguro que querés cambiar el estado del usuario '{nombreUsuario}' a {nuevoEstado}?",
+                DialogResult pregunta = MensajeAsuFit.Mostrar($"¿Estás seguro que querés cambiar el estado del usuario '{nombreUsuario}' a {nuevoEstado}?",
                                                         "Confirmar Cambio de Estado", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                 if (pregunta == DialogResult.Yes)
                 {
@@ -372,14 +372,14 @@ namespace AsuFit.Presentacion
                     if (negocio.CambiarEstado(idUsuario, nuevoEstado))
                     {
                         GestorAuditoria.Registrar(usuarioActual.NombreCompleto, "Usuarios", "Cambio de Estado", $"Cambió el estado de '{nombreUsuario}' a {nuevoEstado}.");
-                        MessageBox.Show($"El usuario ahora está {nuevoEstado}.", "Operación Exitosa", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        MensajeAsuFit.Mostrar($"El usuario ahora está {nuevoEstado}.", "Operación Exitosa", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         RecargarGrilla();
                     }
                 }
             }
             else
             {
-                MessageBox.Show("Por favor, seleccioná un usuario de la tabla haciendo clic en la fila.", "Atención", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MensajeAsuFit.Mostrar("Por favor, seleccioná un usuario de la tabla haciendo clic en la fila.", "Atención", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
 
@@ -390,7 +390,7 @@ namespace AsuFit.Presentacion
                 int idUsuario = Convert.ToInt32(dgvUsuarios.CurrentRow.Cells["colUsuarioId"].Value);
                 string nombreUsuario = dgvUsuarios.CurrentRow.Cells["colUsuarioUsername"].Value.ToString();
 
-                DialogResult pregunta = MessageBox.Show($"¿Deseás restablecer la contraseña del usuario '{nombreUsuario}' a '12345'?",
+                DialogResult pregunta = MensajeAsuFit.Mostrar($"¿Deseás restablecer la contraseña del usuario '{nombreUsuario}' a '12345'?",
                                                         "Confirmar Reset", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
                 if (pregunta == DialogResult.Yes)
                 {
@@ -398,13 +398,13 @@ namespace AsuFit.Presentacion
                     if (negocio.ResetearClave(idUsuario))
                     {
                         GestorAuditoria.Registrar(usuarioActual.NombreCompleto, "Usuarios", "Reset de Clave", $"Restableció la contraseña de '{nombreUsuario}'.");
-                        MessageBox.Show("Contraseña restablecida con éxito a: 12345", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        MensajeAsuFit.Mostrar("Contraseña restablecida con éxito a: 12345", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
                 }
             }
             else
             {
-                MessageBox.Show("Por favor, seleccioná un usuario de la lista.", "Atención", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MensajeAsuFit.Mostrar("Por favor, seleccioná un usuario de la lista.", "Atención", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
         #endregion

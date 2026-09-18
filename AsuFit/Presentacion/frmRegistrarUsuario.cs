@@ -270,7 +270,7 @@ namespace AsuFit.Presentacion
                 {
                     if (string.IsNullOrWhiteSpace(txtActivo.Text))
                     {
-                        MessageBox.Show("Este campo es obligatorio y no puede estar vacío.", "Campo requerido", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        MensajeAsuFit.Mostrar("Este campo es obligatorio y no puede estar vacío.", "Campo requerido", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                         return;
                     }
 
@@ -278,7 +278,7 @@ namespace AsuFit.Presentacion
                     {
                         if (txtPassword.Text != txtConfirmarPassword.Text)
                         {
-                            MessageBox.Show("Las contraseñas no coinciden. Por favor volvé a ingresarlas.", "Error de Seguridad", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                            MensajeAsuFit.Mostrar("Las contraseñas no coinciden. Por favor volvé a ingresarlas.", "Error de Seguridad", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                             txtConfirmarPassword.Clear();
                             txtConfirmarPassword.Focus();
                             return;
@@ -324,13 +324,13 @@ namespace AsuFit.Presentacion
         {
             if (!puedeGuardar)
             {
-                MessageBox.Show("Por favor, completá todos los campos obligatorios.", "Datos Incompletos", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MensajeAsuFit.Mostrar("Por favor, completá todos los campos obligatorios.", "Datos Incompletos", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
             if (txtPassword.Text != txtConfirmarPassword.Text)
             {
-                MessageBox.Show("Las contraseñas no coinciden. Por favor verificalas.", "Error de Seguridad", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MensajeAsuFit.Mostrar("Las contraseñas no coinciden. Por favor verificalas.", "Error de Seguridad", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 txtConfirmarPassword.Focus();
                 return;
             }
@@ -356,7 +356,7 @@ namespace AsuFit.Presentacion
                 if (exito)
                 {
                     AsuFit.Datos.GestorAuditoria.Registrar(usuarioActual.NombreCompleto, "Usuarios", "Registro", $"Se registró un nuevo usuario en el sistema: '{nuevo.Username}'.");
-                    MessageBox.Show("¡Usuario registrado con éxito!", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MensajeAsuFit.Mostrar("¡Usuario registrado con éxito!", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     if (this.Modal) this.Close();
                     else
                     {
@@ -387,14 +387,14 @@ namespace AsuFit.Presentacion
                 if (exito)
                 {
                     AsuFit.Datos.GestorAuditoria.Registrar(usuarioActual.NombreCompleto, "Usuarios", "Edición", $"Se actualizaron los datos del usuario '{txtUsername.Text}'.");
-                    MessageBox.Show("Usuario actualizado con éxito.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MensajeAsuFit.Mostrar("Usuario actualizado con éxito.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     this.Close();
                 }
             }
 
             if (!exito)
             {
-                MessageBox.Show(mensajeError, "Aviso de Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MensajeAsuFit.Mostrar(mensajeError, "Aviso de Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
 

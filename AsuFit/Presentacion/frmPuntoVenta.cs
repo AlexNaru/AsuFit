@@ -664,9 +664,16 @@ namespace AsuFit.Presentacion
 
         private void btnFinalizarVenta_Click(object sender, EventArgs e)
         {
+            ArqueoNegocio negocioArqueo = new ArqueoNegocio();
+            if (!negocioArqueo.VerificarCajaAbierta())
+            {
+                MensajeAsuFit.Mostrar("Operación denegada. Debes realizar la apertura de caja para procesar transacciones financieras.", "Caja Cerrada", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
             if (dgvCarrito.Rows.Count == 0 && CarritoGlobal.Detalles.Rows.Count == 0)
             {
-                MessageBox.Show("El carrito está vacío. Agregue productos antes de continuar.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MensajeAsuFit.Mostrar("El carrito está vacío. Agregue productos antes de continuar.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
@@ -705,7 +712,7 @@ namespace AsuFit.Presentacion
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error al enviar productos a la caja: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MensajeAsuFit.Mostrar("Error al enviar productos a la caja: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 

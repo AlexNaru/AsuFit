@@ -61,7 +61,7 @@ namespace AsuFit.Presentacion
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error al cargar proveedores: " + ex.Message, "Excepción de Datos", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MensajeAsuFit.Mostrar("Error al cargar proveedores: " + ex.Message, "Excepción de Datos", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -165,7 +165,7 @@ namespace AsuFit.Presentacion
                 string.IsNullOrWhiteSpace(txtPrecio.Text) ||
                 cmbProveedor.SelectedIndex == -1)
             {
-                MessageBox.Show("Complete el Código, Nombre, Precio y seleccione un Proveedor.", "Aviso de Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MensajeAsuFit.Mostrar("Complete el Código, Nombre, Precio y seleccione un Proveedor.", "Aviso de Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
@@ -201,7 +201,7 @@ namespace AsuFit.Presentacion
                     }
 
                     GestorAuditoria.Registrar(usuarioActual.NombreCompleto, "Inventario", "Alta Rápida", $"Se registró el producto '{objProducto.Nombre}'.");
-                    MessageBox.Show("¡Producto registrado con éxito!", "Operación Exitosa", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MensajeAsuFit.Mostrar("¡Producto registrado con éxito!", "Operación Exitosa", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                     ProductoRecienCreado = objProducto.Nombre;
                     this.Close();
@@ -209,7 +209,7 @@ namespace AsuFit.Presentacion
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error al guardar el producto: " + ex.Message, "Excepción Crítica", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MensajeAsuFit.Mostrar("Error al guardar el producto: " + ex.Message, "Excepción Crítica", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
