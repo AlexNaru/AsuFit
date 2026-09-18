@@ -143,7 +143,7 @@ namespace AsuFit.Datos
             {
                 using (SqlConnection oConexion = Conexion.ObtenerConexion())
                 {
-                    string query = "SELECT IdUsuario, NombreCompleto, Username, Rol, Email, Estado, FechaRegistro FROM Usuarios WHERE Estado = @estado";
+                    string query = "SELECT IdUsuario, NombreCompleto, Username, Rol, Email, Estado, CONVERT(varchar, FechaRegistro, 103) + ' | ' + CONVERT(varchar, FechaRegistro, 108) AS FechaRegistro FROM Usuarios WHERE Estado = @estado";
                     SqlCommand cmd = new SqlCommand(query, oConexion);
                     cmd.Parameters.AddWithValue("@estado", estado);
 

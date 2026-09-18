@@ -65,7 +65,7 @@ namespace AsuFit.Presentacion
                 dtpFechaNacimiento.Value = dtpFechaNacimiento.MaxDate;
             }
 
-            txtFechaNacimiento.Text = dtpFechaNacimiento.Value.ToShortDateString();
+            txtFechaNacimiento.Text = dtpFechaNacimiento.Value.ToString("dd/MM/yyyy");
 
             CargarComboboxPlanes();
             ConfigurarTextosDeAyuda();
@@ -342,7 +342,7 @@ namespace AsuFit.Presentacion
         // Extrapola el valor DateTime interno hacia el componente visual de exposición textual.
         private void dtpFechaNacimiento_ValueChanged(object sender, EventArgs e)
         {
-            txtFechaNacimiento.Text = dtpFechaNacimiento.Value.ToShortDateString();
+            txtFechaNacimiento.Text = dtpFechaNacimiento.Value.ToString("dd/MM/yyyy");
         }
 
         // Revoca el foco residual post-despliegue mitigando anomalías visuales en el renderizado de selección.

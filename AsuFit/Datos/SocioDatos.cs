@@ -162,9 +162,13 @@ namespace AsuFit.Datos
                 using (SqlConnection oConexion = Conexion.ObtenerConexion())
                 {
                     string query = @"SELECT s.IdSocio, s.Cedula, s.Nombre, s.Apellido, s.Email, s.RUC, s.Telefono, 
-                                     s.FechaNacimiento, s.NombreContactoEmergencia, s.TelefonoEmergencia, 
-                                     s.FechaRegistro, p.NombrePlan AS TipoPlan, 
-                                     p.Precio, s.IdPlan, s.FechaVencimiento, s.Estado
+                                     CONVERT(varchar, s.FechaNacimiento, 103) AS FechaNacimiento, 
+                                     s.NombreContactoEmergencia, s.TelefonoEmergencia, 
+                                     CONVERT(varchar, s.FechaRegistro, 103) AS FechaRegistro, 
+                                     p.NombrePlan AS TipoPlan, 
+                                     CAST(p.Precio AS INT) AS Precio, s.IdPlan, 
+                                     CONVERT(varchar, s.FechaVencimiento, 103) AS FechaVencimiento, 
+                                     s.Estado
                                      FROM Socios s
                                      INNER JOIN Planes p ON s.IdPlan = p.IdPlan
                                      WHERE s.Estado = @estado";

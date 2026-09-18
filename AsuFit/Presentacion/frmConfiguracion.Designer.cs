@@ -32,7 +32,6 @@
             this.txtRutaDestino = new System.Windows.Forms.TextBox();
             this.btnGenerarBackup = new System.Windows.Forms.Button();
             this.lblUltimoRespaldo = new System.Windows.Forms.Label();
-            this.label9 = new System.Windows.Forms.Label();
             this.btnExaminar = new System.Windows.Forms.Button();
             this.label7 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
@@ -89,7 +88,6 @@
             this.tabPage6.Controls.Add(this.txtRutaDestino);
             this.tabPage6.Controls.Add(this.btnGenerarBackup);
             this.tabPage6.Controls.Add(this.lblUltimoRespaldo);
-            this.tabPage6.Controls.Add(this.label9);
             this.tabPage6.Controls.Add(this.btnExaminar);
             this.tabPage6.Controls.Add(this.label7);
             this.tabPage6.Controls.Add(this.label6);
@@ -127,22 +125,12 @@
             // lblUltimoRespaldo
             // 
             this.lblUltimoRespaldo.AutoSize = true;
-            this.lblUltimoRespaldo.Location = new System.Drawing.Point(165, 189);
+            this.lblUltimoRespaldo.Location = new System.Drawing.Point(34, 189);
             this.lblUltimoRespaldo.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblUltimoRespaldo.Name = "lblUltimoRespaldo";
             this.lblUltimoRespaldo.Size = new System.Drawing.Size(113, 13);
             this.lblUltimoRespaldo.TabIndex = 7;
             this.lblUltimoRespaldo.Text = "Nunca / Desconocido";
-            // 
-            // label9
-            // 
-            this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(34, 189);
-            this.label9.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(127, 13);
-            this.label9.TabIndex = 6;
-            this.label9.Text = "Último respaldo realizado:";
             // 
             // btnExaminar
             // 
@@ -627,7 +615,6 @@
         private System.Windows.Forms.TextBox txtRutaDestino;
         private System.Windows.Forms.Button btnGenerarBackup;
         private System.Windows.Forms.Label lblUltimoRespaldo;
-        private System.Windows.Forms.Label label9;
         private System.Windows.Forms.Button btnExaminar;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Label label6;

@@ -16,7 +16,9 @@ namespace AsuFit.Datos
             {
                 try
                 {
-                    string query = @"SELECT FechaHora, Usuario, Modulo, Accion, Detalle 
+                    string query = @"SELECT 
+                                        CONVERT(varchar, FechaHora, 103) + ' | ' + CONVERT(varchar, FechaHora, 108) AS FechaHora, 
+                                        Usuario, Modulo, Accion, Detalle 
                                      FROM LogAuditoria 
                                      WHERE CAST(FechaHora AS DATE) >= @Desde 
                                      AND CAST(FechaHora AS DATE) <= @Hasta 

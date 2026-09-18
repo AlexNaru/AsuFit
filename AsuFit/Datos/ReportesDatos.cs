@@ -16,7 +16,11 @@ namespace AsuFit.Datos
             {
                 try
                 {
-                    string query = @"SELECT Fecha, TipoComprobante AS Comprobante, MetodoPago, Total 
+                    string query = @"SELECT 
+                                        CONVERT(varchar, Fecha, 103) + ' | ' + CONVERT(varchar, Fecha, 108) AS Fecha, 
+                                        TipoComprobante AS Comprobante, 
+                                        MetodoPago, 
+                                        CAST(Total AS INT) AS Total 
                                      FROM Ventas 
                                      WHERE CAST(Fecha AS DATE) BETWEEN @FechaDesde AND @FechaHasta
                                      ORDER BY Fecha DESC";
@@ -44,7 +48,7 @@ namespace AsuFit.Datos
                     string query = @"SELECT TOP 5 
                                         P.Nombre AS Producto, 
                                         SUM(VD.Cantidad) AS CantidadVendida, 
-                                        SUM(VD.SubTotal) AS Ingresos
+                                        CAST(SUM(VD.SubTotal) AS INT) AS Ingresos
                                      FROM VentasDetalle VD
                                      INNER JOIN Productos P ON VD.IdProducto = P.IdProducto
                                      INNER JOIN Ventas V ON VD.IdVenta = V.IdVenta

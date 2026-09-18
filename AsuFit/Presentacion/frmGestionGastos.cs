@@ -172,8 +172,8 @@ namespace AsuFit.Presentacion
             dtpHasta.Value = DateTime.Now.Date;
 
             // Sincroniza visualmente las cajas de texto con los valores iniciales de los calendarios
-            if (txtDesde != null) txtDesde.Text = dtpDesde.Value.ToShortDateString();
-            if (txtHasta != null) txtHasta.Text = dtpHasta.Value.ToShortDateString();
+            if (txtDesde != null) txtDesde.Text = dtpDesde.Value.ToString("dd\\/MM\\/yyyy");
+            if (txtHasta != null) txtHasta.Text = dtpHasta.Value.ToString("dd\\/MM\\/yyyy");
 
             if (cmbFiltroTipo != null)
             {
@@ -271,13 +271,13 @@ namespace AsuFit.Presentacion
 
         private void dtpDesde_ValueChanged(object sender, EventArgs e)
         {
-            if (txtDesde != null) txtDesde.Text = dtpDesde.Value.ToShortDateString();
+            if (txtDesde != null) txtDesde.Text = dtpDesde.Value.ToString("dd\\/MM\\/yyyy");
             AplicarFiltrosGastos();
         }
 
         private void dtpHasta_ValueChanged(object sender, EventArgs e)
         {
-            if (txtHasta != null) txtHasta.Text = dtpHasta.Value.ToShortDateString();
+            if (txtHasta != null) txtHasta.Text = dtpHasta.Value.ToString("dd\\/MM\\/yyyy");
             AplicarFiltrosGastos();
         }
         private void txtBuscar_TextChanged(object sender, EventArgs e) { AplicarFiltrosGastos(); }

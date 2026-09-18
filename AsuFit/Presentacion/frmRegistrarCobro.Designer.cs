@@ -28,8 +28,16 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             this.dgvSocios = new System.Windows.Forms.DataGridView();
+            this.txtBuscar = new System.Windows.Forms.TextBox();
+            this.cmbPlanes = new System.Windows.Forms.ComboBox();
+            this.txtMonto = new System.Windows.Forms.TextBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.btnCobrar = new System.Windows.Forms.Button();
+            this.label2 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
             this.colCobroId = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colCobroCedula = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colCobroNombre = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -39,13 +47,6 @@
             this.colCobroVencimiento = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colCobroEstado = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colCobroIdPlan = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.txtBuscar = new System.Windows.Forms.TextBox();
-            this.cmbPlanes = new System.Windows.Forms.ComboBox();
-            this.txtMonto = new System.Windows.Forms.TextBox();
-            this.label1 = new System.Windows.Forms.Label();
-            this.btnCobrar = new System.Windows.Forms.Button();
-            this.label2 = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dgvSocios)).BeginInit();
             this.SuspendLayout();
             // 
@@ -56,14 +57,14 @@
             this.dgvSocios.AllowUserToResizeRows = false;
             this.dgvSocios.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.dgvSocios.BackgroundColor = System.Drawing.Color.White;
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(39)))), ((int)(((byte)(47)))));
-            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dgvSocios.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(39)))), ((int)(((byte)(47)))));
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dgvSocios.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             this.dgvSocios.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvSocios.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.colCobroId,
@@ -88,80 +89,6 @@
             this.dgvSocios.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvSocios_CellClick);
             this.dgvSocios.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.dgvSocios_CellFormatting);
             this.dgvSocios.DataBindingComplete += new System.Windows.Forms.DataGridViewBindingCompleteEventHandler(this.dgvSocios_DataBindingComplete);
-            // 
-            // colCobroId
-            // 
-            this.colCobroId.DataPropertyName = "IdSocio";
-            this.colCobroId.HeaderText = "ID";
-            this.colCobroId.MinimumWidth = 8;
-            this.colCobroId.Name = "colCobroId";
-            this.colCobroId.ReadOnly = true;
-            this.colCobroId.Visible = false;
-            // 
-            // colCobroCedula
-            // 
-            this.colCobroCedula.DataPropertyName = "Cedula";
-            this.colCobroCedula.HeaderText = "Cédula";
-            this.colCobroCedula.MinimumWidth = 8;
-            this.colCobroCedula.Name = "colCobroCedula";
-            this.colCobroCedula.ReadOnly = true;
-            // 
-            // colCobroNombre
-            // 
-            this.colCobroNombre.DataPropertyName = "Nombre";
-            this.colCobroNombre.HeaderText = "Nombre";
-            this.colCobroNombre.MinimumWidth = 8;
-            this.colCobroNombre.Name = "colCobroNombre";
-            this.colCobroNombre.ReadOnly = true;
-            // 
-            // colCobroApellido
-            // 
-            this.colCobroApellido.DataPropertyName = "Apellido";
-            this.colCobroApellido.HeaderText = "Apellido";
-            this.colCobroApellido.MinimumWidth = 8;
-            this.colCobroApellido.Name = "colCobroApellido";
-            this.colCobroApellido.ReadOnly = true;
-            // 
-            // colCobroPlan
-            // 
-            this.colCobroPlan.DataPropertyName = "TipoPlan";
-            this.colCobroPlan.HeaderText = "Plan Actual";
-            this.colCobroPlan.MinimumWidth = 8;
-            this.colCobroPlan.Name = "colCobroPlan";
-            this.colCobroPlan.ReadOnly = true;
-            // 
-            // colCobroPrecio
-            // 
-            this.colCobroPrecio.DataPropertyName = "Precio";
-            this.colCobroPrecio.HeaderText = "Precio";
-            this.colCobroPrecio.MinimumWidth = 8;
-            this.colCobroPrecio.Name = "colCobroPrecio";
-            this.colCobroPrecio.ReadOnly = true;
-            // 
-            // colCobroVencimiento
-            // 
-            this.colCobroVencimiento.DataPropertyName = "FechaVencimiento";
-            this.colCobroVencimiento.HeaderText = "Vencimiento";
-            this.colCobroVencimiento.MinimumWidth = 8;
-            this.colCobroVencimiento.Name = "colCobroVencimiento";
-            this.colCobroVencimiento.ReadOnly = true;
-            // 
-            // colCobroEstado
-            // 
-            this.colCobroEstado.DataPropertyName = "Estado";
-            this.colCobroEstado.HeaderText = "Estado";
-            this.colCobroEstado.MinimumWidth = 8;
-            this.colCobroEstado.Name = "colCobroEstado";
-            this.colCobroEstado.ReadOnly = true;
-            // 
-            // colCobroIdPlan
-            // 
-            this.colCobroIdPlan.DataPropertyName = "IdPlan";
-            this.colCobroIdPlan.HeaderText = "ID Plan";
-            this.colCobroIdPlan.MinimumWidth = 8;
-            this.colCobroIdPlan.Name = "colCobroIdPlan";
-            this.colCobroIdPlan.ReadOnly = true;
-            this.colCobroIdPlan.Visible = false;
             // 
             // txtBuscar
             // 
@@ -255,6 +182,83 @@
             this.label3.Size = new System.Drawing.Size(129, 13);
             this.label3.TabIndex = 12;
             this.label3.Text = "REGISTRO DE COBROS";
+            // 
+            // colCobroId
+            // 
+            this.colCobroId.DataPropertyName = "IdSocio";
+            this.colCobroId.HeaderText = "ID";
+            this.colCobroId.MinimumWidth = 8;
+            this.colCobroId.Name = "colCobroId";
+            this.colCobroId.ReadOnly = true;
+            this.colCobroId.Visible = false;
+            // 
+            // colCobroCedula
+            // 
+            this.colCobroCedula.DataPropertyName = "Cedula";
+            this.colCobroCedula.HeaderText = "Cédula";
+            this.colCobroCedula.MinimumWidth = 8;
+            this.colCobroCedula.Name = "colCobroCedula";
+            this.colCobroCedula.ReadOnly = true;
+            // 
+            // colCobroNombre
+            // 
+            this.colCobroNombre.DataPropertyName = "Nombre";
+            this.colCobroNombre.HeaderText = "Nombre";
+            this.colCobroNombre.MinimumWidth = 8;
+            this.colCobroNombre.Name = "colCobroNombre";
+            this.colCobroNombre.ReadOnly = true;
+            // 
+            // colCobroApellido
+            // 
+            this.colCobroApellido.DataPropertyName = "Apellido";
+            this.colCobroApellido.HeaderText = "Apellido";
+            this.colCobroApellido.MinimumWidth = 8;
+            this.colCobroApellido.Name = "colCobroApellido";
+            this.colCobroApellido.ReadOnly = true;
+            // 
+            // colCobroPlan
+            // 
+            this.colCobroPlan.DataPropertyName = "TipoPlan";
+            this.colCobroPlan.HeaderText = "Plan Actual";
+            this.colCobroPlan.MinimumWidth = 8;
+            this.colCobroPlan.Name = "colCobroPlan";
+            this.colCobroPlan.ReadOnly = true;
+            // 
+            // colCobroPrecio
+            // 
+            this.colCobroPrecio.DataPropertyName = "Precio";
+            dataGridViewCellStyle2.Format = "N0";
+            dataGridViewCellStyle2.NullValue = null;
+            this.colCobroPrecio.DefaultCellStyle = dataGridViewCellStyle2;
+            this.colCobroPrecio.HeaderText = "Precio";
+            this.colCobroPrecio.MinimumWidth = 8;
+            this.colCobroPrecio.Name = "colCobroPrecio";
+            this.colCobroPrecio.ReadOnly = true;
+            // 
+            // colCobroVencimiento
+            // 
+            this.colCobroVencimiento.DataPropertyName = "FechaVencimiento";
+            this.colCobroVencimiento.HeaderText = "Vencimiento";
+            this.colCobroVencimiento.MinimumWidth = 8;
+            this.colCobroVencimiento.Name = "colCobroVencimiento";
+            this.colCobroVencimiento.ReadOnly = true;
+            // 
+            // colCobroEstado
+            // 
+            this.colCobroEstado.DataPropertyName = "Estado";
+            this.colCobroEstado.HeaderText = "Estado";
+            this.colCobroEstado.MinimumWidth = 8;
+            this.colCobroEstado.Name = "colCobroEstado";
+            this.colCobroEstado.ReadOnly = true;
+            // 
+            // colCobroIdPlan
+            // 
+            this.colCobroIdPlan.DataPropertyName = "IdPlan";
+            this.colCobroIdPlan.HeaderText = "ID Plan";
+            this.colCobroIdPlan.MinimumWidth = 8;
+            this.colCobroIdPlan.Name = "colCobroIdPlan";
+            this.colCobroIdPlan.ReadOnly = true;
+            this.colCobroIdPlan.Visible = false;
             // 
             // frmRegistrarCobro
             // 

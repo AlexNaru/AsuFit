@@ -23,8 +23,8 @@ namespace AsuFit.Presentacion
             dtpHasta.Value = DateTime.Now;
 
             // Sincroniza la fecha inicial a los TextBox oscuros creados en el diseñador
-            if (txtDesde != null) txtDesde.Text = dtpDesde.Value.ToShortDateString();
-            if (txtHasta != null) txtHasta.Text = dtpHasta.Value.ToShortDateString();
+            if (txtDesde != null) txtDesde.Text = dtpDesde.Value.ToString("dd\\/MM\\/yyyy");
+            if (txtHasta != null) txtHasta.Text = dtpHasta.Value.ToString("dd\\/MM\\/yyyy");
 
             CargarHistorial();
 
@@ -166,14 +166,14 @@ namespace AsuFit.Presentacion
         private void dtpDesde_ValueChanged(object sender, EventArgs e)
         {
             // Sincronizamos y buscamos
-            if (txtDesde != null) txtDesde.Text = dtpDesde.Value.ToShortDateString();
+            if (txtDesde != null) txtDesde.Text = dtpDesde.Value.ToString("dd\\/MM\\/yyyy");
             CargarHistorial();
         }
 
         private void dtpHasta_ValueChanged(object sender, EventArgs e)
         {
             // Sincronizamos y buscamos
-            if (txtHasta != null) txtHasta.Text = dtpHasta.Value.ToShortDateString();
+            if (txtHasta != null) txtHasta.Text = dtpHasta.Value.ToString("dd\\/MM\\/yyyy");
             CargarHistorial();
         }
 

@@ -238,8 +238,8 @@ namespace AsuFit.Presentacion
         // Sincroniza los valores de los calendarios con los TextBox decorativos
         private void SincronizarTextosFecha()
         {
-            if (txtDesde != null) txtDesde.Text = dtpDesde.Value.ToShortDateString();
-            if (txtHasta != null) txtHasta.Text = dtpHasta.Value.ToShortDateString();
+            if(txtDesde != null) txtDesde.Text = dtpDesde.Value.ToString("dd\\/MM\\/yyyy");
+            if (txtHasta != null) txtHasta.Text = dtpHasta.Value.ToString("dd\\/MM\\/yyyy");
         }
         #endregion
 

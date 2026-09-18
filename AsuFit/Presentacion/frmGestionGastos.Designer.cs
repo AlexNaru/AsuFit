@@ -28,15 +28,9 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             this.dgvGastos = new System.Windows.Forms.DataGridView();
-            this.colGastoId = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colGastoDescripcion = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colGastoCategoria = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colGastoMonto = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colGastoFecha = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colGastoUsuario = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.txtDescripcion = new System.Windows.Forms.TextBox();
             this.txtMonto = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
@@ -56,6 +50,12 @@
             this.dtpHasta = new System.Windows.Forms.DateTimePicker();
             this.txtHasta = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
+            this.colGastoId = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colGastoDescripcion = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colGastoCategoria = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colGastoMonto = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colGastoFecha = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colGastoUsuario = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dgvGastos)).BeginInit();
             this.SuspendLayout();
             // 
@@ -82,59 +82,6 @@
             this.dgvGastos.Size = new System.Drawing.Size(565, 150);
             this.dgvGastos.TabIndex = 4;
             this.dgvGastos.DataBindingComplete += new System.Windows.Forms.DataGridViewBindingCompleteEventHandler(this.dgvGastos_DataBindingComplete);
-            // 
-            // colGastoId
-            // 
-            this.colGastoId.DataPropertyName = "IdGasto";
-            this.colGastoId.HeaderText = "Id Gasto";
-            this.colGastoId.MinimumWidth = 8;
-            this.colGastoId.Name = "colGastoId";
-            this.colGastoId.ReadOnly = true;
-            this.colGastoId.Visible = false;
-            // 
-            // colGastoDescripcion
-            // 
-            this.colGastoDescripcion.DataPropertyName = "Descripcion";
-            this.colGastoDescripcion.HeaderText = "Descripción";
-            this.colGastoDescripcion.MinimumWidth = 8;
-            this.colGastoDescripcion.Name = "colGastoDescripcion";
-            this.colGastoDescripcion.ReadOnly = true;
-            // 
-            // colGastoCategoria
-            // 
-            this.colGastoCategoria.DataPropertyName = "Categoria";
-            this.colGastoCategoria.HeaderText = "Categoría";
-            this.colGastoCategoria.MinimumWidth = 8;
-            this.colGastoCategoria.Name = "colGastoCategoria";
-            this.colGastoCategoria.ReadOnly = true;
-            // 
-            // colGastoMonto
-            // 
-            this.colGastoMonto.DataPropertyName = "Monto";
-            dataGridViewCellStyle3.Format = "N0";
-            this.colGastoMonto.DefaultCellStyle = dataGridViewCellStyle3;
-            this.colGastoMonto.HeaderText = "Monto";
-            this.colGastoMonto.MinimumWidth = 8;
-            this.colGastoMonto.Name = "colGastoMonto";
-            this.colGastoMonto.ReadOnly = true;
-            // 
-            // colGastoFecha
-            // 
-            this.colGastoFecha.DataPropertyName = "FechaGasto";
-            dataGridViewCellStyle4.Format = "dd/MM/yyyy HH:mm";
-            this.colGastoFecha.DefaultCellStyle = dataGridViewCellStyle4;
-            this.colGastoFecha.HeaderText = "Fecha";
-            this.colGastoFecha.MinimumWidth = 8;
-            this.colGastoFecha.Name = "colGastoFecha";
-            this.colGastoFecha.ReadOnly = true;
-            // 
-            // colGastoUsuario
-            // 
-            this.colGastoUsuario.DataPropertyName = "UsuarioRegistra";
-            this.colGastoUsuario.HeaderText = "Usuario";
-            this.colGastoUsuario.MinimumWidth = 8;
-            this.colGastoUsuario.Name = "colGastoUsuario";
-            this.colGastoUsuario.ReadOnly = true;
             // 
             // txtDescripcion
             // 
@@ -370,6 +317,63 @@
             this.label5.TabIndex = 40;
             this.label5.Text = "Hasta:";
             // 
+            // colGastoId
+            // 
+            this.colGastoId.DataPropertyName = "IdGasto";
+            this.colGastoId.HeaderText = "Id Gasto";
+            this.colGastoId.MinimumWidth = 8;
+            this.colGastoId.Name = "colGastoId";
+            this.colGastoId.ReadOnly = true;
+            this.colGastoId.Visible = false;
+            // 
+            // colGastoDescripcion
+            // 
+            this.colGastoDescripcion.DataPropertyName = "Descripcion";
+            this.colGastoDescripcion.FillWeight = 120F;
+            this.colGastoDescripcion.HeaderText = "Descripción";
+            this.colGastoDescripcion.MinimumWidth = 8;
+            this.colGastoDescripcion.Name = "colGastoDescripcion";
+            this.colGastoDescripcion.ReadOnly = true;
+            // 
+            // colGastoCategoria
+            // 
+            this.colGastoCategoria.DataPropertyName = "Categoria";
+            this.colGastoCategoria.FillWeight = 140F;
+            this.colGastoCategoria.HeaderText = "Categoría";
+            this.colGastoCategoria.MinimumWidth = 8;
+            this.colGastoCategoria.Name = "colGastoCategoria";
+            this.colGastoCategoria.ReadOnly = true;
+            // 
+            // colGastoMonto
+            // 
+            this.colGastoMonto.DataPropertyName = "Monto";
+            dataGridViewCellStyle1.Format = "N0";
+            dataGridViewCellStyle1.NullValue = null;
+            this.colGastoMonto.DefaultCellStyle = dataGridViewCellStyle1;
+            this.colGastoMonto.FillWeight = 70F;
+            this.colGastoMonto.HeaderText = "Monto";
+            this.colGastoMonto.MinimumWidth = 8;
+            this.colGastoMonto.Name = "colGastoMonto";
+            this.colGastoMonto.ReadOnly = true;
+            // 
+            // colGastoFecha
+            // 
+            this.colGastoFecha.DataPropertyName = "FechaGasto";
+            dataGridViewCellStyle2.Format = "dd/MM/yyyy \' | \' HH:mm";
+            this.colGastoFecha.DefaultCellStyle = dataGridViewCellStyle2;
+            this.colGastoFecha.HeaderText = "Fecha y Hora";
+            this.colGastoFecha.MinimumWidth = 8;
+            this.colGastoFecha.Name = "colGastoFecha";
+            this.colGastoFecha.ReadOnly = true;
+            // 
+            // colGastoUsuario
+            // 
+            this.colGastoUsuario.DataPropertyName = "UsuarioRegistra";
+            this.colGastoUsuario.HeaderText = "Usuario";
+            this.colGastoUsuario.MinimumWidth = 8;
+            this.colGastoUsuario.Name = "colGastoUsuario";
+            this.colGastoUsuario.ReadOnly = true;
+            // 
             // frmGestionGastos
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -417,12 +421,6 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Button btnGuardar;
         private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.DataGridViewTextBoxColumn colGastoId;
-        private System.Windows.Forms.DataGridViewTextBoxColumn colGastoDescripcion;
-        private System.Windows.Forms.DataGridViewTextBoxColumn colGastoCategoria;
-        private System.Windows.Forms.DataGridViewTextBoxColumn colGastoMonto;
-        private System.Windows.Forms.DataGridViewTextBoxColumn colGastoFecha;
-        private System.Windows.Forms.DataGridViewTextBoxColumn colGastoUsuario;
         private System.Windows.Forms.ComboBox cmbCategoria;
         private System.Windows.Forms.Label lblTotalGastado;
         private System.Windows.Forms.Label lblGastosEncontrados;
@@ -435,5 +433,11 @@
         private System.Windows.Forms.DateTimePicker dtpHasta;
         private System.Windows.Forms.TextBox txtHasta;
         private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colGastoId;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colGastoDescripcion;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colGastoCategoria;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colGastoMonto;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colGastoFecha;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colGastoUsuario;
     }
 }

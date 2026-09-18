@@ -118,7 +118,7 @@ namespace AsuFit.Datos
                     )
                     SELECT 
                         v.IdVenta AS [N° Transacción],
-                        v.Fecha AS [Fecha],
+                        CONVERT(varchar, v.Fecha, 103) + ' | ' + CONVERT(varchar, v.Fecha, 108) AS [Fecha],
                         ISNULL(s.Nombre + ' ' + s.Apellido, 'Cliente Ocasional') AS [Cliente],
                         v.MetodoPago AS [Método],
                         CASE 
@@ -126,7 +126,7 @@ namespace AsuFit.Datos
                             WHEN c.CantMensualidades > 0 THEN 'Mensualidad'
                             ELSE 'Producto'
                         END AS [Tipo Operación],
-                        v.Total AS [Total Cobrado]
+                        CAST(v.Total AS INT) AS [Total Cobrado]
                     FROM Ventas v
                     LEFT JOIN Socios s ON v.IdSocio = s.IdSocio
                     INNER JOIN Clasificacion c ON v.IdVenta = c.IdVenta

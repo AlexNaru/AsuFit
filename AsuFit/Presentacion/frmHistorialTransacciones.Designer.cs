@@ -36,12 +36,6 @@
             this.label2 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.dgvVentas = new System.Windows.Forms.DataGridView();
-            this.colHistorialId = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colHistorialFecha = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colHistorialCliente = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colHistorialMetodo = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colHistorialTipo = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colHistorialTotal = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.btnVerDetalle = new System.Windows.Forms.Button();
             this.cmbFiltroTipo = new System.Windows.Forms.ComboBox();
             this.label6 = new System.Windows.Forms.Label();
@@ -50,6 +44,12 @@
             this.txtDesde = new System.Windows.Forms.TextBox();
             this.dtpHasta = new System.Windows.Forms.DateTimePicker();
             this.txtHasta = new System.Windows.Forms.TextBox();
+            this.colHistorialId = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colHistorialFecha = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colHistorialCliente = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colHistorialMetodo = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colHistorialTipo = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colHistorialTotal = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dgvVentas)).BeginInit();
             this.SuspendLayout();
             // 
@@ -132,63 +132,6 @@
             this.dgvVentas.Size = new System.Drawing.Size(546, 150);
             this.dgvVentas.TabIndex = 5;
             this.dgvVentas.DataBindingComplete += new System.Windows.Forms.DataGridViewBindingCompleteEventHandler(this.dgvVentas_DataBindingComplete);
-            // 
-            // colHistorialId
-            // 
-            this.colHistorialId.DataPropertyName = "N° Transacción";
-            this.colHistorialId.HeaderText = "N° Transacción";
-            this.colHistorialId.MinimumWidth = 8;
-            this.colHistorialId.Name = "colHistorialId";
-            this.colHistorialId.ReadOnly = true;
-            // 
-            // colHistorialFecha
-            // 
-            this.colHistorialFecha.DataPropertyName = "Fecha";
-            dataGridViewCellStyle1.Format = "dd/MM/yyyy HH:mm";
-            this.colHistorialFecha.DefaultCellStyle = dataGridViewCellStyle1;
-            this.colHistorialFecha.FillWeight = 120F;
-            this.colHistorialFecha.HeaderText = "Fecha";
-            this.colHistorialFecha.MinimumWidth = 8;
-            this.colHistorialFecha.Name = "colHistorialFecha";
-            this.colHistorialFecha.ReadOnly = true;
-            // 
-            // colHistorialCliente
-            // 
-            this.colHistorialCliente.DataPropertyName = "Cliente";
-            this.colHistorialCliente.FillWeight = 110F;
-            this.colHistorialCliente.HeaderText = "Cliente";
-            this.colHistorialCliente.MinimumWidth = 8;
-            this.colHistorialCliente.Name = "colHistorialCliente";
-            this.colHistorialCliente.ReadOnly = true;
-            // 
-            // colHistorialMetodo
-            // 
-            this.colHistorialMetodo.DataPropertyName = "Método";
-            this.colHistorialMetodo.FillWeight = 95F;
-            this.colHistorialMetodo.HeaderText = "Método";
-            this.colHistorialMetodo.MinimumWidth = 8;
-            this.colHistorialMetodo.Name = "colHistorialMetodo";
-            this.colHistorialMetodo.ReadOnly = true;
-            // 
-            // colHistorialTipo
-            // 
-            this.colHistorialTipo.DataPropertyName = "Tipo Operación";
-            this.colHistorialTipo.FillWeight = 95F;
-            this.colHistorialTipo.HeaderText = "Tipo Operación";
-            this.colHistorialTipo.MinimumWidth = 8;
-            this.colHistorialTipo.Name = "colHistorialTipo";
-            this.colHistorialTipo.ReadOnly = true;
-            // 
-            // colHistorialTotal
-            // 
-            this.colHistorialTotal.DataPropertyName = "Total Cobrado";
-            dataGridViewCellStyle2.Format = "N0";
-            this.colHistorialTotal.DefaultCellStyle = dataGridViewCellStyle2;
-            this.colHistorialTotal.FillWeight = 80F;
-            this.colHistorialTotal.HeaderText = "Total Cobrado";
-            this.colHistorialTotal.MinimumWidth = 8;
-            this.colHistorialTotal.Name = "colHistorialTotal";
-            this.colHistorialTotal.ReadOnly = true;
             // 
             // btnVerDetalle
             // 
@@ -292,6 +235,64 @@
             this.txtHasta.Size = new System.Drawing.Size(102, 20);
             this.txtHasta.TabIndex = 32;
             // 
+            // colHistorialId
+            // 
+            this.colHistorialId.DataPropertyName = "N° Transacción";
+            this.colHistorialId.FillWeight = 80F;
+            this.colHistorialId.HeaderText = "N° Transacción";
+            this.colHistorialId.MinimumWidth = 8;
+            this.colHistorialId.Name = "colHistorialId";
+            this.colHistorialId.ReadOnly = true;
+            // 
+            // colHistorialFecha
+            // 
+            this.colHistorialFecha.DataPropertyName = "Fecha";
+            dataGridViewCellStyle1.Format = "dd/MM/yyyy HH:mm";
+            this.colHistorialFecha.DefaultCellStyle = dataGridViewCellStyle1;
+            this.colHistorialFecha.FillWeight = 140F;
+            this.colHistorialFecha.HeaderText = "Fecha y Hora";
+            this.colHistorialFecha.MinimumWidth = 8;
+            this.colHistorialFecha.Name = "colHistorialFecha";
+            this.colHistorialFecha.ReadOnly = true;
+            // 
+            // colHistorialCliente
+            // 
+            this.colHistorialCliente.DataPropertyName = "Cliente";
+            this.colHistorialCliente.FillWeight = 160F;
+            this.colHistorialCliente.HeaderText = "Cliente";
+            this.colHistorialCliente.MinimumWidth = 8;
+            this.colHistorialCliente.Name = "colHistorialCliente";
+            this.colHistorialCliente.ReadOnly = true;
+            // 
+            // colHistorialMetodo
+            // 
+            this.colHistorialMetodo.DataPropertyName = "Método";
+            this.colHistorialMetodo.FillWeight = 95F;
+            this.colHistorialMetodo.HeaderText = "Método";
+            this.colHistorialMetodo.MinimumWidth = 8;
+            this.colHistorialMetodo.Name = "colHistorialMetodo";
+            this.colHistorialMetodo.ReadOnly = true;
+            // 
+            // colHistorialTipo
+            // 
+            this.colHistorialTipo.DataPropertyName = "Tipo Operación";
+            this.colHistorialTipo.FillWeight = 95F;
+            this.colHistorialTipo.HeaderText = "Tipo Operación";
+            this.colHistorialTipo.MinimumWidth = 8;
+            this.colHistorialTipo.Name = "colHistorialTipo";
+            this.colHistorialTipo.ReadOnly = true;
+            // 
+            // colHistorialTotal
+            // 
+            this.colHistorialTotal.DataPropertyName = "Total Cobrado";
+            dataGridViewCellStyle2.Format = "N0";
+            this.colHistorialTotal.DefaultCellStyle = dataGridViewCellStyle2;
+            this.colHistorialTotal.FillWeight = 80F;
+            this.colHistorialTotal.HeaderText = "Total Cobrado";
+            this.colHistorialTotal.MinimumWidth = 8;
+            this.colHistorialTotal.Name = "colHistorialTotal";
+            this.colHistorialTotal.ReadOnly = true;
+            // 
             // frmHistorialTransacciones
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -335,16 +336,16 @@
         private System.Windows.Forms.Button btnVerDetalle;
         private System.Windows.Forms.ComboBox cmbFiltroTipo;
         private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.TextBox txtBuscar;
+        private System.Windows.Forms.DateTimePicker dtpDesde;
+        private System.Windows.Forms.TextBox txtDesde;
+        private System.Windows.Forms.DateTimePicker dtpHasta;
+        private System.Windows.Forms.TextBox txtHasta;
         private System.Windows.Forms.DataGridViewTextBoxColumn colHistorialId;
         private System.Windows.Forms.DataGridViewTextBoxColumn colHistorialFecha;
         private System.Windows.Forms.DataGridViewTextBoxColumn colHistorialCliente;
         private System.Windows.Forms.DataGridViewTextBoxColumn colHistorialMetodo;
         private System.Windows.Forms.DataGridViewTextBoxColumn colHistorialTipo;
         private System.Windows.Forms.DataGridViewTextBoxColumn colHistorialTotal;
-        private System.Windows.Forms.TextBox txtBuscar;
-        private System.Windows.Forms.DateTimePicker dtpDesde;
-        private System.Windows.Forms.TextBox txtDesde;
-        private System.Windows.Forms.DateTimePicker dtpHasta;
-        private System.Windows.Forms.TextBox txtHasta;
     }
 }

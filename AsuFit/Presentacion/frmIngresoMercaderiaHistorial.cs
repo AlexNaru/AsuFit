@@ -34,8 +34,8 @@ namespace AsuFit.Presentacion
             dtpDesde.Value = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
             dtpHasta.Value = DateTime.Now.Date;
 
-            if (txtDesde != null) txtDesde.Text = dtpDesde.Value.ToShortDateString();
-            if (txtHasta != null) txtHasta.Text = dtpHasta.Value.ToShortDateString();
+            if (txtDesde != null) txtDesde.Text = dtpDesde.Value.ToString("dd/MM/yyyy");
+            if (txtHasta != null) txtHasta.Text = dtpHasta.Value.ToString("dd/MM/yyyy");
 
             AplicarPlaceholder(txtBuscar, "Buscar por nombre de Proveedor...");
 
@@ -69,14 +69,14 @@ namespace AsuFit.Presentacion
         // Sincroniza la cota inferior del rango temporal y solicita la actualización de datos a la grilla.
         private void dtpDesde_ValueChanged(object sender, EventArgs e)
         {
-            if (txtDesde != null) txtDesde.Text = dtpDesde.Value.ToShortDateString();
+            if (txtDesde != null) txtDesde.Text = dtpDesde.Value.ToString("dd/MM/yyyy");
             BuscarCompras();
         }
 
         // Sincroniza la cota superior del rango temporal y solicita la actualización de datos a la grilla.
         private void dtpHasta_ValueChanged(object sender, EventArgs e)
         {
-            if (txtHasta != null) txtHasta.Text = dtpHasta.Value.ToShortDateString();
+            if (txtHasta != null) txtHasta.Text = dtpHasta.Value.ToString("dd/MM/yyyy");
             BuscarCompras();
         }
 

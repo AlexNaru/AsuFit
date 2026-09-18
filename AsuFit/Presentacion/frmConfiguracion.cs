@@ -27,25 +27,17 @@ namespace AsuFit.Presentacion
         #region 2. INICIALIZACIÓN Y CARGA DE DATOS
         private void frmConfiguracion_Load(object sender, EventArgs e)
         {
-            _esCargaInicial = true; // Aseguramos que esté activo al iniciar la carga
+            _esCargaInicial = true;
 
             ConfigurarTemaOscuro();
             CargarConfiguracion();
             CargarEscalaActual();
 
-            // Restaura la fecha del último backup desde la memoria local de la PC
-            string fechaBackup = Properties.Settings.Default.FechaUltimoBackup;
-            if (!string.IsNullOrEmpty(fechaBackup))
-            {
-                lblUltimoRespaldo.Text = "Último respaldo realizado: " + fechaBackup;
-            }
-
-            // Activa el blindaje de seguridad para todos los TextBox
             SuscribirFiltrosDeSeguridad();
 
-            this.ActiveControl = null; // Evita el borde azul en el combobox al cargar
+            this.ActiveControl = null;
 
-            _esCargaInicial = false; // ¡Carga completada! A partir de aquí, el evento responderá al usuario
+            _esCargaInicial = false;
         }
 
         private void CargarConfiguracion()
@@ -64,10 +56,9 @@ namespace AsuFit.Presentacion
                 nudDiasAviso2.Value = config.DiasAviso2;
                 txtRutaDestino.Text = config.RutaBackup;
 
-                // Carga de forma persistente la fecha del último backup desde la columna SQL
                 if (config.FechaUltimoBackup != null && config.FechaUltimoBackup != DateTime.MinValue)
                 {
-                    lblUltimoRespaldo.Text = "Último respaldo realizado: " + config.FechaUltimoBackup.ToString("dd/MM/yyyy HH:mm") + " hs";
+                    lblUltimoRespaldo.Text = "Último respaldo realizado: " + config.FechaUltimoBackup.ToString("dd\\/MM\\/yyyy ' | ' HH:mm") + " hs";
                 }
                 else
                 {
@@ -298,7 +289,6 @@ namespace AsuFit.Presentacion
             string nombreArchivo = $"AsuFit_Backup_{fechaHoy}.bak";
             string rutaCompleta = Path.Combine(txtRutaDestino.Text, nombreArchivo);
 
-            // Estado reactivo "Generando..." con bloqueo preventivo de UI
             btnGenerarBackup.Enabled = false;
             btnGenerarBackup.Text = "GENERANDO...";
             lblUltimoRespaldo.Text = "Estado: Generando copia de seguridad, por favor espere...";
@@ -311,7 +301,6 @@ namespace AsuFit.Presentacion
 
                 GestorAuditoria.Registrar(usuarioActual.NombreCompleto, "Sistema", "Backup de Base de Datos", $"Se generó una copia de seguridad en: {rutaCompleta}");
 
-                // Construcción integral de la entidad para evitar el envío de parámetros nulos
                 Configuracion obj = new Configuracion();
                 obj.NombreGimnasio = txtNombreGimnasio.Text;
                 obj.Ruc = txtRUC.Text;
@@ -332,7 +321,7 @@ namespace AsuFit.Presentacion
 
                 negocio.ActualizarDatosGenerales(obj);
 
-                string fechaFormateada = obj.FechaUltimoBackup.ToString("dd/MM/yyyy HH:mm") + " hs";
+                string fechaFormateada = obj.FechaUltimoBackup.ToString("dd\\/MM\\/yyyy ' | ' HH:mm") + " hs";
                 lblUltimoRespaldo.Text = "Último respaldo realizado: " + fechaFormateada;
 
                 MensajeAsuFit.Mostrar($"¡Copia de seguridad generada con éxito!\n\nSe guardó en:\n{rutaCompleta}", "Respaldo Exitoso", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -344,7 +333,6 @@ namespace AsuFit.Presentacion
             }
             finally
             {
-                // Restauración del estado interactivo
                 btnGenerarBackup.Enabled = true;
                 btnGenerarBackup.Text = "GENERAR BACKUP AHORA";
             }

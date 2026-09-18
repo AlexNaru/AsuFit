@@ -28,14 +28,20 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle9 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle10 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle11 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle12 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.dgvArqueos = new System.Windows.Forms.DataGridView();
+            this.label4 = new System.Windows.Forms.Label();
+            this.btnVerPDF = new System.Windows.Forms.Button();
+            this.dtpDesde = new System.Windows.Forms.DateTimePicker();
+            this.txtDesde = new System.Windows.Forms.TextBox();
+            this.dtpHasta = new System.Windows.Forms.DateTimePicker();
+            this.txtHasta = new System.Windows.Forms.TextBox();
             this.colArqueoId = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colArqueoFecha = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colArqueoIngresos = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -43,12 +49,6 @@
             this.colArqueoDiferencia = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colArqueoCajero = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colArqueoEstado = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.label4 = new System.Windows.Forms.Label();
-            this.btnVerPDF = new System.Windows.Forms.Button();
-            this.dtpDesde = new System.Windows.Forms.DateTimePicker();
-            this.txtDesde = new System.Windows.Forms.TextBox();
-            this.dtpHasta = new System.Windows.Forms.DateTimePicker();
-            this.txtHasta = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.dgvArqueos)).BeginInit();
             this.SuspendLayout();
             // 
@@ -106,71 +106,6 @@
             this.dgvArqueos.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dgvArqueos.Size = new System.Drawing.Size(383, 150);
             this.dgvArqueos.TabIndex = 10;
-            // 
-            // colArqueoId
-            // 
-            this.colArqueoId.DataPropertyName = "IdArqueo";
-            this.colArqueoId.HeaderText = "Id Arqueo";
-            this.colArqueoId.MinimumWidth = 8;
-            this.colArqueoId.Name = "colArqueoId";
-            this.colArqueoId.ReadOnly = true;
-            this.colArqueoId.Visible = false;
-            // 
-            // colArqueoFecha
-            // 
-            this.colArqueoFecha.DataPropertyName = "FechaHora";
-            dataGridViewCellStyle9.Format = "dd/MM/yyyy HH:mm";
-            this.colArqueoFecha.DefaultCellStyle = dataGridViewCellStyle9;
-            this.colArqueoFecha.HeaderText = "Fecha y Hora";
-            this.colArqueoFecha.MinimumWidth = 8;
-            this.colArqueoFecha.Name = "colArqueoFecha";
-            this.colArqueoFecha.ReadOnly = true;
-            // 
-            // colArqueoIngresos
-            // 
-            this.colArqueoIngresos.DataPropertyName = "TotalIngresosSistema";
-            dataGridViewCellStyle10.Format = "N0";
-            this.colArqueoIngresos.DefaultCellStyle = dataGridViewCellStyle10;
-            this.colArqueoIngresos.HeaderText = "Total Ingresos";
-            this.colArqueoIngresos.MinimumWidth = 8;
-            this.colArqueoIngresos.Name = "colArqueoIngresos";
-            this.colArqueoIngresos.ReadOnly = true;
-            // 
-            // colArqueoEfectivo
-            // 
-            this.colArqueoEfectivo.DataPropertyName = "EfectivoDeclarado";
-            dataGridViewCellStyle11.Format = "N0";
-            this.colArqueoEfectivo.DefaultCellStyle = dataGridViewCellStyle11;
-            this.colArqueoEfectivo.HeaderText = "Efectivo Declarado";
-            this.colArqueoEfectivo.MinimumWidth = 8;
-            this.colArqueoEfectivo.Name = "colArqueoEfectivo";
-            this.colArqueoEfectivo.ReadOnly = true;
-            // 
-            // colArqueoDiferencia
-            // 
-            this.colArqueoDiferencia.DataPropertyName = "Diferencia";
-            dataGridViewCellStyle12.Format = "N0";
-            this.colArqueoDiferencia.DefaultCellStyle = dataGridViewCellStyle12;
-            this.colArqueoDiferencia.HeaderText = "Diferencia";
-            this.colArqueoDiferencia.MinimumWidth = 8;
-            this.colArqueoDiferencia.Name = "colArqueoDiferencia";
-            this.colArqueoDiferencia.ReadOnly = true;
-            // 
-            // colArqueoCajero
-            // 
-            this.colArqueoCajero.DataPropertyName = "UsuarioRegistra";
-            this.colArqueoCajero.HeaderText = "Cajero";
-            this.colArqueoCajero.MinimumWidth = 8;
-            this.colArqueoCajero.Name = "colArqueoCajero";
-            this.colArqueoCajero.ReadOnly = true;
-            // 
-            // colArqueoEstado
-            // 
-            this.colArqueoEstado.DataPropertyName = "Estado";
-            this.colArqueoEstado.HeaderText = "Estado";
-            this.colArqueoEstado.MinimumWidth = 8;
-            this.colArqueoEstado.Name = "colArqueoEstado";
-            this.colArqueoEstado.ReadOnly = true;
             // 
             // label4
             // 
@@ -233,6 +168,77 @@
             this.txtHasta.Size = new System.Drawing.Size(102, 20);
             this.txtHasta.TabIndex = 52;
             // 
+            // colArqueoId
+            // 
+            this.colArqueoId.DataPropertyName = "IdArqueo";
+            this.colArqueoId.HeaderText = "Id Arqueo";
+            this.colArqueoId.MinimumWidth = 8;
+            this.colArqueoId.Name = "colArqueoId";
+            this.colArqueoId.ReadOnly = true;
+            this.colArqueoId.Visible = false;
+            // 
+            // colArqueoFecha
+            // 
+            this.colArqueoFecha.DataPropertyName = "FechaHora";
+            dataGridViewCellStyle1.Format = "dd/MM/yyyy HH:mm";
+            this.colArqueoFecha.DefaultCellStyle = dataGridViewCellStyle1;
+            this.colArqueoFecha.FillWeight = 160F;
+            this.colArqueoFecha.HeaderText = "Fecha y Hora";
+            this.colArqueoFecha.MinimumWidth = 8;
+            this.colArqueoFecha.Name = "colArqueoFecha";
+            this.colArqueoFecha.ReadOnly = true;
+            // 
+            // colArqueoIngresos
+            // 
+            this.colArqueoIngresos.DataPropertyName = "TotalIngresosSistema";
+            dataGridViewCellStyle2.Format = "N0";
+            this.colArqueoIngresos.DefaultCellStyle = dataGridViewCellStyle2;
+            this.colArqueoIngresos.FillWeight = 92F;
+            this.colArqueoIngresos.HeaderText = "Total Ingresos";
+            this.colArqueoIngresos.MinimumWidth = 8;
+            this.colArqueoIngresos.Name = "colArqueoIngresos";
+            this.colArqueoIngresos.ReadOnly = true;
+            // 
+            // colArqueoEfectivo
+            // 
+            this.colArqueoEfectivo.DataPropertyName = "EfectivoDeclarado";
+            dataGridViewCellStyle3.Format = "N0";
+            this.colArqueoEfectivo.DefaultCellStyle = dataGridViewCellStyle3;
+            this.colArqueoEfectivo.FillWeight = 92F;
+            this.colArqueoEfectivo.HeaderText = "Efectivo Declarado";
+            this.colArqueoEfectivo.MinimumWidth = 8;
+            this.colArqueoEfectivo.Name = "colArqueoEfectivo";
+            this.colArqueoEfectivo.ReadOnly = true;
+            // 
+            // colArqueoDiferencia
+            // 
+            this.colArqueoDiferencia.DataPropertyName = "Diferencia";
+            dataGridViewCellStyle4.Format = "N0";
+            this.colArqueoDiferencia.DefaultCellStyle = dataGridViewCellStyle4;
+            this.colArqueoDiferencia.FillWeight = 92F;
+            this.colArqueoDiferencia.HeaderText = "Diferencia";
+            this.colArqueoDiferencia.MinimumWidth = 8;
+            this.colArqueoDiferencia.Name = "colArqueoDiferencia";
+            this.colArqueoDiferencia.ReadOnly = true;
+            // 
+            // colArqueoCajero
+            // 
+            this.colArqueoCajero.DataPropertyName = "UsuarioRegistra";
+            this.colArqueoCajero.FillWeight = 162F;
+            this.colArqueoCajero.HeaderText = "Cajero";
+            this.colArqueoCajero.MinimumWidth = 8;
+            this.colArqueoCajero.Name = "colArqueoCajero";
+            this.colArqueoCajero.ReadOnly = true;
+            // 
+            // colArqueoEstado
+            // 
+            this.colArqueoEstado.DataPropertyName = "Estado";
+            this.colArqueoEstado.FillWeight = 72F;
+            this.colArqueoEstado.HeaderText = "Estado";
+            this.colArqueoEstado.MinimumWidth = 8;
+            this.colArqueoEstado.Name = "colArqueoEstado";
+            this.colArqueoEstado.ReadOnly = true;
+            // 
             // frmHistorialArqueos
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -250,8 +256,8 @@
             this.Controls.Add(this.label1);
             this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "frmHistorialArqueos";
+            this.ShowIcon = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "frmHistorialArqueos";
             this.Load += new System.EventHandler(this.frmHistorialArqueos_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dgvArqueos)).EndInit();
             this.ResumeLayout(false);
@@ -267,6 +273,10 @@
         private System.Windows.Forms.DataGridView dgvArqueos;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Button btnVerPDF;
+        private System.Windows.Forms.DateTimePicker dtpDesde;
+        private System.Windows.Forms.TextBox txtDesde;
+        private System.Windows.Forms.DateTimePicker dtpHasta;
+        private System.Windows.Forms.TextBox txtHasta;
         private System.Windows.Forms.DataGridViewTextBoxColumn colArqueoId;
         private System.Windows.Forms.DataGridViewTextBoxColumn colArqueoFecha;
         private System.Windows.Forms.DataGridViewTextBoxColumn colArqueoIngresos;
@@ -274,9 +284,5 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn colArqueoDiferencia;
         private System.Windows.Forms.DataGridViewTextBoxColumn colArqueoCajero;
         private System.Windows.Forms.DataGridViewTextBoxColumn colArqueoEstado;
-        private System.Windows.Forms.DateTimePicker dtpDesde;
-        private System.Windows.Forms.TextBox txtDesde;
-        private System.Windows.Forms.DateTimePicker dtpHasta;
-        private System.Windows.Forms.TextBox txtHasta;
     }
 }

@@ -177,8 +177,8 @@ namespace AsuFit.Presentacion
             dtpHasta.Value = DateTime.Now.Date;
 
             // Sincroniza la fecha inicial a los TextBox oscuros creados en el diseñador
-            if (txtDesde != null) txtDesde.Text = dtpDesde.Value.ToShortDateString();
-            if (txtHasta != null) txtHasta.Text = dtpHasta.Value.ToShortDateString();
+            if (txtDesde != null) txtDesde.Text = dtpDesde.Value.ToString("dd\\/MM\\/yyyy");
+            if (txtHasta != null) txtHasta.Text = dtpHasta.Value.ToString("dd\\/MM\\/yyyy");
 
             AplicarPlaceholder(txtBuscar, "Buscar por N° de Transacción, Cliente o Cédula...");
 
@@ -217,14 +217,14 @@ namespace AsuFit.Presentacion
         // Sincroniza el DTP con el TextBox oscuro y lanza la búsqueda
         private void dtpDesde_ValueChanged(object sender, EventArgs e)
         {
-            if (txtDesde != null) txtDesde.Text = dtpDesde.Value.ToShortDateString();
+            if (txtDesde != null) txtDesde.Text = dtpDesde.Value.ToString("dd\\/MM\\/yyyy");
             BuscarVentas();
         }
 
         // Sincroniza el DTP con el TextBox oscuro y lanza la búsqueda
         private void dtpHasta_ValueChanged(object sender, EventArgs e)
         {
-            if (txtHasta != null) txtHasta.Text = dtpHasta.Value.ToShortDateString();
+            if (txtHasta != null) txtHasta.Text = dtpHasta.Value.ToString("dd\\/MM\\/yyyy");
             BuscarVentas();
         }
 

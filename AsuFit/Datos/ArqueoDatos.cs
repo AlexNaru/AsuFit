@@ -137,7 +137,7 @@ namespace AsuFit.Datos
                 {
                     string query = @"SELECT 
                                         IdTurno AS IdArqueo, 
-                                        FechaApertura AS FechaHora, 
+                                        CONVERT(varchar, FechaApertura, 103) + ' | ' + CONVERT(varchar, FechaApertura, 108) AS FechaHora, 
                                         MontoEsperado AS TotalIngresosSistema, 
                                         MontoContado AS EfectivoDeclarado, 
                                         Diferencia, 

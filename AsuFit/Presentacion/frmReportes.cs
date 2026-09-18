@@ -144,12 +144,12 @@ namespace AsuFit.Presentacion
         private void SincronizarTextosFecha()
         {
             // Pestaña 1
-            if (txtDesde != null) txtDesde.Text = dtpDesde.Value.ToShortDateString();
-            if (txtHasta != null) txtHasta.Text = dtpHasta.Value.ToShortDateString();
+            if (txtDesde != null) txtDesde.Text = dtpDesde.Value.ToString("dd\\/MM\\/yyyy");
+            if (txtHasta != null) txtHasta.Text = dtpHasta.Value.ToString("dd\\/MM\\/yyyy");
 
             // Pestaña 2
-            if (txtDesdeTop != null) txtDesdeTop.Text = dtpDesdeTop.Value.ToShortDateString();
-            if (txtHastaTop != null) txtHastaTop.Text = dtpHastaTop.Value.ToShortDateString();
+            if (txtDesdeTop != null) txtDesdeTop.Text = dtpDesdeTop.Value.ToString("dd\\/MM\\/yyyy");
+            if (txtHastaTop != null) txtHastaTop.Text = dtpHastaTop.Value.ToString("dd\\/MM\\/yyyy");
         }
         #endregion
 
