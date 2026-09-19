@@ -303,7 +303,16 @@ namespace AsuFit.Presentacion
             ArqueoNegocio negocioArqueo = new ArqueoNegocio();
             if (!negocioArqueo.VerificarCajaAbierta())
             {
-                MensajeAsuFit.Mostrar("Operación denegada. Debes realizar la apertura de caja para procesar transacciones financieras.", "Caja Cerrada", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MensajeAsuFit.Mostrar("Para registrar un gasto de dinero físico debes realizar la Apertura de Caja primero.\n\nSerás redirigido al módulo de Arqueos.", "Caja Cerrada", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+
+                frmDashboard dashboard = Application.OpenForms["frmDashboard"] as frmDashboard;
+                if (dashboard != null)
+                {
+                    dashboard.IntentoGastoPendiente = true; // <-- Activa la memoria
+
+                    Control[] botones = dashboard.Controls.Find("btnArqueoCaja", true);
+                    if (botones.Length > 0 && botones[0] is Button btnArqueo) btnArqueo.PerformClick();
+                }
                 return;
             }
 

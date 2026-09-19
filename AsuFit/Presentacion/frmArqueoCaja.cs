@@ -13,6 +13,7 @@ namespace AsuFit.Presentacion
         private Usuario usuarioActual;
         private int idTurnoActivo = 0;
         private DateTime fechaAperturaActiva;
+        private bool _autoEjecutado = false; // Agrega solo esta línea
 
         public frmArqueoCaja(Usuario user)
         {
@@ -25,14 +26,37 @@ namespace AsuFit.Presentacion
         #endregion
 
         #region 2. INICIALIZACIÓN
+        // Orquesta el arranque visual y evalúa la presencia de intenciones diferidas para forzar flujos automatizados de caja.
         private void frmArqueoCaja_Load(object sender, EventArgs e)
         {
             ConfigurarTemaOscuro();
             lblCajeroActual.Text = "Cajero: " + usuarioActual.NombreCompleto;
             RevisarEstadoDeCaja();
 
-            // Libera el foco inicial para un despliegue visual completamente limpio
             this.ActiveControl = null;
+
+            this.BeginInvoke(new Action(() =>
+            {
+                if (_autoEjecutado) return;
+                _autoEjecutado = true;
+
+                frmDashboard dashboard = Application.OpenForms["frmDashboard"] as frmDashboard;
+                bool vengoDeVentas = AsuFit.Entidades.CarritoGlobal.Detalles != null && AsuFit.Entidades.CarritoGlobal.Detalles.Rows.Count > 0;
+                bool vengoDeRegistro = dashboard != null && dashboard.IntentoRegistroSocioPendiente;
+                bool vengoDeCobro = dashboard != null && dashboard.IntentoCobroPendiente;
+                bool vengoDeGasto = dashboard != null && dashboard.IntentoGastoPendiente;
+
+                // 1. Auto-Apertura multi-módulo
+                if (idTurnoActivo == 0 && (vengoDeVentas || vengoDeRegistro || vengoDeCobro || vengoDeGasto))
+                {
+                    btnAbrirCaja.PerformClick();
+                }
+                // 2. Auto-Cierre
+                else if (idTurnoActivo > 0 && dashboard != null && dashboard.HayCierrePendiente)
+                {
+                    btnCerrarCaja.PerformClick();
+                }
+            }));
         }
         #endregion
 
@@ -189,10 +213,18 @@ namespace AsuFit.Presentacion
                 lblGastos.Text = "Gs. 0";
                 lblTotalEsperado.Text = "Gs. 0";
             }
+            
+            // Actualiza el estado de la caja en la barra superior del dashboard
+            frmDashboard dashboard = Application.OpenForms["frmDashboard"] as frmDashboard;
+            if (dashboard != null)
+            {
+                dashboard.ActualizarEstadoCajaTopBar();
+            }
         }
         #endregion
 
         #region 5. SECCIÓN INFERIOR: ACCIONES DE CAJA
+        // Ejecuta la apertura de caja y enruta la respuesta de la UI según la huella de intención activa en el contenedor maestro.
         private void btnAbrirCaja_Click(object sender, EventArgs e)
         {
             frmAbrirCaja frm = new frmAbrirCaja(usuarioActual);
@@ -200,6 +232,45 @@ namespace AsuFit.Presentacion
             if (frm.ShowDialog() == DialogResult.OK)
             {
                 RevisarEstadoDeCaja();
+
+                frmDashboard dashboard = Application.OpenForms["frmDashboard"] as frmDashboard;
+
+                // Redirección 1: Volver a Ventas
+                if (AsuFit.Entidades.CarritoGlobal.Detalles != null && AsuFit.Entidades.CarritoGlobal.Detalles.Rows.Count > 0)
+                {
+                    if (dashboard != null)
+                    {
+                        Control[] botones = dashboard.Controls.Find("btnInventarioVentas", true);
+                        if (botones.Length > 0 && botones[0] is Button btnVentas) btnVentas.PerformClick();
+                    }
+                }
+                // Redirección 2: Volver a Registro de Socio
+                else if (dashboard != null && dashboard.IntentoRegistroSocioPendiente)
+                {
+                    Control[] botones = dashboard.Controls.Find("btnRegistrarSocio", true);
+                    if (botones.Length > 0 && botones[0] is Button btnSocio) btnSocio.PerformClick();
+                }
+                // Redirección 3: Volver a Registrar Cobro
+                else if (dashboard != null && dashboard.IntentoCobroPendiente)
+                {
+                    Control[] botones = dashboard.Controls.Find("btnRegistrarCobro", true);
+                    if (botones.Length > 0 && botones[0] is Button btnCobro) btnCobro.PerformClick();
+                }
+                // Redirección 4: Volver a Gestión de Gastos
+                else if (dashboard != null && dashboard.IntentoGastoPendiente)
+                {
+                    Control[] botones = dashboard.Controls.Find("btnGestionGastos", true);
+                    if (botones.Length > 0 && botones[0] is Button btnGasto) btnGasto.PerformClick();
+                }
+            }
+
+            // Limpieza de seguridad: Se borra la memoria sin importar si abrió o canceló
+            frmDashboard dash = Application.OpenForms["frmDashboard"] as frmDashboard;
+            if (dash != null)
+            {
+                dash.IntentoRegistroSocioPendiente = false;
+                dash.IntentoCobroPendiente = false;
+                dash.IntentoGastoPendiente = false;
             }
         }
 
@@ -216,6 +287,14 @@ namespace AsuFit.Presentacion
             if (frm.ShowDialog() == DialogResult.OK)
             {
                 RevisarEstadoDeCaja();
+
+                // --- AVISAR AL DASHBOARD QUE SE CERRO LA CAJA PARA RETOMAR ACCIÓN ---
+                frmDashboard dashboard = Application.OpenForms["frmDashboard"] as frmDashboard;
+                if (dashboard != null)
+                {
+                    dashboard.ProcesarCierrePendiente();
+                }
+                // --------------------------------------------------------------------
             }
         }
 

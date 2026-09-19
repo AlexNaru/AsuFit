@@ -296,14 +296,28 @@ namespace AsuFit.Presentacion
         #endregion
 
         #region 6. BOTONES DE ACCIÓN (CRUD)
-        // Instancia el formulario para registrar un nuevo socio
+        // Instancia el formulario para registrar un nuevo socio validando primero la apertura de caja
         private void btnNuevo_Click(object sender, EventArgs e)
         {
+            ArqueoNegocio negocioArqueo = new ArqueoNegocio();
+            if (!negocioArqueo.VerificarCajaAbierta())
+            {
+                MensajeAsuFit.Mostrar("Para registrar un nuevo socio debes realizar la Apertura de Caja, ya que esto requiere cobrar la suscripción inicial.\n\nSerás redirigido al módulo de Arqueos.", "Caja Cerrada", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+
+                frmDashboard dashboard = Application.OpenForms["frmDashboard"] as frmDashboard;
+                if (dashboard != null)
+                {
+                    dashboard.IntentoRegistroSocioPendiente = true; // <-- Activa la memoria
+
+                    Control[] botones = dashboard.Controls.Find("btnArqueoCaja", true);
+                    if (botones.Length > 0 && botones[0] is Button btnArqueo) btnArqueo.PerformClick();
+                }
+                return;
+            }
+
             frmRegistrarSocio frm = new frmRegistrarSocio(usuarioActual);
             frm.btnCancelar.Visible = true;
-
             PrepararFormularioComoDashboard(frm);
-
             frm.ShowDialog();
             CargarGrilla();
         }

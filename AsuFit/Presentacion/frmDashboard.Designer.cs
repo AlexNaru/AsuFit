@@ -36,10 +36,10 @@
             this.btnRegistrarUsuario = new System.Windows.Forms.Button();
             this.lblModulo4 = new System.Windows.Forms.Label();
             this.btnReportesEstadísticas = new System.Windows.Forms.Button();
-            this.btnArqueoCaja = new System.Windows.Forms.Button();
             this.btnGestionGastos = new System.Windows.Forms.Button();
             this.btnHistorialTransacciones = new System.Windows.Forms.Button();
             this.btnRegistrarCobro = new System.Windows.Forms.Button();
+            this.btnArqueoCaja = new System.Windows.Forms.Button();
             this.lblModulo3 = new System.Windows.Forms.Label();
             this.btnProveedores = new System.Windows.Forms.Button();
             this.btnIngresoMercaderia = new System.Windows.Forms.Button();
@@ -62,6 +62,7 @@
             this.btnNotificaciones = new System.Windows.Forms.Button();
             this.btnUsuario = new System.Windows.Forms.Button();
             this.timerReloj = new System.Windows.Forms.Timer(this.components);
+            this.btnEstadoCajaTop = new System.Windows.Forms.Button();
             this.pnlSidebar.SuspendLayout();
             this.pnlContenedor.SuspendLayout();
             this.pnlBarraSuperior.SuspendLayout();
@@ -178,23 +179,6 @@
             this.btnReportesEstadísticas.UseVisualStyleBackColor = false;
             this.btnReportesEstadísticas.Click += new System.EventHandler(this.btnReportesEstadísticas_Click);
             // 
-            // btnArqueoCaja
-            // 
-            this.btnArqueoCaja.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(20)))), ((int)(((byte)(20)))));
-            this.btnArqueoCaja.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnArqueoCaja.Dock = System.Windows.Forms.DockStyle.Top;
-            this.btnArqueoCaja.FlatAppearance.BorderSize = 0;
-            this.btnArqueoCaja.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnArqueoCaja.ForeColor = System.Drawing.Color.White;
-            this.btnArqueoCaja.Location = new System.Drawing.Point(0, 324);
-            this.btnArqueoCaja.Margin = new System.Windows.Forms.Padding(2);
-            this.btnArqueoCaja.Name = "btnArqueoCaja";
-            this.btnArqueoCaja.Size = new System.Drawing.Size(208, 26);
-            this.btnArqueoCaja.TabIndex = 9;
-            this.btnArqueoCaja.Text = "💵 Arqueo de Caja";
-            this.btnArqueoCaja.UseVisualStyleBackColor = false;
-            this.btnArqueoCaja.Click += new System.EventHandler(this.btnArqueoCaja_Click);
-            // 
             // btnGestionGastos
             // 
             this.btnGestionGastos.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(20)))), ((int)(((byte)(20)))));
@@ -245,6 +229,23 @@
             this.btnRegistrarCobro.Text = "💰 Registrar Cobro";
             this.btnRegistrarCobro.UseVisualStyleBackColor = false;
             this.btnRegistrarCobro.Click += new System.EventHandler(this.btnRegistrarCobro_Click);
+            // 
+            // btnArqueoCaja
+            // 
+            this.btnArqueoCaja.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(20)))), ((int)(((byte)(20)))));
+            this.btnArqueoCaja.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnArqueoCaja.Dock = System.Windows.Forms.DockStyle.Top;
+            this.btnArqueoCaja.FlatAppearance.BorderSize = 0;
+            this.btnArqueoCaja.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnArqueoCaja.ForeColor = System.Drawing.Color.White;
+            this.btnArqueoCaja.Location = new System.Drawing.Point(0, 324);
+            this.btnArqueoCaja.Margin = new System.Windows.Forms.Padding(2);
+            this.btnArqueoCaja.Name = "btnArqueoCaja";
+            this.btnArqueoCaja.Size = new System.Drawing.Size(208, 26);
+            this.btnArqueoCaja.TabIndex = 9;
+            this.btnArqueoCaja.Text = "💵 Arqueo de Caja";
+            this.btnArqueoCaja.UseVisualStyleBackColor = false;
+            this.btnArqueoCaja.Click += new System.EventHandler(this.btnArqueoCaja_Click);
             // 
             // lblModulo3
             // 
@@ -492,6 +493,7 @@
             // pnlBarraSuperior
             // 
             this.pnlBarraSuperior.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(20)))), ((int)(((byte)(20)))));
+            this.pnlBarraSuperior.Controls.Add(this.btnEstadoCajaTop);
             this.pnlBarraSuperior.Controls.Add(this.lblFechaHora);
             this.pnlBarraSuperior.Controls.Add(this.pictureBox1);
             this.pnlBarraSuperior.Controls.Add(this.btnNotificaciones);
@@ -509,7 +511,7 @@
             this.lblFechaHora.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.lblFechaHora.AutoSize = true;
             this.lblFechaHora.ForeColor = System.Drawing.Color.White;
-            this.lblFechaHora.Location = new System.Drawing.Point(382, 11);
+            this.lblFechaHora.Location = new System.Drawing.Point(185, 11);
             this.lblFechaHora.Name = "lblFechaHora";
             this.lblFechaHora.Padding = new System.Windows.Forms.Padding(20, 0, 0, 0);
             this.lblFechaHora.Size = new System.Drawing.Size(80, 13);
@@ -565,6 +567,24 @@
             this.timerReloj.Enabled = true;
             this.timerReloj.Interval = 1000;
             this.timerReloj.Tick += new System.EventHandler(this.timerReloj_Tick);
+            // 
+            // btnEstadoCajaTop
+            // 
+            this.btnEstadoCajaTop.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnEstadoCajaTop.AutoSize = true;
+            this.btnEstadoCajaTop.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(20)))), ((int)(((byte)(20)))));
+            this.btnEstadoCajaTop.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnEstadoCajaTop.FlatAppearance.BorderSize = 0;
+            this.btnEstadoCajaTop.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnEstadoCajaTop.ForeColor = System.Drawing.Color.White;
+            this.btnEstadoCajaTop.Location = new System.Drawing.Point(449, 3);
+            this.btnEstadoCajaTop.Margin = new System.Windows.Forms.Padding(0);
+            this.btnEstadoCajaTop.Name = "btnEstadoCajaTop";
+            this.btnEstadoCajaTop.Size = new System.Drawing.Size(196, 28);
+            this.btnEstadoCajaTop.TabIndex = 23;
+            this.btnEstadoCajaTop.Text = "🔴 CAJA: CERRADA";
+            this.btnEstadoCajaTop.UseVisualStyleBackColor = false;
+            this.btnEstadoCajaTop.Click += new System.EventHandler(this.btnEstadoCajaTop_Click);
             // 
             // frmDashboard
             // 
@@ -630,5 +650,6 @@
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label lblFechaHora;
         private System.Windows.Forms.Timer timerReloj;
+        private System.Windows.Forms.Button btnEstadoCajaTop;
     }
 }

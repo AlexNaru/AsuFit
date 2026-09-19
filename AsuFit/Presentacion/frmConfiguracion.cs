@@ -201,9 +201,13 @@ namespace AsuFit.Presentacion
         #endregion
 
         #region 5. PESTAÑA: NOTIFICACIONES Y ALERTAS
+        // Verifica la conectividad del servidor SMTP validando previamente que no existan cambios sin guardar en la vista.
         private void btnPruebaCorreo_Click(object sender, EventArgs e)
         {
-            if (string.IsNullOrWhiteSpace(txtCorreoEmisor.Text) || string.IsNullOrWhiteSpace(txtContrasenaCorreo.Text))
+            string correoIngresado = txtCorreoEmisor.Text.Trim();
+            string passIngresada = txtContrasenaCorreo.Text.Trim();
+
+            if (string.IsNullOrWhiteSpace(correoIngresado) || string.IsNullOrWhiteSpace(passIngresada))
             {
                 MensajeAsuFit.Mostrar("Por favor, completá el correo y la contraseña antes de hacer la prueba.", "Datos incompletos", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
@@ -211,8 +215,26 @@ namespace AsuFit.Presentacion
 
             try
             {
+                Configuracion configDB = negocio.ObtenerConfiguracion();
+                string correoDB = configDB.CorreoEmisor != null ? configDB.CorreoEmisor.Trim() : "";
+                string passDB = configDB.ContrasenaCorreo != null ? configDB.ContrasenaCorreo.Trim() : "";
+
+                if (correoIngresado != correoDB || passIngresada != passDB)
+                {
+                    MensajeAsuFit.Mostrar("Hemos detectado que modificaste el correo o la contraseña.\n\nPor favor, hacé clic en el botón 'GUARDAR' primero para registrar los cambios antes de enviar la prueba.", "Guardar Cambios", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+            }
+            catch (Exception ex)
+            {
+                MensajeAsuFit.Mostrar("Error al verificar los datos guardados: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            try
+            {
                 Cursor.Current = Cursors.WaitCursor;
-                negocio.ProbarConexionCorreo(txtCorreoEmisor.Text.Trim(), txtContrasenaCorreo.Text.Trim());
+                negocio.ProbarConexionCorreo(correoIngresado, passIngresada);
                 Cursor.Current = Cursors.Default;
 
                 MensajeAsuFit.Mostrar("¡Conexión exitosa!\n\nTe hemos enviado un correo de prueba a tu bandeja de entrada. Por favor, revisalo para confirmar.", "Prueba Superada", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -224,8 +246,22 @@ namespace AsuFit.Presentacion
             }
         }
 
+        // Persiste la configuración del servidor de correo y dispara automáticamente el protocolo de prueba.
         private void btnGuardarNotificaciones_Click(object sender, EventArgs e)
         {
+            // --- NUEVA VALIDACIÓN: Confirmación de intención de guardado ---
+            DialogResult confirmacion = MensajeAsuFit.Mostrar(
+                "¿Estás seguro de que deseas guardar los cambios en la configuración de correos y avisos de vencimiento?",
+                "Confirmar Guardado",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Question);
+
+            if (confirmacion == DialogResult.No)
+            {
+                return; // Aborta la operación silenciosamente si el usuario se arrepiente
+            }
+            // ---------------------------------------------------------------
+
             try
             {
                 Configuracion obj = new Configuracion();
@@ -237,7 +273,10 @@ namespace AsuFit.Presentacion
                 if (negocio.ActualizarNotificaciones(obj))
                 {
                     GestorAuditoria.Registrar(usuarioActual.NombreCompleto, "Configuración", "Actualización", "Se cambiaron los parámetros de envío de correos.");
+
                     MensajeAsuFit.Mostrar("¡Configuración de correos y avisos guardada correctamente!", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                    btnPruebaCorreo_Click(sender, e);
                 }
             }
             catch (Exception ex)
@@ -246,6 +285,7 @@ namespace AsuFit.Presentacion
             }
         }
 
+        // Revierte los controles visuales al estado de la última persistencia.
         private void btnCancelarNotificaciones_Click(object sender, EventArgs e)
         {
             DialogResult resultado = MensajeAsuFit.Mostrar("¿Estás seguro de que deseas cancelar? Se perderán los cambios no guardados.", "Cancelar", MessageBoxButtons.YesNo, MessageBoxIcon.Question);

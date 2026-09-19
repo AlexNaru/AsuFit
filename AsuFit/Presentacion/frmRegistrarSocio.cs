@@ -356,13 +356,7 @@ namespace AsuFit.Presentacion
         // Efectúa comprobaciones paramétricas, evalúa unicidad, ejecuta el procedimiento almacenado y despacha al módulo de facturación.
         private void btnGuardar_Click(object sender, EventArgs e)
         {
-            ArqueoNegocio negocioArqueo = new ArqueoNegocio();
-            if (!negocioArqueo.VerificarCajaAbierta())
-            {
-                MensajeAsuFit.Mostrar("Operación denegada. Debes realizar la apertura de caja para procesar transacciones financieras.", "Caja Cerrada", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
-
+            // Verificación exclusiva para socios nuevos
             if (socioEdicion == null && cmbPlanes.SelectedIndex <= 0)
             {
                 MensajeAsuFit.Mostrar("Por favor, seleccioná el Plan para el nuevo socio.", "Atención", MessageBoxButtons.OK, MessageBoxIcon.Warning);

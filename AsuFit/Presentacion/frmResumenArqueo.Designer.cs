@@ -300,7 +300,7 @@
             // 
             this.btnAceptarEnviar.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnAceptarEnviar.Location = new System.Drawing.Point(11, 420);
-            this.btnAceptarEnviar.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btnAceptarEnviar.Margin = new System.Windows.Forms.Padding(2);
             this.btnAceptarEnviar.Name = "btnAceptarEnviar";
             this.btnAceptarEnviar.Size = new System.Drawing.Size(240, 25);
             this.btnAceptarEnviar.TabIndex = 47;
@@ -323,6 +323,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(259, 456);
+            this.ControlBox = false;
             this.Controls.Add(this.lblDatosApertura);
             this.Controls.Add(this.btnAceptarEnviar);
             this.Controls.Add(this.lblResumenDiferencia);
@@ -349,7 +350,7 @@
             this.Controls.Add(this.lblDatosCierre);
             this.Controls.Add(this.lblCajeroEncargado);
             this.Controls.Add(this.label10);
-            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "frmResumenArqueo";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "frmResumenArqueo";

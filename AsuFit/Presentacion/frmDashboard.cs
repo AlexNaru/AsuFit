@@ -11,6 +11,15 @@ namespace AsuFit.Presentacion
         private Button botonActivo = null;
         private Usuario usuarioActual;
         private bool _cerrandoParaLogOut = false;
+        private bool _intentoCerrarSesionPendiente = false;
+        private bool _intentoSalirSistemaPendiente = false;
+        public bool HayCierrePendiente
+        {
+            get { return _intentoCerrarSesionPendiente || _intentoSalirSistemaPendiente; }
+        }
+        public bool IntentoRegistroSocioPendiente = false;
+        public bool IntentoCobroPendiente = false;
+        public bool IntentoGastoPendiente = false;
 
         private ContextMenuStrip menuDropdownUsuario;
         private ContextMenuStrip menuDropdownNotificaciones;
@@ -46,6 +55,9 @@ namespace AsuFit.Presentacion
 
             // 2. Construir los menús invisibles con datos de la BD
             GenerarMenusDesplegables();
+
+            // Renderiza el estado financiero inicial en la barra superior
+            ActualizarEstadoCajaTopBar();
 
             // 3. Forzar la primera actualización del reloj para que arranque al instante
             timerReloj_Tick(null, null);
@@ -96,31 +108,37 @@ namespace AsuFit.Presentacion
             };
         }
 
-        // Intercepta la petición de cierre del sistema operativo o sesión y evalúa la integridad del turno de caja antes de liberar los recursos.
         // Utiliza Environment.Exit para forzar la finalización del proceso y evitar recursividad en la colección de formularios.
+        // Intercepta la petición de cierre del sistema operativo o sesión y evalúa la integridad del turno.
         private void frmDashboard_FormClosing(object sender, FormClosingEventArgs e)
         {
+            if (_cerrandoParaLogOut) return;
+
             AsuFit.Negocio.ArqueoNegocio negocioArqueo = new AsuFit.Negocio.ArqueoNegocio();
             if (negocioArqueo.VerificarCajaAbierta())
             {
-                AsuFit.Presentacion.MensajeAsuFit.Mostrar("No se puede cerrar el sistema ni la sesión porque existe un turno de caja abierto. Proceda a realizar el Arqueo de Caja correspondiente.", "Operación Denegada", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MensajeAsuFit.Mostrar("No se puede cerrar el sistema porque existe un turno de caja abierto.\n\nSerás redirigido para realizar el Arqueo de Caja correspondiente.", "Operación Denegada", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                _intentoSalirSistemaPendiente = true; // Guardamos la intención
+                _intentoCerrarSesionPendiente = false;
+
                 e.Cancel = true;
+                Control[] btnArqueo = this.Controls.Find("btnArqueoCaja", true);
+                if (btnArqueo.Length > 0 && btnArqueo[0] is Button btn) btn.PerformClick();
                 return;
             }
 
-            if (!_cerrandoParaLogOut)
-            {
-                DialogResult resultado = MensajeAsuFit.Mostrar("¿Está seguro de que desea salir del sistema AsuFit?", "Confirmar Salida", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+            DialogResult resultado = MensajeAsuFit.Mostrar("¿Está seguro de que desea salir del sistema AsuFit?", "Confirmar Salida", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
 
-                if (resultado == DialogResult.Yes)
-                {
-                    AsuFit.Datos.GestorAuditoria.Registrar(usuarioActual.NombreCompleto, "Seguridad", "Cierre de Sistema", "El usuario finalizó la ejecución de la aplicación.");
-                    Environment.Exit(0);
-                } 
-                else
-                {
-                    e.Cancel = true;
-                }
+            if (resultado == DialogResult.Yes)
+            {
+                AsuFit.Datos.GestorAuditoria.Registrar(usuarioActual.NombreCompleto, "Seguridad", "Cierre de Sistema", "El usuario finalizó la ejecución de la aplicación.");
+                Environment.Exit(0);
+            }
+            else
+            {
+                e.Cancel = true;
+                _intentoSalirSistemaPendiente = false; // Se arrepintió, limpiamos la memoria
             }
         }
 
@@ -144,6 +162,21 @@ namespace AsuFit.Presentacion
             }
             return base.ProcessCmdKey(ref msg, keyData);
         }
+
+        // Retoma el intento de cierre o salida si el usuario fue interrumpido para cerrar la caja
+        public void ProcesarCierrePendiente()
+        {
+            if (_intentoSalirSistemaPendiente)
+            {
+                _intentoSalirSistemaPendiente = false;
+                this.Close(); // Dispara la "X" de nuevo, pero ahora la caja estará cerrada
+            }
+            else if (_intentoCerrarSesionPendiente)
+            {
+                _intentoCerrarSesionPendiente = false;
+                btnCerrarSesion_Click(this, EventArgs.Empty); // Dispara el cierre de sesión de nuevo
+            }
+        }
         #endregion
 
         #region 3. LÓGICA DE BARRA SUPERIOR, BD Y MENÚS DESPLEGABLES
@@ -164,6 +197,12 @@ namespace AsuFit.Presentacion
             // Imprimimos todo en el Label con sus respectivos íconos
             if (lblFechaHora != null)
                 lblFechaHora.Text = $"📅 {fecha}   |   🕒 {hora}";
+        }
+
+        // Redirige el flujo de navegación hacia el módulo de Arqueos desde el indicador global de la barra superior.
+        private void btnEstadoCajaTop_Click(object sender, EventArgs e)
+        {
+            btnArqueoCaja.PerformClick();
         }
 
         private void ConsultarNotificacionesBD(out int porVencer, out int vencidos, out int stockBajo, out int sinStock)
@@ -275,6 +314,25 @@ namespace AsuFit.Presentacion
         #endregion
 
         #region 4. MÉTODOS DE LA INTERFAZ (UI Y ESCALADO)
+        // Actualiza visualmente el indicador persistente de la barra superior consultando el estado del turno actual.
+        public void ActualizarEstadoCajaTopBar()
+        {
+            if (btnEstadoCajaTop == null) return;
+
+            AsuFit.Negocio.ArqueoNegocio negocioArqueo = new AsuFit.Negocio.ArqueoNegocio();
+            bool cajaAbierta = negocioArqueo.VerificarCajaAbierta();
+
+            if (cajaAbierta)
+            {
+                btnEstadoCajaTop.Text = "🟢 CAJA: ABIERTA";
+                btnEstadoCajaTop.ForeColor = Color.MediumSeaGreen;
+            }
+            else
+            {
+                btnEstadoCajaTop.Text = "🔴 CAJA: CERRADA";
+                btnEstadoCajaTop.ForeColor = Color.IndianRed;
+            }
+        }
         private void ResaltarBoton(object btnSender)
         {
             if (btnSender != null)
@@ -443,6 +501,17 @@ namespace AsuFit.Presentacion
         private void btnRegistrarSocio_Click(object sender, EventArgs e)
         {
             ResaltarBoton(sender);
+
+            AsuFit.Negocio.ArqueoNegocio negocioArqueo = new AsuFit.Negocio.ArqueoNegocio();
+            if (!negocioArqueo.VerificarCajaAbierta())
+            {
+                MensajeAsuFit.Mostrar("Para registrar un nuevo socio debes realizar la Apertura de Caja, ya que esto requiere cobrar la suscripción inicial.\n\nSerás redirigido al módulo de Arqueos.", "Caja Cerrada", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+
+                IntentoRegistroSocioPendiente = true; // <-- Activa la memoria
+                btnArqueoCaja.PerformClick();
+                return;
+            }
+
             AbrirFormularioHijo(new frmRegistrarSocio(usuarioActual));
         }
 
@@ -538,8 +607,20 @@ namespace AsuFit.Presentacion
 
         private void btnCerrarSesion_Click(object sender, EventArgs e)
         {
-            DialogResult resultado = MensajeAsuFit.Mostrar("¿Está seguro de que desea cerrar la sesión actual?",
-                "Cerrar Sesión", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            AsuFit.Negocio.ArqueoNegocio negocioArqueo = new AsuFit.Negocio.ArqueoNegocio();
+            if (negocioArqueo.VerificarCajaAbierta())
+            {
+                MensajeAsuFit.Mostrar("No se puede cerrar la sesión porque existe un turno de caja abierto.\n\nSerás redirigido para realizar el Arqueo de Caja correspondiente.", "Operación Denegada", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                _intentoCerrarSesionPendiente = true; // Guardamos la intención
+                _intentoSalirSistemaPendiente = false;
+
+                Control[] btnArqueo = this.Controls.Find("btnArqueoCaja", true);
+                if (btnArqueo.Length > 0 && btnArqueo[0] is Button btn) btn.PerformClick();
+                return;
+            }
+
+            DialogResult resultado = MensajeAsuFit.Mostrar("¿Está seguro de que desea cerrar la sesión actual?", "Cerrar Sesión", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
             if (resultado == DialogResult.Yes)
             {
@@ -548,11 +629,7 @@ namespace AsuFit.Presentacion
                 Form ventanaAsistencia = null;
                 foreach (Form formulario in Application.OpenForms)
                 {
-                    if (formulario is frmAsistencia)
-                    {
-                        ventanaAsistencia = formulario;
-                        break;
-                    }
+                    if (formulario is frmAsistencia) { ventanaAsistencia = formulario; break; }
                 }
                 if (ventanaAsistencia != null) ventanaAsistencia.Close();
 
@@ -560,6 +637,10 @@ namespace AsuFit.Presentacion
                 this.Close();
                 frmLogin login = new frmLogin();
                 login.Show();
+            }
+            else
+            {
+                _intentoCerrarSesionPendiente = false; // Se arrepintió, limpiamos la memoria
             }
         }
         #endregion

@@ -662,15 +662,9 @@ namespace AsuFit.Presentacion
             }
         }
 
+        // Procesa la venta actual, validando el estado de la caja y preservando el carrito en memoria global ante redirecciones.
         private void btnFinalizarVenta_Click(object sender, EventArgs e)
         {
-            ArqueoNegocio negocioArqueo = new ArqueoNegocio();
-            if (!negocioArqueo.VerificarCajaAbierta())
-            {
-                MensajeAsuFit.Mostrar("Operación denegada. Debes realizar la apertura de caja para procesar transacciones financieras.", "Caja Cerrada", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
-
             if (dgvCarrito.Rows.Count == 0 && CarritoGlobal.Detalles.Rows.Count == 0)
             {
                 MensajeAsuFit.Mostrar("El carrito está vacío. Agregue productos antes de continuar.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -679,7 +673,7 @@ namespace AsuFit.Presentacion
 
             try
             {
-                // Descuenta los productos actuales para evitar duplicar sumatorias
+                // 1. Guardamos el carrito visual en la memoria global ANTES de hacer cualquier validación
                 for (int i = CarritoGlobal.Detalles.Rows.Count - 1; i >= 0; i--)
                 {
                     if (Convert.ToInt32(CarritoGlobal.Detalles.Rows[i]["IdProducto"]) > 0)
@@ -702,17 +696,35 @@ namespace AsuFit.Presentacion
                     CarritoGlobal.AgregarItem(idProd, codigoDeBarras, concepto, cant, precio, iva);
                 }
 
-                // Abrir en modo Modal (bloquea el formulario de atrás)
+                // 2. Verificamos el estado de la caja
+                ArqueoNegocio negocioArqueo = new ArqueoNegocio();
+                if (!negocioArqueo.VerificarCajaAbierta())
+                {
+                    MensajeAsuFit.Mostrar("Para procesar ventas, primero debes realizar la Apertura de Caja.\n\nSerás redirigido al módulo de Arqueos. Tu carrito ha sido guardado en memoria y no perderás los productos.", "Caja Cerrada", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+
+                    // 3. Redirección automática al módulo de Arqueos
+                    frmDashboard dashboard = Application.OpenForms["frmDashboard"] as frmDashboard;
+                    if (dashboard != null)
+                    {
+                        Control[] botones = dashboard.Controls.Find("btnArqueoCaja", true);
+                        if (botones.Length > 0 && botones[0] is Button btnArqueo)
+                        {
+                            btnArqueo.PerformClick();
+                        }
+                    }
+                    return;
+                }
+
+                // 4. Si la caja está abierta, abrimos la ventana de cobro con normalidad
                 frmCajaCobro nuevaCaja = new frmCajaCobro(usuarioActual);
                 CentrarSobreContenedor(nuevaCaja);
                 nuevaCaja.ShowDialog();
 
-                // Al cerrar la caja (por pagar o por agregar cosas), actualizamos la vista
                 SincronizarCarritoVisual();
             }
             catch (Exception ex)
             {
-                MensajeAsuFit.Mostrar("Error al enviar productos a la caja: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MensajeAsuFit.Mostrar("Error al procesar la venta: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
